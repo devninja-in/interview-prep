@@ -1,0 +1,105 @@
+24 Replication and sharding
+One database eventually runs out of room, either for traffic or for data. Two
+techniques fix the two different problems. Replication makes copies for
+safety and read speed. Sharding splits the data so writes and storage
+spread across many machines. They solve different things and are often
+used together.
+Replication
+Primary
+takes writes
+Replica
+serves reads
+Replica
+serves reads
+copy
+copy
+Sharding
+Router
+by shard key
+Shard A
+users A to H
+Shard B
+users I to P
+Shard C
+users Q to Z
+Replication copies the same data for safety and read scale. Sharding splits
+different data for write scale.
+Replication
+Replication keeps copies of the same data on several machines. The common setup is one primary
+that takes all the writes and several replicas that copy from it and serve reads. This gives you two
+wins: if the primary dies, a replica can take over, and read heavy traffic spreads across many
+replicas.
+The catch is how the copy happens. Asynchronous replication is fast because the primary does not
+wait for replicas, but a crash can lose the most recent writes that had not copied yet. Synchronous
+
+replication waits for replicas to confirm, so nothing is lost, but every write is slower. Most systems
+pick a spot on that spectrum based on how much they fear losing a few seconds of data.
+PROS
+Survives a machine failure with a replica
+ready to take over
+Read traffic scales across many replicas
+Replicas can sit closer to users in other
+regions
+CONS
+Writes still funnel through a single
+primary
+Replicas can lag, so reads may be
+slightly stale
+Failover and promoting a new primary is
+fiddly
+Sharding, also called partitioning
+Sharding splits the data itself so different machines hold different rows. You pick a shard key, like
+user id, and route each record to a shard based on it. Range based sharding groups by ranges of
+the key, which is simple but can create hotspots. Hash based sharding spreads keys evenly by
+hashing them. Consistent hashing is the refinement that lets you add or remove a machine while
+moving only a small slice of the data instead of reshuffling everything.
+PROS
+Write throughput and storage scale
+nearly without limit
+Each shard is smaller, so its own
+operations stay fast
+Consistent hashing keeps rebalancing
+cheap
+CONS
+Queries that span shards are slow and
+awkward
+A bad shard key creates hotspots that
+ruin the balance
+Transactions across shards are hard or
+impossible
+More machines means more operational
+overhead
+T H E S H A R D K E Y I S E V E R Y T H I N G
+Choose a shard key that spreads load evenly and matches how you query. If most requests
+hit one popular key, that shard becomes a hotspot and you are back to a single overloaded
+machine. Picking this well is one of the highest stakes decisions in a sharded design.
+
+GOING DEEPER
+Consistent hashing, and choosing a new leader
+Plain hashing across N machines has a nasty flaw: change N and almost every key moves to a
+different machine. Consistent hashing fixes this by placing both nodes and keys on a ring, where
+each key belongs to the next node clockwise. Add or remove a node and only the keys between it
+and its neighbor move, a small slice instead of the whole dataset. For replication, when the primary
+dies the replicas run a leader election to promote a new primary and clients are redirected to it. The
+subtle part is doing this without two nodes both believing they are the primary, which would corrupt
+data.
+A
+B
+C
+key -> next node clockwise
+Adding or removing a node moves
+only the slice of keys between it
+and its neighbor, not everything.
+keys and nodes share one ring
+Consistent hashing places nodes and keys on a ring, so changing the node count
+reshuffles only a small slice.
+PROS
+Async replication is fast, since the
+primary does not wait for replicas
+Reads scale across many replicas
+placed near users
+CONS
+Async can lose the last few writes if the
+primary crashes
+Sync replication is safe but makes every
+write slower

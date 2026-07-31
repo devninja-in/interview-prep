@@ -1,0 +1,45 @@
+F U N D A M E N T A L S
+19 Approaching system design
+System design questions feel open ended and a little scary, but they follow
+a script just like coding problems do. Nobody expects one perfect answer.
+The interviewer wants to watch how you think, how you weigh trade offs,
+and how you drive the conversation. Learn the script and the fear mostly
+goes away.
+Clarify requirements and scope
+functional and non functional
+Estimate the scale
+users, traffic, storage
+Define the API and data model
+the few endpoints and core entities
+Sketch the high level design
+boxes and arrows, data flowing end to end
+Deep dive on the hard parts
+the one or two things that make it tricky
+Find and fix the bottlenecks
+what breaks at ten times the load
+and keep talking through all of it
+A repeatable script for almost any design question, top to bottom.
+The six moves, in order
+Start by clarifying requirements. Split them into functional (what the system must do, like send a
+message or shorten a link) and non functional (how it must behave, like handle millions of users,
+
+stay up, respond in under a hundred milliseconds). Ask whether it is read heavy or write heavy, how
+many users, and whether strong consistency matters. These answers shape every later decision.
+Next, estimate the scale with rough math so your design is grounded in real numbers rather than
+vibes. Then define the API and data model, just the handful of endpoints and the core entities,
+because they force you to be concrete. Now draw the high level design, boxes for the client, load
+balancer, services, cache, database, and queue, and make data flow from a request all the way to a
+response.
+With the skeleton in place, deep dive on the hard parts, whatever makes this system special, like
+unique ID generation for a URL shortener or fanout for a news feed. Finally, hunt for bottlenecks
+and show how you scale past them by adding caches, replicas, shards, or queues.
+F U N C T I O N A L V S N O N F U N C T I O N A L , K N O W T H E D I F F E R E N C E
+Functional requirements are features: post a tweet, follow a user, search. Non functional
+requirements are qualities: availability, latency, consistency, durability, and cost. Interviewers
+care most about how you handle the non functional side, because that is where the
+interesting trade offs live.
+D R I V E T H E C O N V E R S A T I O N
+Say your assumptions out loud and write them down. State the numbers you are using.
+When you pick a database or a cache, say why, and name the trade off you are accepting. A
+design interview is a discussion, not a monologue, so a running commentary of your
+reasoning is exactly what earns the score.

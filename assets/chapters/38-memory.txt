@@ -1,0 +1,73 @@
+38 Memory
+By default a model remembers nothing between calls. It is completely
+stateless. Any sense of memory is something you build by choosing what to
+carry back into the context window. Good memory design is really just
+good context management.
+Conversation
+in the context window
+Summarize
+and extract facts
+Memory store
+facts, past chats
+when it fills
+store
+retrieve only what is relevant, back into context
+Memory is built, not given. Summarize and save what matters, then retrieve
+only the relevant pieces later.
+The kinds of memory
+Working memory is just the current conversation sitting in the context window. It is immediate but
+limited, and it disappears when the window fills or the session ends. Long term memory is anything
+you store outside the model and pull back in when it is relevant, which uses the very same
+embedding and retrieval idea as RAG, only now the documents are your own past interactions and
+facts.
+People often split long term memory into episodic (things that happened, like past conversations),
+semantic (stable facts and preferences, like the user's name or timezone), and procedural (how to
+do things, which overlaps with skills later in this part). You do not need all of them, but naming them
+helps you decide what is worth keeping.
+The practical loop
+As a conversation grows, you summarize older turns so they take fewer tokens, and you extract
+durable facts worth remembering. You save those to a store. On a later turn, you retrieve only the
+memories relevant to the new message and place them back into the context. The trick is
+selectivity: pulling everything back in wastes the budget and can even confuse the model.
+
+PYTHON
+# Long term memory is just retrieval over your own history.
+def remember(fact, store):
+store.add(text=fact, vector=embed(fact))
+def recall(message, store, k=3):
+return store.search(embed(message), top_k=k)   # only what fits the
+moment
+# On each turn:
+memories = recall(user_message, store)
+context = format_memories(memories) + "\n" + user_message
+M E M O R Y I S R E T R I E V A L I N T O T H E C O N T E X T W I N D O W
+There is no separate memory organ inside the model. Every technique here ends the same
+way: put the right text back into the context before you call the model. Once you see
+memory as selective retrieval into a fixed budget, designing it becomes straightforward.
+GOING DEEPER
+Managing the context budget
+Because the context window is a fixed size, everything you might want the model to know
+competes for the same space: the system prompt, the running conversation, any retrieved
+documents, recalled memories, and the room left for the answer. Memory design is the craft of
+fitting the right things into that budget. The tools are summarizing older turns so they take fewer
+tokens, keeping only a sliding window of recent messages verbatim, and retrieving just the handful
+of past facts relevant to the current message instead of everything. Seen this way, there is no
+separate memory store inside the model, only clever choices about what to place in the window
+before each call.
+
+one fixed context window, shared by everything below
+system
+conversation
+retrieved docs
+memory
+answer room
+Everything competes for one fixed window, so memory design is really about
+spending that budget wisely.
+Memory type
+What it holds
+Episodic
+things that happened, like past conversations
+Semantic
+stable facts, like a user's name or preferences
+Procedural
+how to do things, which overlaps with skills

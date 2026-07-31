@@ -1,0 +1,45 @@
+18 A study plan that works
+Talent is overrated here. Consistency and the right practice beat raw brains.
+Here is a plan that turns the patterns in this book into instinct over a few
+weeks, without burning you out.
+The weekly rhythm
+Pick one pattern per few days rather than jumping around randomly. Depth beats variety early on.
+For each pattern, read its chapter here, then solve four to six problems that use it, from easy to
+medium. Do not move to the next pattern until you can rewrite the core template from memory.
+How to practice one problem
+1. Try it cold for about twenty minutes. Real struggle is where the learning happens. Do not peek
+early.
+2. If stuck, read only a small hint, not the full solution. Often "this is a sliding window" is enough to
+unstick you.
+3. After solving or reading the answer, close everything and rewrite it from scratch. If you
+cannot, you have not learned it yet, so repeat.
+4. Write one sentence about the trick that made it work. This is your personal cheat sheet, and it
+will be worth more than any book at review time.
+A S E N S I B L E O R D E R T O L E A R N T H E P A T T E R N S
+Arrays and hashing, then two pointers and sliding window, then stack and binary search.
+Next linked lists, then trees and BFS or DFS, then heaps. Then the hard hitters: backtracking,
+graphs, and dynamic programming. Finish with greedy, intervals, and bits. Each stage builds
+on the ones before, so resist skipping ahead.
+Spaced repetition beats cramming
+A problem you solved today should be revisited in a few days, then a week later, then a couple of
+weeks after that. Each time it should feel a little easier. The ones that still feel hard on the second
+
+pass are exactly the ones worth your time. Keep a short list of "solved but felt shaky" problems and
+cycle back to them.
+S I M U L A T E T H E R E A L T H I N G
+Before an interview or contest, do a few problems under a timer, talking out loud as if
+someone is listening. Explaining your thinking while you code is a separate skill from just
+coding, and it is the one most people neglect. Practicing it removes most of the panic on the
+real day.
+T H E T R A P S T H A T S T A L L P E O P L E
+Solving hundreds of problems without ever revisiting them, so nothing sticks. Reading
+solutions before really trying, which feels productive but teaches almost nothing. Chasing
+hard problems too early instead of building a solid base of easy and medium ones. And
+skipping the "rewrite from memory" step, which is the single highest-value habit in this
+whole plan.
+One last thing
+Everyone who is good at this was once bad at it and felt lost staring at problems that now seem
+easy. The gap between "I have no idea" and "oh, this is just a sliding window" is not intelligence, it
+is exposure. Keep showing up, keep rewriting from memory, and keep noting the trick. The patterns
+in this book are finite, and once they are in your hands, most of LeetCode turns into recognition. You
+have got this.

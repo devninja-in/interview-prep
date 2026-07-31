@@ -1,0 +1,89 @@
+31 Design walkthrough: Amazon
+Designing an online store like Amazon is really designing several systems
+that cooperate: a product catalog, a shopping cart, orders, payments, and
+inventory. The heart of it is a tension. Browsing must be fast and always
+available, while checkout has to be correct down to the last unit and the last
+cent.
+Requirements
+Users browse and search a huge catalog, add items to a cart, place an order, pay, and get it
+shipped. Behind that, inventory must be tracked so two people cannot both buy the last item. The
+catalog is extremely read heavy, while orders, payments, and inventory are write sensitive and must
+be correct.
+Client
+API gateway
+auth, routing
+Catalog service
+Product DB
++ search
+Cart service
+Cart store
+Order service
+Order DB
+ACID
+Each concern is its own service and store. Checkout also fans out to payment
+and inventory through a queue.
+The key decisions
+The catalog is read dominated, so cache it hard, serve it from read replicas, and back it with a
+search index for queries and filters. Here eventual consistency is fine, since a price or a rating
+
+updating a second late hurts nobody. The cart is a fast key value store keyed by user, cheap to read
+and write.
+Orders and payments are the opposite. They need strong consistency and transactions, so they sit
+on a relational database with ACID guarantees. The critical rule is that inventory must be reserved
+atomically at checkout, so the last unit is sold exactly once. Slow or non urgent steps like charging
+the card, sending the confirmation email, and updating recommendations are pushed onto a queue
+so the user's click returns immediately.
+PROS
+Each service scales on its own, so the
+busy catalog does not slow checkout
+You can use the right store per job,
+cache for catalog, ACID for orders
+Queues absorb spikes and keep the
+checkout click fast
+CONS
+Many services means more operational
+and networking complexity
+A cart or order spanning services needs
+careful coordination
+Keeping the search index in sync with
+the catalog adds moving parts
+T H E C O N S I S T E N C Y S P L I T I S T H E W H O L E T R I C K
+Notice how one system uses two different consistency levels on purpose. Browsing leans
+available and eventually consistent because stale by a second is harmless. Checkout leans
+strongly consistent because overselling the last unit is not. Naming that split, and where you
+draw the line, is exactly the judgment an interviewer wants to see.
+GOING DEEPER
+Checkout as a saga across services
+A checkout spans several independent services, and you cannot wrap them all in one database
+transaction. The saga pattern runs the steps in sequence, and gives each step a compensating
+action that cleanly undoes it if a later step fails. Reserve the inventory, then charge the payment,
+then confirm the order. If the payment fails, the compensating action releases the reserved
+inventory so the item is not left stuck as unavailable. This gives you correctness across services
+without a global lock, at the cost of writing the undo logic for every step.
+
+Reserve inventory
+Charge payment
+Confirm order
+payment fails
+compensate: release inventory
+each step has an undo, run in reverse if a later step fails
+A saga runs the steps in order, and if one fails it triggers compensating
+actions to undo the earlier ones.
+T H E L A S T U N I T U N D E R C O N C U R R E N C Y
+The scary case is two customers checking out the last item at the same instant. A plain read
+then write can let both succeed and oversell. The reservation must be atomic, a single
+conditional decrement that only succeeds if stock remains, so exactly one of the two wins
+and the other is told it is out of stock.
+STEP BY STEP
+How a checkout flows through the store, keeping the last unit correct.
+The user adds items to a cart held in a fast key value store.
+1
+At checkout, the order service begins a database transaction.
+2
+It reserves the inventory atomically, so the last unit in stock cannot be sold to two people.
+3
+It charges the payment, then records the completed order in the relational database.
+4
+Slower follow ups like the confirmation email and recommendation updates are pushed onto
+a queue, so the checkout click returns fast.
+5

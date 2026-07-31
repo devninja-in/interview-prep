@@ -1,0 +1,57 @@
+27 More building blocks
+A few more components show up in almost every design. You do not need
+to design each from scratch, but you should know what they are for and
+when to reach for them.
+API gateway
+An API gateway is a single front door for all client requests. It handles the cross cutting concerns
+you do not want scattered across every service: authentication, rate limiting, request routing, and
+sometimes response shaping. Clients talk to one endpoint, and the gateway forwards to the right
+service behind it.
+Rate limiting
+Rate limiting protects a system from abuse and overload by capping how many requests a client can
+make in a window. The token bucket is the classic approach: a bucket refills tokens at a steady rate,
+each request spends one, and when the bucket is empty requests are rejected or delayed. It allows
+short bursts while enforcing a long term average. The leaky bucket and sliding window are
+common alternatives with slightly different burst behavior.
+Object storage
+Large files like images, video, and backups do not belong in a relational database. Object storage,
+the S3 style service, is built for exactly this: cheap, durable, effectively unlimited storage for big
+blobs, usually served to users through a CDN.
+Search
+Searching text with a database LIKE query does not scale. A search engine like Elasticsearch
+builds an inverted index, a map from each word to the documents that contain it, so full text queries
+stay fast even over huge datasets. You keep it in sync with your main database as data changes.
+
+Observability
+Once a system is distributed, you cannot debug it by guessing. The three pillars are logs (what
+happened), metrics (numbers over time like latency and error rate), and tracing (following one
+request across many services). Alerting on the right metrics is what turns a 3 a.m. outage into a 3
+a.m. page before users notice.
+Y O U R A R E L Y B U I L D T H E S E Y O U R S E L F
+In a design discussion, naming the right off the shelf building block is the goal, not
+reinventing it. Saying "put an API gateway here for auth and rate limiting, object storage for
+the media, and a search index kept in sync with the database" shows exactly the judgment
+interviewers are looking for.
+GOING DEEPER
+Rate limiting up close, with the token bucket
+The token bucket is the workhorse of rate limiting. A bucket holds up to a fixed number of tokens
+and refills at a steady rate. Each request removes a token, and if the bucket is empty the request is
+rejected or delayed. This cleverly allows short bursts, up to the bucket size, while still enforcing a
+long term average equal to the refill rate. A sliding window counter is the other common choice,
+smoothing the hard edges of a fixed window so a burst straddling the boundary cannot sneak
+through double the limit. You place this at the API gateway so every service behind it is protected in
+one spot.
+token bucket
+refill at a steady rate
+Request
+take 1
+allowed
+rejected if empty
+A bucket refills tokens at a steady rate. Each request spends one, and an
+empty bucket means rejection.
+
+F I X E D W I N D O W V E R S U S S L I D I N G W I N D O W
+A fixed window counts requests per clock interval, which is simple but lets a client fire a full
+quota at the end of one window and another at the start of the next, briefly doubling the rate.
+A sliding window weights the previous window as it moves, smoothing that spike out. The
+token bucket avoids the issue differently, by capping the burst to the bucket size.

@@ -1,0 +1,1971 @@
+{
+  "chapters": [
+    {
+      "id": "cover",
+      "num": null,
+      "title": "Cover",
+      "part": "front",
+      "start": 1,
+      "end": 1,
+      "pages": [
+        1
+      ]
+    },
+    {
+      "id": "contents",
+      "num": null,
+      "title": "Contents",
+      "part": "front",
+      "start": 2,
+      "end": 3,
+      "pages": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "part-cp",
+      "num": null,
+      "title": "Part One: Competitive Programming",
+      "part": "cp",
+      "start": 4,
+      "end": 4,
+      "pages": [
+        4
+      ]
+    },
+    {
+      "id": "00-how-to-use",
+      "num": "00",
+      "title": "How to use this book",
+      "part": "cp",
+      "start": 5,
+      "end": 5,
+      "pages": [
+        5
+      ]
+    },
+    {
+      "id": "01-approaching",
+      "num": "01",
+      "title": "Approaching any problem",
+      "part": "cp",
+      "start": 6,
+      "end": 8,
+      "pages": [
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "id": "02-big-o",
+      "num": "02",
+      "title": "Big O and complexity",
+      "part": "cp",
+      "start": 9,
+      "end": 13,
+      "pages": [
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "id": "03-arrays",
+      "num": "03",
+      "title": "Arrays and hashing",
+      "part": "cp",
+      "start": 14,
+      "end": 22,
+      "pages": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "id": "04-two-pointers",
+      "num": "04",
+      "title": "Two pointers",
+      "part": "cp",
+      "start": 23,
+      "end": 30,
+      "pages": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "id": "05-sliding-window",
+      "num": "05",
+      "title": "Sliding window",
+      "part": "cp",
+      "start": 31,
+      "end": 37,
+      "pages": [
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
+    },
+    {
+      "id": "06-stack",
+      "num": "06",
+      "title": "Stack",
+      "part": "cp",
+      "start": 38,
+      "end": 44,
+      "pages": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+      ]
+    },
+    {
+      "id": "07-binary-search",
+      "num": "07",
+      "title": "Binary search",
+      "part": "cp",
+      "start": 45,
+      "end": 52,
+      "pages": [
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ]
+    },
+    {
+      "id": "08-linked-lists",
+      "num": "08",
+      "title": "Linked lists",
+      "part": "cp",
+      "start": 53,
+      "end": 61,
+      "pages": [
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ]
+    },
+    {
+      "id": "09-trees",
+      "num": "09",
+      "title": "Trees and BST",
+      "part": "cp",
+      "start": 62,
+      "end": 71,
+      "pages": [
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71
+      ]
+    },
+    {
+      "id": "10-heaps",
+      "num": "10",
+      "title": "Heaps and priority queues",
+      "part": "cp",
+      "start": 72,
+      "end": 78,
+      "pages": [
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78
+      ]
+    },
+    {
+      "id": "11-backtracking",
+      "num": "11",
+      "title": "Backtracking",
+      "part": "cp",
+      "start": 79,
+      "end": 87,
+      "pages": [
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87
+      ]
+    },
+    {
+      "id": "12-graphs",
+      "num": "12",
+      "title": "Graphs, BFS, DFS",
+      "part": "cp",
+      "start": 88,
+      "end": 100,
+      "pages": [
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100
+      ]
+    },
+    {
+      "id": "13-dp",
+      "num": "13",
+      "title": "Dynamic programming",
+      "part": "cp",
+      "start": 101,
+      "end": 108,
+      "pages": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
+      ]
+    },
+    {
+      "id": "14-greedy",
+      "num": "14",
+      "title": "Greedy",
+      "part": "cp",
+      "start": 109,
+      "end": 115,
+      "pages": [
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115
+      ]
+    },
+    {
+      "id": "15-intervals",
+      "num": "15",
+      "title": "Intervals",
+      "part": "cp",
+      "start": 116,
+      "end": 122,
+      "pages": [
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122
+      ]
+    },
+    {
+      "id": "16-bits",
+      "num": "16",
+      "title": "Bit manipulation",
+      "part": "cp",
+      "start": 123,
+      "end": 128,
+      "pages": [
+        123,
+        124,
+        125,
+        126,
+        127,
+        128
+      ]
+    },
+    {
+      "id": "17-cheat-sheet",
+      "num": "17",
+      "title": "Pattern cheat sheet",
+      "part": "cp",
+      "start": 129,
+      "end": 131,
+      "pages": [
+        129,
+        130,
+        131
+      ]
+    },
+    {
+      "id": "18-study-plan",
+      "num": "18",
+      "title": "A study plan that works",
+      "part": "cp",
+      "start": 132,
+      "end": 133,
+      "pages": [
+        132,
+        133
+      ]
+    },
+    {
+      "id": "part-sd",
+      "num": null,
+      "title": "Part Two: System Design",
+      "part": "sd",
+      "start": 134,
+      "end": 134,
+      "pages": [
+        134
+      ]
+    },
+    {
+      "id": "19-approaching-sd",
+      "num": "19",
+      "title": "Approaching system design",
+      "part": "sd",
+      "start": 135,
+      "end": 136,
+      "pages": [
+        135,
+        136
+      ]
+    },
+    {
+      "id": "20-estimation",
+      "num": "20",
+      "title": "Estimation and key numbers",
+      "part": "sd",
+      "start": 137,
+      "end": 138,
+      "pages": [
+        137,
+        138
+      ]
+    },
+    {
+      "id": "21-scaling",
+      "num": "21",
+      "title": "Scaling and load balancing",
+      "part": "sd",
+      "start": 139,
+      "end": 141,
+      "pages": [
+        139,
+        140,
+        141
+      ]
+    },
+    {
+      "id": "22-caching",
+      "num": "22",
+      "title": "Caching and CDNs",
+      "part": "sd",
+      "start": 142,
+      "end": 144,
+      "pages": [
+        142,
+        143,
+        144
+      ]
+    },
+    {
+      "id": "23-databases",
+      "num": "23",
+      "title": "SQL vs NoSQL",
+      "part": "sd",
+      "start": 145,
+      "end": 147,
+      "pages": [
+        145,
+        146,
+        147
+      ]
+    },
+    {
+      "id": "24-replication",
+      "num": "24",
+      "title": "Replication and sharding",
+      "part": "sd",
+      "start": 148,
+      "end": 150,
+      "pages": [
+        148,
+        149,
+        150
+      ]
+    },
+    {
+      "id": "25-cap",
+      "num": "25",
+      "title": "CAP and consistency",
+      "part": "sd",
+      "start": 151,
+      "end": 153,
+      "pages": [
+        151,
+        152,
+        153
+      ]
+    },
+    {
+      "id": "26-queues",
+      "num": "26",
+      "title": "Queues and async",
+      "part": "sd",
+      "start": 154,
+      "end": 156,
+      "pages": [
+        154,
+        155,
+        156
+      ]
+    },
+    {
+      "id": "27-building-blocks",
+      "num": "27",
+      "title": "More building blocks",
+      "part": "sd",
+      "start": 157,
+      "end": 159,
+      "pages": [
+        157,
+        158,
+        159
+      ]
+    },
+    {
+      "id": "28-url-shortener",
+      "num": "28",
+      "title": "Design: URL shortener",
+      "part": "sd",
+      "start": 160,
+      "end": 163,
+      "pages": [
+        160,
+        161,
+        162,
+        163
+      ]
+    },
+    {
+      "id": "29-whatsapp",
+      "num": "29",
+      "title": "Design: WhatsApp",
+      "part": "sd",
+      "start": 164,
+      "end": 167,
+      "pages": [
+        164,
+        165,
+        166,
+        167
+      ]
+    },
+    {
+      "id": "30-instagram",
+      "num": "30",
+      "title": "Design: Instagram",
+      "part": "sd",
+      "start": 168,
+      "end": 171,
+      "pages": [
+        168,
+        169,
+        170,
+        171
+      ]
+    },
+    {
+      "id": "31-amazon",
+      "num": "31",
+      "title": "Design: Amazon",
+      "part": "sd",
+      "start": 172,
+      "end": 174,
+      "pages": [
+        172,
+        173,
+        174
+      ]
+    },
+    {
+      "id": "32-s3",
+      "num": "32",
+      "title": "Design: Amazon S3",
+      "part": "sd",
+      "start": 175,
+      "end": 177,
+      "pages": [
+        175,
+        176,
+        177
+      ]
+    },
+    {
+      "id": "33-youtube",
+      "num": "33",
+      "title": "Design: YouTube",
+      "part": "sd",
+      "start": 178,
+      "end": 180,
+      "pages": [
+        178,
+        179,
+        180
+      ]
+    },
+    {
+      "id": "34-uber",
+      "num": "34",
+      "title": "Design: Uber",
+      "part": "sd",
+      "start": 181,
+      "end": 183,
+      "pages": [
+        181,
+        182,
+        183
+      ]
+    },
+    {
+      "id": "part-ai",
+      "num": null,
+      "title": "Part Three: AI Engineering",
+      "part": "ai",
+      "start": 184,
+      "end": 184,
+      "pages": [
+        184
+      ]
+    },
+    {
+      "id": "35-llms",
+      "num": "35",
+      "title": "How LLMs work",
+      "part": "ai",
+      "start": 185,
+      "end": 188,
+      "pages": [
+        185,
+        186,
+        187,
+        188
+      ]
+    },
+    {
+      "id": "36-prompting",
+      "num": "36",
+      "title": "Prompting patterns",
+      "part": "ai",
+      "start": 189,
+      "end": 191,
+      "pages": [
+        189,
+        190,
+        191
+      ]
+    },
+    {
+      "id": "37-rag",
+      "num": "37",
+      "title": "RAG",
+      "part": "ai",
+      "start": 192,
+      "end": 195,
+      "pages": [
+        192,
+        193,
+        194,
+        195
+      ]
+    },
+    {
+      "id": "38-memory",
+      "num": "38",
+      "title": "Memory",
+      "part": "ai",
+      "start": 196,
+      "end": 198,
+      "pages": [
+        196,
+        197,
+        198
+      ]
+    },
+    {
+      "id": "39-agents",
+      "num": "39",
+      "title": "Agentic patterns",
+      "part": "ai",
+      "start": 199,
+      "end": 202,
+      "pages": [
+        199,
+        200,
+        201,
+        202
+      ]
+    },
+    {
+      "id": "40-mcp",
+      "num": "40",
+      "title": "MCP",
+      "part": "ai",
+      "start": 203,
+      "end": 205,
+      "pages": [
+        203,
+        204,
+        205
+      ]
+    },
+    {
+      "id": "41-skills",
+      "num": "41",
+      "title": "Skills",
+      "part": "ai",
+      "start": 206,
+      "end": 208,
+      "pages": [
+        206,
+        207,
+        208
+      ]
+    },
+    {
+      "id": "42-ai-agent",
+      "num": "42",
+      "title": "Design: an AI agent",
+      "part": "ai",
+      "start": 209,
+      "end": 212,
+      "pages": [
+        209,
+        210,
+        211,
+        212
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "file": "assets/pages/page-001.jpg",
+      "is_diagram": false,
+      "text_preview": "C O D I N G , S Y S T E M D E S I G N , A N D A I , I N O N E P L A C E Interview Prep Three parts in one book. Competitive programming patterns in plain English with working Python and Java. System d"
+    },
+    {
+      "page": 2,
+      "file": "assets/pages/page-002.jpg",
+      "is_diagram": false,
+      "text_preview": "Contents INTERVIEW PREP Competitive Programming FOUNDATIONS 00 How to use this book 01 Approaching any problem 02 Big O and complexity CORE PATTERNS 03 Arrays and hashing 04 Two pointers 05 Sliding wi"
+    },
+    {
+      "page": 3,
+      "file": "assets/pages/page-003.jpg",
+      "is_diagram": false,
+      "text_preview": "FUNDAMENTALS 19 Approaching system design 20 Estimation and key numbers BUILDING BLOCKS 21 Scaling and load balancing 22 Caching and CDNs 23 SQL vs NoSQL 24 Replication and sharding 25 CAP and consist"
+    },
+    {
+      "page": 4,
+      "file": "assets/pages/page-004.jpg",
+      "is_diagram": false,
+      "text_preview": "P A R T O N E Competitive Programming The patterns behind almost every coding problem, from arrays and two pointers to graphs and dynamic programming. Each one is explained in plain English, drawn as "
+    },
+    {
+      "page": 5,
+      "file": "assets/pages/page-005.jpg",
+      "is_diagram": false,
+      "text_preview": "F O U N D A T I O N S 00 How to use this book Solving LeetCode problems is not about being a genius. It is a skill, and like any skill it breaks down into a small number of patterns that show up again"
+    },
+    {
+      "page": 6,
+      "file": "assets/pages/page-006.jpg",
+      "is_diagram": false,
+      "text_preview": "01 Approaching any problem Most people fail a problem not because the code is hard, but because they start typing before they understand what they are solving. Here is a repeatable process that works "
+    },
+    {
+      "page": 7,
+      "file": "assets/pages/page-007.jpg",
+      "is_diagram": false,
+      "text_preview": "4. Code it in small pieces Write the structure first, then fill it in. Handle the normal case, then come back for the edge cases. Keep variable names honest, so left and right instead of a and b . Cle"
+    },
+    {
+      "page": 8,
+      "file": "assets/pages/page-008.jpg",
+      "is_diagram": true,
+      "text_preview": "A quick way to guess the pattern What you see in the problem Pattern to try first \"Find two numbers that...\", \"have you seen this before\" Hash map Sorted array, or \"pair that sums to X\" Two pointers \""
+    },
+    {
+      "page": 9,
+      "file": "assets/pages/page-009.jpg",
+      "is_diagram": false,
+      "text_preview": "02 Big O and complexity Big O is just a way to describe how the amount of work grows as the input grows. It answers one question: if I make the input ten times bigger, does my solution get ten times s"
+    },
+    {
+      "page": 10,
+      "file": "assets/pages/page-010.jpg",
+      "is_diagram": true,
+      "text_preview": "The common complexities, from best to worst Notation Name What it looks like in code O(1) Constant Direct access, a hash lookup, arithmetic. Size does not matter. O(log n) Logarithmic Halving the sear"
+    },
+    {
+      "page": 11,
+      "file": "assets/pages/page-011.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON # O(n^2): for each element, scan the rest. Slow. def has_duplicate_slow(nums): for i in range(len(nums)): for j in range(i + 1, len(nums)): if nums[i] == nums[j]: return True return False # O(n"
+    },
+    {
+      "page": 12,
+      "file": "assets/pages/page-012.jpg",
+      "is_diagram": true,
+      "text_preview": "The fast version trades a little memory (the set) for a lot of speed. That trade, spending memory to save time, is the single most common optimization in this whole book. Keep an eye out for it. GOING"
+    },
+    {
+      "page": 13,
+      "file": "assets/pages/page-013.jpg",
+      "is_diagram": false,
+      "text_preview": "R E A D T H E C E I L I N G B A C K W A R D S If the problem says n can be 100000, you are being told to find an O(n) or O(n log n) solution, because O(n^2) would be ten billion operations and time ou"
+    },
+    {
+      "page": 14,
+      "file": "assets/pages/page-014.jpg",
+      "is_diagram": false,
+      "text_preview": "C O R E PA T T E R N S 03 Arrays and hashing Arrays are just a row of boxes with numbered positions. Hashing is the trick of storing things by a key so you can find them again instantly. Put them toge"
+    },
+    {
+      "page": 15,
+      "file": "assets/pages/page-015.jpg",
+      "is_diagram": false,
+      "text_preview": "R E A C H F O R H A S H I N G W H E N Y O U S E E \"Find a pair / complement\", \"count how many times each thing appears\", \"have I seen this value\", \"group things that are the same in some way\", or \"che"
+    },
+    {
+      "page": 16,
+      "file": "assets/pages/page-016.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def two_sum(nums, target): seen = {} # value -> index we saw it at for i, x in enumerate(nums): need = target - x # the partner that completes the pair if need in seen: # have we already passed"
+    },
+    {
+      "page": 17,
+      "file": "assets/pages/page-017.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON from collections import Counter def is_anagram(s, t): # Two strings are anagrams if they use the exact same letters. return Counter(s) == Counter(t) JAVA boolean isAnagram(String s, String t) {"
+    },
+    {
+      "page": 18,
+      "file": "assets/pages/page-018.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON from collections import defaultdict def group_anagrams(words): groups = defaultdict(list) for w in words: key = \"\".join(sorted(w)) # anagrams share the same sorted key groups[key].append(w) ret"
+    },
+    {
+      "page": 19,
+      "file": "assets/pages/page-019.jpg",
+      "is_diagram": false,
+      "text_preview": "total once, so the sum of any range is just the difference of two stored totals, again O(1) instead of re adding the range each time. the array 3 0 1 1 4 2 1 3 5 4 prefix sums (running total, one long"
+    },
+    {
+      "page": 20,
+      "file": "assets/pages/page-020.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def subarray_sum(nums, k): count = 0 running = 0 seen = {0: 1} # one empty prefix with sum 0 for x in nums: running += x count += seen.get(running - k, 0) # earlier prefixes that hit k seen[run"
+    },
+    {
+      "page": 21,
+      "file": "assets/pages/page-021.jpg",
+      "is_diagram": false,
+      "text_preview": "Problem type Classic examples Have I seen this Contains Duplicate, Two Sum, Longest Consecutive Sequence, Intersection of Two Arrays Frequency counting Valid Anagram, Group Anagrams, Top K Frequent El"
+    },
+    {
+      "page": 22,
+      "file": "assets/pages/page-022.jpg",
+      "is_diagram": false,
+      "text_preview": "In Java use getOrDefault or merge for counting, and remember keys must be objects, so autoboxing of int to Integer is happening under the hood. Lookups are O(1) on average but degrade in rare worst ca"
+    },
+    {
+      "page": 23,
+      "file": "assets/pages/page-023.jpg",
+      "is_diagram": false,
+      "text_preview": "04 Two pointers Instead of one index walking through an array, you use two, and you move them cleverly based on what you find. This turns many O(n\u00b2) brute forces into O(n), and it barely uses extra me"
+    },
+    {
+      "page": 24,
+      "file": "assets/pages/page-024.jpg",
+      "is_diagram": false,
+      "text_preview": "Worked example: two sum on a sorted array Because the array is sorted, you do not need a hash map at all. Point at both ends. If the current sum is too small, the only way to grow it is to move the le"
+    },
+    {
+      "page": 25,
+      "file": "assets/pages/page-025.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def is_palindrome(s): left, right = 0, len(s) - 1 while left < right: while left < right and not s[left].isalnum(): left += 1 while left < right and not s[right].isalnum(): right -= 1 if s[left"
+    },
+    {
+      "page": 26,
+      "file": "assets/pages/page-026.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def remove_duplicates(nums): if not nums: return 0 slow = 0 # last position of a kept value for fast in range(1, len(nums)): if nums[fast] != nums[slow]: slow += 1 nums[slow] = nums[fast] retur"
+    },
+    {
+      "page": 27,
+      "file": "assets/pages/page-027.jpg",
+      "is_diagram": false,
+      "text_preview": "Why moving the shorter side is safe On a sorted array, the two ends carry information: if their sum is too big the answer must be smaller, so you can only help by pulling the right pointer in, and if "
+    },
+    {
+      "page": 28,
+      "file": "assets/pages/page-028.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def max_area(height): left, right = 0, len(height) - 1 best = 0 while left < right: width = right - left best = max(best, width * min(height[left], height[right])) if height[left] < height[righ"
+    },
+    {
+      "page": 29,
+      "file": "assets/pages/page-029.jpg",
+      "is_diagram": false,
+      "text_preview": "Problem type Classic examples Ends moving inward Two Sum II, 3Sum, 4Sum, Container With Most Water, Trapping Rain Water, Valid Palindrome Same direction, slow and fast Remove Duplicates from Sorted Ar"
+    },
+    {
+      "page": 30,
+      "file": "assets/pages/page-030.jpg",
+      "is_diagram": true,
+      "text_preview": "For in place removal, return the new length and remember the array tail past that length is garbage. STEP BY STEP Two pointers on the sorted array [1, 3, 4, 6, 8, 10] with target = 10. The ends move i"
+    },
+    {
+      "page": 31,
+      "file": "assets/pages/page-031.jpg",
+      "is_diagram": false,
+      "text_preview": "05 Sliding window A window is a range of the array or string that you keep looking at. Instead of recomputing everything for every possible range, you slide the window along and only update what chang"
+    },
+    {
+      "page": 32,
+      "file": "assets/pages/page-032.jpg",
+      "is_diagram": false,
+      "text_preview": "Fixed window: maximum sum of k consecutive elements Compute the sum of the first k elements once. Then slide: each step, add the element entering the window and subtract the one leaving. One pass, O(n"
+    },
+    {
+      "page": 33,
+      "file": "assets/pages/page-033.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def longest_unique(s): seen = set() left = 0 best = 0 for right in range(len(s)): while s[right] in seen: # duplicate found, shrink left seen.remove(s[left]) left += 1 seen.add(s[right]) # now "
+    },
+    {
+      "page": 34,
+      "file": "assets/pages/page-034.jpg",
+      "is_diagram": false,
+      "text_preview": "W A T C H O U T The window size is right - left + 1 , not right - left . Off-by-one here is the most common bug. Also, for \"shortest\" problems you update the answer inside the shrink loop; for \"longes"
+    },
+    {
+      "page": 35,
+      "file": "assets/pages/page-035.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def min_subarray_len(target, nums): left = 0 total = 0 best = float('inf') for right, x in enumerate(nums): total += x # grow the window while total >= target: # shrink while still valid best ="
+    },
+    {
+      "page": 36,
+      "file": "assets/pages/page-036.jpg",
+      "is_diagram": false,
+      "text_preview": "Problem type Classic examples Fixed size window Maximum Average Subarray, Find All Anagrams in a String, Permutation in String Longest valid window Longest Substring Without Repeating Characters, Long"
+    },
+    {
+      "page": 37,
+      "file": "assets/pages/page-037.jpg",
+      "is_diagram": true,
+      "text_preview": "Empty input and windows larger than the array are the usual off by one traps. STEP BY STEP The longest substring without repeats on 'abcabcbb'. The right edge grows the window, and a repeat forces the"
+    },
+    {
+      "page": 38,
+      "file": "assets/pages/page-038.jpg",
+      "is_diagram": false,
+      "text_preview": "06 Stack A stack is a pile. You add to the top and you remove from the top, so the last thing you put in is the first thing you take out. That \"last in, first out\" rule turns out to be exactly what yo"
+    },
+    {
+      "page": 39,
+      "file": "assets/pages/page-039.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def is_valid(s): pairs = {')': '(', ']': '[', '}': '{'} stack = [] for c in s: if c in pairs: # a closing bracket if not stack or stack[-1] != pairs[c]: return False # nothing to match, or wron"
+    },
+    {
+      "page": 40,
+      "file": "assets/pages/page-040.jpg",
+      "is_diagram": false,
+      "text_preview": "The monotonic stack: next greater element This is the stack trick that feels like magic. For each element, you want the next element to its right that is bigger than it. Brute force is O(n\u00b2). With a s"
+    },
+    {
+      "page": 41,
+      "file": "assets/pages/page-041.jpg",
+      "is_diagram": false,
+      "text_preview": "W A T C H O U T Decide up front whether your stack holds values or indices. For \"next greater\" you almost always want indices, so you can write the answer back into the correct slot. Storing values lo"
+    },
+    {
+      "page": 42,
+      "file": "assets/pages/page-042.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def daily_temperatures(temps): answer = [0] * len(temps) stack = [] # indices, temperatures decreasing for i, t in enumerate(temps): while stack and temps[stack[-1]] < t: j = stack.pop() # toda"
+    },
+    {
+      "page": 43,
+      "file": "assets/pages/page-043.jpg",
+      "is_diagram": false,
+      "text_preview": "Problem type Classic examples Matching and nesting Valid Parentheses, Minimum Remove to Make Valid, Simplify Path, Basic Calculator Monotonic stack Next Greater Element, Daily Temperatures, Largest Re"
+    },
+    {
+      "page": 44,
+      "file": "assets/pages/page-044.jpg",
+      "is_diagram": true,
+      "text_preview": "Remember to handle whatever is left on the stack after the loop, since leftovers often mean unmatched items. STEP BY STEP Valid parentheses on the string '([])'. Each opener is pushed and waits, and e"
+    },
+    {
+      "page": 45,
+      "file": "assets/pages/page-045.jpg",
+      "is_diagram": false,
+      "text_preview": "07 Binary search If your data is sorted, you never need to check every element. Look at the middle. If it is too small, throw away the left half. If it is too big, throw away the right half. Each step"
+    },
+    {
+      "page": 46,
+      "file": "assets/pages/page-046.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def binary_search(nums, target): lo, hi = 0, len(nums) - 1 while lo <= hi: mid = (lo + hi) // 2 # middle index if nums[mid] == target: return mid elif nums[mid] < target: lo = mid + 1 # answer "
+    },
+    {
+      "page": 47,
+      "file": "assets/pages/page-047.jpg",
+      "is_diagram": false,
+      "text_preview": "There is no array to search. But the space of possible capacities is a sorted range, and \"can we finish in D days with capacity C?\" is a yes/no question that becomes yes once C is large enough. So bin"
+    },
+    {
+      "page": 48,
+      "file": "assets/pages/page-048.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def ship_within_days(weights, days): def can_do(cap): needed, load = 1, 0 for w in weights: if load + w > cap: # start a new day needed += 1 load = 0 load += w return needed <= days lo, hi = ma"
+    },
+    {
+      "page": 49,
+      "file": "assets/pages/page-049.jpg",
+      "is_diagram": false,
+      "text_preview": "W A T C H O U T Mixing up the loop condition and the update is the classic infinite loop. If you use while lo < hi with hi = mid , you must pair it with lo = mid + 1 , or the range may never shrink. W"
+    },
+    {
+      "page": 50,
+      "file": "assets/pages/page-050.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def min_eating_speed(piles, hours): def hours_needed(speed): return sum((p + speed - 1) // speed for p in piles) # ceil divide lo, hi = 1, max(piles) while lo < hi: mid = (lo + hi) // 2 if hour"
+    },
+    {
+      "page": 51,
+      "file": "assets/pages/page-051.jpg",
+      "is_diagram": false,
+      "text_preview": "What kinds of problems this solves U S E T H I S P A T T E R N F O R Searching sorted data, finding the first or last position that satisfies a condition, and the powerful trick of searching over an a"
+    },
+    {
+      "page": 52,
+      "file": "assets/pages/page-052.jpg",
+      "is_diagram": true,
+      "text_preview": "decide which half is sorted. The answer space version replaces the array comparison with a feasibility check. Edge cases and gotchas Compute the middle as low plus half the gap, not low plus high divi"
+    },
+    {
+      "page": 53,
+      "file": "assets/pages/page-053.jpg",
+      "is_diagram": false,
+      "text_preview": "L I N E A R A N D L I N K E D 08 Linked lists A linked list is a chain of nodes. Each node holds a value and a pointer to the next node. There is no index and no jumping around; to reach the fifth nod"
+    },
+    {
+      "page": 54,
+      "file": "assets/pages/page-054.jpg",
+      "is_diagram": false,
+      "text_preview": "The node definition PYTHON class ListNode: def __init__(self, val=0, next=None): self.val = val self.next = next JAVA class ListNode { int val; ListNode next; ListNode(int val) { this.val = val; } } W"
+    },
+    {
+      "page": 55,
+      "file": "assets/pages/page-055.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def reverse_list(head): prev = None curr = head while curr: nxt = curr.next # save the rest of the chain first curr.next = prev # flip the arrow backward prev = curr # move prev forward curr = "
+    },
+    {
+      "page": 56,
+      "file": "assets/pages/page-056.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def find_middle(head): slow = fast = head while fast and fast.next: slow = slow.next # one step fast = fast.next.next # two steps return slow # middle node def has_cycle(head): slow = fast = he"
+    },
+    {
+      "page": 57,
+      "file": "assets/pages/page-057.jpg",
+      "is_diagram": false,
+      "text_preview": "The dummy node trick: merge two sorted lists When you build a new list or delete from the front, having a fake node in front of the real head saves you from special-casing the first element. You alway"
+    },
+    {
+      "page": 58,
+      "file": "assets/pages/page-058.jpg",
+      "is_diagram": false,
+      "text_preview": "W A T C H O U T The number one linked list bug is a null pointer error. Before you write node.next.next , be sure node.next is not null. In the fast-and-slow loop, always check fast and fast.next befo"
+    },
+    {
+      "page": 59,
+      "file": "assets/pages/page-059.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def remove_nth_from_end(head, n): dummy = ListNode(0, head) lead = trail = dummy for _ in range(n): lead = lead.next # move lead n steps ahead while lead.next: # move both until lead is last le"
+    },
+    {
+      "page": 60,
+      "file": "assets/pages/page-060.jpg",
+      "is_diagram": false,
+      "text_preview": "Problem type Classic examples Pointer rewiring Reverse Linked List, Reverse Nodes in k-Group, Swap Nodes in Pairs, Rotate List Fast and slow pointers Middle of the Linked List, Linked List Cycle, Link"
+    },
+    {
+      "page": 61,
+      "file": "assets/pages/page-061.jpg",
+      "is_diagram": true,
+      "text_preview": "Reversing the list 1 to 2 to 3. We keep a previous pointer and, at each node, flip its next to point backward before moving on. prev current action list built so far null 1 1.next = null, prev = 1, cu"
+    },
+    {
+      "page": 62,
+      "file": "assets/pages/page-062.jpg",
+      "is_diagram": false,
+      "text_preview": "T R E E S A N D H E A P S 09 Trees and BST A tree is a branching structure. One node at the top (the root), and each node points to its children below. There are no loops. Most tree problems are solve"
+    },
+    {
+      "page": 63,
+      "file": "assets/pages/page-063.jpg",
+      "is_diagram": false,
+      "text_preview": "R E A C H F O R T H E S E W H E N Y O U S E E \"Depth\", \"height\", \"count nodes\", \"is the tree balanced\", \"path sum\": use DFS recursion. \"Level order\", \"nodes at each level\", \"minimum depth\", \"right sid"
+    },
+    {
+      "page": 64,
+      "file": "assets/pages/page-064.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON class TreeNode: def __init__(self, val=0, left=None, right=None): self.val = val self.left = left self.right = right def max_depth(root): if not root: return 0 # empty tree has depth 0 left = m"
+    },
+    {
+      "page": 65,
+      "file": "assets/pages/page-065.jpg",
+      "is_diagram": false,
+      "text_preview": "BFS: level order traversal Use a queue. Put the root in. Then, while the queue is not empty, process everything currently in it as one level, and add all their children for the next level. Counting th"
+    },
+    {
+      "page": 66,
+      "file": "assets/pages/page-066.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON from collections import deque def level_order(root): if not root: return [] result = [] queue = deque([root]) while queue: level = [] for _ in range(len(queue)): # exactly the nodes on this lev"
+    },
+    {
+      "page": 67,
+      "file": "assets/pages/page-067.jpg",
+      "is_diagram": false,
+      "text_preview": "Binary search trees: the sorted shortcut A binary search tree keeps a rule at every node: everything in the left subtree is smaller, everything in the right subtree is bigger. That means searching is "
+    },
+    {
+      "page": 68,
+      "file": "assets/pages/page-068.jpg",
+      "is_diagram": false,
+      "text_preview": "W A T C H O U T To validate a binary search tree, checking only that each node is bigger than its left child and smaller than its right child is not enough. A node deep on the left must be smaller tha"
+    },
+    {
+      "page": 69,
+      "file": "assets/pages/page-069.jpg",
+      "is_diagram": false,
+      "text_preview": "are larger go right, otherwise this node is the split point and the answer. PYTHON def lowest_common_ancestor(root, p, q): node = root while node: if p.val < node.val and q.val < node.val: node = node"
+    },
+    {
+      "page": 70,
+      "file": "assets/pages/page-070.jpg",
+      "is_diagram": false,
+      "text_preview": "Problem type Classic examples Depth and path with DFS Maximum Depth, Diameter of Binary Tree, Path Sum, Balanced Binary Tree, Binary Tree Maximum Path Sum Level by level with BFS Binary Tree Level Ord"
+    },
+    {
+      "page": 71,
+      "file": "assets/pages/page-071.jpg",
+      "is_diagram": true,
+      "text_preview": "Level order needs to capture the queue size at the start of each level so you know where one level ends. Recursion depth can be large on a skewed tree, so very deep trees may need an iterative version"
+    },
+    {
+      "page": 72,
+      "file": "assets/pages/page-072.jpg",
+      "is_diagram": false,
+      "text_preview": "10 Heaps and priority queues A heap is a container that always hands you the smallest (or largest) item first, and lets you add new items cheaply. It is the perfect tool whenever you repeatedly need \""
+    },
+    {
+      "page": 73,
+      "file": "assets/pages/page-073.jpg",
+      "is_diagram": false,
+      "text_preview": "Worked example: Kth largest element You want the Kth biggest number. The clean trick is to keep a min-heap of only the K largest numbers seen so far. Whenever it grows past K, pop the smallest. At the"
+    },
+    {
+      "page": 74,
+      "file": "assets/pages/page-074.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON import heapq from collections import Counter def top_k_frequent(nums, k): counts = Counter(nums) # value -> how many times # nlargest gives the k items with the biggest count return [val for va"
+    },
+    {
+      "page": 75,
+      "file": "assets/pages/page-075.jpg",
+      "is_diagram": false,
+      "text_preview": "W A T C H O U T A heap is not sorted. It only guarantees the top element is the min or max. If you iterate over a heap's internal array you will not get sorted order. Also, in Python remember to negat"
+    },
+    {
+      "page": 76,
+      "file": "assets/pages/page-076.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON import heapq class MedianFinder: def __init__(self): self.low = [] # max-heap via negatives, the smaller half self.high = [] # min-heap, the larger half def add_num(self, num): heapq.heappush(s"
+    },
+    {
+      "page": 77,
+      "file": "assets/pages/page-077.jpg",
+      "is_diagram": false,
+      "text_preview": "What kinds of problems this solves U S E T H I S P A T T E R N F O R Whenever you repeatedly need the smallest or largest item without fully sorting: top K, the kth largest, a running median, merging "
+    },
+    {
+      "page": 78,
+      "file": "assets/pages/page-078.jpg",
+      "is_diagram": false,
+      "text_preview": "Edge cases and gotchas Python heapq is a min heap only, so negate values or use a key wrapper to get max heap behavior. When you push tuples, make sure the tie breaking field is comparable, or add a c"
+    },
+    {
+      "page": 79,
+      "file": "assets/pages/page-079.jpg",
+      "is_diagram": false,
+      "text_preview": "R E C U R S I O N FA M I LY 11 Backtracking Backtracking is organized trial and error. You build a solution one choice at a time. When a choice leads nowhere, you undo it and try the next option. It i"
+    },
+    {
+      "page": 80,
+      "file": "assets/pages/page-080.jpg",
+      "is_diagram": false,
+      "text_preview": "The universal template: choose, explore, unchoose Every backtracking solution has the same rhythm. You make a choice (add something to your current path), you recurse to build on it, then you undo the"
+    },
+    {
+      "page": 81,
+      "file": "assets/pages/page-081.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def subsets(nums): result = [] def backtrack(start, path): result.append(path[:]) # record a copy of the current subset for i in range(start, len(nums)): path.append(nums[i]) # choose nums[i] b"
+    },
+    {
+      "page": 82,
+      "file": "assets/pages/page-082.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def permutations(nums): result = [] used = [False] * len(nums) def backtrack(path): if len(path) == len(nums): # used everything result.append(path[:]) return for i in range(len(nums)): if used"
+    },
+    {
+      "page": 83,
+      "file": "assets/pages/page-083.jpg",
+      "is_diagram": false,
+      "text_preview": "} } P R U N E E A R L Y T O G O F A S T E R The real speed in backtracking comes from cutting off dead branches as soon as you can tell they will fail. In combination sum, if the running total already"
+    },
+    {
+      "page": 84,
+      "file": "assets/pages/page-084.jpg",
+      "is_diagram": false,
+      "text_preview": "[] 2 9 2,2 2,4 X prune: 9 already exceeds the target cut a branch the moment it cannot lead to a valid answer Backtracking explores the tree of choices, but pruning skips whole branches that cannot po"
+    },
+    {
+      "page": 85,
+      "file": "assets/pages/page-085.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def combination_sum(candidates, target): result = [] def backtrack(start, remaining, path): if remaining == 0: result.append(path[:]) # a valid combination return for i in range(start, len(cand"
+    },
+    {
+      "page": 86,
+      "file": "assets/pages/page-086.jpg",
+      "is_diagram": false,
+      "text_preview": "What kinds of problems this solves U S E T H I S P A T T E R N F O R Any request to build all of something by making a sequence of choices: every subset, every permutation, every combination, or filli"
+    },
+    {
+      "page": 87,
+      "file": "assets/pages/page-087.jpg",
+      "is_diagram": false,
+      "text_preview": "Edge cases and gotchas Always undo your choice after the recursive call, or state leaks between branches. When you record a solution, add a copy of the current path, not the live list, since it keeps "
+    },
+    {
+      "page": 88,
+      "file": "assets/pages/page-088.jpg",
+      "is_diagram": false,
+      "text_preview": "12 Graphs, BFS, and DFS A graph is nodes connected by edges. Roads between cities, friends on a network, rooms with doors between them. Trees are just a special kind of graph. Two traversals do most o"
+    },
+    {
+      "page": 89,
+      "file": "assets/pages/page-089.jpg",
+      "is_diagram": false,
+      "text_preview": "BFS: shortest steps in an unweighted graph BFS uses a queue and visits nodes in rings: all nodes one step away, then all two steps away, and so on. Because it reaches nodes in order of distance, the f"
+    },
+    {
+      "page": 90,
+      "file": "assets/pages/page-090.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON from collections import deque def bfs(graph, start): visited = {start} queue = deque([start]) order = [] while queue: node = queue.popleft() order.append(node) for neighbor in graph[node]: if n"
+    },
+    {
+      "page": 91,
+      "file": "assets/pages/page-091.jpg",
+      "is_diagram": false,
+      "text_preview": "DFS: explore everything reachable DFS dives down one branch as far as it goes, then backtracks. It can be written with recursion (simplest) or with an explicit stack. Use it to count connected compone"
+    },
+    {
+      "page": 92,
+      "file": "assets/pages/page-092.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def num_islands(grid): if not grid: return 0 rows, cols = len(grid), len(grid[0]) count = 0 def sink(r, c): if r < 0 or r >= rows or c < 0 or c >= cols or grid[r][c] != '1': return grid[r][c] ="
+    },
+    {
+      "page": 93,
+      "file": "assets/pages/page-093.jpg",
+      "is_diagram": false,
+      "text_preview": "sink(grid, r, c + 1); sink(grid, r, c - 1); } Topological sort: ordering with prerequisites When tasks depend on each other, like courses that require other courses first, you need an order where ever"
+    },
+    {
+      "page": 94,
+      "file": "assets/pages/page-094.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON from collections import deque, defaultdict def can_finish(num_courses, prerequisites): graph = defaultdict(list) indegree = [0] * num_courses for course, need in prerequisites: graph[need].appe"
+    },
+    {
+      "page": 95,
+      "file": "assets/pages/page-095.jpg",
+      "is_diagram": false,
+      "text_preview": "} return done == numCourses; // false -> cycle } W A T C H O U T Forgetting to mark nodes visited is the classic graph bug; it causes infinite loops or exponential blowups. In BFS, mark when you enque"
+    },
+    {
+      "page": 96,
+      "file": "assets/pages/page-096.jpg",
+      "is_diagram": false,
+      "text_preview": "Another worked example: Rotting Oranges Rotten oranges infect fresh neighbors each minute. Ask how many minutes until none are fresh. This is multi source BFS: start with every rotten orange in the qu"
+    },
+    {
+      "page": 97,
+      "file": "assets/pages/page-097.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON from collections import deque def oranges_rotting(grid): rows, cols = len(grid), len(grid[0]) queue, fresh = deque(), 0 for r in range(rows): for c in range(cols): if grid[r][c] == 2: queue.app"
+    },
+    {
+      "page": 98,
+      "file": "assets/pages/page-098.jpg",
+      "is_diagram": true,
+      "text_preview": "int nr = cell[0] + d[0], nc = cell[1] + d[1]; if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr] [nc] == 1) { grid[nr][nc] = 2; fresh--; queue.offer(new int[]{nr, nc}); } } } } return fresh "
+    },
+    {
+      "page": 99,
+      "file": "assets/pages/page-099.jpg",
+      "is_diagram": false,
+      "text_preview": "The algorithm, in a bit more detail Two engines cover most of this chapter. Breadth first search explores in rings using a queue, so the first time it reaches a node it has found the shortest path in "
+    },
+    {
+      "page": 100,
+      "file": "assets/pages/page-100.jpg",
+      "is_diagram": false,
+      "text_preview": "The flood spreads to the connected land: the top left, its right neighbor, and the cell below that. Mark all three as visited. 3 Keep scanning. Every remaining cell is water or already visited, so no "
+    },
+    {
+      "page": 101,
+      "file": "assets/pages/page-101.jpg",
+      "is_diagram": false,
+      "text_preview": "13 Dynamic programming Dynamic programming, or DP, sounds scary but it is one idea: break a problem into smaller versions of itself, and never solve the same small version twice. You solve each subpro"
+    },
+    {
+      "page": 102,
+      "file": "assets/pages/page-102.jpg",
+      "is_diagram": false,
+      "text_preview": "T H E F O U R Q U E S T I O N S T H A T C R A C K A N Y D P 1. What is the state? (What does one subproblem look like, and what index or indices describe it?) 2. What is the recurrence? (How do you bu"
+    },
+    {
+      "page": 103,
+      "file": "assets/pages/page-103.jpg",
+      "is_diagram": false,
+      "text_preview": "R O L L I N G V A R I A B L E S S A V E M E M O R Y When each state only depends on the previous one or two, you do not need a whole array. Keep just the last couple of values in variables and slide t"
+    },
+    {
+      "page": 104,
+      "file": "assets/pages/page-104.jpg",
+      "is_diagram": false,
+      "text_preview": "Worked example: longest common subsequence (2D DP) Given two strings, find the length of the longest sequence of characters that appears in both, in order but not necessarily together. The state is a "
+    },
+    {
+      "page": 105,
+      "file": "assets/pages/page-105.jpg",
+      "is_diagram": false,
+      "text_preview": "W A T C H O U T Get the base cases right or everything downstream is wrong; an off-by-one in the table size or the starting values is the usual culprit. Make sure you fill the table in an order where "
+    },
+    {
+      "page": 106,
+      "file": "assets/pages/page-106.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def rob(nums): prev, curr = 0, 0 # best up to the last two houses for money in nums: prev, curr = curr, max(curr, prev + money) # skip vs rob this house return curr JAVA int rob(int[] nums) { i"
+    },
+    {
+      "page": 107,
+      "file": "assets/pages/page-107.jpg",
+      "is_diagram": false,
+      "text_preview": "Problem type Classic examples One dimensional sequence Climbing Stairs, House Robber, House Robber II, Decode Ways, Maximum Subarray, Word Break Knapsack and coins Coin Change, Coin Change II, Partiti"
+    },
+    {
+      "page": 108,
+      "file": "assets/pages/page-108.jpg",
+      "is_diagram": true,
+      "text_preview": "Get the base cases right, they anchor everything built on top of them. Fill the table in an order where every value you read is already computed. Watch array sizes and off by one, especially when the "
+    },
+    {
+      "page": 109,
+      "file": "assets/pages/page-109.jpg",
+      "is_diagram": false,
+      "text_preview": "14 Greedy A greedy algorithm makes the choice that looks best right now and never reconsiders. When that works, it is wonderfully simple and fast. The catch is that grabbing the locally best option do"
+    },
+    {
+      "page": 110,
+      "file": "assets/pages/page-110.jpg",
+      "is_diagram": false,
+      "text_preview": "farthest reach, you are stuck. Otherwise extend the reach. If the reach ever covers the last index, you made it. PYTHON def can_jump(nums): farthest = 0 for i, jump in enumerate(nums): if i > farthest"
+    },
+    {
+      "page": 111,
+      "file": "assets/pages/page-111.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def max_profit(prices): min_price = float('inf') best = 0 for price in prices: min_price = min(min_price, price) # cheapest day so far best = max(best, price - min_price) # profit if we sell to"
+    },
+    {
+      "page": 112,
+      "file": "assets/pages/page-112.jpg",
+      "is_diagram": false,
+      "text_preview": "most room for the rest, so sorting by end time and greedily keeping whatever fits is provably optimal. keep skip (overlaps) keep skip keep sort by end time, then keep each interval that starts after t"
+    },
+    {
+      "page": 113,
+      "file": "assets/pages/page-113.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def jump(nums): jumps = 0 current_end = 0 # boundary reachable with the jumps so far farthest = 0 for i in range(len(nums) - 1): farthest = max(farthest, i + nums[i]) if i == current_end: # mus"
+    },
+    {
+      "page": 114,
+      "file": "assets/pages/page-114.jpg",
+      "is_diagram": false,
+      "text_preview": "Problem type Classic examples Interval scheduling Non-overlapping Intervals, Minimum Number of Arrows to Burst Balloons, Merge Intervals Reach and jumps Jump Game, Jump Game II, Gas Station Sequences "
+    },
+    {
+      "page": 115,
+      "file": "assets/pages/page-115.jpg",
+      "is_diagram": true,
+      "text_preview": "Handle ties and empty inputs, which are common places greedy solutions quietly break. STEP BY STEP Jump Game on [2, 3, 1, 1, 4]. We track the farthest index we can reach and check that we never get st"
+    },
+    {
+      "page": 116,
+      "file": "assets/pages/page-116.jpg",
+      "is_diagram": false,
+      "text_preview": "T O O L B O X 15 Intervals An interval is just a start and an end, like a meeting from 2 to 4. Interval problems are about overlaps: merging them, counting how many overlap at once, or fitting them to"
+    },
+    {
+      "page": 117,
+      "file": "assets/pages/page-117.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def merge(intervals): intervals.sort(key=lambda x: x[0]) # sort by start merged = [intervals[0]] for start, end in intervals[1:]: last = merged[-1] if start <= last[1]: # overlaps the current i"
+    },
+    {
+      "page": 118,
+      "file": "assets/pages/page-118.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON import heapq def min_meeting_rooms(intervals): if not intervals: return 0 intervals.sort(key=lambda x: x[0]) # by start time ends = [] # min-heap of room end times for start, end in intervals: "
+    },
+    {
+      "page": 119,
+      "file": "assets/pages/page-119.jpg",
+      "is_diagram": false,
+      "text_preview": "DEEPER INTUITION Why sorting first makes intervals easy Almost every interval problem starts with a sort, because once intervals are in order you can sweep through them once and make a local decision "
+    },
+    {
+      "page": 120,
+      "file": "assets/pages/page-120.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def insert(intervals, new): result = [] i, n = 0, len(intervals) while i < n and intervals[i][1] < new[0]: # entirely before result.append(intervals[i]); i += 1 while i < n and intervals[i][0] "
+    },
+    {
+      "page": 121,
+      "file": "assets/pages/page-121.jpg",
+      "is_diagram": false,
+      "text_preview": "What kinds of problems this solves U S E T H I S P A T T E R N F O R Anything about ranges on a line: merging overlaps, inserting a new range, counting how many overlap at once, finding free time, or "
+    },
+    {
+      "page": 122,
+      "file": "assets/pages/page-122.jpg",
+      "is_diagram": false,
+      "text_preview": "Edge cases and gotchas Decide whether touching endpoints count as overlapping, since problems differ and it changes your comparison. Sort before you sweep, and pick start versus end based on whether y"
+    },
+    {
+      "page": 123,
+      "file": "assets/pages/page-123.jpg",
+      "is_diagram": false,
+      "text_preview": "16 Bit manipulation Computers store numbers as bits, a row of ones and zeros. A few problems become almost free if you work directly with those bits. You do not need to love binary, you just need a ha"
+    },
+    {
+      "page": 124,
+      "file": "assets/pages/page-124.jpg",
+      "is_diagram": true,
+      "text_preview": "Worked example: the single number Every number appears twice except one. Find the lonely one. XOR is perfect here: any number XORed with itself cancels to 0, and XOR with 0 leaves a number unchanged. "
+    },
+    {
+      "page": 125,
+      "file": "assets/pages/page-125.jpg",
+      "is_diagram": false,
+      "text_preview": "Worked example: count the set bits Count how many 1s are in the binary form of a number. The elegant way uses the trick above: n & (n - 1) removes the lowest 1 each time. So loop, removing one 1 per s"
+    },
+    {
+      "page": 126,
+      "file": "assets/pages/page-126.jpg",
+      "is_diagram": false,
+      "text_preview": "Why bits are secretly sets The three moves that carry most bit problems are simple: XOR cancels pairs since a number XORed with itself is zero, the expression n and n minus one clears the lowest set b"
+    },
+    {
+      "page": 127,
+      "file": "assets/pages/page-127.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def missing_number(nums): result = len(nums) # start with n for i, x in enumerate(nums): result ^= i ^ x # XOR all indices and values return result # the missing one survives JAVA int missingNu"
+    },
+    {
+      "page": 128,
+      "file": "assets/pages/page-128.jpg",
+      "is_diagram": false,
+      "text_preview": "The algorithm, in a bit more detail The three moves that carry this chapter are simple. XOR cancels pairs, since a number XORed with itself is zero, so XORing a whole array leaves only the element tha"
+    },
+    {
+      "page": 129,
+      "file": "assets/pages/page-129.jpg",
+      "is_diagram": false,
+      "text_preview": "17 Pattern cheat sheet This is the page to reread before a contest or an interview. It compresses the whole book into signals, tools, and typical costs. When a problem lands in front of you, run down "
+    },
+    {
+      "page": 130,
+      "file": "assets/pages/page-130.jpg",
+      "is_diagram": true,
+      "text_preview": "Signal to pattern The problem says or implies Try this pattern Typical time Seen this value before, count, or pair up Hash map or set O(n) Sorted array, pair summing to a target, palindrome Two pointe"
+    },
+    {
+      "page": 131,
+      "file": "assets/pages/page-131.jpg",
+      "is_diagram": true,
+      "text_preview": "The decision flow, in words Start by reading the constraints. If n is tiny (up to about 20), an exponential backtracking solution is probably fine and maybe expected. If n is large (100,000 or more), "
+    },
+    {
+      "page": 132,
+      "file": "assets/pages/page-132.jpg",
+      "is_diagram": false,
+      "text_preview": "18 A study plan that works Talent is overrated here. Consistency and the right practice beat raw brains. Here is a plan that turns the patterns in this book into instinct over a few weeks, without bur"
+    },
+    {
+      "page": 133,
+      "file": "assets/pages/page-133.jpg",
+      "is_diagram": false,
+      "text_preview": "pass are exactly the ones worth your time. Keep a short list of \"solved but felt shaky\" problems and cycle back to them. S I M U L A T E T H E R E A L T H I N G Before an interview or contest, do a fe"
+    },
+    {
+      "page": 134,
+      "file": "assets/pages/page-134.jpg",
+      "is_diagram": false,
+      "text_preview": "P A R T T W O System Design How large systems are actually built, from load balancers and caches to databases, replication, and message queues. We start with the fundamentals and the trade offs, then "
+    },
+    {
+      "page": 135,
+      "file": "assets/pages/page-135.jpg",
+      "is_diagram": false,
+      "text_preview": "F U N D A M E N T A L S 19 Approaching system design System design questions feel open ended and a little scary, but they follow a script just like coding problems do. Nobody expects one perfect answe"
+    },
+    {
+      "page": 136,
+      "file": "assets/pages/page-136.jpg",
+      "is_diagram": false,
+      "text_preview": "stay up, respond in under a hundred milliseconds). Ask whether it is read heavy or write heavy, how many users, and whether strong consistency matters. These answers shape every later decision. Next, "
+    },
+    {
+      "page": 137,
+      "file": "assets/pages/page-137.jpg",
+      "is_diagram": false,
+      "text_preview": "20 Back of the envelope estimation Estimation is how you prove a design can actually hold the load. You are not after exact figures, you are after the right order of magnitude, enough to decide whethe"
+    },
+    {
+      "page": 138,
+      "file": "assets/pages/page-138.jpg",
+      "is_diagram": false,
+      "text_preview": "A W O R K E D E S T I M A T E Suppose a service has 100 million daily active users, and each makes 10 requests a day. That is 1 billion requests a day. Divide by roughly 100000 seconds and you get abo"
+    },
+    {
+      "page": 139,
+      "file": "assets/pages/page-139.jpg",
+      "is_diagram": false,
+      "text_preview": "B U I L D I N G B L O C K S 21 Scaling and load balancing There are only two ways to handle more load. Make one machine bigger, or add more machines. The first hits a ceiling fast and gives you a sing"
+    },
+    {
+      "page": 140,
+      "file": "assets/pages/page-140.jpg",
+      "is_diagram": true,
+      "text_preview": "The load balancer Clients Load Balancer Server 1 Server 2 Server 3 health checks One entry point spreads traffic across many identical, stateless servers. A load balancer sits in front of your servers"
+    },
+    {
+      "page": 141,
+      "file": "assets/pages/page-141.jpg",
+      "is_diagram": false,
+      "text_preview": "Why stateless servers are the whole trick Horizontal scaling only works because every server is interchangeable, and that only holds if servers keep no local state. Push session data into a shared sto"
+    },
+    {
+      "page": 142,
+      "file": "assets/pages/page-142.jpg",
+      "is_diagram": false,
+      "text_preview": "22 Caching and CDNs A cache is a small, fast copy of data kept close to where it is needed, so you avoid a slow trip to the database every time. Caching is the single highest leverage move for read he"
+    },
+    {
+      "page": 143,
+      "file": "assets/pages/page-143.jpg",
+      "is_diagram": false,
+      "text_preview": "Eviction and the staleness problem A cache is small, so it must throw things out. The usual policy is least recently used, which evicts whatever has not been touched in the longest time. Others includ"
+    },
+    {
+      "page": 144,
+      "file": "assets/pages/page-144.jpg",
+      "is_diagram": false,
+      "text_preview": "do not all die at once, and to serve slightly stale data while a fresh copy is fetched in the background. Browser local cache CDN edge cache App cache in memory Database source of truth miss miss miss"
+    },
+    {
+      "page": 145,
+      "file": "assets/pages/page-145.jpg",
+      "is_diagram": false,
+      "text_preview": "23 Databases: SQL vs NoSQL Picking a database is one of the biggest decisions in a design, and the honest answer is always \"it depends on your access patterns.\" The split people talk about is relation"
+    },
+    {
+      "page": 146,
+      "file": "assets/pages/page-146.jpg",
+      "is_diagram": false,
+      "text_preview": "Flexible schema fits changing or messy data Very high throughput for the right access pattern Often simpler and cheaper at huge scale Transactions are limited or absent in many systems Easy to model d"
+    },
+    {
+      "page": 147,
+      "file": "assets/pages/page-147.jpg",
+      "is_diagram": true,
+      "text_preview": "Normalized (relational) Users Orders Products joined at query time Denormalized (document) Order document user + product embedded inside one fetch, no join trade write simplicity for read speed Normal"
+    },
+    {
+      "page": 148,
+      "file": "assets/pages/page-148.jpg",
+      "is_diagram": false,
+      "text_preview": "24 Replication and sharding One database eventually runs out of room, either for traffic or for data. Two techniques fix the two different problems. Replication makes copies for safety and read speed."
+    },
+    {
+      "page": 149,
+      "file": "assets/pages/page-149.jpg",
+      "is_diagram": false,
+      "text_preview": "replication waits for replicas to confirm, so nothing is lost, but every write is slower. Most systems pick a spot on that spectrum based on how much they fear losing a few seconds of data. PROS Survi"
+    },
+    {
+      "page": 150,
+      "file": "assets/pages/page-150.jpg",
+      "is_diagram": false,
+      "text_preview": "GOING DEEPER Consistent hashing, and choosing a new leader Plain hashing across N machines has a nasty flaw: change N and almost every key moves to a different machine. Consistent hashing fixes this b"
+    },
+    {
+      "page": 151,
+      "file": "assets/pages/page-151.jpg",
+      "is_diagram": false,
+      "text_preview": "25 CAP theorem and consistency Once data lives on more than one machine, physics forces a trade off. The CAP theorem names it. In the moment two parts of your system cannot talk to each other, you hav"
+    },
+    {
+      "page": 152,
+      "file": "assets/pages/page-152.jpg",
+      "is_diagram": false,
+      "text_preview": "How this shows up A banking ledger leans CP: it would rather reject a request than show two people the same money. A social feed or a shopping cart often leans AP: showing a slightly stale like count "
+    },
+    {
+      "page": 153,
+      "file": "assets/pages/page-153.jpg",
+      "is_diagram": true,
+      "text_preview": "R1 R2 R3 write to 2 read from 2 overlap N = 3, W = 2, R = 2, and W + R > N, so read and write sets overlap With enough overlap between the write set and the read set, a read is guaranteed to see the l"
+    },
+    {
+      "page": 154,
+      "file": "assets/pages/page-154.jpg",
+      "is_diagram": false,
+      "text_preview": "26 Message queues and async processing Not everything has to happen while the user waits. Sending an email, resizing an image, updating a feed, these can happen in the background. A message queue is t"
+    },
+    {
+      "page": 155,
+      "file": "assets/pages/page-155.jpg",
+      "is_diagram": false,
+      "text_preview": "PROS The user gets a fast response while work happens later Spikes are absorbed instead of crashing the system Producers and consumers scale and fail independently Failed work can be retried automatic"
+    },
+    {
+      "page": 156,
+      "file": "assets/pages/page-156.jpg",
+      "is_diagram": true,
+      "text_preview": "Producer Topic (partitioned log) partition 0 partition 1 partition 2 consumer A consumer B dead letter queue keeps failing A topic is split into ordered partitions. Consumers share them, and messages "
+    },
+    {
+      "page": 157,
+      "file": "assets/pages/page-157.jpg",
+      "is_diagram": false,
+      "text_preview": "27 More building blocks A few more components show up in almost every design. You do not need to design each from scratch, but you should know what they are for and when to reach for them. API gateway"
+    },
+    {
+      "page": 158,
+      "file": "assets/pages/page-158.jpg",
+      "is_diagram": false,
+      "text_preview": "Observability Once a system is distributed, you cannot debug it by guessing. The three pillars are logs (what happened), metrics (numbers over time like latency and error rate), and tracing (following"
+    },
+    {
+      "page": 159,
+      "file": "assets/pages/page-159.jpg",
+      "is_diagram": false,
+      "text_preview": "F I X E D W I N D O W V E R S U S S L I D I N G W I N D O W A fixed window counts requests per clock interval, which is simple but lets a client fire a full quota at the end of one window and another "
+    },
+    {
+      "page": 160,
+      "file": "assets/pages/page-160.jpg",
+      "is_diagram": false,
+      "text_preview": "D E S I G N C A S E S T U D I E S 28 Design walkthrough: a URL shortener This is the classic warm up design. It looks tiny, but it touches unique ID generation, heavy read caching, and horizontal scal"
+    },
+    {
+      "page": 161,
+      "file": "assets/pages/page-161.jpg",
+      "is_diagram": true,
+      "text_preview": "Write path Client API ID generator Database store Read path Client API Cache hot links Database GET /code 1 cache 2 miss 301 redirect Writes generate a unique code and store it. Reads hit the cache fi"
+    },
+    {
+      "page": 162,
+      "file": "assets/pages/page-162.jpg",
+      "is_diagram": false,
+      "text_preview": "GOING DEEPER Generating unique codes without a bottleneck The tempting design, a single auto incrementing counter, becomes a hot spot that every write must pass through, and it quietly leaks how many "
+    },
+    {
+      "page": 163,
+      "file": "assets/pages/page-163.jpg",
+      "is_diagram": false,
+      "text_preview": "Using a short link The client sends the long URL to the API. 1 The service generates a unique short code, for example by encoding a counter in base 62. 2 It stores the mapping from code to long URL in"
+    },
+    {
+      "page": 164,
+      "file": "assets/pages/page-164.jpg",
+      "is_diagram": false,
+      "text_preview": "29 Design walkthrough: WhatsApp WhatsApp is the classic chat design. It forces you to think about real time delivery, which most systems never need, plus the twist of holding hundreds of millions of l"
+    },
+    {
+      "page": 165,
+      "file": "assets/pages/page-165.jpg",
+      "is_diagram": true,
+      "text_preview": "How a message flows When Client A sends a message, it travels over the open connection to a gateway, then to the chat service, which persists it and figures out where the recipient is connected. Becau"
+    },
+    {
+      "page": 166,
+      "file": "assets/pages/page-166.jpg",
+      "is_diagram": false,
+      "text_preview": "GOING DEEPER Group messages and keeping order One to one delivery is simple, but a group message has to reach every member, and each of them may be connected to a different gateway server. The chat se"
+    },
+    {
+      "page": 167,
+      "file": "assets/pages/page-167.jpg",
+      "is_diagram": true,
+      "text_preview": "The gateway passes it to the chat service, which persists it and looks up where the recipient is connected. 2 If the recipient is online, the service pushes the message straight down their gateway con"
+    },
+    {
+      "page": 168,
+      "file": "assets/pages/page-168.jpg",
+      "is_diagram": false,
+      "text_preview": "30 Design walkthrough: Instagram Instagram is a feed sitting on top of a media problem. The feed is the timeline of posts from people you follow, and it carries the same hard trade off every feed does"
+    },
+    {
+      "page": 169,
+      "file": "assets/pages/page-169.jpg",
+      "is_diagram": false,
+      "text_preview": "PROS Push makes reads a fast, precomputed lookup Pull keeps writes cheap and handles celebrities well A hybrid gets the best of both for different user types CONS Push explodes on users with millions "
+    },
+    {
+      "page": 170,
+      "file": "assets/pages/page-170.jpg",
+      "is_diagram": true,
+      "text_preview": "The media pipeline behind a single photo When a photo is uploaded it does not go into a database, it goes to object storage and kicks off processing that produces several sizes and formats, a thumbnai"
+    },
+    {
+      "page": 171,
+      "file": "assets/pages/page-171.jpg",
+      "is_diagram": false,
+      "text_preview": "For a normal account, a fanout worker writes the new post id into each follower's precomputed feed. 3 When a follower opens the app, the feed service reads their precomputed list of post ids. 4 The ap"
+    },
+    {
+      "page": 172,
+      "file": "assets/pages/page-172.jpg",
+      "is_diagram": false,
+      "text_preview": "31 Design walkthrough: Amazon Designing an online store like Amazon is really designing several systems that cooperate: a product catalog, a shopping cart, orders, payments, and inventory. The heart o"
+    },
+    {
+      "page": 173,
+      "file": "assets/pages/page-173.jpg",
+      "is_diagram": false,
+      "text_preview": "updating a second late hurts nobody. The cart is a fast key value store keyed by user, cheap to read and write. Orders and payments are the opposite. They need strong consistency and transactions, so "
+    },
+    {
+      "page": 174,
+      "file": "assets/pages/page-174.jpg",
+      "is_diagram": true,
+      "text_preview": "Reserve inventory Charge payment Confirm order payment fails compensate: release inventory each step has an undo, run in reverse if a later step fails A saga runs the steps in order, and if one fails "
+    },
+    {
+      "page": 175,
+      "file": "assets/pages/page-175.jpg",
+      "is_diagram": false,
+      "text_preview": "32 Design walkthrough: Amazon S3 S3 is a service that stores files, called objects, and simply never loses them. That is the whole game: durability at massive scale. Store trillions of objects across "
+    },
+    {
+      "page": 176,
+      "file": "assets/pages/page-176.jpg",
+      "is_diagram": false,
+      "text_preview": "thing can be rebuilt from a subset. Either way the pieces are spread across separate disks, racks, and data centers, so no single failure loses data. A background process constantly watches for failed"
+    },
+    {
+      "page": 177,
+      "file": "assets/pages/page-177.jpg",
+      "is_diagram": true,
+      "text_preview": "Object one file d1 d2 d3 d4 p1 p2 4 data + 2 parity, spread across nodes; lose any 2 and rebuild the red fragments are lost, yet the object still rebuilds Erasure coding splits an object into data and"
+    },
+    {
+      "page": 178,
+      "file": "assets/pages/page-178.jpg",
+      "is_diagram": false,
+      "text_preview": "33 Design walkthrough: YouTube Streaming video is a storage and delivery problem far more than a compute one. A creator uploads one enormous file, and millions of viewers on different devices and wild"
+    },
+    {
+      "page": 179,
+      "file": "assets/pages/page-179.jpg",
+      "is_diagram": false,
+      "text_preview": "PROS Transcoding once upfront makes every later view smooth and cheap A CDN gives low latency starts and offloads the origin Chunking lets the player adapt quality and resume instantly CONS Transcodin"
+    },
+    {
+      "page": 180,
+      "file": "assets/pages/page-180.jpg",
+      "is_diagram": true,
+      "text_preview": "1080p 720p 480p 240p Player picks a rung good network -> 720p network drops -> 480p same video encoded at several rungs, chosen per segment The video exists at several quality rungs. The player climbs"
+    },
+    {
+      "page": 181,
+      "file": "assets/pages/page-181.jpg",
+      "is_diagram": false,
+      "text_preview": "34 Design walkthrough: Uber A ride hailing app is a real time matching problem laid over a map. Thousands of drivers move around a city sending their location, and the moment a rider requests a ride, "
+    },
+    {
+      "page": 182,
+      "file": "assets/pages/page-182.jpg",
+      "is_diagram": false,
+      "text_preview": "so two riders never get the same one. Everything downstream, trip updates, pricing, and payment, flows through queues so the fast matching path is not blocked by slower work. PROS Cell based indexing "
+    },
+    {
+      "page": 183,
+      "file": "assets/pages/page-183.jpg",
+      "is_diagram": true,
+      "text_preview": "R R is the rider; blue dots are drivers filed by cell look only at the rider's cell and its neighbors, not the whole city Drivers are filed by map cell, so finding nearby ones means checking a handful"
+    },
+    {
+      "page": 184,
+      "file": "assets/pages/page-184.jpg",
+      "is_diagram": false,
+      "text_preview": "P A R T T H R E E AI Engineering How modern AI systems are actually built on top of large language models. We start with how a model works and how to prompt it, then add knowledge with RAG and memory,"
+    },
+    {
+      "page": 185,
+      "file": "assets/pages/page-185.jpg",
+      "is_diagram": false,
+      "text_preview": "F O U N D A T I O N S 35 How large language models work A large language model is, at its heart, a very good next word guesser. Everything impressive it does, answering questions, writing code, reason"
+    },
+    {
+      "page": 186,
+      "file": "assets/pages/page-186.jpg",
+      "is_diagram": false,
+      "text_preview": "A minimal call You talk to a model with a list of messages, each with a role. The system message sets behavior, the user message is the request, and the model replies as the assistant. PYTHON from ant"
+    },
+    {
+      "page": 187,
+      "file": "assets/pages/page-187.jpg",
+      "is_diagram": true,
+      "text_preview": "Where the model's ability comes from The reason a model can write and reason is a two stage upbringing. In pretraining it reads an enormous amount of text and learns only to predict the next token, wh"
+    },
+    {
+      "page": 188,
+      "file": "assets/pages/page-188.jpg",
+      "is_diagram": false,
+      "text_preview": "One token is sampled from that distribution, with temperature deciding how adventurous the choice is. 3 The chosen token is appended to the sequence. 4 Steps two through four repeat on the slightly lo"
+    },
+    {
+      "page": 189,
+      "file": "assets/pages/page-189.jpg",
+      "is_diagram": false,
+      "text_preview": "36 Prompting patterns The prompt is your main control surface. Because the model just continues the most likely text, how you ask shapes what you get, often dramatically. A small set of patterns cover"
+    },
+    {
+      "page": 190,
+      "file": "assets/pages/page-190.jpg",
+      "is_diagram": false,
+      "text_preview": "Few shot plus structured output PYTHON system = \"\"\"You label a support message as one of: billing, bug, feature. Reply with ONLY a JSON object like {\"label\": \"...\"}. No prose.\"\"\" examples = [ {\"role\":"
+    },
+    {
+      "page": 191,
+      "file": "assets/pages/page-191.jpg",
+      "is_diagram": true,
+      "text_preview": "Why chain of thought actually helps A model does a fixed amount of computation per token, so when you demand an answer immediately it has to leap straight to the result with no room to work. Asking it"
+    },
+    {
+      "page": 192,
+      "file": "assets/pages/page-192.jpg",
+      "is_diagram": false,
+      "text_preview": "K N O W L E D G E A N D M E M O R Y 37 RAG, retrieval augmented generation A model only knows what was in its training data and what fits in the context window. RAG fixes both. It fetches the most rel"
+    },
+    {
+      "page": 193,
+      "file": "assets/pages/page-193.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON def answer_with_rag(question, vector_db, client): q_vec = embed(question) # same embedder as indexing chunks = vector_db.search(q_vec, top_k=5) # nearest chunks by meaning context = \"\\n\\n\".join"
+    },
+    {
+      "page": 194,
+      "file": "assets/pages/page-194.jpg",
+      "is_diagram": false,
+      "text_preview": "GOING DEEPER Why retrieval quality is the whole game RAG lives or dies on what you retrieve, because the model can only answer from the chunks you hand it. Two levers dominate. Chunking decides how do"
+    },
+    {
+      "page": 195,
+      "file": "assets/pages/page-195.jpg",
+      "is_diagram": true,
+      "text_preview": "Indexing, once Answering, per question Split your documents into chunks. 1 Turn each chunk into an embedding vector. 2 Store the vectors in a vector database. 3 Embed the user's question with the same"
+    },
+    {
+      "page": 196,
+      "file": "assets/pages/page-196.jpg",
+      "is_diagram": false,
+      "text_preview": "38 Memory By default a model remembers nothing between calls. It is completely stateless. Any sense of memory is something you build by choosing what to carry back into the context window. Good memory"
+    },
+    {
+      "page": 197,
+      "file": "assets/pages/page-197.jpg",
+      "is_diagram": false,
+      "text_preview": "PYTHON # Long term memory is just retrieval over your own history. def remember(fact, store): store.add(text=fact, vector=embed(fact)) def recall(message, store, k=3): return store.search(embed(messag"
+    },
+    {
+      "page": 198,
+      "file": "assets/pages/page-198.jpg",
+      "is_diagram": true,
+      "text_preview": "one fixed context window, shared by everything below system conversation retrieved docs memory answer room Everything competes for one fixed window, so memory design is really about spending that budg"
+    },
+    {
+      "page": 199,
+      "file": "assets/pages/page-199.jpg",
+      "is_diagram": false,
+      "text_preview": "A G E N T S A N D T O O L S 39 Agentic patterns A plain model just answers in one shot. An agent can act. It decides to use a tool, looks at the result, and keeps going until the job is done. That loo"
+    },
+    {
+      "page": 200,
+      "file": "assets/pages/page-200.jpg",
+      "is_diagram": false,
+      "text_preview": "The patterns on top Tool use, also called function calling, is the foundation: the model outputs which tool to call and with what arguments, and you execute it. Planning has the agent break a goal int"
+    },
+    {
+      "page": 201,
+      "file": "assets/pages/page-201.jpg",
+      "is_diagram": false,
+      "text_preview": "L O O P S C A N R U N A W A Y An agent that keeps thinking and acting can loop forever, rack up cost, or wander down a wrong path. Always cap the number of steps, validate what tools return, and for a"
+    },
+    {
+      "page": 202,
+      "file": "assets/pages/page-202.jpg",
+      "is_diagram": true,
+      "text_preview": "Pattern Use it when ReAct loop most tasks, tool use with reasoning Plan and execute long tasks that benefit from a plan up front Reflection quality matters and self review helps Multi-agent distinct s"
+    },
+    {
+      "page": 203,
+      "file": "assets/pages/page-203.jpg",
+      "is_diagram": false,
+      "text_preview": "40 MCP, the Model Context Protocol Once agents start using tools, every application ends up reinventing how to connect a model to data and actions. The Model Context Protocol is an open standard that "
+    },
+    {
+      "page": 204,
+      "file": "assets/pages/page-204.jpg",
+      "is_diagram": false,
+      "text_preview": "MCP SERVER # A tiny MCP server exposing one tool. from mcp.server import Server server = Server(\"weather\") @server.tool() def get_weather(city: str) -> str: \"\"\"Return the current weather for a city.\"\""
+    },
+    {
+      "page": 205,
+      "file": "assets/pages/page-205.jpg",
+      "is_diagram": true,
+      "text_preview": "MCP without a standard: 9 custom integrations with MCP: 3 + 3 through one standard Without a standard, every app must integrate every tool. MCP turns that tangle into one connection per side. H O W A "
+    },
+    {
+      "page": 206,
+      "file": "assets/pages/page-206.jpg",
+      "is_diagram": false,
+      "text_preview": "41 Skills As agents take on bigger jobs, you do not want to cram every possible instruction into one giant prompt. A skill is the answer: a self contained folder of instructions and resources that the"
+    },
+    {
+      "page": 207,
+      "file": "assets/pages/page-207.jpg",
+      "is_diagram": false,
+      "text_preview": "SKILL.MD --- name: pdf description: > Create, read, edit, or fill PDF files. Use whenever the user wants to make a PDF, extract text or tables, merge or split pages, add a watermark, or fill a form. D"
+    },
+    {
+      "page": 208,
+      "file": "assets/pages/page-208.jpg",
+      "is_diagram": true,
+      "text_preview": "Name + description always loaded, cheap Full SKILL.md loaded when the task matches Bundled scripts and resources loaded only when actually needed load on demand Skills reveal themselves in layers, so "
+    },
+    {
+      "page": 209,
+      "file": "assets/pages/page-209.jpg",
+      "is_diagram": false,
+      "text_preview": "P U T T I N G I T T O G E T H E R 42 Design walkthrough: an AI assistant Let us wire the whole part together into one system: an assistant that answers questions over your company's documents, remembe"
+    },
+    {
+      "page": 210,
+      "file": "assets/pages/page-210.jpg",
+      "is_diagram": false,
+      "text_preview": "How the pieces fit An orchestrator runs the agent loop and owns the context window. When a request comes in, it pulls in the relevant memory and any matching skill, then enters the loop: retrieve supp"
+    },
+    {
+      "page": 211,
+      "file": "assets/pages/page-211.jpg",
+      "is_diagram": false,
+      "text_preview": "Making it reliable: guardrails and evals An agent that can act needs a safety layer, because the model only proposes an action, it never runs one directly. That boundary is where guardrails live: vali"
+    },
+    {
+      "page": 212,
+      "file": "assets/pages/page-212.jpg",
+      "is_diagram": true,
+      "text_preview": "The model reasons, and may call a tool through MCP, whose result is observed. 4 The loop repeats until the model can answer, which it returns with citations to the sources. 5 Anything worth rememberin"
+    }
+  ],
+  "total_pages": 212
+}

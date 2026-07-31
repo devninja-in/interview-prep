@@ -1,0 +1,104 @@
+F O U N D A T I O N S
+35 How large language models work
+A large language model is, at its heart, a very good next word guesser.
+Everything impressive it does, answering questions, writing code,
+reasoning through a problem, comes from one simple loop: predict the
+most likely next token given everything so far, then do it again.
+Understanding that single idea takes the magic and the fear out of the rest.
+Context so far
+the cat sat on the
+Model
+predict
+next token
+mat
+0.6
+rug
+0.3
+roof
+0.1
+sample the next token, append, and repeat
+A model reads the tokens so far, predicts the next one, you sample it, append,
+and loop.
+The core ideas
+Text is broken into tokens, which are word pieces, not letters. The word "unhappiness" might
+become three tokens. The model reads tokens and writes tokens. Given the sequence so far, it
+produces a probability for every possible next token, and you sample one, add it to the sequence,
+and repeat. That is the whole engine.
+Two knobs matter early. The context window is the fixed number of tokens the model can see at
+once. Your system instructions, the conversation, and any documents you paste all have to fit inside
+it, which makes the context window the single biggest practical constraint you design around.
+Temperature controls how randomly you sample: low temperature stays focused and repeatable,
+high temperature gets more varied and creative.
+
+A minimal call
+You talk to a model with a list of messages, each with a role. The system message sets behavior,
+the user message is the request, and the model replies as the assistant.
+PYTHON
+from anthropic import Anthropic
+client = Anthropic()
+resp = client.messages.create(
+model="claude-sonnet-4-5",
+max_tokens=500,
+system="You are a concise, helpful tutor.",   # sets behavior
+messages=[
+{"role": "user", "content": "Explain what a token is, in one
+sentence."}
+],
+)
+print(resp.content[0].text)
+W H Y M O D E L S H A L L U C I N A T E
+A model predicts plausible text, not verified truth. When it does not know something, it will
+often produce a confident, well formed answer that is simply wrong, because a fluent guess
+is exactly what next token prediction rewards. This is why grounding the model in real data,
+which the next chapters cover, matters so much.
+T H E C O N T E X T W I N D O W I S Y O U R B U D G E T
+Think of every token in the context as costing money and attention. Long conversations, big
+documents, and verbose instructions all compete for the same fixed space. Almost every
+technique later in this part, retrieval, memory, summarization, is really about spending that
+budget wisely.
+GOING DEEPER
+
+Where the model's ability comes from
+The reason a model can write and reason is a two stage upbringing. In pretraining it reads an
+enormous amount of text and learns only to predict the next token, which forces it to absorb
+grammar, facts, and patterns of reasoning as a side effect. That produces a raw base model that is
+knowledgeable but not especially helpful. Fine tuning on curated examples, followed by
+reinforcement learning from human feedback, then teaches it to follow instructions, stay on task,
+and avoid harmful output. The mechanism that lets it use context at all is attention, which lets each
+token look back at the earlier tokens that matter most.
+Internet text
+trillions of words
+Pretrain
+Base model
+knows language
+Tune + RLHF
+Aligned
+helpful, safe
+learn to predict text, then learn to follow instructions and behave
+A model is grown in stages: pretraining teaches language, then fine-tuning and
+RLHF teach it to be helpful and safe.
+Sampling
+choice
+What it does
+Greedy
+always take the single most likely token, deterministic
+Temperature
+flatten or sharpen the distribution, higher is more varied
+Top-p
+sample only from the smallest set of tokens covering p of the
+probability
+STEP BY STEP
+What actually happens when a model generates a reply, one token at a time.
+Your text is broken into tokens, the word pieces the model works with.
+1
+The model reads all the tokens and produces a probability for every possible next token.
+2
+
+One token is sampled from that distribution, with temperature deciding how adventurous the
+choice is.
+3
+The chosen token is appended to the sequence.
+4
+Steps two through four repeat on the slightly longer sequence, until a stop token appears or
+the length limit is hit.
+5

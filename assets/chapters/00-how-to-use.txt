@@ -1,0 +1,22 @@
+F O U N D A T I O N S
+00 How to use this book
+Solving LeetCode problems is not about being a genius. It is a skill, and like
+any skill it breaks down into a small number of patterns that show up again
+and again. Once you can recognize the pattern, most problems become
+variations of something you have already done.
+This book is organized around those patterns, not around random problems. Each chapter follows
+the same shape so you always know what you are getting:
+The idea in plain English. What the pattern actually is, without jargon.
+When to reach for it. The signals in a problem statement that tell you "this is the one."
+A picture. Almost every pattern is easier to see than to read.
+A template. The skeleton of code you can adapt, so you are not starting from a blank page.
+Worked examples in both Python and Java, with the thinking spelled out.
+Tricks and traps that save you time or stop you from failing on edge cases.
+H O W T O A C T U A L L Y L E A R N T H I S
+Reading is not practice. The loop that works is simple: read the pattern here, then go solve
+three or four problems that use it before moving on. Struggle for about twenty minutes
+before looking at a hint. When you get stuck and read the answer, close it and rewrite the
+solution from memory. If you cannot rewrite it, you have not learned it yet.
+You do not need to read this front to back. If you already know arrays and want trees, jump there.
+But the Foundations chapters, especially how to approach a problem and how to think about time
+complexity, pay off in every single chapter after them, so start there if you are newer to this.

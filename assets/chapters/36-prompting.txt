@@ -1,0 +1,75 @@
+36 Prompting patterns
+The prompt is your main control surface. Because the model just continues
+the most likely text, how you ask shapes what you get, often dramatically. A
+small set of patterns covers most of what actually works in practice.
+System
+role, rules, tone
+Few shot examples
+input to output pairs
+The task
+clear, specific request
+Model
+Output
+in your format
+A good prompt stacks a role, a few examples, and a clear task, and asks for a
+format you can parse.
+The patterns that pay off
+Be specific and give context, since a vague request produces a vague answer. Use few shot
+examples, a couple of input to output pairs, so the model copies the pattern you want. For anything
+that needs reasoning, ask for chain of thought, letting the model work step by step before the final
+answer, which measurably improves accuracy. When you will parse the result in code, ask for
+structured output like JSON that matches a schema. And set a role and hard constraints up front
+so the model stays in bounds.
+
+Few shot plus structured output
+PYTHON
+system = """You label a support message as one of: billing, bug, feature.
+Reply with ONLY a JSON object like {"label": "..."}. No prose."""
+examples = [
+{"role": "user", "content": "I was charged twice this month."},
+{"role": "assistant", "content": '{"label": "billing"}'},
+{"role": "user", "content": "The export button does nothing."},
+{"role": "assistant", "content": '{"label": "bug"}'},
+]
+new = [{"role": "user", "content": "Can you add a dark mode?"}]
+resp = client.messages.create(
+model="claude-sonnet-4-5", max_tokens=50,
+system=system, messages=examples + new,
+)
+# -> {"label": "feature"}
+A S K F O R T H E F O R M A T Y O U W I L L P A R S E
+If your code needs JSON, say so explicitly, show an example of the exact shape, and tell the
+model to return only that with no extra prose. Models are good at following a format when
+you make it concrete, and it saves you from brittle text parsing later.
+M O R E I S N O T B E T T E R , R E L E V A N T I S B E T T E R
+Stuffing a prompt with everything you can think of often hurts. Extra, loosely related text
+dilutes the important parts and burns your context budget. Give the model exactly what it
+needs for this task, clearly organized, and nothing more.
+GOING DEEPER
+
+Why chain of thought actually helps
+A model does a fixed amount of computation per token, so when you demand an answer
+immediately it has to leap straight to the result with no room to work. Asking it to reason step by
+step lets it spend tokens laying out intermediate results, and each of those becomes context the
+next step can build on, which is why accuracy on multi step problems jumps. The same logic
+explains few shot prompting: the examples you show become part of the context the model
+continues from, steering its output toward the pattern you demonstrated.
+Question
+Quick answer
+often wrong
+Reason step by step
+Answer
+more accurate
+answer at once
+Letting the model work through intermediate steps in tokens gives it room to
+compute, which lifts accuracy on hard questions.
+Technique
+When to reach for it
+Zero-shot
+simple, well known tasks where a clear instruction is enough
+Few-shot
+when the format or style is easier to show than describe
+Chain of thought
+multi step reasoning, math, and logic
+Structured output
+whenever your code will parse the result

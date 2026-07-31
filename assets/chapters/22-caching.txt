@@ -1,0 +1,98 @@
+22 Caching and CDNs
+A cache is a small, fast copy of data kept close to where it is needed, so
+you avoid a slow trip to the database every time. Caching is the single
+highest leverage move for read heavy systems, which is most systems. It
+also brings the hardest problem in the field: knowing when the cached copy
+is stale.
+Where caching happens
+Caching lives at many layers. The browser caches on the client. A content delivery network caches
+near the user at the edge. Your application caches hot data in memory using something like Redis or
+Memcached. Even the database caches its own frequent queries. Each layer you add removes load
+from the layer behind it.
+App server
+Cache
+fast, in memory
+Database
+slower, on disk
+1 look here first
+hit: return
+2 on a miss, query
+3 store result
+Cache aside: check the cache, fall back to the database, then fill the cache.
+Read and write strategies
+The most common read pattern is cache aside: the app checks the cache, and on a miss it reads
+the database and then stores the value in the cache for next time. For writes you choose how the
+cache and database stay in step. Write through updates both on every write, so the cache is always
+fresh but writes are a little slower. Write back updates the cache immediately and the database
+later, which is fast but risks losing data if the cache dies first. Write around writes only to the
+database and lets the cache fill on the next read, which avoids caching data nobody reads.
+
+Eviction and the staleness problem
+A cache is small, so it must throw things out. The usual policy is least recently used, which evicts
+whatever has not been touched in the longest time. Others include least frequently used and a
+simple time to live that expires entries after a set period.
+The famous hard part is invalidation. When the underlying data changes, the cached copy is now
+wrong, and serving stale data can be anything from harmless to dangerous. The tools are a time to
+live so entries expire on their own, explicit invalidation when you know data changed, and versioned
+keys so a new version simply misses the old cache.
+PROS
+Reads get dramatically faster and
+cheaper
+The database is shielded from repetitive
+load
+A CDN cuts latency by serving content
+near the user
+CONS
+Stale data is possible, and invalidation is
+genuinely hard
+A cache adds a moving part that can fail
+or fill up
+A sudden loss of the cache can
+stampede the database
+C O N T E N T D E L I V E R Y N E T W O R K S
+A CDN is a global cache for static content like images, video, scripts, and styles. It stores
+copies at edge locations around the world, so a user in Tokyo is served from a nearby
+machine instead of your origin server across the ocean. This slashes latency and takes a
+huge load off your own servers.
+GOING DEEPER
+Layers of cache, and the stampede to avoid
+Caching is rarely one cache. It is a stack: the browser, then a CDN at the edge, then an in memory
+cache in front of the database, and each layer that hits shields the layers behind it. The classic
+failure mode is a cache stampede: a popular key expires and thousands of requests miss at the
+same instant, all hammering the database together and sometimes knocking it over. The fixes are to
+let only one request refill a missing key while the others briefly wait, to stagger expiry times so keys
+
+do not all die at once, and to serve slightly stale data while a fresh copy is fetched in the
+background.
+Browser
+local cache
+CDN
+edge cache
+App cache
+in memory
+Database
+source of truth
+miss
+miss
+miss
+each layer absorbs traffic, only misses fall through to the next
+Caching is a stack of layers. A hit at any layer returns early, so only misses
+reach the database.
+T H R E E W A Y S T O K E E P A C A C H E F R E S H
+Time to live expires entries on their own after a set period, which is simple but can serve
+stale data until it lapses. Explicit invalidation deletes or updates the entry the moment the
+source changes, which is precise but needs you to catch every change. Versioned keys
+sidestep the problem by writing to a new key on each change, so a stale entry is simply
+never read again.
+STEP BY STEP
+How one read flows through cache aside, the most common caching pattern.
+The application receives a read request for some data.
+1
+It looks in the cache first.
+2
+On a hit, it returns the cached value immediately, never touching the database.
+3
+On a miss, it reads the value from the database.
+4
+It writes that value into the cache, then returns it, so the next identical read is a fast hit.
+5

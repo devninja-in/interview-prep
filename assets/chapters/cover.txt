@@ -1,0 +1,10 @@
+C O D I N G , S Y S T E M D E S I G N , A N D A I , I N O N E P L A C E
+Interview
+Prep
+Three parts in one book. Competitive programming patterns in
+plain English with working Python and Java. System design
+from first principles through real products like WhatsApp,
+Amazon, and YouTube. And a hands on tour of modern AI, from
+how models work to RAG, agents, memory, MCP, and skills.
+Competitive Programming · System Design · AI Engineering · Diagrams · Real world
+examples
