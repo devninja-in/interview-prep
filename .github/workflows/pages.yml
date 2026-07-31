@@ -25,6 +25,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # Requires Pages to already be enabled (Settings → Pages → GitHub Actions),
+          # or a token with administration:write + pages:write for first-time enablement.
+          enablement: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
