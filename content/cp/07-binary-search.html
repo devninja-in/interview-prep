@@ -1,0 +1,119 @@
+<p class="section-label">Halving the search space with every comparison</p>
+<p>The interviewer starts gently: <em>&quot;Given a sorted array of a billion integers, find the index of a target value.&quot;</em> The candidate reaches for the obvious linear scan and the interviewer nods, then tightens the screw: <em>&quot;It has to answer in microseconds, and I will call it millions of times.&quot;</em> A billion-element scan is 10⁹ comparisons per call — hopelessly slow. Then the candidate says the magic word: <strong>sorted</strong>. &quot;If I check the middle element, I learn which half the target must be in, so I can throw the other half away — and repeat.&quot; A billion becomes half a billion, then a quarter, and after about thirty checks the answer is found. That is binary search: each comparison discards half of what remains, turning O(n) into O(log n). The whole skill is maintaining one invariant — <em>the answer, if it exists, is always inside the current [lo, hi] window</em> — and never violating it as the window shrinks.</p>
+<figure class="diagram native"><img src="../assets/diagrams/binary-search.svg" alt="Binary search repeatedly halving a sorted array around the midpoint" loading="lazy" /><figcaption>Each probe at the midpoint eliminates half the remaining range; the target is always kept inside the shrinking [lo, hi] window.</figcaption></figure>
+
+<h2>Why interviewers ask binary-search problems</h2>
+<p>Binary search looks trivial and is famously hard to get exactly right — that gap is the whole point. Interviewers use it to test <em>invariant discipline</em>: can you state precisely what your <code>lo</code> and <code>hi</code> pointers mean, prove the loop makes progress, and prove it terminates? The classic result that a large fraction of professional programmers cannot write a bug-free binary search is interview folklore for a reason. The deeper signal is abstraction: the strongest candidates recognize that binary search is not about arrays at all but about searching any <em>monotonic predicate</em> — &quot;binary search on the answer.&quot; Spotting that a problem hides a sorted yes/no boundary is a staff-level move that separates pattern-memorizers from people who understand the idea.</p>
+
+<h2>Pattern cues and anti-cues</h2>
+<p>Reach for binary search when you see:</p>
+<ul>
+<li><strong>A sorted (or rotated-sorted) array</strong> and a lookup, insertion point, or boundary query.</li>
+<li><strong>&quot;Find the smallest / largest x such that some condition holds&quot;</strong> — a monotonic predicate that flips from false to true exactly once.</li>
+<li><strong>&quot;Minimize the maximum&quot; or &quot;maximize the minimum&quot;</strong> — the fingerprint of binary search on the answer space (capacity, speed, or threshold problems).</li>
+<li><strong>A huge constraint (n up to 10⁹ or a value range up to 10¹⁸)</strong> where even O(n) is too slow, pointing at O(log n).</li>
+</ul>
+<p><strong>Anti-cues — when binary search does not apply:</strong></p>
+<ul>
+<li><strong>The data is unsorted and you cannot afford to sort.</strong> Sorting is O(n log n), which often defeats the purpose; a hash set may be the right O(n) tool instead.</li>
+<li><strong>The predicate is not monotonic.</strong> If &quot;condition true&quot; can flip back to false as x grows, there is no single boundary to find and binary search is simply wrong.</li>
+<li><strong>You need <em>all</em> matches or the global structure</strong>, not a single boundary — that is a full scan or a different algorithm.</li>
+</ul>
+<p>The monotonicity requirement is the one interviewers probe hardest. Before writing a line, say out loud: <em>&quot;Is there a value x below which the answer is always no and above which it is always yes?&quot;</em> If yes, binary search applies even when there is no literal sorted array in sight.</p>
+
+<h2>Brute force to optimal: find the target</h2>
+<p><strong>Brute force.</strong> Scan left to right until you hit the target — O(n). On a billion elements called millions of times, this is a non-starter.</p>
+<p><strong>The insight.</strong> The array is sorted, so the midpoint tells you a direction: if the middle value is less than the target, everything to its left is also too small and can be discarded; if it is greater, discard the right. Each step halves the range, so you finish in ⌈log₂ n⌉ ≈ 30 comparisons for a billion elements.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def binary_search(nums, target):
+    lo, hi = 0, len(nums) - 1        # inclusive window [lo, hi]
+    while lo &lt;= hi:                  # stop only when the window is empty
+        mid = lo + (hi - lo) // 2   # avoids overflow in other languages
+        if nums[mid] == target:
+            return mid
+        if nums[mid] &lt; target:
+            lo = mid + 1            # target is strictly right of mid
+        else:
+            hi = mid - 1           # target is strictly left of mid
+    return -1                       # O(log n) time, O(1) space
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int binarySearch(int[] nums, int target) {
+    int lo = 0, hi = nums.length - 1;      // inclusive window
+    while (lo &lt;= hi) {
+        int mid = lo + (hi - lo) / 2;      // never (lo + hi) / 2: overflow
+        if (nums[mid] == target) return mid;
+        if (nums[mid] &lt; target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;                              // O(log n) time
+}
+</code></pre></div>
+<p>Two invariants make this correct. First, <code>[lo, hi]</code> always contains the target if it is present, so discarding the other half never loses the answer. Second, every branch moves a pointer past <code>mid</code>, so the window strictly shrinks and the loop must terminate — the <code>+1</code>/<code>-1</code> is what guarantees progress and prevents an infinite loop.</p>
+
+<h2>The template that generalizes: leftmost boundary</h2>
+<p>Most real binary-search problems are not &quot;is it here&quot; but &quot;where is the boundary.&quot; The robust way to think about this is to search for the <em>first index where a predicate becomes true</em>. This single template answers lower_bound, upper_bound, insertion position, and &quot;first bad version&quot; with one mental model, and it sidesteps the off-by-one traps of the equality version.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def first_true(lo, hi, pred):
+    # pred is monotonic: False...False, True...True. Find the first True.
+    while lo &lt; hi:                  # half-open: hi is a candidate, not yet ruled out
+        mid = lo + (hi - lo) // 2
+        if pred(mid):
+            hi = mid               # mid might be the answer; keep it
+        else:
+            lo = mid + 1           # mid is too small; discard it
+    return lo                       # lo == hi == first index where pred is True
+</code></pre></div>
+<p>To find the leftmost occurrence of <code>target</code>, use <code>pred = lambda i: nums[i] &gt;= target</code>; for the rightmost, search for the first index with <code>nums[i] &gt; target</code> and step back one. The subtle choice is <code>hi = mid</code> (not <code>mid - 1</code>) because <code>mid</code> is still a viable answer, paired with the <code>lo &lt; hi</code> condition so the window collapses to a single index without overshooting.</p>
+
+<h2>Binary search on the answer: the staff move</h2>
+<p>The most valuable variant searches a <em>value space</em> rather than an index. Consider <em>&quot;Koko eats bananas: given piles and h hours, find the minimum eating speed that finishes in time.&quot;</em> There is no sorted array — but the predicate &quot;can she finish at speed s?&quot; is monotonic: if speed s works, any faster speed also works. So binary-search the speed between 1 and max(pile), checking feasibility at each guess.</p>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int minEatingSpeed(int[] piles, int h) {
+    int lo = 1, hi = 0;
+    for (int p : piles) hi = Math.max(hi, p);   // fastest useful speed
+    while (lo &lt; hi) {
+        int mid = lo + (hi - lo) / 2;           // candidate speed
+        long hours = 0;
+        for (int p : piles) hours += (p + mid - 1) / mid;  // ceil division
+        if (hours &lt;= h) hi = mid;               // feasible: try slower
+        else lo = mid + 1;                      // too slow: speed up
+    }
+    return lo;                                   // O(n log maxPile) time
+}
+</code></pre></div>
+<p>This same shape solves &quot;split array into k subarrays minimizing the largest sum,&quot; &quot;ship packages within d days,&quot; and &quot;minimum time to complete tasks&quot; — all &quot;minimize the maximum / maximize the minimum&quot; problems. The rotated-array variant is the other classic twist: even after rotation, one half of the array is always sorted, so you can decide which half to keep.</p>
+<figure class="diagram native"><img src="../assets/diagrams/rotated-search.svg" alt="Binary search on a rotated sorted array deciding which half is sorted" loading="lazy" /><figcaption>In a rotated sorted array, one side of the midpoint is always in order; compare the target against that ordered side to decide which half to discard.</figcaption></figure>
+
+<h2>Complexity and constraint math</h2>
+<p>Plain binary search is O(log n) time and O(1) space — about 30 steps for n = 10⁹, 60 for 10¹⁸. Binary search on the answer costs O(log R) predicate checks, where R is the size of the value range, times the O(n) cost of each feasibility check, giving O(n log R). Read the constraints as a hint: when n reaches 10⁵–10⁶ and the array is sorted, an O(n) scan is fine but a follow-up demanding many queries pushes you to O(log n) per query; when a value range spans up to 10¹⁸, only a logarithmic search over that range is viable. If you see &quot;minimize the maximum X such that a check passes,&quot; the answer space plus a feasibility function is practically naming binary search as the intended solution.</p>
+
+<h2>Edge cases and failure modes</h2>
+<ul>
+<li><strong>Midpoint overflow.</strong> In fixed-width integer languages, <code>(lo + hi) / 2</code> can overflow; always write <code>lo + (hi - lo) / 2</code>.</li>
+<li><strong>Off-by-one in the window.</strong> Mixing an inclusive <code>[lo, hi]</code> loop (<code>lo &lt;= hi</code>, move by ±1) with a half-open one (<code>lo &lt; hi</code>, <code>hi = mid</code>) is the classic infinite loop or missed-boundary bug. Pick one convention and keep it.</li>
+<li><strong>Non-monotonic predicate.</strong> If the yes/no condition is not sorted, binary search returns a plausible-looking but wrong index. Verify monotonicity first.</li>
+<li><strong>Empty array or single element.</strong> Ensure the loop handles <code>len == 0</code> and <code>len == 1</code> without indexing out of bounds.</li>
+<li><strong>Duplicates.</strong> Plain search returns <em>an</em> index, not the first or last; use the boundary template when the exact edge matters.</li>
+<li><strong>Wrong feasibility direction.</strong> In answer-space search, confusing &quot;feasible → go smaller&quot; with &quot;→ go larger&quot; inverts the result; state which direction feasibility points.</li>
+</ul>
+
+<h2>When not to use binary search</h2>
+<p>Binary search buys logarithmic time only when the data has a monotonic structure you can exploit. If the array is unsorted and you would have to sort it just to search once, the O(n log n) sort dominates and a single O(n) scan — or an O(n) hash lookup for membership — is both simpler and faster. If you need every element matching a condition rather than a single boundary, a linear pass is the right tool. And if the predicate genuinely is not monotonic — the answer flickers between yes and no as the parameter grows — there is no boundary to converge on, and forcing binary search produces confidently wrong output. The honest senior statement is: <em>&quot;This only works because feasibility is monotonic in the parameter; let me confirm that before I commit.&quot;</em></p>
+
+<h2>Production analogy: indexes, git bisect, and load tuning</h2>
+<p>Binary search runs constantly in real systems. Every B-tree database index is a disk-friendly generalization of binary search: each node probe eliminates a large fraction of the keyspace, which is why an indexed lookup on a billion-row table is a handful of page reads instead of a full scan. <code>git bisect</code> is binary search over commit history — halving the range of suspect commits to pin down which one introduced a bug in log₂(commits) build-and-test steps. Autoscalers and capacity planners binary-search the answer space to find the minimum number of servers that keeps p99 latency under a threshold, the same &quot;minimize the resource subject to a feasibility check&quot; shape as Koko. Even TCP's search for the right send rate and version-rollout &quot;find the last good release&quot; workflows lean on the identical halving idea.</p>
+
+<h2>Interview follow-up ladder</h2>
+<div class="table-wrap"><table><caption>How binary-search problems scale by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody>
+<tr><td>L3 / new grad</td><td>Write a bug-free search on a sorted array; explain the invariant and why it is O(log n).</td></tr>
+<tr><td>L4 / mid</td><td>Find leftmost/rightmost boundaries with duplicates; handle overflow and off-by-one cleanly.</td></tr>
+<tr><td>L5 / senior</td><td>Search a rotated sorted array; recognize and apply binary search on the answer (Koko, ship-within-days).</td></tr>
+<tr><td>Staff</td><td>Prove monotonicity, derive O(n log R), and connect to B-tree indexes, bisect, and capacity autotuning.</td></tr>
+</tbody></table></div>
+
+<h2>Practice set with answer shape</h2>
+<ul>
+<li><strong>Binary Search.</strong> Say: &quot;Inclusive window, halve on each compare, +1/-1 to guarantee progress.&quot; Avoid: <code>(lo+hi)/2</code> overflow and an infinite loop from a missing ±1.</li>
+<li><strong>Find First and Last Position.</strong> Say: &quot;Two boundary searches — first index ≥ target and first index &gt; target.&quot; Avoid: a single equality search that returns an arbitrary duplicate.</li>
+<li><strong>Search in Rotated Sorted Array.</strong> Say: &quot;One half is always sorted; test the target against that side to pick the half to keep.&quot; Avoid: assuming the whole array is monotonic.</li>
+<li><strong>Koko Eating Bananas / Ship Within D Days.</strong> Say: &quot;Binary-search the answer space with a monotonic feasibility check.&quot; Avoid: scanning every possible speed linearly.</li>
+<li><strong>Find Minimum in Rotated Sorted Array.</strong> Say: &quot;Compare mid to the right end to decide which half holds the pivot.&quot; Avoid: comparing to the left end, which breaks on duplicates.</li>
+</ul>
+<p>Once &quot;is there a monotonic boundary I can converge on?&quot; becomes your first question, binary search stops being a fragile array trick and becomes a general search-space tool — the same idea whether you are probing a sorted array, a value range, or a history of commits.</p>
