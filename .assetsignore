@@ -1,4 +1,4 @@
-# Cloudflare Workers Static Assets ignore (for any leftover root deploys)
+# Only upload the static book — never .git (25 MiB pack limit)
 .git
 .git/
 **/.git/**
@@ -7,21 +7,23 @@
 .wrangler/
 node_modules/
 dist/
+public/
+
+# Worker / tooling (not public site files)
 src/
 scripts/
+package.json
+package-lock.json
+wrangler.jsonc
+wrangler.toml
+.assetsignore
+.gitignore
+.nojekyll
+README.md
 
 *.pack
 *.idx
 *.rev
 *.bitmap
-
 .DS_Store
 *.log
-.gitignore
-.assetsignore
-wrangler.jsonc
-wrangler.toml
-package.json
-package-lock.json
-README.md
-.nojekyll

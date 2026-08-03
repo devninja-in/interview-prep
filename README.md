@@ -2,7 +2,7 @@
 
 Coding, system design, and AI in one place — published as a static book.
 
-**Cloudflare Worker:** [https://interview-prep.devninja.workers.dev/](https://interview-prep.devninja.workers.dev/)  
+**Cloudflare:** [https://interview-prep.devninja.workers.dev/](https://interview-prep.devninja.workers.dev/)  
 **GitHub Pages:** [https://devninja-in.github.io/interview-prep/](https://devninja-in.github.io/interview-prep/)
 
 ## What's inside
@@ -15,33 +15,17 @@ Coding, system design, and AI in one place — published as a static book.
 
 ```bash
 python3 -m http.server 8080
-# or
-npm run build && npx wrangler dev
 ```
 
-## Cloudflare Workers deploy
+## Cloudflare Workers
 
-This project deploys as a **Worker with Static Assets** (not classic Pages).
+Deployed as a **Worker + Static Assets** (`wrangler.jsonc`).
 
-### Required build settings (Workers → Settings → Builds)
+- `src/index.js` serves `env.ASSETS` (replaces the default Hello World Worker)
+- `.assetsignore` excludes `.git` so deploys stay under the 25 MiB file limit
+- Dashboard build command can stay empty; deploy command: `npx wrangler deploy`
 
-| Setting | Value |
-|---------|--------|
-| Git branch | `main` |
-| Build command | `npm run build` (or leave empty) |
-| Deploy command | `npm run deploy` |
-| Root directory | `/` |
-
-`npm run deploy` runs `npm run build && wrangler deploy`, so `dist/` is always fresh and `.git` is never uploaded.
-### What the build does
-
-1. `npm run build` copies the site into `dist/` (no `.git`)
-2. `wrangler deploy` publishes `src/index.js` + `dist/` assets
-3. The Worker serves assets via `env.ASSETS.fetch()` (replaces any Hello World stub)
-
-Files: `wrangler.jsonc`, `src/index.js`, `scripts/build.mjs`, `.assetsignore`
-
-**Deploy trigger:** 2026-08-03 Cloudflare dist fix
+**Deploy trigger:** 2026-08-03 replace Hello World with book assets
 
 ## Files
 
@@ -53,7 +37,6 @@ Files: `wrangler.jsonc`, `src/index.js`, `scripts/build.mjs`, `.assetsignore`
 | `assets/diagrams/` | Highlighted diagram pages |
 | `assets/interview-prep.pdf` | Original PDF |
 | `assets/book-data.json` | Chapter map for navigation |
-| `dist/` | Build output for Cloudflare (generated) |
 
 ## Keyboard (reader)
 

@@ -6,11 +6,8 @@
   "observability": {
     "enabled": true
   },
-  "build": {
-    "command": "npm run build"
-  },
   "assets": {
-    "directory": "./dist",
+    "directory": ".",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
