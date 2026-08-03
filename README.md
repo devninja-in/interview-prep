@@ -30,6 +30,9 @@ In Cloudflare, use:
 - **Deploy / output directory:** `.` (repo root)
 - Ensure the committed `wrangler.jsonc` is used (do not let setup recreate assets as the full git checkout without `.assetsignore`)
 
+Also ignore via `.assetsignore`: `.github/`, `node_modules/`, and Wrangler local files.
+
+**Last Cloudflare trigger:** 2026-08-03 00:32 UTC
 ## Files
 
 | Path | Purpose |
