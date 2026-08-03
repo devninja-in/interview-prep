@@ -40,12 +40,12 @@
 
   const strip = document.getElementById("diagram-strip");
   const featured = [
-    { file: "hash-map.svg", href: "chapters/03-arrays.html", label: "Hash map" },
     { file: "load-balancer.svg", href: "chapters/21-scaling.html", label: "Load balancer" },
-    { file: "url-shortener.svg", href: "chapters/28-url-shortener.html", label: "URL shortener" },
-    { file: "rag.svg", href: "chapters/37-rag.html", label: "RAG" },
-    { file: "agent-loop.svg", href: "chapters/39-agents.html", label: "Agent loop" },
-    { file: "mcp.svg", href: "chapters/40-mcp.html", label: "MCP" },
+    { file: "url-shortener-detailed.svg", href: "chapters/28-url-shortener.html", label: "URL shortener" },
+    { file: "rag-detailed.svg", href: "chapters/37-rag.html", label: "RAG pipeline" },
+    { file: "kafka-partitions.svg", href: "chapters/26-queues.html", label: "Kafka partitions" },
+    { file: "uber-matching.svg", href: "chapters/34-uber.html", label: "Uber matching" },
+    { file: "feed-hybrid-fanout.svg", href: "chapters/30-instagram.html", label: "Feed fanout" },
   ];
   strip.innerHTML = featured
     .map(

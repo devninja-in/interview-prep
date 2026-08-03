@@ -92,9 +92,6 @@ CHAPTER_SHELL = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{heading} — Interview Prep</title>
   <meta name="description" content="{desc}" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
   <link rel="stylesheet" href="../css/interview.css" />
@@ -107,7 +104,7 @@ CHAPTER_SHELL = """<!DOCTYPE html>
     <main class="chapter-main" id="content">
       <div class="chapter-toolbar">
         <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
-        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <a class="brand" href="../">Interview Prep <span>DevNinja</span></a>
         <div class="toolbar-spacer"></div>
         <a class="btn btn-ghost btn-small" href="../">Home</a>
       </div>
