@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="22-caching" data-part="sd">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -52,6 +53,54 @@
 <h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
 <p>How one read flows through cache aside, the most common caching pattern.</p>
 <p>The application receives a read request for some data. 1 It looks in the cache first. 2 On a hit, it returns the cached value immediately, never touching the database. 3 On a miss, it reads the value from the database. 4 It writes that value into the cache, then returns it, so the next identical read is a fast hit. 5</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Caching questions separate people who have operated systems from people who memorized buzzwords.</p>
+<p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Design a distributed cache</span></summary>
+<div class="qa-body">
+<p>Build Redis-like get/put across nodes.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Consistent hashing</p>
+<div class="qa-label">Approach</div>
+<p>Consistent hash ring, replicas, LRU/TTL. <a href="interview-sd.html">Lab Q9</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Cache stampede</span></summary>
+<div class="qa-body">
+<p>Hot key expires — thousands hit DB.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Singleflight / soft TTL</p>
+<div class="qa-label">Approach</div>
+<p>Soft TTL with background refresh; request coalescing; probabilistic early expiration.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Write strategies</span></summary>
+<div class="qa-body">
+<p>When do you write the cache vs DB first?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Write-through / behind / around</p>
+<div class="qa-label">Approach</div>
+<p>Write-through for strong freshness; write-behind for write throughput (risk); write-around for write-heavy rarely-read data. Invalidate on write is the common microservice pattern.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. CDN vs app cache</span></summary>
+<div class="qa-body">
+<p>What belongs on a CDN?</p>
+<p class="qa-meta"><strong>Asked at:</strong> All companies · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Edge vs origin</p>
+<div class="qa-label">Approach</div>
+<p>Static &amp; cacheable HTTP responses near users. Personalized or auth-sensitive data stays in app/Redis closer to origin logic.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Rate limiter with Redis</span></summary>
+<div class="qa-body">
+<p>Enforce per-API-key limits across gateways.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Stripe, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Token bucket</p>
+<div class="qa-label">Approach</div>
+<p>Atomic Redis Lua token bucket; 429 + Retry-After. <a href="interview-sd.html">Lab Q4</a>.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

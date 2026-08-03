@@ -155,6 +155,14 @@
       "href": "chapters/18-study-plan.html"
     },
     {
+      "id": "interview-cp",
+      "num": null,
+      "title": "Interview Lab: Coding",
+      "part": "cp",
+      "href": "chapters/interview-cp.html",
+      "lab": true
+    },
+    {
       "id": "part-sd",
       "num": null,
       "title": "Part Two: System Design",
@@ -274,6 +282,14 @@
       "href": "chapters/34-uber.html"
     },
     {
+      "id": "interview-sd",
+      "num": null,
+      "title": "Interview Lab: System Design",
+      "part": "sd",
+      "href": "chapters/interview-sd.html",
+      "lab": true
+    },
+    {
       "id": "part-ai",
       "num": null,
       "title": "Part Three: AI Engineering",
@@ -335,6 +351,14 @@
       "title": "Design: an AI agent",
       "part": "ai",
       "href": "chapters/42-ai-agent.html"
+    },
+    {
+      "id": "interview-ai",
+      "num": null,
+      "title": "Interview Lab: AI",
+      "part": "ai",
+      "href": "chapters/interview-ai.html",
+      "lab": true
     }
   ]
 }

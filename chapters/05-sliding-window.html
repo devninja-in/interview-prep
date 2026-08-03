@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="05-sliding-window" data-part="cp">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -139,6 +140,54 @@
 <h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
 <p>The longest substring without repeats on &#x27;abcabcbb&#x27;. The right edge grows the window, and a repeat forces the left edge to shrink until the window is valid again.</p>
 <div class="table-wrap"><table><thead><tr><th>right</th><th>char</th><th>window</th><th>best length</th></tr></thead><tbody><tr><td>0</td><td>a</td><td>a</td><td>1</td></tr><tr><td>1</td><td>b</td><td>ab</td><td>2</td></tr><tr><td>2</td><td>c</td><td>abc</td><td>3</td></tr><tr><td>3</td><td>a</td><td>abc -&gt; shrink -&gt; bca</td><td>3</td></tr><tr><td>4</td><td>b</td><td>cab</td><td>3</td></tr><tr><td>5</td><td>c</td><td>abc</td><td>3</td></tr></tbody></table></div>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Sliding-window problems are Amazon and Meta favorites for medium rounds.</p>
+<p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Longest Substring Without Repeating Characters</span></summary>
+<div class="qa-body">
+<p>Length of longest substring with all unique characters.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Variable window</p>
+<div class="qa-label">Approach</div>
+<p>Expand right; when a duplicate appears inside the window, jump left past its last index. Track max length. See <a href="interview-cp.html">Coding Interview Lab Q2</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Minimum Window Substring</span></summary>
+<div class="qa-body">
+<p>Smallest substring of s that covers all characters in t (including duplicates).</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, LinkedIn · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Variable window · need/have counts</p>
+<div class="qa-label">Approach</div>
+<p>Expand until the window satisfies t's counts, then shrink from the left while still valid, recording the best span. Use need/have counters so validation is O(1).</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Longest Repeating Character Replacement</span></summary>
+<div class="qa-body">
+<p>Longest substring you can get by replacing at most k characters.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Window · max frequency</p>
+<div class="qa-label">Approach</div>
+<p>Window is valid while <code>window_len - max_freq ≤ k</code>. Expand right; shrink left when invalid. You never need to decrease max_freq for the answer to stay correct.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Permutation in String</span></summary>
+<div class="qa-body">
+<p>Return true if s2 contains a permutation of s1.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Microsoft, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Fixed window · frequency match</p>
+<div class="qa-label">Approach</div>
+<p>Fixed window of len(s1) on s2; compare character counts (or a diff counter that hits zero when matched).</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Max Consecutive Ones III</span></summary>
+<div class="qa-body">
+<p>Longest subarray with at most k zeros (you may flip those zeros to ones).</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Window · at most k zeros</p>
+<div class="qa-label">Approach</div>
+<p>Expand right; count zeros in the window; while zeros &gt; k, advance left. Track max window length.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

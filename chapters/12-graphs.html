@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="12-graphs" data-part="cp">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -252,6 +253,54 @@ minute
 <p>Scan cells left to right, top to bottom, looking for a 1 that has not been visited. 1 Find land at the top left. Start island number 1 and begin a flood fill from there. 2</p>
 <p>The flood spreads to the connected land: the top left, its right neighbor, and the cell below 3 that. Mark all three as visited.</p>
 <p>Keep scanning. Every remaining cell is water or already visited, so no new island starts. 4 Total islands found: 1. 5</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Graph rounds usually mean BFS/DFS on grids or adjacency lists — not fancy theory.</p>
+<p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Number of Islands</span></summary>
+<div class="qa-body">
+<p>Count connected components of '1's in a grid.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> DFS / BFS flood fill</p>
+<div class="qa-label">Approach</div>
+<p>On each unvisited land cell, increment and flood-fill. <a href="interview-cp.html">Lab Q5</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Course Schedule</span></summary>
+<div class="qa-body">
+<p>Can you finish all courses given prerequisite pairs?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Topological sort</p>
+<div class="qa-label">Approach</div>
+<p>Detect a cycle in a directed graph via Kahn BFS or DFS colors. <a href="interview-cp.html">Lab Q6</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Clone Graph</span></summary>
+<div class="qa-body">
+<p>Deep-copy a connected undirected graph of nodes with neighbor lists.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> BFS/DFS + hashmap</p>
+<div class="qa-label">Approach</div>
+<p>Map old node → new node. BFS/DFS: create clone on first visit, then wire neighbor clones from the map.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Word Ladder</span></summary>
+<div class="qa-body">
+<p>Shortest word transformation changing one letter at a time.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, LinkedIn · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS shortest path</p>
+<div class="qa-label">Approach</div>
+<p>BFS over the word set; remove words when enqueued. <a href="interview-cp.html">Lab Q8</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Pacific Atlantic Water Flow</span></summary>
+<div class="qa-body">
+<p>Cells from which water can flow to both Pacific and Atlantic oceans.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Multi-source DFS/BFS</p>
+<div class="qa-label">Approach</div>
+<p>Flood inland from both ocean borders (water can "climb" to higher-or-equal cells). Intersection of the two reachable sets.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

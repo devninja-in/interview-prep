@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="21-scaling" data-part="sd">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -41,6 +42,54 @@
 <h2>Why stateless servers are the whole trick</h2>
 <p>Horizontal scaling only works because every server is interchangeable, and that only holds if servers keep no local state. Push session data into a shared store so any server can handle any request, which is what lets you add or remove machines freely and lets the load balancer send a user to a different server each time. The balancer also runs continuous health checks, so the moment a server stops responding it is pulled from rotation and traffic reroutes to the healthy ones, making a single failure invisible. The balancer itself is made redundant with a standby, so it does not become the one thing that can take everything down. health checks pull the dead server out; traffic reroutes Server 1 healthy X Client Load balancer Server 2 down Server 3 healthy When a server fails its health check, the balancer stops sending it traffic and the rest carry on.</p>
 <div class="table-wrap"><table><thead><tr><th>Balancer algorithm</th><th>How it picks a server</th></tr></thead><tbody><tr><td>Round robin</td><td>take turns evenly, simple and common</td></tr><tr><td>Least connections</td><td>send to the least busy server</td></tr><tr><td>IP hash</td><td>same client tends to hit the same server</td></tr><tr><td>Weighted</td><td>bigger servers get proportionally more traffic</td></tr></tbody></table></div>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Scaling rounds test whether you can move from one box to a fleet thoughtfully.</p>
+<p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Horizontal scale a read-heavy API</span></summary>
+<div class="qa-body">
+<p>Traffic grew 20× — what do you change first?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> LB + replicas + cache</p>
+<div class="qa-label">Approach</div>
+<p>Measure bottleneck; add LB + stateless app replicas; read replicas or cache; only then shard. Order matters.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Load balancer choice</span></summary>
+<div class="qa-body">
+<p>When L4 vs L7? Sticky sessions?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> L4 vs L7</p>
+<div class="qa-label">Approach</div>
+<p>L4 for raw TCP/WS scale; L7 for path-based routing and auth at edge. Prefer external session store over sticky when possible.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Graceful degradation</span></summary>
+<div class="qa-body">
+<p>Dependency is down — what does the user see?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Netflix-style · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Feature flags / fallbacks</p>
+<div class="qa-label">Approach</div>
+<p>Timeouts, circuit breakers, cached fallbacks, disable non-critical widgets. Explicit SLO per dependency.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Backpressure</span></summary>
+<div class="qa-body">
+<p>Producers outrun consumers.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Queues + load shedding</p>
+<div class="qa-label">Approach</div>
+<p>Bounded queues, 503/retry-after, drop low-priority work, autoscale consumers, rate-limit producers.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Idempotent APIs</span></summary>
+<div class="qa-body">
+<p>Clients retry — how do you not double-charge?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Stripe, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Idempotency keys</p>
+<div class="qa-label">Approach</div>
+<p>Client idempotency key stored with request hash/result; replays return the first result.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

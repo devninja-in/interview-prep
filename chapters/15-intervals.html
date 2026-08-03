@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="15-intervals" data-part="cp">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -142,6 +143,54 @@ def min_meeting_rooms(intervals):
 <p>Sort before you sweep, and pick start versus end based on whether you are merging or selecting.</p>
 <p>When inserting into an already sorted list, handle the intervals fully before, overlapping, and fully after separately.</p>
 <p>Watch empty input and a single interval, the usual boundary cases.</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Interval problems almost always start with sort-by-start (or a sweep line).</p>
+<p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Merge Intervals</span></summary>
+<div class="qa-body">
+<p>Merge all overlapping intervals.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sort + merge</p>
+<div class="qa-label">Approach</div>
+<p>Sort by start; extend or append. <a href="interview-cp.html">Lab Q3</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Insert Interval</span></summary>
+<div class="qa-body">
+<p>Insert a new interval into a sorted non-overlapping list and merge.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, LinkedIn · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Linear scan merge</p>
+<div class="qa-label">Approach</div>
+<p>Add all intervals fully left of new; merge overlaps; append the rest. O(n), no full resorted needed.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Meeting Rooms II</span></summary>
+<div class="qa-body">
+<p>Minimum number of conference rooms required.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon, Bloomberg · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sweep / min-heap of ends</p>
+<div class="qa-label">Approach</div>
+<p>Sort starts; keep a min-heap of end times. If next start ≥ earliest end, reuse a room (pop); else allocate (push). Heap size is the answer.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Non-overlapping Intervals</span></summary>
+<div class="qa-body">
+<p>Minimum number of intervals to remove to make the rest non-overlapping.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Greedy by end time</p>
+<div class="qa-label">Approach</div>
+<p>Sort by end; greedily keep an interval if it starts ≥ last kept end. Removals = n − kept.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Employee Free Time</span></summary>
+<div class="qa-body">
+<p>Given employees' busy intervals, return common free gaps.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Airbnb, Google · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Merge all busy intervals</p>
+<div class="qa-label">Approach</div>
+<p>Flatten and merge all busy intervals; gaps between merged busy blocks are free time.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

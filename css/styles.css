@@ -296,6 +296,15 @@ img {
   letter-spacing: -0.02em;
 }
 
+.part h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.part h3 a:hover {
+  color: var(--accent);
+}
+
 .part p {
   margin: 0;
   color: var(--ink-soft);

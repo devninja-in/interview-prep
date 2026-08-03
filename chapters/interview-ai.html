@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI interview questions — Interview Prep</title>
+  <meta name="description" content="AI interview questions — interview questions and deep solutions" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
+</head>
+<body class="chapter-page" data-chapter="interview-ai" data-part="ai">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Interview Lab · AI Engineering</p>
+        <header class="chapter-hero">
+<h1>AI interview questions</h1>
+<p class="lab-hero-note">RAG, agents, eval, memory, and multi-tenant AI — how hiring loops actually run.</p>
+</header>
+<div class="chapter-body">
+<p>AI interviews in 2024–2026 rarely ask you to derive attention math on a whiteboard.
+They ask you to design RAG systems, agents with tools, eval harnesses, and cost-safe multi-tenant
+platforms. These ten prompts are what hiring loops at product companies and AI platforms actually use.</p>
+<p class="drill-intro">Lead with data flow and failure modes. Name concrete components (chunking,
+rerankers, tool schemas, ACL filters) — buzzwords alone fail.</p>
+<details class="qa">
+<summary><span>Q1. Design a ChatGPT-like Assistant with Company Knowledge (RAG)</span></summary>
+<div class="qa-body">
+<p>Design an internal chatbot that answers employee questions using private wikis, tickets, and PDFs. It must cite sources and minimize hallucinations.</p>
+<p class="qa-meta"><strong>Asked at:</strong> OpenAI-adjacent, Google, Meta, Stripe, enterprise AI interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> RAG · chunking · retrieval · grounded generation</p>
+<div class="qa-label">Clarify</div>
+<p>Latency budget? Languages? Freshness SLA? Who can see which docs (ACL)? Streaming answers? Human escalation?</p>
+<div class="qa-label">Architecture</div>
+<p><strong>Ingest:</strong> connectors pull docs → clean/normalize → chunk (e.g. 400–800 tokens with overlap) → embed → upsert into vector DB with metadata (source, updated_at, acl_tags).</p><p><strong>Query:</strong> user question → optional query rewrite / HyDE → embed → hybrid retrieval (vector + BM25) → metadata/ACL filter → rerank (cross-encoder) → top-k passages into prompt with citations → LLM stream → answer + source links.</p><p><strong>Guardrails:</strong> refuse if retrieval confidence low; prompt: "only use provided context"; log traces for eval.</p>
+<div class="qa-label">What interviewers probe</div>
+<ul><li>Chunking strategy vs table/code docs.</li><li>ACL: filter at retrieval, never post-hoc only.</li><li>Updates: incremental re-embed on doc change; tombstone deletes.</li><li>Eval: gold Q&amp;A set, retrieval recall@k, groundedness, latency.</li></ul>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q2. Design Semantic Search / Vector Search at Scale</span></summary>
+<div class="qa-body">
+<p>Design search that finds relevant documents by meaning, not just keywords, for ~100M documents with &amp;lt;100ms p95 retrieval.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon, Notion, Mid-size AI product interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Embeddings · ANN indexes · hybrid search</p>
+<div class="qa-label">Architecture</div>
+<p>Embedding model service (batch offline + online query). ANN index (HNSW / IVF-PQ) sharded by collection. Hybrid: fuse BM25 and vector scores (RRF). Optional rerank stage on top 50–100.</p><p>Store raw docs in object/SQL; index stores vectors + doc_id + lean metadata. Cache popular query embeddings.</p>
+<div class="qa-label">Tradeoffs to discuss</div>
+<p>Recall vs latency vs memory (PQ compression). Freshness: nearline index updates vs periodic rebuild. Multilingual: one multilingual model vs per-language indexes. Dimension and model upgrades need re-embed migrations — version vectors.</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q3. Design an LLM Evaluation Pipeline</span></summary>
+<div class="qa-body">
+<p>You ship prompt/model/RAG changes weekly. Design a system that catches quality regressions before and after production.</p>
+<p class="qa-meta"><strong>Asked at:</strong> OpenAI, Anthropic-adjacent, Google, enterprise AI platforms · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Offline + online eval · judges · regression gates</p>
+<div class="qa-label">Architecture</div>
+<p><strong>Offline:</strong> curated datasets (faithfulness, toxicity, task accuracy) → run candidate config → metrics (exact match, F1, LLM-as-judge with rubrics, retrieval recall) → compare to baseline → block deploy on regressions.</p><p><strong>Online:</strong> shadow traffic, A/B, user thumbs, implicit signals (regenerates, copy, task success). Trace store (prompt, retrieval, output, latency, cost).</p>
+<div class="qa-label">Pitfalls</div>
+<p>LLM judges need calibrated rubrics and spot-check humans. Online metrics lag. Separate eval for retrieval vs generation. Track cost/token budgets as first-class metrics.</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q4. Design a Tool-Using Agent (e.g. Flight Booking Assistant)</span></summary>
+<div class="qa-body">
+<p>Design an agent that can search flights, compare options, and book with user confirmation. It must call external APIs safely.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon, startups shipping agents — 2024–2026 favorite · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Planner · tools · state machine · human-in-the-loop</p>
+<div class="qa-label">Architecture</div>
+<p>Orchestrator loop: LLM reasons → selects tool (search_flights, get_seat_map, create_hold, charge_payment) → tool router executes with timeouts/auth → observe result → repeat until done or need user input.</p><p>Persist session state (slots: origin, dates, budget). Dangerous tools (pay/book) require explicit confirmation. Cap steps/tokens; circuit-break on loops.</p>
+<div class="qa-label">Safety &amp;amp; reliability</div>
+<ul><li>Schema-validate tool args (JSON schema).</li><li>Idempotency keys on booking APIs.</li><li>Sandbox vs prod credentials; least privilege.</li><li>Transcript logging for debugging without storing full card data.</li></ul>
+<div class="qa-label">Sketch of tool schema</div>
+<div class="code-block"><div class="code-lang">JSON</div><pre class="code"><code class="language-json">{
+  &quot;name&quot;: &quot;search_flights&quot;,
+  &quot;description&quot;: &quot;Search flights between two airports on a date&quot;,
+  &quot;parameters&quot;: {
+    &quot;from&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;pattern&quot;: &quot;^[A-Z]{3}$&quot;},
+    &quot;to&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;pattern&quot;: &quot;^[A-Z]{3}$&quot;},
+    &quot;date&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;date&quot;},
+    &quot;cabin&quot;: {&quot;enum&quot;: [&quot;economy&quot;, &quot;business&quot;]}
+  }
+}
+</code></pre></div>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q5. Design Content Moderation with ML + LLMs</span></summary>
+<div class="qa-body">
+<p>Design a system that detects policy-violating user content (text, images, video) at upload time and in social feeds.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, TikTok, OpenAI, Trust &amp; Safety rounds · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Cascaded classifiers · human review · appeals</p>
+<div class="qa-label">Architecture</div>
+<p>Cascade: cheap heuristics/hashes (known CSAM/terror hashes) → specialized classifiers (spam, hate, NSFW) → multimodal LLM only on uncertain band → auto-action (block/blur/age-gate) or queue for human review. Appeals workflow writes training labels back.</p>
+<div class="qa-label">Interview depth</div>
+<p>Latency SLOs differ for chat vs VOD. False positive cost is product/trust. Shadow deploy models. Adversarial users — rate limits + graph features. Regional policy packs. Never let the LLM be the only line of defense for critical categories.</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q6. Design Recommendations with Embeddings</span></summary>
+<div class="qa-body">
+<p>Design a recommendation system for a media app that suggests items a user will engage with next.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Netflix, Spotify, Amazon, YouTube · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Two-tower · ANN retrieval · ranking</p>
+<div class="qa-label">Architecture</div>
+<p><strong>Retrieval:</strong> two-tower model (user tower / item tower) → ANN of item embeddings → thousands of candidates.</p><p><strong>Ranking:</strong> heavier model on candidates with features (history, context, freshness) → top N.</p><p><strong>Business rules:</strong> diversity, cold-start (content embeddings / popularity prior), exploration budget.</p>
+<div class="qa-label">Serving</div>
+<p>Precompute user embeddings periodically; realtime delta from session. Feature store for ranker. A/B platform mandatory. Offline replay + online metrics (CTR, dwell, long-term retention — not just clicks).</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q7. Design Real-Time Meeting Transcription + Summarization</span></summary>
+<div class="qa-body">
+<p>Design a system that live-transcribes meetings and produces summaries, action items, and searchable notes afterward.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Zoom, Microsoft, Google, Otter-style product interviews · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Streaming ASR · diarization · LLM summary</p>
+<div class="qa-label">Architecture</div>
+<p>Audio stream → streaming ASR (chunked) → optional speaker diarization → partial transcripts to clients via WebSocket. On meeting end (or rolling windows): LLM summarization with structured schema (decisions, actions, owners). Index transcript segments for search (BM25 + vectors).</p>
+<div class="qa-label">Hard parts</div>
+<p>Clock sync and partial hypothesis revisions; PII redaction; multilingual code-switching; cost control (summarize every N minutes not every utterance); store audio retention policies.</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q8. Design Multi-Tenant AI SaaS with Cost Controls</span></summary>
+<div class="qa-body">
+<p>You sell an API that wraps foundation models to thousands of tenants. Design tenancy, billing, and noisy-neighbor protection.</p>
+<p class="qa-meta"><strong>Asked at:</strong> B2B AI startups, Amazon Bedrock-style platform interviews · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Quotas · routing · isolation</p>
+<div class="qa-label">Architecture</div>
+<p>Per-tenant API keys → gateway auth → quota/rate limits (tokens/min, $/day) → model router (pick provider/model by policy) → usage meter (tokens in/out, tool calls) → billing pipeline.</p><p>Isolation: separate encryption keys optional; data residency regions; prompt/response logs with retention per plan. Abuse detection on sudden token spikes.</p>
+<div class="qa-label">Talking points</div>
+<p>Fail closed on quota exhaustion. Priority lanes for enterprise. Cache identical deterministic requests where safe. Show cost estimates before agent loops run away.</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q9. Design a Hallucination-Resistant Customer Support Bot</span></summary>
+<div class="qa-body">
+<p>A support bot can refund, reset passwords, and explain policies. How do you keep it truthful and prevent unsafe actions?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Shopify, Amazon, Intercom-like AI rounds · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Grounding · policies · escalation</p>
+<div class="qa-label">Architecture</div>
+<p>Intent classify → for knowledge questions use RAG over approved policy docs with mandatory citations → for actions use deterministic tools with server-side authorization (not LLM judgment alone) → confidence/abstention → escalate to human with full transcript.</p>
+<div class="qa-label">Controls</div>
+<ul><li>Allowlist tools per intent; amount caps on refunds.</li><li>Never invent policy — if retrieval empty, say so.</li><li>Regression tests for jailbreaks and prompt injection from tickets.</li><li>Separate "helpful chat" tone from "authorized action" path.</li></ul>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q10. Design Memory for a Long-Running Personal Assistant</span></summary>
+<div class="qa-body">
+<p>Design memory so an assistant remembers user preferences and past projects across months without stuffing the whole history into every prompt.</p>
+<p class="qa-meta"><strong>Asked at:</strong> OpenAI, Google Assistant-style, agent platform interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Short-term · long-term · episodic memory</p>
+<div class="qa-label">Architecture</div>
+<p><strong>Short-term:</strong> current thread messages in context window (summarize older turns when near limit).</p><p><strong>Long-term:</strong> extracted facts/preferences as structured records + embeddings for semantic recall. Write path: LLM extraction with confidence → user-visible memory store (editable).</p><p><strong>Retrieval:</strong> on each turn, pull top relevant memories + profile summary into system prompt. Forget/tombstone APIs for privacy.</p>
+<div class="qa-label">Risks</div>
+<p>Stale or wrong memories poison future answers — allow correction. Do not store secrets (passwords). GDPR deletion must wipe vector + SQL. Separate org memory from personal memory in B2B.</p>
+</div>
+</details>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="30-instagram" data-part="sd">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -58,6 +59,54 @@
 <p>A user uploads a photo, which goes to object storage and is processed into several sizes. 1 A small post record with the media id, caption, and author is written to the database. 2</p>
 <p>For a normal account, a fanout worker writes the new post id into each follower&#x27;s 3 precomputed feed.</p>
 <p>When a follower opens the app, the feed service reads their precomputed list of post ids. 4 The app fetches each post&#x27;s media from the nearest CDN edge and renders the feed. 5</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Feeds are a fan-out problem dressed as a product question.</p>
+<p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Design Instagram feed</span></summary>
+<div class="qa-body">
+<p>Home feed for follows + media.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Hybrid fan-out</p>
+<div class="qa-label">Approach</div>
+<p>Fan-out on write for normals, pull for celebs; CDN for media. <a href="interview-sd.html">Lab Q2</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Celebrity problem</span></summary>
+<div class="qa-body">
+<p>User with 50M followers posts — what breaks?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Twitter/Meta · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Fan-out on read</p>
+<div class="qa-label">Approach</div>
+<p>Do not push to 50M timelines. Store post; mix into followers' feeds at read/merge time; precompute for active users only if needed.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Feed ranking</span></summary>
+<div class="qa-body">
+<p>Not purely chronological — how?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Retrieval + ranker</p>
+<div class="qa-label">Approach</div>
+<p>Candidate retrieval from follow graph / timeline cache → feature join → lightweight ranker → diversity rules. Keep ranking async-friendly.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Counter service</span></summary>
+<div class="qa-body">
+<p>Likes and view counts at huge QPS.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Instagram classic · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sharded counters</p>
+<div class="qa-label">Approach</div>
+<p>Sharded in-memory counters with periodic flush; accept approximate display counts; exact counts via batch reconciliation.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Stories vs feed</span></summary>
+<div class="qa-body">
+<p>Ephemeral stories architecture?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> TTL data</p>
+<div class="qa-label">Approach</div>
+<p>Separate store with 24h TTL; ring/view fan-out smaller; media still on CDN/blob with lifecycle policies.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

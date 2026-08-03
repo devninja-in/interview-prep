@@ -28,7 +28,7 @@
               .map(
                 (c) => `
               <a class="toc-item${c.id === current ? " active" : ""}" href="./${c.id}.html">
-                ${c.num ? `<span class="num">${c.num}</span>` : ""}
+                ${c.lab ? `<span class="num">Lab</span>` : c.num ? `<span class="num">${c.num}</span>` : ""}
                 ${c.title}
               </a>`
               )

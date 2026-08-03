@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="33-youtube" data-part="sd">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -51,6 +52,54 @@
 <p>How one upload becomes smooth playback for millions of viewers.</p>
 <p>A creator uploads one large video file to the upload service. 1 A transcoding pipeline processes it into several resolutions and bitrates, each split into small 2 chunks.</p>
 <p>The chunks are stored in object storage, and the metadata records which renditions exist. 3 A viewer&#x27;s player fetches the manifest, then streams chunks from the nearest CDN edge. 4 The player watches the network and switches quality up or down chunk by chunk, so 5 playback never freezes.</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Video designs are pipelines plus CDN — keep processing off the request path.</p>
+<p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Design YouTube</span></summary>
+<div class="qa-body">
+<p>Upload and stream adaptive video worldwide.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Netflix · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Transcode + CDN</p>
+<div class="qa-label">Approach</div>
+<p>Direct upload to blob; async transcode to HLS/DASH; CDN playback. <a href="interview-sd.html">Lab Q6</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Processing lag</span></summary>
+<div class="qa-body">
+<p>User uploads — when is video watchable?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Queue priorities</p>
+<div class="qa-label">Approach</div>
+<p>Fast-start low-res rendition first; higher qualities land later; show processing state in UI.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Hot live event</span></summary>
+<div class="qa-body">
+<p>Millions watch a live stream.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Twitch/YouTube · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Live ingest + edge</p>
+<div class="qa-label">Approach</div>
+<p>Ingest → transcode ladder → packager → CDN with short segment TTL; separate from VOD pipeline; regional ingest POPs.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Storage cost control</span></summary>
+<div class="qa-body">
+<p>Petabytes of old video.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Cost deep-dive · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Tiering</p>
+<div class="qa-label">Approach</div>
+<p>Lifecycle to colder storage; fewer bitrates for rarely watched; dedupe; delete derivatives on takedown.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Thumbnails &amp;amp; previews</span></summary>
+<div class="qa-body">
+<p>Where do thumbnails fit?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Product follow-up · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Derived assets</p>
+<div class="qa-label">Approach</div>
+<p>Generated in the same pipeline; stored as objects; heavily CDN cached; can A/B multiple thumbs via metadata.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>System design interview questions — Interview Prep</title>
+  <meta name="description" content="System design interview questions — interview questions and deep solutions" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
+</head>
+<body class="chapter-page" data-chapter="interview-sd" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Interview Lab · System Design</p>
+        <header class="chapter-hero">
+<h1>System design interview questions</h1>
+<p class="lab-hero-note">Ten prompts that show up in real L4–L6 design loops, with full talking tracks.</p>
+</header>
+<div class="chapter-body">
+<p>These are the system-design prompts that appear again and again in L4–L6 loops:
+URL shortener as a warmup, then chat, feed, rides, video, or a focused building block like
+rate limiting. Each card mirrors how a strong 45-minute whiteboard session should unfold —
+clarify, propose API + data model, draw the path, then deep-dive.</p>
+<p class="drill-intro">Structure every answer: requirements → capacity sketch → API → high-level
+diagram → data model → deep dives → failures. Interviewers interrupt; practice recovering.</p>
+<details class="qa">
+<summary><span>Q1. Design a URL Shortener (Bitly)</span></summary>
+<div class="qa-body">
+<p>Design a service like bit.ly: users submit a long URL and get a short link; opening the short link redirects to the original. Expect ~100M new URLs/month and a much higher read:write ratio.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft, Uber — most common system-design opener · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hashing · base62 IDs · read-heavy cache</p>
+<div class="qa-label">Clarify first</div>
+<p>Custom aliases? Expiry? Analytics? Auth? Assume: 7-character base62 codes, optional expiry, basic click counts, 100:1 read:write, 99.9% availability, redirect latency &lt; 100ms p99.</p>
+<div class="qa-label">Core design</div>
+<p><strong>API:</strong> <code>POST /shorten {url}</code> → code; <code>GET /{code}</code> → 302 to long URL.</p><p><strong>ID generation:</strong> (1) counter + base62 encode — simple, needs a distributed counter (Redis INCR / Snowflake); (2) hash long URL (MD5/sha) then take prefix — handle collisions; (3) pre-generated key pool for write bursts.</p><p><strong>Storage:</strong> key-value of code → {long_url, user, created, expires}. Cassandra/DynamoDB or sharded MySQL by code hash. Cache hot redirects in Redis with TTL.</p><p><strong>Redirect path:</strong> CDN/edge optional → load balancer → app → Redis → DB. Prefer 302 (allows updating mapping) unless they ask for browser caching with 301.</p>
+<div class="qa-label">Deep dive topics</div>
+<ul><li>Capacity: 100M/mo ≈ 40 writes/s average; reads maybe thousands/s — cache is mandatory.</li><li>Hot keys: viral links — replicate in cache, consider read replicas.</li><li>Analytics: async click events to Kafka → warehouse; do not block redirect.</li><li>Abuse: rate limit shorten API; malware URL scanning offline.</li></ul>
+<div class="qa-label">What strong answers sound like</div>
+<p>They pick one ID scheme and defend collision handling, draw the read path shorter than the write path, and mention why redirects must not wait on analytics.</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q2. Design Instagram / News Feed</span></summary>
+<div class="qa-body">
+<p>Design a photo-sharing social network: follow users, upload photos, and see a home feed of posts from people you follow, ranked roughly reverse-chronological with light ranking.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Instagram, Twitter/X interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Fan-out · timeline cache · media CDN</p>
+<div class="qa-label">Clarify</div>
+<p>Scale: hundreds of millions of users; celebrity fan-out problem; feed freshness vs cost; media sizes; soft deletes.</p>
+<div class="qa-label">Core design</div>
+<p><strong>Write path:</strong> upload image → object store (S3) + CDN; metadata in DB (post_id, author, caption, media_url, ts).</p><p><strong>Feed generation:</strong> <em>Fan-out on write</em> — push post_id into each follower's timeline cache (Redis lists) — great for normal users; <em>Fan-out on read</em> — merge recent posts from followees at read time — required for celebrities with millions of followers. Hybrid: fan-out write for regulars, pull for celebs.</p><p><strong>Read path:</strong> auth → timeline cache → hydrate post objects → CDN URLs for media.</p>
+<div class="qa-label">Deep dives</div>
+<ul><li>Ranking: start chronological; add ML ranker later as a re-rank stage.</li><li>Sharding: user_id for timelines; post_id for post store.</li><li>Notifications &amp; stories: separate services, async via queues.</li><li>Consistency: feed can be eventually consistent; posting ACK after metadata durable is enough.</li></ul>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q3. Design WhatsApp / Chat</span></summary>
+<div class="qa-body">
+<p>Design a 1:1 and group messaging system with delivery receipts, online presence, and media sharing. Focus on low latency and reliability.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, WhatsApp, Slack, Discord-style rounds · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> WebSocket · message queue · presence</p>
+<div class="qa-label">Core design</div>
+<p><strong>Connections:</strong> sticky WebSocket/MQTT to chat servers; connection service maps user_id → server instance (Redis).</p><p><strong>Message flow:</strong> client → chat server → durable queue/log (Kafka) → fan-out to recipients' inbox stores → push to online sockets or store-and-forward for offline. Persist before ACK to sender for at-least-once; clients de-dupe by message_id.</p><p><strong>Group chat:</strong> small groups: fan-out to each member; large groups: write to group inbox + notify members (or hybrid).</p><p><strong>Media:</strong> upload to blob store, send message with URL/thumbnail; encrypt if E2E is in scope.</p>
+<div class="qa-label">Hard parts interviewers probe</div>
+<ul><li>Ordering per conversation (per-chat sequence numbers).</li><li>Unread counts and last-seen (eventual OK).</li><li>Presence heartbeats with short TTL.</li><li>E2E encryption: server stores ciphertext only; key exchange on devices.</li></ul>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q4. Design a Rate Limiter</span></summary>
+<div class="qa-body">
+<p>Design a distributed rate limiter used by an API gateway: e.g. 100 requests per user per minute, consistent across many gateway instances.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Stripe, Cloudflare, Google — often a building-block question · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Token bucket · sliding window · Redis</p>
+<div class="qa-label">Algorithms to know</div>
+<ul><li><strong>Token bucket:</strong> tokens refill at rate r; request costs 1; allows short bursts — industry default.</li><li><strong>Leaky bucket:</strong> smooths to constant outflow.</li><li><strong>Fixed window:</strong> simple counters; burst at window edges.</li><li><strong>Sliding window log / counter:</strong> fairer, more storage/CPU.</li></ul>
+<div class="qa-label">Distributed design</div>
+<p>Centralize counters in Redis (INCR + EXPIRE, or Lua for token bucket atomicity). Gateways call Redis before forwarding. For multi-region, use regional limiters with a global budget, or accept approximate limits. Return <code>429</code> with <code>Retry-After</code>.</p>
+<div class="qa-label">Talking points</div>
+<p>Compare accuracy vs performance; mention race conditions without atomic scripts; discuss per-IP vs per-API-key vs per-endpoint limits; graceful degradation if Redis is down (fail open vs fail closed — product call).</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q5. Design Uber / Ride Sharing</span></summary>
+<div class="qa-body">
+<p>Design a ride-hailing app: riders request trips, nearby drivers are matched, locations update in realtime, pricing/ETA are computed.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Uber, Lyft, DoorDash-adjacent geo interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Geo index · matching · realtime location</p>
+<div class="qa-label">Core design</div>
+<p><strong>Location stream:</strong> drivers send GPS every few seconds → location service → update geo index (geohash / S2 cells in Redis or specialized store).</p><p><strong>Matching:</strong> rider request → query drivers in nearby cells → filter by status/vehicle → ranking (ETA, rating) → offer with timeout → retry ring expansion.</p><p><strong>Trip lifecycle:</strong> state machine (requested → matched → enroute → ongoing → completed) in a trip service; events to billing, notifications, analytics.</p>
+<div class="qa-label">Deep dives</div>
+<ul><li>ETA: map/routing service; cache road graph segments.</li><li>Surge pricing: demand/supply per cell, smoothed to avoid thrash.</li><li>Consistency: matching must avoid double-booking — optimistic lock / atomic claim on driver.</li><li>Scale: shard by city/region; most traffic is local.</li></ul>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q6. Design YouTube / Video Streaming</span></summary>
+<div class="qa-body">
+<p>Design a video upload and streaming platform: users upload videos; millions watch with adaptive quality worldwide.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Netflix, Meta — storage + CDN heavy · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Transcoding pipeline · CDN · adaptive bitrate</p>
+<div class="qa-label">Core design</div>
+<p><strong>Upload:</strong> client gets pre-signed URL → direct to blob store; metadata row = processing.</p><p><strong>Processing pipeline:</strong> queue workers transcode to multiple resolutions/codecs, generate thumbnails, extract duration; store HLS/DASH segments; mark ready.</p><p><strong>Playback:</strong> client fetches manifest; CDN serves segments; origin is object store. Adaptive bitrate based on bandwidth.</p>
+<div class="qa-label">Deep dives</div>
+<ul><li>Hot videos: heavy CDN caching; popular titles at edge.</li><li>Recommendations: offline ML + online re-rank (separate from serving path).</li><li>Copyright / abuse: async fingerprinting and review queues.</li><li>Cost: storage tiers, cold archive for old rarely watched content.</li></ul>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q7. Design a Notification System</span></summary>
+<div class="qa-body">
+<p>Design a multi-channel notification platform: push, email, SMS, in-app, with user preferences, retries, and high throughput.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Uber, Slack · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Fan-out · priority queues · templates</p>
+<div class="qa-label">Core design</div>
+<p>Producer APIs enqueue notification jobs → Kafka topics by priority/channel → workers render templates → provider adapters (APNs/FCM, SES, Twilio) → delivery receipts back for status.</p><p>Preferences service gates channel/quiet hours. Deduplicate with idempotency keys. Rate-limit per user and per provider.</p>
+<div class="qa-label">Failure modes</div>
+<p>Provider outages → exponential backoff + DLQ. Partial fan-out for large audiences (celebrity posts) via chunked tasks. Exactly-once is unrealistic — aim for at-least-once + idempotent display.</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q8. Design Typeahead / Search Autocomplete</span></summary>
+<div class="qa-body">
+<p>Design search autocomplete that returns top suggestions as the user types, with low latency and trending awareness.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon, Twitter · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Trie · top-k · edge cache</p>
+<div class="qa-label">Core design</div>
+<p>Offline: aggregate query logs → compute top-k per prefix → build trie or prefix index; ship snapshots to servers / edge.</p><p>Online: client debounces; request prefix → memory trie returns top-k (&lt;50ms). Personalization and trending as a light re-rank layer. Cache popular prefixes at CDN/edge.</p>
+<div class="qa-label">Scale tricks</div>
+<p>Limit prefix length; store only top-k not full postings; AJAX results tiny; update index periodically (minutes) not per keystroke. For distributed tries, shard by first character(s).</p>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q9. Design a Distributed Cache</span></summary>
+<div class="qa-body">
+<p>Design a distributed in-memory cache used by many microservices: get/put/delete, TTL, high availability, horizontal scale.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft, Oracle — Redis/Memcached style · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Consistent hashing · replication · eviction</p>
+<div class="qa-label">Core design</div>
+<p>Client or proxy uses consistent hashing to pick a shard. Each shard is a primary + replicas (async or semi-sync). LRU/LFU/TTL eviction per node. Gossip or config service for membership.</p>
+<div class="qa-label">Deep dives</div>
+<ul><li>Hot keys: replicate popular keys to many nodes or add local caches.</li><li>Thundering herd: soft TTL + singleflight refresh.</li><li>Persistence optional (AOF/RDB) — usually cache is ephemeral.</li><li>CAP: prefer AP for cache; clients tolerate miss and load DB.</li></ul>
+</div>
+</details>
+<details class="qa">
+<summary><span>Q10. Design Ticketmaster / Event Booking</span></summary>
+<div class="qa-body">
+<p>Design a ticketing system for concerts: browse events, hold seats, pay, and issue tickets — without double-selling under huge spikes.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Ticketmaster-style concurrency interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Inventory locks · idempotency · flash sales</p>
+<div class="qa-label">Core design</div>
+<p><strong>Inventory:</strong> seat map per event/section; state available → held → sold. Hold = soft lock with short TTL (2–10 min) in Redis or row-level locks.</p><p><strong>Checkout:</strong> create hold → payment intent → on success commit seats + generate ticket IDs; on fail/expiry release hold. Idempotency keys on payment webhooks.</p><p><strong>Scale:</strong> shard by event_id; queue waiting rooms for mega-events; read replicas for browse; CDN for static event pages.</p>
+<div class="qa-label">Consistency</div>
+<p>This is one design where strong consistency on inventory matters. Use conditional updates (COMPARE_AND_SET / SQL WHERE status='available'). Never trust client-side seat claims alone.</p>
+</div>
+</details>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

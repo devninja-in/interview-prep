@@ -440,6 +440,7 @@ def main() -> None:
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="{html.escape(slug)}" data-part="{html.escape(part)}">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -478,6 +479,17 @@ def main() -> None:
 
     (ROOT / "assets" / "nav.json").write_text(json.dumps({"chapters": nav_items}, indent=2))
     print(f"done: {len(nav_items)} chapters, {len(list(OUT_DIAG.glob('*.jpg')))} diagrams")
+
+    # Re-apply Interview Labs + per-chapter drills (also restores lab entries in nav.json).
+    try:
+        import sys
+
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from assemble_interview import main as assemble_interview_main
+
+        assemble_interview_main()
+    except Exception as exc:  # pragma: no cover
+        print(f"note: could not assemble interview labs: {exc}")
 
 
 if __name__ == "__main__":

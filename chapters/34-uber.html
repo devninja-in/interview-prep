@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="34-uber" data-part="sd">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -53,6 +54,54 @@
 <p>Driver apps continuously stream their location into the geospatial index, bucketed by map 1 cell.</p>
 <p>A rider requests a ride from their current location. 2 The matching service looks up the nearby cells and gathers the candidate drivers in them. 3 It picks the best one by distance, arrival time, and rating, then dispatches and holds that 4 driver.</p>
 <p>The trip service tracks the ride to completion, with pricing and payment handled through 5 queues.</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Geo + matching + state machines — keep the diagram regional.</p>
+<p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Design Uber</span></summary>
+<div class="qa-body">
+<p>Match riders to nearby drivers in realtime.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Uber, Lyft · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Geo index + matching</p>
+<div class="qa-label">Approach</div>
+<p>Geohash location updates; ring matching; trip state machine. <a href="interview-sd.html">Lab Q5</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Avoid double dispatch</span></summary>
+<div class="qa-body">
+<p>Two riders matched to the same driver?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Uber · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Atomic claim</p>
+<div class="qa-label">Approach</div>
+<p>Driver status CAS to 'offered/busy'; offer lease with timeout; only one claim wins.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. ETA accuracy</span></summary>
+<div class="qa-body">
+<p>How is ETA computed?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Routing service</p>
+<div class="qa-label">Approach</div>
+<p>Map-matching GPS to roads; routing over traffic-aware graph; cache segments; update with live speeds.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Surge pricing</span></summary>
+<div class="qa-body">
+<p>Design surge without wild oscillation.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Demand/supply per cell</p>
+<div class="qa-label">Approach</div>
+<p>Compute per-geocell imbalance on a short window; smooth with EMA; cap rate of change; show multiplier before confirm.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. City sharding</span></summary>
+<div class="qa-body">
+<p>How do you shard the system?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Scale follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Regional deployment</p>
+<div class="qa-label">Approach</div>
+<p>Most state is city-local — shard services and data by region/city; global for identity/billing only.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

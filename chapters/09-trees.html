@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="09-trees" data-part="cp">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -182,6 +183,54 @@ TreeNode insertBST(TreeNode root, int val) {
 <p>To validate a BST you must pass down an allowed range, not just compare a node with its direct parent.</p>
 <p>Handle the null node as your base case cleanly, it is the root of most tree bugs.</p>
 <p>Level order needs to capture the queue size at the start of each level so you know where one Recursion depth can be large on a skewed tree, so very deep trees may need an iterative</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Tree interviews: name the traversal, then code it. Recursion is expected.</p>
+<p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Serialize / Deserialize Binary Tree</span></summary>
+<div class="qa-body">
+<p>Encode a tree to a string and decode it back.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS with null markers</p>
+<div class="qa-label">Approach</div>
+<p>Level-order with # for nulls. <a href="interview-cp.html">Lab Q9</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Validate Binary Search Tree</span></summary>
+<div class="qa-body">
+<p>Determine if a binary tree is a valid BST.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Bounds recursion / inorder</p>
+<div class="qa-label">Approach</div>
+<p>Pass (low, high) bounds down, or inorder and ensure strictly increasing values.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Lowest Common Ancestor of a BST / Binary Tree</span></summary>
+<div class="qa-body">
+<p>Find LCA of two nodes.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Recursion / BST walk</p>
+<div class="qa-label">Approach</div>
+<p>BST: walk left/right by value. General tree: recurse; if both sides nonempty, root is LCA.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Binary Tree Level Order Traversal</span></summary>
+<div class="qa-body">
+<p>Return node values grouped by level.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> BFS by level</p>
+<div class="qa-label">Approach</div>
+<p>Queue; for each level process queue.length nodes into a list.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Maximum Depth / Invert Binary Tree</span></summary>
+<div class="qa-body">
+<p>Compute height; or mirror the tree.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Apple (warmup) · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> DFS recursion</p>
+<div class="qa-label">Approach</div>
+<p>Depth = 1 + max(left, right). Invert = swap children then recurse (or BFS swap).</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

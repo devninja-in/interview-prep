@@ -1,7 +1,7 @@
 (async function () {
   const res = await fetch("assets/nav.json");
   const data = await res.json();
-  const chapters = data.chapters.filter((c) => c.num);
+  const chapters = data.chapters.filter((c) => c.num || c.lab);
 
   const parts = {
     cp: { title: "Competitive Programming", items: [] },
@@ -25,7 +25,7 @@
               (ch) => `
             <li>
               <a href="${ch.href}">
-                <span class="num">${ch.num}</span>
+                <span class="num">${ch.lab ? "Lab" : ch.num}</span>
                 <span>${ch.title}</span>
               </a>
             </li>`

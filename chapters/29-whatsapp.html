@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="29-whatsapp" data-part="sd">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -47,6 +48,54 @@
 <p>How a single WhatsApp message travels from one phone to another.</p>
 <p>The sender&#x27;s phone sends the message over its open WebSocket connection to a gateway. 1</p>
 <p>The gateway passes it to the chat service, which persists it and looks up where the recipient If the recipient is online, the service pushes the message straight down their gateway The recipient&#x27;s app acknowledges receipt, which flows back to the sender as the second If the recipient is offline, the message waits on a queue and a push notification is sent, then it</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Chat designs hinge on connections, durability, and fan-out — not UI.</p>
+<p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Design WhatsApp</span></summary>
+<div class="qa-body">
+<p>1:1 and group messaging with receipts.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, WhatsApp · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> WebSocket + inbox</p>
+<div class="qa-label">Approach</div>
+<p>Sticky sockets, durable log, per-user inbox, offline store-and-forward. <a href="interview-sd.html">Lab Q3</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Read receipts at scale</span></summary>
+<div class="qa-body">
+<p>How do blue ticks work without melting the DB?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Async events</p>
+<div class="qa-label">Approach</div>
+<p>Receipts are separate lightweight events; batch writes; eventual consistency OK; do not block message delivery on receipt fan-out.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Large group chats</span></summary>
+<div class="qa-body">
+<p>10k-member group — fan-out on write or read?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Discord / Slack style follow-up · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Fan-out strategies</p>
+<div class="qa-label">Approach</div>
+<p>Write to group log; members pull/catch up; push notify only online subscribers. Pure write fan-out explodes.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. End-to-end encryption</span></summary>
+<div class="qa-body">
+<p>Where do keys live and what does the server store?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Signal/WhatsApp rounds · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> E2E keys</p>
+<div class="qa-label">Approach</div>
+<p>Server stores ciphertext + metadata; identity/prekeys on devices; server cannot read bodies — acknowledge tradeoffs for search/features.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Message ordering</span></summary>
+<div class="qa-body">
+<p>How do you order messages in a chat?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Per-conversation seq</p>
+<div class="qa-label">Approach</div>
+<p>Per-chat monotonic sequence from a single writer partition; clients sort by seq; vector clocks only if multi-device concurrent edits matter.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

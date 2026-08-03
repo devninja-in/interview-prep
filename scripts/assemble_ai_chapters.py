@@ -39,6 +39,7 @@ def wrap(slug: str, num: str | None, title: str, body: str) -> str:
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="{html.escape(slug)}" data-part="ai">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -77,6 +78,14 @@ def main() -> None:
         (OUT / f"{slug}.html").write_text(wrap(slug, num, title, body))
         words = len(body.split())
         print(f"wrote {slug}.html ({words} words in body)")
+    # Re-apply interview drills / CSS after regenerating AI shells.
+    try:
+        from assemble_interview import inject_all_drills, write_labs
+
+        write_labs()
+        inject_all_drills()
+    except Exception as exc:  # pragma: no cover
+        print(f"note: could not re-apply interview drills: {exc}")
 
 
 if __name__ == "__main__":

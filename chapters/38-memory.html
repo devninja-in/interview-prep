@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
 </head>
 <body class="chapter-page" data-chapter="38-memory" data-part="ai">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -70,6 +71,54 @@
 <p>Running summaries drift. Mitigations: regenerate from the last N raw turns periodically; store decision bullets separately from narrative color; never let a summary erase an explicit user constraint without keeping the constraint as a fact row.</p>
 <h2>Multi-user and enterprise memory</h2>
 <p>Separate user memory from org memory (playbooks, account state). Agents acting for a team need shared stores with roles. In design interviews, draw two boxes: personal graph vs tenant knowledge, both feeding the same orchestrator under ACL checks.</p>
+<!-- INTERVIEW_DRILL_START -->
+<section class="interview-drill" id="interview-drill">
+<h2>Interview drill</h2>
+<p class="drill-intro">Memory design is how assistants feel personal without blowing the context window.</p>
+<p class="drill-intro">More drills in the <a href="interview-ai.html">Interview Lab</a>.</p>
+<details class="qa">
+<summary><span>Q1. Long-running assistant memory</span></summary>
+<div class="qa-body">
+<p>Remember preferences across months.</p>
+<p class="qa-meta"><strong>Asked at:</strong> OpenAI, Google · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Tiered memory</p>
+<div class="qa-label">Approach</div>
+<p>Short-term thread + long-term extracted facts + semantic recall. <a href="interview-ai.html">Lab Q10</a>.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q2. Wrong memory</span></summary>
+<div class="qa-body">
+<p>Assistant remembered the wrong hometown.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Correction UX</p>
+<div class="qa-label">Approach</div>
+<p>User-editable memory; confidence scores; overwrite/tombstone; prefer explicit "Remember that…" writes over silent inference.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q3. Privacy deletion</span></summary>
+<div class="qa-body">
+<p>User requests deletion of all memory.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Enterprise / EU · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> GDPR</p>
+<div class="qa-label">Approach</div>
+<p>Delete SQL rows, vector points, cached summaries, backups per retention policy; verify via audit log.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q4. Org vs user memory</span></summary>
+<div class="qa-body">
+<p>Company playbook vs personal notes.</p>
+<p class="qa-meta"><strong>Asked at:</strong> B2B AI · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Tenancy</p>
+<div class="qa-label">Approach</div>
+<p>Separate stores and ACLs; org memory curated; user memory private; never leak across tenants in retrieval filters.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Summarization loss</span></summary>
+<div class="qa-body">
+<p>What do you lose when you summarize a thread?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Applied · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Compaction</p>
+<div class="qa-label">Approach</div>
+<p>Exact quotes, IDs, numbers — pin critical entities into structured state before summarizing prose.</p>
+</div>
+</details>
+</section>
+<!-- INTERVIEW_DRILL_END -->
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>
