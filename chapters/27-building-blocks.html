@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>27 · More building blocks — Interview Prep</title>
+  <meta name="description" content="27 · More building blocks — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="27-building-blocks" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">System Design</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 27</p>
+<h1>More building blocks</h1>
+</header>
+<div class="chapter-body">
+<p>A few more components show up in almost every design. You do not need to design each from scratch, but you should know what they are for and when to reach for them.</p>
+<h2>API gateway</h2>
+<p>An API gateway is a single front door for all client requests. It handles the cross cutting concerns you do not want scattered across every service: authentication, rate limiting, request routing, and sometimes response shaping. Clients talk to one endpoint, and the gateway forwards to the right service behind it.</p>
+<h2>Rate limiting</h2>
+<p>Rate limiting protects a system from abuse and overload by capping how many requests a client can make in a window. The token bucket is the classic approach: a bucket refills tokens at a steady rate, each request spends one, and when the bucket is empty requests are rejected or delayed. It allows short bursts while enforcing a long term average. The leaky bucket and sliding window are common alternatives with slightly different burst behavior.</p>
+<h2>Object storage</h2>
+<p>Large files like images, video, and backups do not belong in a relational database. Object storage, the S3 style service, is built for exactly this: cheap, durable, effectively unlimited storage for big blobs, usually served to users through a CDN.</p>
+<h2>Search</h2>
+<p>Searching text with a database LIKE query does not scale. A search engine like Elasticsearch builds an inverted index, a map from each word to the documents that contain it, so full text queries stay fast even over huge datasets. You keep it in sync with your main database as data changes.</p>
+<h2>Observability</h2>
+<p>Once a system is distributed, you cannot debug it by guessing. The three pillars are logs (what happened), metrics (numbers over time like latency and error rate), and tracing (following one request across many services). Alerting on the right metrics is what turns a 3 a.m. outage into a 3 a.m. page before users notice.</p>
+<h2 class="section-label">Y O U R A R E L Y B U I L D T H E S E Y O U R S E L F</h2>
+<p>In a design discussion, naming the right off the shelf building block is the goal, not reinventing it. Saying &quot;put an API gateway here for auth and rate limiting, object storage for the media, and a search index kept in sync with the database&quot; shows exactly the judgment interviewers are looking for.</p>
+<h3>Going Deeper</h3>
+<h2>Rate limiting up close, with the token bucket</h2>
+<p>The token bucket is the workhorse of rate limiting. A bucket holds up to a fixed number of tokens and refills at a steady rate. Each request removes a token, and if the bucket is empty the request is rejected or delayed. This cleverly allows short bursts, up to the bucket size, while still enforcing a long term average equal to the refill rate. A sliding window counter is the other common choice, smoothing the hard edges of a fixed window so a burst straddling the boundary cannot sneak through double the limit. You place this at the API gateway so every service behind it is protected in one spot. refill at a steady rate allowed take 1 Request rejected if empty token bucket A bucket refills tokens at a steady rate. Each request spends one, and an empty bucket means rejection.</p>
+<h2 class="section-label">F I X E D W I N D O W V E R S U S S L I D I N G W I N D O W</h2>
+<p>A fixed window counts requests per clock interval, which is simple but lets a client fire a full quota at the end of one window and another at the start of the next, briefly doubling the rate.</p>
+<p>A sliding window weights the previous window as it moves, smoothing that spike out. The token bucket avoids the issue differently, by capping the burst to the bucket size.</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

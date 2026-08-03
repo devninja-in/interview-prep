@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>26 · Queues and async — Interview Prep</title>
+  <meta name="description" content="26 · Queues and async — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="26-queues" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">System Design</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 26</p>
+<h1>Queues and async</h1>
+</header>
+<div class="chapter-body">
+<h2>processing</h2>
+<p>Not everything has to happen while the user waits. Sending an email, resizing an image, updating a feed, these can happen in the background. A message queue is the piece that lets one part of the system hand off work to another without waiting, which makes systems more resilient and much easier to scale.</p>
+<p>Producer Consumer Queue / Topic holds messages Producer Consumer buffer absorbs spikes A queue decouples producers from consumers, so each side works at its own pace.</p>
+<h2>Why go asynchronous</h2>
+<p>A queue sits between a producer that creates work and a consumer that does it. The producer drops a message and moves on immediately, so the user is not stuck waiting. If a traffic spike arrives, the queue buffers the flood and the consumers drain it at a steady pace, so nothing falls over. If a consumer crashes, the message waits safely until another consumer picks it up.</p>
+<h2>Queues versus publish and subscribe</h2>
+<p>A plain queue is point to point: each message is handled by exactly one consumer, which is perfect for a pool of workers sharing a task list. Publish and subscribe broadcasts each message on a topic to every interested subscriber, which is perfect when one event needs to trigger many independent reactions. Log based systems like Kafka blur the line by keeping an ordered, replayable log that many consumer groups can read at their own position.</p>
+<p>PROS CONS The user gets a fast response while More moving parts and a new system to work happens later operate Spikes are absorbed instead of crashing Results are eventual, not immediate, the system which can confuse users Producers and consumers scale and fail Exactly once delivery is very hard, so independently you design for duplicates Failed work can be retried automatically Debugging a flow spread across queues is harder</p>
+<h2 class="section-label">A T L E A S T O N C E P L U S I D E M P O T E N C Y</h2>
+<p>Guaranteeing a message is delivered exactly once is famously hard. The practical pattern is at least once delivery, which may deliver a message twice, combined with idempotent consumers that produce the same result no matter how many times they process the same message. A dead letter queue catches messages that keep failing so they do not block everything else.</p>
+<h3>Going Deeper</h3>
+<h2>Partitions, ordering, and messages that will not process</h2>
+<p>A log based system like Kafka splits a topic into partitions, and order is only guaranteed within a partition, so you choose a partition key such as user id to keep related messages in order.</p>
+<p>Consumers form a group and divide the partitions between them, so adding consumers raises throughput. Because delivery is usually at least once, a message can arrive twice, so consumers must be idempotent, producing the same result no matter how many times they see it. A message that keeps failing is moved to a dead letter queue after a few retries, so one poison message does not block everything behind it.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p156.jpg" alt="Topic (partitioned log)" loading="lazy" /><figcaption>Topic (partitioned log)</figcaption></figure>
+<p>A topic is split into ordered partitions. Consumers share them, and messages Guaranteeing exactly once delivery is famously hard, so the practical recipe is at least once delivery combined with idempotent consumers. Give each message a stable id and have the consumer ignore ids it has already processed. That way a duplicate is harmless, and you get effectively once behavior without the cost of true exactly once machinery.</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>37 · RAG — Interview Prep</title>
+  <meta name="description" content="37 · RAG — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="37-rag" data-part="ai">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">AI Engineering</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 37</p>
+<h1>RAG</h1>
+</header>
+<div class="chapter-body">
+<h2 class="section-label">K N O W L E D G E A N D M E M O R Y</h2>
+<h2>generation</h2>
+<p>A model only knows what was in its training data and what fits in the context window. RAG fixes both. It fetches the most relevant pieces of your own data at question time and drops them into the prompt, so the model answers from fresh, private knowledge instead of guessing, and can even cite its sources.</p>
+<p>Indexing, done ahead of time Vector DB Documents Chunks Embed stores meaning top-k search Query, at question time Model Top chunks Question Embed answer using them most similar Documents are chunked and embedded ahead of time. A question retrieves the closest chunks and feeds them to the model.</p>
+<h2>How it works, in two phases</h2>
+<p>First, indexing, done ahead of time. You split your documents into chunks, turn each chunk into an embedding (a vector of numbers that captures its meaning), and store those vectors in a vector database. Chunks with similar meaning end up close together in that vector space.</p>
+<p>Then, at query time, you embed the user&#x27;s question the same way, search the vector database for the chunks whose vectors are closest to it, and paste those chunks into the prompt as context. The model then answers using that retrieved text. The quality of what you retrieve decides the quality of the answer, so retrieval is the heart of RAG.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def answer_with_rag(question, vector_db, client):
+    q_vec = embed(question)                        # same embedder as
+indexing
+    chunks = vector_db.search(q_vec, top_k=5)      # nearest chunks by
+meaning
+    context = &quot;\n\n&quot;.join(c.text for c in chunks)
+    prompt = f&quot;&quot;&quot;Answer using ONLY the context below. Cite the source ids.
+Context:
+{context}
+Question: {question}&quot;&quot;&quot;
+    resp = client.messages.create(
+        model=&quot;claude-sonnet-4-5&quot;, max_tokens=500,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}],
+    )
+    return resp.content[0].text
+E M B E D D I N G S A N D V E C T O R S E A R C H , P L A I N L Y
+</code></pre></div>
+<p>An embedding turns a piece of text into a point in a high dimensional space where nearness means similar meaning. So &quot;how do I reset my password&quot; lands near a support article about password resets, even if they share no exact words. Vector search is just finding the nearest points to your question, which is why RAG retrieves by meaning rather than keyword.</p>
+<p>PROS CONS Answers from fresh, private data the Bad retrieval means a confident but model never trained on wrong answer Fewer hallucinations, since the model is Chunking and embedding choices grounded in real text strongly affect quality You can show citations back to the Retrieved text still competes for the source chunks context budget Cheaper and faster to update than Adds a vector database and a pipeline retraining the model to maintain</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p194.jpg" alt="GOING DEEPER" loading="lazy" /><figcaption>GOING DEEPER</figcaption></figure>
+<p>RAG lives or dies on what you retrieve, because the model can only answer from the chunks you hand it. Two levers dominate. Chunking decides how documents are split: chunks too large dilute the relevant sentence, too small lose context, so a sensible size with a little overlap matters a lot. Retrieval decides what comes back: pure vector search finds semantic matches, but combining it with keyword search (hybrid search) and then re ranking the top results with a stronger model catches cases where meaning and exact terms both matter. Get retrieval right and the generation step is easy; get it wrong and no prompt can save the answer. Q = question, teal = relevant chunks nearby, grey = irrelevant chunks far away Embeddings place text so that similar meaning sits close together, so retrieval is just finding the nearest points to the question. RAG has two phases: build the index once, then use it on every question.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p195.jpg" alt="Indexing, once" loading="lazy" /><figcaption>Indexing, once</figcaption></figure>
+<p>Search the vector database for the closest chunks by meaning. Ask the model to answer using only that context, and return the answer with citations.</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

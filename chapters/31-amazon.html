@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>31 · Design: Amazon — Interview Prep</title>
+  <meta name="description" content="31 · Design: Amazon — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="31-amazon" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">System Design</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 31</p>
+<h1>Design: Amazon</h1>
+</header>
+<div class="chapter-body">
+<p>Designing an online store like Amazon is really designing several systems that cooperate: a product catalog, a shopping cart, orders, payments, and inventory. The heart of it is a tension. Browsing must be fast and always available, while checkout has to be correct down to the last unit and the last cent.</p>
+<h2>Requirements</h2>
+<p>Users browse and search a huge catalog, add items to a cart, place an order, pay, and get it shipped. Behind that, inventory must be tracked so two people cannot both buy the last item. The catalog is extremely read heavy, while orders, payments, and inventory are write sensitive and must be correct.</p>
+<p>Product DB Catalog service + search API gateway Cart service Cart store Client auth, routing Order DB Order service ACID Each concern is its own service and store. Checkout also fans out to payment and inventory through a queue.</p>
+<h2>The key decisions</h2>
+<p>The catalog is read dominated, so cache it hard, serve it from read replicas, and back it with a search index for queries and filters. Here eventual consistency is fine, since a price or a rating</p>
+<p>updating a second late hurts nobody. The cart is a fast key value store keyed by user, cheap to read and write.</p>
+<p>Orders and payments are the opposite. They need strong consistency and transactions, so they sit on a relational database with ACID guarantees. The critical rule is that inventory must be reserved atomically at checkout, so the last unit is sold exactly once. Slow or non urgent steps like charging the card, sending the confirmation email, and updating recommendations are pushed onto a queue so the user&#x27;s click returns immediately.</p>
+<p>PROS CONS Each service scales on its own, so the Many services means more operational busy catalog does not slow checkout and networking complexity You can use the right store per job, A cart or order spanning services needs cache for catalog, ACID for orders careful coordination Queues absorb spikes and keep the Keeping the search index in sync with checkout click fast the catalog adds moving parts</p>
+<h2 class="section-label">T H E C O N S I S T E N C Y S P L I T I S T H E W H O L E T R I C K</h2>
+<p>Notice how one system uses two different consistency levels on purpose. Browsing leans available and eventually consistent because stale by a second is harmless. Checkout leans strongly consistent because overselling the last unit is not. Naming that split, and where you draw the line, is exactly the judgment an interviewer wants to see.</p>
+<h3>Going Deeper</h3>
+<h2>Checkout as a saga across services</h2>
+<p>A checkout spans several independent services, and you cannot wrap them all in one database transaction. The saga pattern runs the steps in sequence, and gives each step a compensating action that cleanly undoes it if a later step fails. Reserve the inventory, then charge the payment, then confirm the order. If the payment fails, the compensating action releases the reserved inventory so the item is not left stuck as unavailable. This gives you correctness across services without a global lock, at the cost of writing the undo logic for every step.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p174.jpg" alt="each step has an undo, run in reverse if a later step fails" loading="lazy" /><figcaption>each step has an undo, run in reverse if a later step fails</figcaption></figure>
+<p>each step has an undo, run in reverse if a later step fails A saga runs the steps in order, and if one fails it triggers compensating The scary case is two customers checking out the last item at the same instant. A plain read then write can let both succeed and oversell. The reservation must be atomic, a single conditional decrement that only succeeds if stock remains, so exactly one of the two wins How a checkout flows through the store, keeping the last unit correct. The user adds items to a cart held in a fast key value store. At checkout, the order service begins a database transaction. It reserves the inventory atomically, so the last unit in stock cannot be sold to two people. It charges the payment, then records the completed order in the relational database. Slower follow ups like the confirmation email and recommendation updates are pushed onto</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

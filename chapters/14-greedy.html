@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>14 · Greedy — Interview Prep</title>
+  <meta name="description" content="14 · Greedy — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="14-greedy" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 14</p>
+<h1>Greedy</h1>
+</header>
+<div class="chapter-body">
+<p>A greedy algorithm makes the choice that looks best right now and never reconsiders. When that works, it is wonderfully simple and fast. The catch is that grabbing the locally best option does not always lead to the globally best result, so the skill is knowing when greedy is safe.</p>
+<h2>Greedy versus dynamic programming</h2>
+<p>Both break a problem into steps. The difference: DP considers all options at each step and remembers them; greedy commits to one option and moves on. Greedy is correct only when a locally optimal choice provably leads to a globally optimal answer. If you are not sure it does, fall back to DP, which is safer but slower. On LeetCode, if a greedy idea passes your hand-checked examples and you can argue why the greedy choice never hurts, trust it. value = how far you can jump from here keep the farthest index you can reach; 2 3 1 1 4 if it ever reaches the end, you win Jump game: one pass, always tracking the farthest reachable point.</p>
+<h2 class="section-label">R E A C H F O R G R E E D Y W H E N Y O U S E E</h2>
+<p>&quot;Maximum number of non-overlapping intervals&quot;, &quot;minimum number of X to cover Y&quot;, &quot;can you reach the end&quot;, &quot;best time to buy and sell&quot;. Often a sort comes first (by end time, by size, by value), and then a single greedy pass does the rest.</p>
+<h2>Worked example: jump game</h2>
+<p>Each number tells you the maximum you can jump from that spot. Can you reach the last index?</p>
+<p>Track the farthest index reachable so far. Walk forward; if you ever stand on a spot beyond your</p>
+<p>farthest reach, you are stuck. Otherwise extend the reach. If the reach ever covers the last index, you made it.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def can_jump(nums):
+    farthest = 0
+    for i, jump in enumerate(nums):
+        if i &gt; farthest:
+            return False          # this spot is unreachable
+        farthest = max(farthest, i + jump)
+        if farthest &gt;= len(nums) - 1:
+            return True           # can already reach the end
+    return True
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">boolean canJump(int[] nums) {
+    int farthest = 0;
+    for (int i = 0; i &lt; nums.length; i++) {
+        if (i &gt; farthest) return false;        // unreachable
+        farthest = Math.max(farthest, i + nums[i]);
+        if (farthest &gt;= nums.length - 1) return true;
+    }
+    return true;
+}
+</code></pre></div>
+<h2>Worked example: best time to buy and sell stock</h2>
+<p>Given daily prices, find the best single buy-then-sell profit. The greedy insight: to sell on any given day for the most profit, you want to have bought at the lowest price seen up to that day. So track the minimum price so far, and at each day check the profit if you sold today. One pass, no DP table needed.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def max_profit(prices):
+    min_price = float(&#x27;inf&#x27;)
+    best = 0
+    for price in prices:
+        min_price = min(min_price, price)     # cheapest day so far
+        best = max(best, price - min_price)   # profit if we sell today
+    return best
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int maxProfit(int[] prices) {
+    int minPrice = Integer.MAX_VALUE, best = 0;
+    for (int price : prices) {
+        minPrice = Math.min(minPrice, price);      // cheapest so far
+        best = Math.max(best, price - minPrice);   // sell today?
+    }
+    return best;
+}
+</code></pre></div>
+<h2 class="section-label">W A T C H O U T</h2>
+<p>Do not assume greedy works just because it feels right. Coin change is the famous trap: greedily taking the biggest coin fails for some coin systems, which is exactly why that problem needs DP. Before trusting a greedy solution, try to break it with a small counterexample. If you cannot, and you can explain why the greedy choice never blocks a better future, you are probably safe.</p>
+<h3>Deeper Intuition</h3>
+<h2>Why a local choice can be globally best</h2>
+<p>Greedy commits to the best looking choice at each step and never revisits it. The hard part is proving the local choice is safe, usually with an exchange argument: show that any optimal solution can be rewritten to agree with the greedy choice without getting worse. Sorting by the right key is the setup move. For scheduling the most non-overlapping intervals, finishing earliest leaves the</p>
+<p>most room for the rest, so sorting by end time and greedily keeping whatever fits is provably optimal. sort by end time, then keep each interval that starts after the last kept end keep skip skip (overlaps) keep keep time To pack the most non-overlapping intervals, sort by end time and greedily keep each one that fits.</p>
+<h2>Another worked example: Jump Game II</h2>
+<p>Reach the last index in the fewest jumps. Sweep left to right tracking the farthest index reachable.</p>
+<p>Each time you arrive at the boundary of the current jump, you are forced to jump, so increment the count and extend the boundary to the farthest seen. That greedy sweep gives the minimum number of jumps.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def jump(nums):
+    jumps = 0
+    current_end = 0          # boundary reachable with the jumps so far
+    farthest = 0
+    for i in range(len(nums) - 1):
+        farthest = max(farthest, i + nums[i])
+        if i == current_end:      # must jump now
+            jumps += 1
+            current_end = farthest
+    return jumps
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int jump(int[] nums) {
+    int jumps = 0, currentEnd = 0, farthest = 0;
+    for (int i = 0; i &lt; nums.length - 1; i++) {
+        farthest = Math.max(farthest, i + nums[i]);
+        if (i == currentEnd) {        // time to jump
+            jumps++;
+            currentEnd = farthest;
+        }
+    }
+    return jumps;
+}
+GOING DEEPER
+</code></pre></div>
+<h2>What kinds of problems this solves</h2>
+<h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
+<p>Problems where taking the best looking choice at each step, usually after sorting by the right key, provably reaches the global best. Interval scheduling, reaching the end with jumps, and many buy or assign problems fit here.</p>
+<p>Problem type Classic examples Interval scheduling Non-overlapping Intervals, Minimum Number of Arrows to Burst Balloons, Merge Intervals Reach and jumps Jump Game, Jump Game II, Gas Station Sequences and Best Time to Buy and Sell Stock II, Partition Labels, Assign assignment Cookies, Task Scheduler Building numbers or Largest Number, Remove K Digits, Candy strings</p>
+<h2>The algorithm, in a bit more detail</h2>
+<p>A greedy algorithm commits to a locally optimal choice and never looks back. The hard part is not the code, it is being sure the local choice is safe. The usual proof is an exchange argument: show that any optimal solution can be rewritten to agree with the greedy choice without getting worse, so the greedy choice is never a mistake.</p>
+<p>Sorting is the setup move for most greedy problems. Sort intervals by their end time and you can always keep the one that finishes earliest, leaving the most room for the rest. Choosing the correct sort key is where these problems are won or lost.</p>
+<h2>Variations you will run into</h2>
+<p>Greedy often pairs with a sort, and sometimes with a heap when you need the current best to change as you go, as in task scheduling. When a plain greedy fails, the problem usually needs dynamic programming instead, because a choice now affects options later in a way you cannot see locally.</p>
+<h2>Edge cases and gotchas</h2>
+<p>Do not assume greedy works, confirm it with a proof or by testing small cases against brute force.</p>
+<p>The sort key is the crux, sort by end time for selection and by start time for merging.</p>
+<p>Greedy fails when a locally best choice blocks a better global outcome, that is your signal to switch to DP.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p115.jpg" alt="Handle ties and empty inputs, which are common places greedy solutions quietly break." loading="lazy" /><figcaption>Handle ties and empty inputs, which are common places greedy solutions quietly break.</figcaption></figure>
+<p>Handle ties and empty inputs, which are common places greedy solutions quietly break. Jump Game on [2, 3, 1, 1, 4]. We track the farthest index we can reach and check that we never get</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

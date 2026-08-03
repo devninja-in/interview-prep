@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>07 · Binary search — Interview Prep</title>
+  <meta name="description" content="07 · Binary search — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="07-binary-search" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 07</p>
+<h1>Binary search</h1>
+</header>
+<div class="chapter-body">
+<p>If your data is sorted, you never need to check every element. Look at the middle. If it is too small, throw away the left half. If it is too big, throw away the right half. Each step halves what is left, so even a billion items take only about thirty checks. step 1: look at the middle 1 3 5 7 9 11 13 mid=7, target 11 &gt; 7 step 2: keep only the right half 9 11 13 mid=11, found it Each comparison discards half the remaining elements. That is why it is O(log n).</p>
+<h2 class="section-label">R E A C H F O R B I N A R Y S E A R C H W H E N Y O U S E E</h2>
+<p>A sorted array plus &quot;find X&quot; or &quot;find the position where X would go.&quot; Also the sneaky version: &quot;find the smallest value that satisfies some condition&quot; or &quot;minimize the maximum.&quot; If you can phrase the problem as &quot;is a candidate answer good enough, yes or no,&quot; and the yes/no flips at one point, you can binary search on the answer itself even when there is no array to search.</p>
+<h2>The classic template</h2>
+<p>Keep two bounds, lo and hi . Look at the middle. Move whichever bound is wrong. The one detail people get wrong is computing the middle safely and updating the bounds so the loop always shrinks.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def binary_search(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo &lt;= hi:
+        mid = (lo + hi) // 2         # middle index
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] &lt; target:
+            lo = mid + 1             # answer is to the right
+        else:
+            hi = mid - 1             # answer is to the left
+    return -1                        # not found
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int binarySearch(int[] nums, int target) {
+    int lo = 0, hi = nums.length - 1;
+    while (lo &lt;= hi) {
+        int mid = lo + (hi - lo) / 2;    // avoids integer overflow
+        if (nums[mid] == target) return mid;
+        else if (nums[mid] &lt; target) lo = mid + 1;  // go right
+        else hi = mid - 1;                            // go left
+    }
+    return -1;
+}
+</code></pre></div>
+<h2 class="section-label">C O M P U T E M I D W I T H O U T O V E R F L O W</h2>
+<p>In Java, (lo + hi) / 2 can overflow when both are large, because the sum exceeds the max int . Write lo + (hi - lo) / 2 instead. Python integers never overflow, so either form is fine there, but the habit is good.</p>
+<h2>Binary search on the answer</h2>
+<p>This is the version that separates people who &quot;know binary search&quot; from people who really get it.</p>
+<p>Example: you must ship packages within D days, and you choose a daily capacity. Bigger capacity finishes faster. You want the smallest capacity that still finishes within D days.</p>
+<p>There is no array to search. But the space of possible capacities is a sorted range, and &quot;can we finish in D days with capacity C?&quot; is a yes/no question that becomes yes once C is large enough. So binary search on C.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def ship_within_days(weights, days):
+    def can_do(cap):
+        needed, load = 1, 0
+        for w in weights:
+            if load + w &gt; cap:      # start a new day
+                needed += 1
+                load = 0
+            load += w
+        return needed &lt;= days
+    lo, hi = max(weights), sum(weights)   # smallest and largest sane
+capacity
+    while lo &lt; hi:
+        mid = (lo + hi) // 2
+        if can_do(mid):
+            hi = mid                # mid works, try smaller
+        else:
+            lo = mid + 1            # mid too small, go bigger
+    return lo
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int shipWithinDays(int[] weights, int days) {
+    int lo = 0, hi = 0;
+    for (int w : weights) { lo = Math.max(lo, w); hi += w; }
+    while (lo &lt; hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (canDo(weights, days, mid)) hi = mid;   // works, try smaller
+        else lo = mid + 1;                          // too small, go bigger
+    }
+    return lo;
+}
+boolean canDo(int[] weights, int days, int cap) {
+    int needed = 1, load = 0;
+    for (int w : weights) {
+        if (load + w &gt; cap) { needed++; load = 0; }
+        load += w;
+    }
+    return needed &lt;= days;
+}
+</code></pre></div>
+<h2 class="section-label">W A T C H O U T</h2>
+<p>Mixing up the loop condition and the update is the classic infinite loop. If you use while lo &lt; hi with hi = mid , you must pair it with lo = mid + 1 , or the range may never shrink. When in doubt, trace a two-element case by hand to be sure the window always gets smaller.</p>
+<h3>Deeper Intuition</h3>
+<h2>Why you can search the answer, not just the array</h2>
+<p>Binary search needs one thing: a way to look at the middle and confidently throw away half. In a sorted array a comparison gives you that. But the same trick works on the space of possible answers whenever a yes or no test is monotonic, meaning once some value works, every larger value also works. Then you binary search for the smallest value that works. Spotting that hidden monotonic property is what unlocks a whole class of hard problems. candidate answers, feasibility flips from no to yes exactly once 1 2 3 4 5 6 7 8 first yes red = does not work, green = works. Binary search the boundary.</p>
+<p>When a yes or no test flips once as the value grows, you can binary search for the boundary.</p>
+<h2>Another worked example: Koko Eating Bananas</h2>
+<p>Koko picks an eating speed and must finish all piles within a number of hours. A faster speed always finishes in the same or fewer hours, so feasibility is monotonic. Binary search the smallest speed for which the hours needed still fits the limit.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def min_eating_speed(piles, hours):
+    def hours_needed(speed):
+        return sum((p + speed - 1) // speed for p in piles)   # ceil divide
+    lo, hi = 1, max(piles)
+    while lo &lt; hi:
+        mid = (lo + hi) // 2
+        if hours_needed(mid) &lt;= hours:     # mid works, try slower
+            hi = mid
+        else:
+            lo = mid + 1                   # too slow, go faster
+    return lo
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int minEatingSpeed(int[] piles, int hours) {
+    int lo = 1, hi = 0;
+    for (int p : piles) hi = Math.max(hi, p);
+    while (lo &lt; hi) {
+        int mid = lo + (hi - lo) / 2;
+        long need = 0;
+        for (int p : piles) need += (p + mid - 1) / mid;   // ceil
+        if (need &lt;= hours) hi = mid;       // works, try slower
+        else lo = mid + 1;                 // too slow
+    }
+    return lo;
+}
+GOING DEEPER
+</code></pre></div>
+<h2>What kinds of problems this solves</h2>
+<h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
+<p>Searching sorted data, finding the first or last position that satisfies a condition, and the powerful trick of searching over an answer space when the answer has a yes or no property that flips once as the value grows.</p>
+<p>Problem type Classic examples Classic and boundaries Binary Search, Search Insert Position, Find First and Last Position, Find Peak Element Rotated and 2D Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array, Search a 2D Matrix Search on the answer Koko Eating Bananas, Capacity To Ship Packages Within D Days, Split Array Largest Sum, Minimum Number of Days to Make Bouquets</p>
+<h2>The algorithm, in a bit more detail</h2>
+<p>Binary search keeps a range that is guaranteed to contain the answer and halves it every step. The trick is the invariant: you must be able to look at the middle and confidently throw away one half. In a sorted array that is easy, since a comparison tells you which side the target is on.</p>
+<p>Search on the answer is the version that unlocks hard problems. Instead of searching the array, you search the range of possible answers, say the smallest eating speed or the smallest ship capacity.</p>
+<p>You write a helper that asks &quot;does answer x work&quot;, which must be monotonic: if x works, everything bigger works too. Then you binary search for the smallest x that works. Recognizing that hidden monotonic property is the whole skill.</p>
+<h2>Variations you will run into</h2>
+<p>You will meet leftmost and rightmost variants (lower bound and upper bound), where a match does not stop the search but nudges a boundary to keep looking. Rotated arrays add one comparison to</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p052.jpg" alt="decide which half is sorted. The answer space version replaces the array comparison with a" loading="lazy" /><figcaption>decide which half is sorted. The answer space version replaces the array comparison with a</figcaption></figure>
+<p>decide which half is sorted. The answer space version replaces the array comparison with a Compute the middle as low plus half the gap, not low plus high divided by two, to avoid integer Match your loop condition and your boundary updates, since a wrong pairing causes an infinite For first and last position, do not return on the first match, keep shrinking toward the side you Double check whether your interval is inclusive on both ends, since that decides less than Searching for 7 in the sorted array [1, 3, 5, 7, 9, 11]. Each step throws away half of what is left.</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

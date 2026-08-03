@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>04 · Two pointers — Interview Prep</title>
+  <meta name="description" content="04 · Two pointers — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="04-two-pointers" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 04</p>
+<h1>Two pointers</h1>
+</header>
+<div class="chapter-body">
+<p>Instead of one index walking through an array, you use two, and you move them cleverly based on what you find. This turns many O(n²) brute forces into O(n), and it barely uses extra memory.</p>
+<h2>The two flavors</h2>
+<p>Opposite ends. One pointer starts at the left, one at the right, and they move toward each other.</p>
+<p>This is the go-to for sorted arrays and for anything symmetric like checking a palindrome.</p>
+<p>Same direction (fast and slow). Both start at the left. One moves ahead to explore, the other lags behind to mark a boundary. This is how you remove duplicates in place or detect a cycle in a linked list. left right 1 3 4 5 7 9 11 → ← sum too small? move left up. sum too big? move right down.</p>
+<p>On a sorted array, comparing the current sum to the target tells you exactly which pointer to move.</p>
+<h2 class="section-label">R E A C H F O R T W O P O I N T E R S W H E N Y O U S E E</h2>
+<p>A sorted array plus &quot;find a pair that sums to X&quot;. A palindrome check. &quot;Remove duplicates in place.&quot; &quot;Container with most water.&quot; &quot;Move zeros to the end.&quot; Anything where you can make a decision by comparing the two ends, or where one runner explores while another marks position.</p>
+<h2>Worked example: two sum on a sorted array</h2>
+<p>Because the array is sorted, you do not need a hash map at all. Point at both ends. If the current sum is too small, the only way to grow it is to move the left pointer right (to a bigger number). If it is too big, move the right pointer left (to a smaller number). You can never miss the answer.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def two_sum_sorted(nums, target):
+    left, right = 0, len(nums) - 1
+    while left &lt; right:
+        total = nums[left] + nums[right]
+        if total == target:
+            return [left, right]
+        elif total &lt; target:
+            left += 1          # need a bigger sum
+        else:
+            right -= 1         # need a smaller sum
+    return []
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int[] twoSumSorted(int[] nums, int target) {
+    int left = 0, right = nums.length - 1;
+    while (left &lt; right) {
+        int total = nums[left] + nums[right];
+        if (total == target) return new int[]{left, right};
+        else if (total &lt; target) left++;   // need a bigger sum
+        else right--;                        // need a smaller sum
+    }
+    return new int[]{};
+}
+This is O(n) time and O(1) space. No extra map, just two indices.
+</code></pre></div>
+<h2>Worked example: valid palindrome</h2>
+<p>Check whether a string reads the same forwards and backwards, ignoring case and non-letters.</p>
+<p>Point at both ends, skip anything that is not a letter or digit, and compare. Walk inward until the pointers meet.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def is_palindrome(s):
+    left, right = 0, len(s) - 1
+    while left &lt; right:
+        while left &lt; right and not s[left].isalnum():
+            left += 1
+        while left &lt; right and not s[right].isalnum():
+            right -= 1
+        if s[left].lower() != s[right].lower():
+            return False
+        left += 1
+        right -= 1
+    return True
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">boolean isPalindrome(String s) {
+    int left = 0, right = s.length() - 1;
+    while (left &lt; right) {
+        while (left &lt; right &amp;&amp; !Character.isLetterOrDigit(s.charAt(left)))
+left++;
+        while (left &lt; right &amp;&amp; !Character.isLetterOrDigit(s.charAt(right)))
+right--;
+        if (Character.toLowerCase(s.charAt(left)) !=
+            Character.toLowerCase(s.charAt(right))) return false;
+        left++;
+        right--;
+    }
+    return true;
+}
+</code></pre></div>
+<h2>The same-direction variant: remove duplicates in place</h2>
+<p>Given a sorted array, keep only one of each value, without allocating a new array. A slow pointer marks where the next unique value should go. A fast pointer scans ahead. Whenever fast finds something new, write it to the slow position and step slow forward.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def remove_duplicates(nums):
+    if not nums:
+        return 0
+    slow = 0                       # last position of a kept value
+    for fast in range(1, len(nums)):
+        if nums[fast] != nums[slow]:
+            slow += 1
+            nums[slow] = nums[fast]
+    return slow + 1                # length of the unique part
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int removeDuplicates(int[] nums) {
+    if (nums.length == 0) return 0;
+    int slow = 0;                          // last kept position
+    for (int fast = 1; fast &lt; nums.length; fast++) {
+        if (nums[fast] != nums[slow]) {
+            slow++;
+            nums[slow] = nums[fast];
+        }
+    }
+    return slow + 1;                        // length of unique part
+}
+</code></pre></div>
+<h2 class="section-label">W A T C H O U T</h2>
+<p>Opposite-ends two pointers usually requires the array to be sorted first. If it is not sorted and the problem does not let you sort, a hash map is often the better tool. Also be careful with the loop condition: while left &lt; right stops the pointers from crossing, which is almost always what you want.</p>
+<h3>Deeper Intuition</h3>
+<h2>Why moving the shorter side is safe</h2>
+<p>On a sorted array, the two ends carry information: if their sum is too big the answer must be smaller, so you can only help by pulling the right pointer in, and if it is too small you pull the left in. Each move permanently discards a whole set of pairs you never have to check again, which is why the work drops from O(n squared) to O(n). In the water container below, the height is limited by the shorter wall, so widening toward the taller wall can only lose area, and moving the shorter wall is the only move that can improve things. area = width * shorter wall = 7 * 7 = 49 1 8 6 2 5 4 8 3 7 L R Water is capped by the shorter wall, so moving the taller wall never helps.</p>
+<p>Move the shorter one inward.</p>
+<h2>Another worked example: Container With Most Water</h2>
+<p>Two walls hold water up to the height of the shorter one, times the distance between them. Start wide at both ends and always move the shorter wall inward, tracking the best area seen. Moving the shorter wall is the only choice that can ever increase the area.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def max_area(height):
+    left, right = 0, len(height) - 1
+    best = 0
+    while left &lt; right:
+        width = right - left
+        best = max(best, width * min(height[left], height[right]))
+        if height[left] &lt; height[right]:    # move the shorter wall in
+            left += 1
+        else:
+            right -= 1
+    return best
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int maxArea(int[] height) {
+    int left = 0, right = height.length - 1, best = 0;
+    while (left &lt; right) {
+        int width = right - left;
+        best = Math.max(best, width * Math.min(height[left], height[right]));
+        if (height[left] &lt; height[right]) left++;   // move shorter wall
+        else right--;
+    }
+    return best;
+}
+GOING DEEPER
+</code></pre></div>
+<h2>What kinds of problems this solves</h2>
+<h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
+<p>Problems on a sorted array or a string where two positions can move toward each other or in the same direction, so you replace a nested loop with a single sweep. Think pairing, partitioning in place, palindrome checks, and merging.</p>
+<p>Problem type Classic examples Ends moving inward Two Sum II, 3Sum, 4Sum, Container With Most Water, Trapping Rain Water, Valid Palindrome Same direction, slow and Remove Duplicates from Sorted Array, Move Zeroes, fast Remove Element, Sort Colors Merging two sequences Merge Sorted Array, Squares of a Sorted Array, Backspace String Compare</p>
+<h2>The algorithm, in a bit more detail</h2>
+<p>When the array is sorted, the two ends carry information. If the sum of the two ends is too big, the only way to get smaller is to pull the right pointer left. If it is too small, push the left pointer right.</p>
+<p>Each step throws away a whole set of pairs you no longer need to check, which is why the work drops from O(n squared) to O(n).</p>
+<p>The same direction version uses a slow pointer that marks where the next good element goes and a fast pointer that scans ahead. This is how you compact an array in place, moving the elements you want to keep to the front without extra memory.</p>
+<h2>Variations you will run into</h2>
+<p>Common flavors are opposite ends for pair and area problems, slow and fast in one direction for in place filtering, and three pointers for 3Sum, where you fix one element and two pointer the rest.</p>
+<p>The Dutch national flag idea (Sort Colors) uses three pointers to partition into low, middle, and high in one pass.</p>
+<h2>Edge cases and gotchas</h2>
+<p>The opposite ends trick needs a sorted array, so sort first if the input is not sorted and the problem allows it.</p>
+<p>In 3Sum and 4Sum, skip duplicate values on both pointers or you will emit the same triple many times.</p>
+<p>Watch the loop condition, usually left is strictly less than right, so you do not compare an element with itself.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p030.jpg" alt="For in place removal, return the new length and remember the array tail past that length is" loading="lazy" /><figcaption>For in place removal, return the new length and remember the array tail past that length is</figcaption></figure>
+<p>For in place removal, return the new length and remember the array tail past that length is Two pointers on the sorted array [1, 3, 4, 6, 8, 10] with target = 10. The ends move inward based on</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

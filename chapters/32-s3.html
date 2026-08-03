@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>32 · Design: Amazon S3 — Interview Prep</title>
+  <meta name="description" content="32 · Design: Amazon S3 — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="32-s3" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">System Design</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 32</p>
+<h1>Design: Amazon S3</h1>
+</header>
+<div class="chapter-body">
+<p>S3 is a service that stores files, called objects, and simply never loses them. That is the whole game: durability at massive scale. Store trillions of objects across cheap, failure prone machines while guaranteeing that a dead disk, or even a whole dead building, never loses your data.</p>
+<h2>Requirements</h2>
+<p>Put and get objects by a key, group them into buckets, store objects of any size, and offer extremely high durability and availability with effectively unlimited capacity. Reads and writes are simple by key, but the durability bar is the hard part.</p>
+<p>Metadata DB Metadata service object index Client API Node · replica Storage service Node · replica Node · replica Small metadata is stored and queried separately from the object bytes, which are copied across many nodes.</p>
+<h2>The key decisions</h2>
+<p>The first move is to separate metadata from the data. Metadata (where an object lives, its size, its permissions) is small and queried constantly, so it lives in a fast, sharded store. The object bytes are huge and streamed, so they go to dedicated storage nodes. These two have completely different access patterns, and splitting them lets each scale on its own.</p>
+<p>Durability comes from redundancy across failure domains. You either keep several full copies (replication) or use erasure coding, which splits an object into fragments plus parity so the whole</p>
+<p>thing can be rebuilt from a subset. Either way the pieces are spread across separate disks, racks, and data centers, so no single failure loses data. A background process constantly watches for failed disks and re creates the lost copies. On consistency, S3 today offers strong read after write for new objects, a place where the classic CAP trade off shows up directly.</p>
+<p>PROS CONS Replication is simple and makes reads Replication multiplies storage cost by fast from any copy the number of copies Erasure coding gives the same durability Erasure coding is cheaper but costs using far less storage more CPU to rebuild on read Separating metadata from data lets each Re replicating after failures uses real scale independently background bandwidth</p>
+<h2 class="section-label">E R A S U R E C O D I N G I N O N E L I N E</h2>
+<p>Instead of storing three full copies, split the object into say ten data fragments and add four parity fragments, then scatter all fourteen. You can lose any four fragments and still rebuild the object perfectly. You get durability similar to replication while storing far less than three full copies, which is why huge storage systems lean on it.</p>
+<h3>Going Deeper</h3>
+<h2>Erasure coding, and durability math</h2>
+<p>Keeping three full copies is simple but triples your storage. Erasure coding does better. You split an object into k data fragments and compute m parity fragments, then scatter all k plus m across different nodes. You can lose any m of them and still rebuild the object exactly, so you reach durability similar to replication while storing far less than three copies. Spreading the fragments across separate racks and data centers is what lets a system quote durability like eleven nines, because the chance of losing more than m fragments at the same moment becomes astronomically small.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p177.jpg" alt="the red fragments are lost, yet the object still rebuilds" loading="lazy" /><figcaption>the red fragments are lost, yet the object still rebuilds</figcaption></figure>
+<p>the red fragments are lost, yet the object still rebuilds 4 data + 2 parity, spread across nodes; lose any 2 and rebuild Erasure coding splits an object into data and parity fragments, so it survives How storing one object keeps it safe from any single failure. The client sends a put request with the object bytes and a key. The service records the object&#x27;s metadata, its key, size, and location, in the metadata store. It splits the bytes and writes copies, or erasure coded fragments, across several nodes in It confirms success only once enough copies are safely stored. A background process keeps watching for failed disks and re creates any lost copies</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

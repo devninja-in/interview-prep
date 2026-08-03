@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>09 · Trees and BST — Interview Prep</title>
+  <meta name="description" content="09 · Trees and BST — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="09-trees" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 09</p>
+<h1>Trees and BST</h1>
+</header>
+<div class="chapter-body">
+<h2 class="section-label">T R E E S A N D H E A P S</h2>
+<p>A tree is a branching structure. One node at the top (the root), and each node points to its children below. There are no loops. Most tree problems are solved by recursion, because a tree is made of smaller trees: every node is itself the root of its own subtree. root 8 3 10 1 6 14 leaves have no children A binary tree: each node has at most a left child and a right child.</p>
+<h2>The two ways to walk a tree</h2>
+<p>Depth first (DFS). Go as deep as you can down one branch before backing up. This is naturally recursive. There are three orders depending on when you visit the node relative to its children: Preorder: node, then left, then right. Good for copying a tree.</p>
+<p>Inorder: left, then node, then right. On a binary search tree this visits values in sorted order.</p>
+<p>Postorder: left, then right, then node. Good when you need results from children first, like computing height.</p>
+<p>Breadth first (BFS). Visit the tree level by level, top to bottom. This uses a queue, and it is the tool for &quot;level order&quot; problems and shortest path in an unweighted graph.</p>
+<h2 class="section-label">R E A C H F O R T H E S E W H E N Y O U S E E</h2>
+<p>&quot;Depth&quot;, &quot;height&quot;, &quot;count nodes&quot;, &quot;is the tree balanced&quot;, &quot;path sum&quot;: use DFS recursion. &quot;Level order&quot;, &quot;nodes at each level&quot;, &quot;minimum depth&quot;, &quot;right side view&quot;: use BFS with a queue. &quot;Search / insert / validate&quot; on a binary search tree: use the sorted property to go left or right.</p>
+<h2>The node, and DFS with recursion</h2>
+<p>Max depth is the perfect first example. The depth of a tree is one plus the depth of its taller subtree.</p>
+<p>An empty tree has depth zero. That sentence is the whole algorithm.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+def max_depth(root):
+    if not root:
+        return 0                       # empty tree has depth 0
+    left = max_depth(root.left)        # depth of left subtree
+    right = max_depth(root.right)      # depth of right subtree
+    return 1 + max(left, right)        # this node adds one level
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int val) { this.val = val; }
+}
+int maxDepth(TreeNode root) {
+    if (root == null) return 0;             // empty -&gt; 0
+    int left = maxDepth(root.left);
+    int right = maxDepth(root.right);
+    return 1 + Math.max(left, right);       // this node adds a level
+}
+</code></pre></div>
+<h2 class="section-label">T H E R E C U R S I V E T R E E T E M P L A T E</h2>
+<p>Almost every DFS tree function has the same three parts. First, the base case: if the node is null, return the &quot;empty&quot; answer (0, or true, or null). Second, recurse on the left and right children. Third, combine their answers with the current node&#x27;s value. Once you see this shape, you can write most tree solutions in a minute.</p>
+<h2>BFS: level order traversal</h2>
+<p>Use a queue. Put the root in. Then, while the queue is not empty, process everything currently in it as one level, and add all their children for the next level. Counting the queue size at the start of each round is the trick that separates the levels cleanly.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import deque
+def level_order(root):
+    if not root:
+        return []
+    result = []
+    queue = deque([root])
+    while queue:
+        level = []
+        for _ in range(len(queue)):   # exactly the nodes on this level
+            node = queue.popleft()
+            level.append(node.val)
+            if node.left:  queue.append(node.left)
+            if node.right: queue.append(node.right)
+        result.append(level)
+    return result
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">List&lt;List&lt;Integer&gt;&gt; levelOrder(TreeNode root) {
+    List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+    if (root == null) return result;
+    Queue&lt;TreeNode&gt; queue = new LinkedList&lt;&gt;();
+    queue.offer(root);
+    while (!queue.isEmpty()) {
+        int size = queue.size();          // nodes on this level
+        List&lt;Integer&gt; level = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; size; i++) {
+            TreeNode node = queue.poll();
+            level.add(node.val);
+            if (node.left != null)  queue.offer(node.left);
+            if (node.right != null) queue.offer(node.right);
+        }
+        result.add(level);
+    }
+    return result;
+}
+</code></pre></div>
+<h2>Binary search trees: the sorted shortcut</h2>
+<p>A binary search tree keeps a rule at every node: everything in the left subtree is smaller, everything in the right subtree is bigger. That means searching is just repeated &quot;go left or go right,&quot; which is binary search on a tree. Insert follows the same path until it finds an empty spot.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def search_bst(root, target):
+    while root:
+        if target == root.val:
+            return root
+        root = root.left if target &lt; root.val else root.right
+    return None
+def insert_bst(root, val):
+    if not root:
+        return TreeNode(val)          # found the empty spot
+    if val &lt; root.val:
+        root.left = insert_bst(root.left, val)
+    else:
+        root.right = insert_bst(root.right, val)
+    return root
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">TreeNode searchBST(TreeNode root, int target) {
+    while (root != null) {
+        if (target == root.val) return root;
+        root = (target &lt; root.val) ? root.left : root.right;
+    }
+    return null;
+}
+TreeNode insertBST(TreeNode root, int val) {
+    if (root == null) return new TreeNode(val);  // empty spot
+    if (val &lt; root.val) root.left = insertBST(root.left, val);
+    else root.right = insertBST(root.right, val);
+    return root;
+}
+</code></pre></div>
+<h2 class="section-label">W A T C H O U T</h2>
+<p>To validate a binary search tree, checking only that each node is bigger than its left child and smaller than its right child is not enough. A node deep on the left must be smaller than an ancestor far above it. Pass down a valid range (a low and high bound) as you recurse, and tighten it at each step. Also remember deep recursion can overflow the call stack on a very tall tree, so extremely skewed trees sometimes need an iterative approach.</p>
+<h3>Deeper Intuition</h3>
+<h2>Why recursion and the BST order do the work</h2>
+<p>Most tree problems are solved by asking one question: if I already had the answers for my left and right subtrees, how would I combine them into mine. That single idea gives height, diameter, balance, and path sums almost for free. A binary search tree adds an ordering rule, everything left is smaller and everything right is larger, which lets you find, insert, or locate a common ancestor by simply comparing values and walking down one side.</p>
+<p>LCA of 2 and 8 is 6, the node where their paths split 6 2 8 0 4 7 9 In a BST, walk down comparing values. The first node that sits between the two targets is their lowest common ancestor.</p>
+<h2>Another worked example: Lowest Common Ancestor of a</h2>
+<h2>BST</h2>
+<p>The lowest common ancestor of two nodes is where their paths from the root first split. In a BST you can find it without recursion: walk down from the root, and if both targets are smaller go left, if both</p>
+<p>are larger go right, otherwise this node is the split point and the answer.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def lowest_common_ancestor(root, p, q):
+    node = root
+    while node:
+        if p.val &lt; node.val and q.val &lt; node.val:
+            node = node.left        # both smaller, go left
+        elif p.val &gt; node.val and q.val &gt; node.val:
+            node = node.right       # both larger, go right
+        else:
+            return node             # the split point is the LCA
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    TreeNode node = root;
+    while (node != null) {
+        if (p.val &lt; node.val &amp;&amp; q.val &lt; node.val) node = node.left;
+        else if (p.val &gt; node.val &amp;&amp; q.val &gt; node.val) node = node.right;
+        else return node;           // split point
+    }
+    return null;
+}
+GOING DEEPER
+</code></pre></div>
+<h2>What kinds of problems this solves</h2>
+<h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
+<p>Anything on a hierarchy: depth and height, path and sum questions, validating or searching a binary search tree, working level by level, finding a lowest common ancestor, or building and serializing a tree.</p>
+<p>Problem type Classic examples Depth and path with DFS Maximum Depth, Diameter of Binary Tree, Path Sum, Balanced Binary Tree, Binary Tree Maximum Path Sum Level by level with BFS Binary Tree Level Order Traversal, Zigzag Level Order, Right Side View, Average of Levels Binary search tree Validate Binary Search Tree, Kth Smallest Element in a BST, properties Lowest Common Ancestor of a BST, Convert Sorted Array to BST Construct and serialize Construct Tree from Preorder and Inorder, Serialize and Deserialize Binary Tree, Flatten Binary Tree to Linked List</p>
+<h2>The algorithm, in a bit more detail</h2>
+<p>Most tree problems are a recursion that solves the children first and then combines their answers.</p>
+<p>Ask &quot;if I already knew the answer for my left and right subtrees, how would I compute mine?&quot; That single question gives you height, diameter, balance, and path sums almost for free.</p>
+<p>A binary search tree adds an ordering rule: everything left is smaller, everything right is larger. That lets you search, insert, and find a lowest common ancestor by simply comparing values and walking down one side, which is O(height). An in order traversal of a BST visits values in sorted order, which is why &quot;kth smallest&quot; and &quot;validate BST&quot; lean on it.</p>
+<h2>Variations you will run into</h2>
+<p>Depth first traversal comes in preorder, inorder, and postorder, done recursively or with an explicit stack. Breadth first uses a queue and naturally groups nodes by level. For BST questions, always think about the ordering invariant before writing code.</p>
+<h2>Edge cases and gotchas</h2>
+<p>To validate a BST you must pass down an allowed range, not just compare a node with its direct parent.</p>
+<p>Handle the null node as your base case cleanly, it is the root of most tree bugs.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p071.jpg" alt="Level order needs to capture the queue size at the start of each level so you know where one" loading="lazy" /><figcaption>Level order needs to capture the queue size at the start of each level so you know where one</figcaption></figure>
+<p>Level order needs to capture the queue size at the start of each level so you know where one Recursion depth can be large on a skewed tree, so very deep trees may need an iterative</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

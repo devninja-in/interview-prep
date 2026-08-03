@@ -1,5 +1,5 @@
 (async function () {
-  const res = await fetch("assets/book-data.json");
+  const res = await fetch("assets/nav.json");
   const data = await res.json();
   const chapters = data.chapters.filter((c) => c.num);
 
@@ -24,7 +24,7 @@
             .map(
               (ch) => `
             <li>
-              <a href="read.html#${ch.id}">
+              <a href="${ch.href}">
                 <span class="num">${ch.num}</span>
                 <span>${ch.title}</span>
               </a>
@@ -36,15 +36,22 @@
     )
     .join("");
 
-  const diagramPages = data.pages.filter((p) => p.is_diagram).slice(0, 12);
   const strip = document.getElementById("diagram-strip");
-  strip.innerHTML = diagramPages
+  const diagramFiles = [
+    "diagram-p008.jpg",
+    "diagram-p140.jpg",
+    "diagram-p161.jpg",
+    "diagram-p165.jpg",
+    "diagram-p195.jpg",
+    "diagram-p205.jpg",
+  ];
+  strip.innerHTML = diagramFiles
     .map(
-      (p) => `
+      (f, i) => `
       <figure class="diagram-card">
-        <a href="read.html#p${String(p.page).padStart(3, "0")}">
-          <img src="${p.file}" alt="Diagram from page ${p.page}" loading="lazy" />
-          <figcaption>Page ${p.page}</figcaption>
+        <a href="chapters/00-how-to-use.html">
+          <img src="assets/diagrams/${f}" alt="Book diagram ${i + 1}" loading="lazy" />
+          <figcaption>Diagram</figcaption>
         </a>
       </figure>`
     )

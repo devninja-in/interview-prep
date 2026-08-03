@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>11 · Backtracking — Interview Prep</title>
+  <meta name="description" content="11 · Backtracking — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="11-backtracking" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 11</p>
+<h1>Backtracking</h1>
+</header>
+<div class="chapter-body">
+<h3>R E C U R S I O N Fa M I Ly</h3>
+<p>Backtracking is organized trial and error. You build a solution one choice at a time. When a choice leads nowhere, you undo it and try the next option. It is how you generate all subsets, all permutations, all combinations, and how you solve puzzles like Sudoku and the N-Queens board. [ ] skip 1 take 1 [ ] [2] [1] [1,2] at each item you branch: include it or skip it the leaves are all the subsets Backtracking explores this tree of choices, then rewinds to try the other branch.</p>
+<h2 class="section-label">R E A C H F O R B A C K T R A C K I N G W H E N Y O U S E E</h2>
+<p>&quot;Generate all...&quot;, &quot;find every combination / permutation / subset&quot;, &quot;list all valid arrangements&quot;, or a constraint puzzle. The giveaway in the constraints is a small input size, often n up to about 15 or 20, because the number of possibilities grows explosively and only stays feasible when n is small.</p>
+<h2>The universal template: choose, explore, unchoose</h2>
+<p>Every backtracking solution has the same rhythm. You make a choice (add something to your current path), you recurse to build on it, then you undo the choice (remove it) so you can try the next option. That undo step is the &quot;backtrack,&quot; and it is what makes the whole search work.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def backtrack(path, options):
+    if is_complete(path):        # reached a full solution
+        record(path)
+        return
+    for choice in options:
+        path.append(choice)      # choose
+        backtrack(path, next_options(choice))   # explore
+        path.pop()               # unchoose (this is the backtrack)
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">void backtrack(List&lt;Integer&gt; path, ...) {
+    if (isComplete(path)) {      // full solution reached
+        record(path);
+        return;
+    }
+    for (int choice : options) {
+        path.add(choice);        // choose
+        backtrack(path, ...);    // explore
+        path.remove(path.size() - 1);  // unchoose
+    }
+}
+</code></pre></div>
+<h2>Worked example: all subsets</h2>
+<p>For each element you have two choices: include it or leave it out. Recurse through the elements, and every time you run out of elements you have formed one complete subset. Record a copy of the current path at every node, because subsets include the partial ones too.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def subsets(nums):
+    result = []
+    def backtrack(start, path):
+        result.append(path[:])          # record a copy of the current subset
+        for i in range(start, len(nums)):
+            path.append(nums[i])        # choose nums[i]
+            backtrack(i + 1, path)      # explore with the rest
+            path.pop()                  # unchoose
+    backtrack(0, [])
+    return result
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">List&lt;List&lt;Integer&gt;&gt; subsets(int[] nums) {
+    List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+    backtrack(nums, 0, new ArrayList&lt;&gt;(), result);
+    return result;
+}
+void backtrack(int[] nums, int start, List&lt;Integer&gt; path,
+                List&lt;List&lt;Integer&gt;&gt; result) {
+    result.add(new ArrayList&lt;&gt;(path));   // record a copy
+    for (int i = start; i &lt; nums.length; i++) {
+        path.add(nums[i]);               // choose
+        backtrack(nums, i + 1, path, result);  // explore
+        path.remove(path.size() - 1);    // unchoose
+    }
+}
+</code></pre></div>
+<h2>Worked example: all permutations</h2>
+<p>Permutations differ from subsets in one way: order matters and you use every element. So instead of a start index, you track which elements are still available and pick any unused one at each step.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def permutations(nums):
+    result = []
+    used = [False] * len(nums)
+    def backtrack(path):
+        if len(path) == len(nums):      # used everything
+            result.append(path[:])
+            return
+        for i in range(len(nums)):
+            if used[i]:
+                continue                # skip already-used elements
+            used[i] = True
+            path.append(nums[i])        # choose
+            backtrack(path)             # explore
+            path.pop()                  # unchoose
+            used[i] = False
+    backtrack([])
+    return result
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">List&lt;List&lt;Integer&gt;&gt; permutations(int[] nums) {
+    List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+    boolean[] used = new boolean[nums.length];
+    backtrack(nums, used, new ArrayList&lt;&gt;(), result);
+    return result;
+}
+void backtrack(int[] nums, boolean[] used, List&lt;Integer&gt; path,
+                List&lt;List&lt;Integer&gt;&gt; result) {
+    if (path.size() == nums.length) {
+        result.add(new ArrayList&lt;&gt;(path));
+        return;
+    }
+    for (int i = 0; i &lt; nums.length; i++) {
+        if (used[i]) continue;
+        used[i] = true;
+        path.add(nums[i]);
+        backtrack(nums, used, path, result);
+        path.remove(path.size() - 1);
+        used[i] = false;
+    }
+}
+</code></pre></div>
+<h2 class="section-label">P R U N E E A R L Y T O G O F A S T E R</h2>
+<p>The real speed in backtracking comes from cutting off dead branches as soon as you can tell they will fail. In combination sum, if the running total already passed the target, stop; do not keep adding. In N-Queens, check for conflicts before placing a queen, not after. A good prune can turn an impossible search into an instant one.</p>
+<h2 class="section-label">W A T C H O U T</h2>
+<p>When you save a solution, save a copy, not the live path. In Python that is path[:] , in Java it is new ArrayList&lt;&gt;(path) . If you store the path directly, later backtracking edits it and every saved answer ends up identical and wrong. This single mistake accounts for a huge share of backtracking bugs.</p>
+<h3>Deeper Intuition</h3>
+<h2>Why choose, explore, unchoose works</h2>
+<p>Backtracking is depth first search over the tree of all choices. You choose an option, recurse to explore everything that follows, then undo the choice so you can try the next one. That rhythm visits every valid arrangement exactly once. The thing that keeps it from being hopelessly slow is pruning: the instant a partial choice cannot lead to a valid answer, you stop and back out instead of exploring a dead branch.</p>
+<p>cut a branch the moment it cannot lead to a valid answer [] X prune: 9 already exceeds the target 2 9 2,2 2,4 Backtracking explores the tree of choices, but pruning skips whole branches that cannot possibly work.</p>
+<h2>Another worked example: Combination Sum</h2>
+<p>Find every combination of numbers that adds up to a target, where each number may be reused.</p>
+<p>Try candidates from a start index so you never repeat a combination in a different order, and prune any branch whose next candidate already exceeds what remains.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def combination_sum(candidates, target):
+    result = []
+    def backtrack(start, remaining, path):
+        if remaining == 0:
+            result.append(path[:])         # a valid combination
+            return
+        for i in range(start, len(candidates)):
+            if candidates[i] &gt; remaining:
+                continue                   # prune: too big
+            path.append(candidates[i])
+            backtrack(i, remaining - candidates[i], path)  # reuse allowed
+            path.pop()                     # unchoose
+    backtrack(0, target, [])
+    return result
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">List&lt;List&lt;Integer&gt;&gt; combinationSum(int[] candidates, int target) {
+    List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+    backtrack(candidates, 0, target, new ArrayList&lt;&gt;(), result);
+    return result;
+}
+void backtrack(int[] c, int start, int remaining,
+                List&lt;Integer&gt; path, List&lt;List&lt;Integer&gt;&gt; result) {
+    if (remaining == 0) { result.add(new ArrayList&lt;&gt;(path)); return; }
+    for (int i = start; i &lt; c.length; i++) {
+        if (c[i] &gt; remaining) continue;           // prune
+        path.add(c[i]);
+        backtrack(c, i, remaining - c[i], path, result);  // reuse i
+        path.remove(path.size() - 1);             // unchoose
+    }
+}
+GOING DEEPER
+</code></pre></div>
+<h2>What kinds of problems this solves</h2>
+<h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
+<p>Any request to build all of something by making a sequence of choices: every subset, every permutation, every combination, or filling a board under constraints. If the word all appears and the input is small, this is usually it.</p>
+<p>Problem type Classic examples Subsets and combinations Subsets, Subsets II, Combinations, Combination Sum, Combination Sum II, Letter Combinations of a Phone Number Permutations Permutations, Permutations II, Next Permutation via ordering Partitioning and boards Palindrome Partitioning, N-Queens, Sudoku Solver, Word Search, Restore IP Addresses</p>
+<h2>The algorithm, in a bit more detail</h2>
+<p>Backtracking is depth first search over the tree of choices. At each step you choose an option, recurse to explore everything that follows from it, then undo the choice so you can try the next option. That choose, explore, unchoose rhythm is the whole template, and it guarantees you visit every valid arrangement exactly once.</p>
+<p>The thing that keeps it from being hopelessly slow is pruning. The moment a partial choice cannot possibly lead to a valid answer, you stop and back out instead of exploring a dead branch. Good pruning is often the difference between passing and timing out on N-Queens or Sudoku.</p>
+<h2>Variations you will run into</h2>
+<p>For combinations you pass a start index so you never reuse earlier elements and never repeat a set in a different order. For permutations you track which elements are already used. To handle duplicates, sort first and skip a value that equals the previous one at the same depth.</p>
+<h2>Edge cases and gotchas</h2>
+<p>Always undo your choice after the recursive call, or state leaks between branches.</p>
+<p>When you record a solution, add a copy of the current path, not the live list, since it keeps changing.</p>
+<p>Sort and skip duplicates to avoid emitting the same subset or permutation twice.</p>
+<p>Prune early with a feasibility check, otherwise the exponential blowup will time out.</p>
+<h3>Step By Step</h3>
+<p>Generating all subsets of [1, 2] with choose, explore, unchoose. Every path down the decision tree records one subset.</p>
+<p>Start with the empty subset [] and record it. 1 Choose 1, giving [1], and record it. 2 From [1], choose 2, giving [1, 2], and record it, then unchoose 2 to return to [1]. 3 Unchoose 1 to return to []. Now choose 2, giving [2], and record it, then unchoose 2. 4 Every choice has been explored. Subsets found: [], [1], [1, 2], [2]. 5</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

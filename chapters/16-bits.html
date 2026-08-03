@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>16 · Bit manipulation — Interview Prep</title>
+  <meta name="description" content="16 · Bit manipulation — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="16-bits" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 16</p>
+<h1>Bit manipulation</h1>
+</header>
+<div class="chapter-body">
+<p>Computers store numbers as bits, a row of ones and zeros. A few problems become almost free if you work directly with those bits. You do not need to love binary, you just need a handful of moves.</p>
+<h2>The operators, in plain terms</h2>
+<p>Operator What it does</p>
+<h3>&amp; And</h3>
+<p>1 only where both bits are 1. Used to test or clear bits.</p>
+<h3>| Or</h3>
+<p>1 where either bit is 1. Used to set bits.</p>
+<h3>^ Xor</h3>
+<p>1 where the bits differ. A number XORed with itself is 0.</p>
+<h3>~ Not</h3>
+<p>Flips every bit. &lt;&lt; left shift Shifts bits left, which multiplies by 2 each step. &gt;&gt; right shift Shifts bits right, which divides by 2 each step. 0 1 0 1 5 = 0 0 1 1 XOR gives 1 only in the 3 = columns where the bits differ 0 1 1 0 = 6</p>
+<h3>Xor =</h3>
+<p>XOR compares bit by bit and keeps only the differences.</p>
+<h2 class="section-label">R E A C H F O R B I T S W H E N Y O U S E E</h2>
+<p>&quot;Find the one number that appears once while all others appear twice&quot; (XOR). &quot;Count the set bits.&quot; &quot;Is this a power of two.&quot; &quot;Generate all subsets using a bitmask.&quot; Anything about flags, toggles, or on/off states packed into a single integer.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p124.jpg" alt="Worked example: the single number" loading="lazy" /><figcaption>Worked example: the single number</figcaption></figure>
+<p>Every number appears twice except one. Find the lonely one. XOR is perfect here: any number XORed with itself cancels to 0, and XOR with 0 leaves a number unchanged. So XOR the whole array together; the pairs cancel out and the single number survives. This is O(n) time and O(1) result ^= x # pairs cancel, the lonely number remains</p>
+<h2>Worked example: count the set bits</h2>
+<p>Count how many 1s are in the binary form of a number. The elegant way uses the trick above: n &amp; (n - 1) removes the lowest 1 each time. So loop, removing one 1 per step, and count the steps. It runs only as many times as there are set bits, not the full bit width.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def count_bits(n):
+    count = 0
+    while n:
+        n &amp;= n - 1        # clears the lowest set bit
+        count += 1
+    return count
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int countBits(int n) {
+    int count = 0;
+    while (n != 0) {
+        n &amp;= (n - 1);     // clear the lowest set bit
+        count++;
+    }
+    return count;
+}
+</code></pre></div>
+<h2 class="section-label">W A T C H O U T</h2>
+<p>Java integers are 32-bit and signed, so right-shifting a negative number keeps the sign bit; use the unsigned shift &gt;&gt;&gt; when you want zeros pulled in from the left. Python integers have unlimited size and no fixed width, so some bit tricks that rely on overflow behave differently. When a problem mixes negatives and bit shifts, test with a negative input on purpose.</p>
+<h3>Deeper Intuition</h3>
+<h2>Why bits are secretly sets</h2>
+<p>The three moves that carry most bit problems are simple: XOR cancels pairs since a number XORed with itself is zero, the expression n and n minus one clears the lowest set bit, and a mask lets you test, set, or clear any single bit. The deeper idea is that an integer is a tiny set: each bit says whether an element is in or out, so counting from zero up to two to the n walks through every possible subset. That is the backbone of bitmask dynamic programming for small inputs. each 3-bit number is one subset of { a, b, c } -&gt; -&gt; 000 100 { } { c } -&gt; -&gt; 001 101 { a } { a, c } -&gt; -&gt; 010 110 { b } { b, c } -&gt; -&gt; 011 111 { a, b } { a, b, c } Treating an integer&#x27;s bits as in-or-out flags, the numbers 0 to 2^n minus 1 enumerate every subset.</p>
+<h2>Another worked example: Missing Number</h2>
+<p>An array holds the numbers 0 to n with exactly one missing. XOR every index together with every value, plus n itself. Every number that is present cancels with its matching index, and the one missing number is left standing. O(n) time and O(1) space.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def missing_number(nums):
+    result = len(nums)              # start with n
+    for i, x in enumerate(nums):
+        result ^= i ^ x             # XOR all indices and values
+    return result                   # the missing one survives
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int missingNumber(int[] nums) {
+    int result = nums.length;
+    for (int i = 0; i &lt; nums.length; i++)
+        result ^= i ^ nums[i];      // pairs cancel, missing remains
+    return result;
+}
+GOING DEEPER
+</code></pre></div>
+<h2>What kinds of problems this solves</h2>
+<h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
+<p>Problems about toggles and flags, finding the odd one out among pairs, enumerating subsets with a bitmask, counting set bits, and quick checks like power of two. Also bitmask dynamic programming for small sets.</p>
+<p>Problem type Classic examples XOR tricks Single Number, Single Number II, Single Number III, Missing Number, Find the Difference Counting and checks Number of 1 Bits, Counting Bits, Power of Two, Reverse Bits Bitmask enumeration and Subsets via bitmask, Sum of Two Integers, Maximum XOR of DP Two Numbers, Partition to K Equal Sum Subsets</p>
+<h2>The algorithm, in a bit more detail</h2>
+<p>The three moves that carry this chapter are simple. XOR cancels pairs, since a number XORed with itself is zero, so XORing a whole array leaves only the element that appears an odd number of times. The expression n and n minus one clears the lowest set bit, which lets you count set bits in as many steps as there are ones. And a mask lets you test, set, or clear any single bit with a shift.</p>
+<p>The more advanced use is treating an integer as a set. Each bit says whether an element is in or out, so a number from zero up to two to the n covers every subset. That is the backbone of bitmask dynamic programming for problems with small n, like assigning tasks or the travelling salesman on a handful of cities.</p>
+<h2>Variations you will run into</h2>
+<p>You will use plain XOR for odd one out problems, n and n minus one for counting and power of two checks, and bitmask as a set for enumerating subsets or as a DP state. Shifts double or halve a number cheaply.</p>
+<h2>Edge cases and gotchas</h2>
+<p>In Java, right shifting a negative number keeps the sign bit, so use the unsigned shift with three angle brackets when you want zeros pulled in.</p>
+<p>Python integers have no fixed width, so tricks that rely on overflow behave differently than in Java or C.</p>
+<p>Bitwise operators have low precedence, so wrap them in parentheses inside comparisons.</p>
+<p>Be careful mixing signed values and shifts, and test with a negative input on purpose.</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

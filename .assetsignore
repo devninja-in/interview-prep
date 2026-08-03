@@ -8,10 +8,10 @@
 node_modules/
 dist/
 public/
+scripts/
 
 # Worker / tooling (not public site files)
 src/
-scripts/
 package.json
 package-lock.json
 wrangler.jsonc

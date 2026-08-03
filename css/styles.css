@@ -170,7 +170,7 @@ img {
   inset: 0;
   background:
     linear-gradient(120deg, rgba(15, 28, 36, 0.72) 0%, rgba(15, 28, 36, 0.35) 42%, rgba(15, 28, 36, 0.15) 100%),
-    url("../assets/pages/page-001.jpg") center / cover no-repeat;
+    url("../assets/cover.jpg") center / cover no-repeat;
   transform: scale(1.04);
   animation: hero-drift 18s var(--ease) infinite alternate;
   z-index: 0;

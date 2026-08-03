@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>30 · Design: Instagram — Interview Prep</title>
+  <meta name="description" content="30 · Design: Instagram — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="30-instagram" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">System Design</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 30</p>
+<h1>Design: Instagram</h1>
+</header>
+<div class="chapter-body">
+<p>Instagram is a feed sitting on top of a media problem. The feed is the timeline of posts from people you follow, and it carries the same hard trade off every feed does: do you do the work when someone posts, or when someone reads? On top of that, the posts are photos and videos, which changes how you store and deliver them.</p>
+<h2>Requirements</h2>
+<p>Users follow others and see a feed of recent posts, usually newest first or ranked by relevance.</p>
+<p>Reads must be fast and are far more frequent than writes. The tricky part is that some users have millions of followers, which breaks the simple approaches.</p>
+<h2>The core choice: push versus pull</h2>
+<p>Fanout on write, the push model, does the work when you post: the post is immediately written into the precomputed feed of every follower. Reads then become a trivial lookup, which is wonderful, but a single post by someone with millions of followers triggers millions of writes.</p>
+<p>Fanout on read, the pull model, does the work when you open the app: the feed is built on the fly by gathering recent posts from everyone you follow. Writes are cheap, but reads become expensive and slow, especially if you follow many people.</p>
+<p>Write (fanout on post) Follower feed cache User posts Post service Fanout worker Follower feed cache Read Feed cache Follower Feed service precomputed list read Push writes a post into every follower&#x27;s feed ahead of time, so reads are a simple lookup.</p>
+<p>PROS CONS Push makes reads a fast, precomputed Push explodes on users with millions of lookup followers Pull keeps writes cheap and handles Pull makes every feed load do heavy celebrities well gathering work A hybrid gets the best of both for Keeping precomputed feeds fresh adds different user types complexity Ranking on top of either approach adds more cost</p>
+<h2>The hybrid that real systems use</h2>
+<p>The practical answer is a mix. Use push for ordinary users, so their followers get fast precomputed feeds. Use pull for the handful of celebrities with enormous followings, whose posts are merged in at read time instead of fanned out to millions. This hybrid sidesteps the worst case of each while keeping the common case fast.</p>
+<h2 class="section-label">T H E C E L E B R I T Y P R O B L E M D R I V E S T H E D E S I G N</h2>
+<p>If every account were small, pure push would be perfect. The entire reason for the hybrid is that a few accounts have millions of followers, and fanning a single post out to all of them would be crippling. Naming this trade off is exactly what a strong answer to this question sounds like.</p>
+<h2 class="section-label">W H A T M A K E S I N S T A G R A M S P E C I F I C</h2>
+<p>The feed logic is the push and pull mix from this chapter, but the media is the real work.</p>
+<p>Photos and videos are large, so they never live in the main database. On upload they go to object storage, get processed into several resolutions, and are served through a CDN close to the viewer, while the database holds only small records like the media id, caption, and author. Stories and the explore page are separate ranked surfaces layered on the same building blocks. The heavy lifting is storing and delivering media fast, not storing text.</p>
+<h3>Going Deeper</h3>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p170.jpg" alt="The media pipeline behind a single photo" loading="lazy" /><figcaption>The media pipeline behind a single photo</figcaption></figure>
+<p>When a photo is uploaded it does not go into a database, it goes to object storage and kicks off processing that produces several sizes and formats, a thumbnail, a feed sized version, and a full size original. Those variants live in object storage and are served through a CDN, so each device pulls just the resolution it will actually display from a nearby edge. The database only stores a small record pointing at the media. This split is why feeds load quickly around the world: the heavy bytes are cached close to users, and the app never downloads more pixels than it shows. each device pulls only the size it needs from a nearby edge Media never touches the database. It is processed into sizes, stored, and Writing a post into every follower&#x27;s feed is great until an account has millions of followers, when one post triggers millions of writes. The fix is a hybrid: push posts into precomputed feeds for ordinary accounts, but for a handful of celebrities pull their recent posts in at read time and merge them into the feed. This keeps the common case fast while surviving the How an Instagram post is created and later appears in a follower&#x27;s feed. A user uploads a photo, which goes to object storage and is processed into several sizes. A small post record with the media id, caption, and author is written to the database.</p>
+<p>For a normal account, a fanout worker writes the new post id into each follower&#x27;s 3 precomputed feed.</p>
+<p>When a follower opens the app, the feed service reads their precomputed list of post ids. 4 The app fetches each post&#x27;s media from the nearest CDN edge and renders the feed. 5</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

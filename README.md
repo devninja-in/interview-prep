@@ -1,9 +1,8 @@
 # Interview Prep
 
-Coding, system design, and AI in one place — published as a static book.
+Coding, system design, and AI in one place — published as a real HTML book.
 
-**Live site:** [https://interview-prep.devninja.in/](https://interview-prep.devninja.in/)  
-**GitHub Pages:** [https://devninja-in.github.io/interview-prep/](https://devninja-in.github.io/interview-prep/)
+**Live site:** [https://interview-prep.devninja.in/](https://interview-prep.devninja.in/)
 
 ## What's inside
 
@@ -11,34 +10,43 @@ Coding, system design, and AI in one place — published as a static book.
 2. **System Design** — fundamentals, building blocks, and case studies (URL shortener, WhatsApp, Instagram, Amazon, S3, YouTube, Uber).
 3. **AI Engineering** — LLMs, prompting, RAG, memory, agents, MCP, skills, and designing an AI assistant.
 
+Chapters are normal web pages (selectable text + code blocks). Diagrams are images only where the book used a figure — not full-page PDF screenshots.
+
 ## Local preview
 
 ```bash
 python3 -m http.server 8080
 ```
 
+Then open `http://localhost:8080` or any file under `chapters/`.
+
+## Regenerate chapters from the PDF
+
+```bash
+pip install pymupdf
+python3 scripts/build_chapters.py
+```
+
 ## Cloudflare Workers
 
 Primary URL: [https://interview-prep.devninja.in/](https://interview-prep.devninja.in/)
 
-Deployed as a **Worker + Static Assets** (`wrangler.jsonc`).
-
-- `src/index.js` serves `env.ASSETS` (replaces the default Hello World Worker)
-- `.assetsignore` excludes `.git` so deploys stay under the 25 MiB file limit
-- Dashboard build command can stay empty; deploy command: `npx wrangler deploy`
+- `src/index.js` serves `env.ASSETS`
+- `.assetsignore` excludes `.git`
+- Deploy command: `npx wrangler deploy`
 
 ## Files
 
 | Path | Purpose |
 |------|---------|
 | `index.html` | Landing page & table of contents |
-| `read.html` | Full-book reader (all 212 pages + diagrams) |
-| `assets/pages/` | Rendered page images from the PDF |
-| `assets/diagrams/` | Highlighted diagram pages |
+| `chapters/` | HTML chapters (text, code, embedded diagrams) |
+| `assets/diagrams/` | Diagram images only |
 | `assets/interview-prep.pdf` | Original PDF |
-| `assets/book-data.json` | Chapter map for navigation |
+| `assets/nav.json` | Chapter navigation |
+| `read.html` | Redirects into the chapter reader |
 
 ## Keyboard (reader)
 
-- `←` / `→` or `k` / `j` — previous / next page
+- `←` / `→` — previous / next chapter
 - `Esc` — close mobile contents

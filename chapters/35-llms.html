@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>35 · How LLMs work — Interview Prep</title>
+  <meta name="description" content="35 · How LLMs work — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="35-llms" data-part="ai">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">AI Engineering</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 35</p>
+<h1>How LLMs work</h1>
+</header>
+<div class="chapter-body">
+<h2 class="section-label">F O U N D A T I O N S</h2>
+<p>A large language model is, at its heart, a very good next word guesser.</p>
+<p>Everything impressive it does, answering questions, writing code, reasoning through a problem, comes from one simple loop: predict the most likely next token given everything so far, then do it again.</p>
+<p>Understanding that single idea takes the magic and the fear out of the rest. next token mat 0.6 predict Context so far Model rug 0.3 the cat sat on the roof 0.1 sample the next token, append, and repeat A model reads the tokens so far, predicts the next one, you sample it, append, and loop.</p>
+<h2>The core ideas</h2>
+<p>Text is broken into tokens, which are word pieces, not letters. The word &quot;unhappiness&quot; might become three tokens. The model reads tokens and writes tokens. Given the sequence so far, it produces a probability for every possible next token, and you sample one, add it to the sequence, and repeat. That is the whole engine.</p>
+<p>Two knobs matter early. The context window is the fixed number of tokens the model can see at once. Your system instructions, the conversation, and any documents you paste all have to fit inside it, which makes the context window the single biggest practical constraint you design around.</p>
+<p>Temperature controls how randomly you sample: low temperature stays focused and repeatable, high temperature gets more varied and creative.</p>
+<h2>A minimal call</h2>
+<p>You talk to a model with a list of messages, each with a role. The system message sets behavior, the user message is the request, and the model replies as the assistant.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from anthropic import Anthropic
+client = Anthropic()
+resp = client.messages.create(
+    model=&quot;claude-sonnet-4-5&quot;,
+    max_tokens=500,
+    system=&quot;You are a concise, helpful tutor.&quot;,   # sets behavior
+    messages=[
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Explain what a token is, in one
+sentence.&quot;}
+    ],
+)
+print(resp.content[0].text)
+</code></pre></div>
+<h2 class="section-label">W H Y M O D E L S H A L L U C I N A T E</h2>
+<p>A model predicts plausible text, not verified truth. When it does not know something, it will often produce a confident, well formed answer that is simply wrong, because a fluent guess is exactly what next token prediction rewards. This is why grounding the model in real data, which the next chapters cover, matters so much.</p>
+<h2 class="section-label">T H E C O N T E X T W I N D O W I S Y O U R B U D G E T</h2>
+<p>Think of every token in the context as costing money and attention. Long conversations, big documents, and verbose instructions all compete for the same fixed space. Almost every technique later in this part, retrieval, memory, summarization, is really about spending that budget wisely.</p>
+<h3>Going Deeper</h3>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p187.jpg" alt="Where the model&#x27;s ability comes from" loading="lazy" /><figcaption>Where the model&#x27;s ability comes from</figcaption></figure>
+<p>The reason a model can write and reason is a two stage upbringing. In pretraining it reads an enormous amount of text and learns only to predict the next token, which forces it to absorb grammar, facts, and patterns of reasoning as a side effect. That produces a raw base model that is knowledgeable but not especially helpful. Fine tuning on curated examples, followed by reinforcement learning from human feedback, then teaches it to follow instructions, stay on task, and avoid harmful output. The mechanism that lets it use context at all is attention, which lets each learn to predict text, then learn to follow instructions and behave A model is grown in stages: pretraining teaches language, then fine-tuning and flatten or sharpen the distribution, higher is more varied sample only from the smallest set of tokens covering p of the What actually happens when a model generates a reply, one token at a time. Your text is broken into tokens, the word pieces the model works with. The model reads all the tokens and produces a probability for every possible next token.</p>
+<p>One token is sampled from that distribution, with temperature deciding how adventurous the 3 choice is.</p>
+<p>The chosen token is appended to the sequence. 4 Steps two through four repeat on the slightly longer sequence, until a stop token appears or 5 the length limit is hit.</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

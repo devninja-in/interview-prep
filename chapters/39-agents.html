@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>39 · Agentic patterns — Interview Prep</title>
+  <meta name="description" content="39 · Agentic patterns — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="39-agents" data-part="ai">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">AI Engineering</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 39</p>
+<h1>Agentic patterns</h1>
+</header>
+<div class="chapter-body">
+<h2 class="section-label">A G E N T S A N D T O O L S</h2>
+<p>A plain model just answers in one shot. An agent can act. It decides to use a tool, looks at the result, and keeps going until the job is done. That loop, plus a few patterns layered on top, is what turns a chatbot into something that books the flight, fixes the code, or researches the report.</p>
+<p>The agent loop Think what to do next call Tools Act repeat until done search, code, APIs call a tool result Observe read the result An agent loops: reason about the next step, act with a tool, observe the result, and repeat until finished.</p>
+<h2>The core loop</h2>
+<p>The workhorse pattern is often called think, act, observe. The model reasons about what to do next, acts by emitting a structured tool call, and your code runs that tool and feeds the result back so the model can observe it. Then it loops. It might search the web, run code, or hit an API, using each result to decide the next step, until it has enough to give a final answer.</p>
+<h2>The patterns on top</h2>
+<p>Tool use, also called function calling, is the foundation: the model outputs which tool to call and with what arguments, and you execute it. Planning has the agent break a goal into steps first, then carry them out. Reflection has it critique and revise its own output before finishing. Multi agent setups split the work across specialists, say a planner, a coder, and a reviewer, that hand work to each other.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def run_agent(goal, tools, client):
+    messages = [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: goal}]
+    for step in range(MAX_STEPS):                 # always cap the loop
+        resp = client.messages.create(
+            model=&quot;claude-sonnet-4-5&quot;, max_tokens=1000,
+            tools=tools, messages=messages,
+        )
+        messages.append({&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: resp.content})
+        if resp.stop_reason != &quot;tool_use&quot;:
+            return resp                            # model gave a final
+answer
+        for call in tool_calls(resp):              # act: run each requested
+tool
+            result = run_tool(call.name, call.input)
+            messages.append(tool_result(call.id, result))   # observe
+    raise RuntimeError(&quot;hit the step limit&quot;)
+T H E M O D E L D E C I D E S , Y O U R C O D E E X E C U T E S
+</code></pre></div>
+<p>A crucial split: the model only proposes a tool call, it never runs anything itself. Your code decides whether to run it, validates the inputs, executes, and returns the result. That boundary is where you put guardrails, permissions, and logging, and it is what keeps an agent safe.</p>
+<h2 class="section-label">L O O P S C A N R U N A W A Y</h2>
+<p>An agent that keeps thinking and acting can loop forever, rack up cost, or wander down a wrong path. Always cap the number of steps, validate what tools return, and for anything risky like sending email or spending money, keep a human or a hard rule in the loop.</p>
+<h3>Going Deeper</h3>
+<h2>Beyond the basic loop</h2>
+<p>The think, act, observe loop is the foundation, but a few patterns layer on top for harder work. Plan and execute has the agent write a full plan first, then carry out each step, which keeps it from wandering. Reflection has it critique and revise its own output before finishing, catching its own mistakes. Multi agent setups split a big job across specialists, say a researcher, a coder, and a reviewer, coordinated by an orchestrator, so each agent has a narrow, well defined role. More structure is not always better, though, so reach for these only when a single loop genuinely struggles.</p>
+<p>Orchestrator plans and delegates delegate results Researcher Coder Reviewer specialists hand work back and forth under one orchestrator For bigger jobs, an orchestrator splits the work across specialist agents that each focus on one thing.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p202.jpg" alt="Pattern" loading="lazy" /><figcaption>Pattern</figcaption></figure>
+<p>One turn of the agent loop, from reasoning to the next action. The model reads the goal and everything observed so far. It reasons about the next step and decides whether it needs a tool. If it does, it emits a structured tool call with the arguments it wants. Your code validates and runs that tool, then feeds the result back in. The model observes the result and loops again, or returns a final answer if the task is done. A</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

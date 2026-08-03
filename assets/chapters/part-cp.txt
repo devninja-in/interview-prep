@@ -1,7 +1,0 @@
-P A R T O N E
-Competitive
-Programming
-The patterns behind almost every coding problem, from arrays and two
-pointers to graphs and dynamic programming. Each one is explained in
-plain English, drawn as a picture, and written out in both Python and Java,
-with the problem types it unlocks and the traps that catch people.

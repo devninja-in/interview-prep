@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>33 · Design: YouTube — Interview Prep</title>
+  <meta name="description" content="33 · Design: YouTube — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="33-youtube" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">System Design</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 33</p>
+<h1>Design: YouTube</h1>
+</header>
+<div class="chapter-body">
+<p>Streaming video is a storage and delivery problem far more than a compute one. A creator uploads one enormous file, and millions of viewers on different devices and wildly different network speeds all need it to play smoothly. Two ideas carry the design: transcoding and a CDN.</p>
+<h2>Requirements</h2>
+<p>Upload a video, process it, store it, and stream it to many devices at many quality levels, with a fast start and no buffering. Reads (views) vastly outnumber writes (uploads), and the files are huge, which pushes everything toward storage and delivery rather than databases.</p>
+<p>Upload and process Transcode Creator Upload svc Object storage many bitrates edge pulls Watch Metadata Viewer CDN video info stream manifest One upload is transcoded into many qualities and stored, then streamed from a nearby CDN edge.</p>
+<h2>The key decisions</h2>
+<p>The core trick is adaptive bitrate streaming. On upload, the video is transcoded once into many resolutions and bitrates, and split into small chunks. The player then switches quality on the fly based on the viewer&#x27;s current bandwidth, which is why a weak connection drops to blurry instead of freezing. Doing this heavy work upfront, at upload time, keeps playback cheap and smooth for everyone afterward.</p>
+<p>The stored chunks live in object storage and are served through a CDN, so almost every viewer streams from a nearby edge rather than the origin across the world. This is what makes start times fast and keeps the origin from melting. The database only holds small records like the title, view count, and the list of available renditions. The heavy bytes never touch it.</p>
+<p>PROS CONS Transcoding once upfront makes every Transcoding into many formats is later view smooth and cheap expensive compute per upload A CDN gives low latency starts and Storing every rendition multiplies offloads the origin storage for popular videos Chunking lets the player adapt quality Keeping global CDN caches warm and and resume instantly fresh adds complexity</p>
+<h2 class="section-label">W H Y T H E V I D E O G E T S B L U R R Y I N S T E A D O F F R E E Z I N G</h2>
+<p>Because the same video exists at several bitrates and is cut into short chunks, the player measures your bandwidth chunk by chunk and requests a lower quality version when the network slows down. You keep watching without a pause, just at lower resolution, and it jumps back up when your connection recovers. That is adaptive bitrate streaming in action.</p>
+<h3>Going Deeper</h3>
+<h2>Adaptive bitrate, segment by segment</h2>
+<p>On upload, the video is transcoded into a ladder of versions at different resolutions and bitrates, and each version is cut into short segments of a few seconds. The player fetches a manifest that lists the ladder, then requests one segment at a time while measuring your bandwidth as it goes. When the network slows it steps down to a lower rung for the next segment, and steps back up when it recovers, so playback keeps flowing smoothly instead of freezing. The segments are cached in a hierarchy, edge first and origin last, so popular videos are served close to viewers.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p180.jpg" alt="same video encoded at several rungs, chosen per segment" loading="lazy" /><figcaption>same video encoded at several rungs, chosen per segment</figcaption></figure>
+<p>The video exists at several quality rungs. The player climbs down a rung when A viewer&#x27;s request first hits a nearby edge cache. On a miss it goes to a larger regional cache, and only a miss there reaches the origin. Because most viewers watch the same popular videos, the edges serve the vast majority of traffic, the regional caches catch the rest, and the origin is touched rarely, which is how one video reaches millions without How one upload becomes smooth playback for millions of viewers. A creator uploads one large video file to the upload service. A transcoding pipeline processes it into several resolutions and bitrates, each split into small The chunks are stored in object storage, and the metadata records which renditions exist. A viewer&#x27;s player fetches the manifest, then streams chunks from the nearest CDN edge. The player watches the network and switches quality up or down chunk by chunk, so</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01 · Approaching any problem — Interview Prep</title>
+  <meta name="description" content="01 · Approaching any problem — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="01-approaching" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 01</p>
+<h1>Approaching any problem</h1>
+</header>
+<div class="chapter-body">
+<p>Most people fail a problem not because the code is hard, but because they start typing before they understand what they are solving. Here is a repeatable process that works whether the problem is easy or brutal.</p>
+<h2>The five steps</h2>
+<p>1. Understand the problem completely Read it twice. Write down, in your own words, what the input is and what the output should be. Then invent one small example by hand and solve it on paper. If you cannot solve a tiny case by hand, you definitely cannot code it. Pay attention to the constraints (the numbers like &quot;1 &lt;= n &lt;= 10^5&quot;), because they are secretly telling you which approach is allowed.</p>
+<h2 class="section-label">C O N S T R A I N T S A R E A C H E A T S H E E T</h2>
+<p>The size of the input hints at the target time complexity. If n can be up to 10^5 or more, an O(n^2) solution will time out, so you need O(n log n) or O(n). If n is tiny, say up to 20, an exponential solution like backtracking is probably expected. Read the constraints before you decide on an approach, not after. 2. Find a brute force answer first Do not chase the clever solution immediately. Ask &quot;what is the dumbest thing that would work?&quot; Often it is: try every possibility. Getting brute force clear in your head does two things. It confirms you understand the problem, and it gives you something to optimize. Many interviewers are happy if you state the brute force out loud even if you never code it. 3. Look for the bottleneck and the pattern Ask where the brute force wastes work. Are you recomputing the same thing? A hash map or memoization might help. Are you scanning a sorted array repeatedly? Binary search or two pointers might help. Are you exploring choices step by step? That is backtracking or dynamic programming.</p>
+<p>This is where knowing the patterns in this book turns a dead end into a plan.</p>
+<p>4. Code it in small pieces Write the structure first, then fill it in. Handle the normal case, then come back for the edge cases.</p>
+<p>Keep variable names honest, so left and right instead of a and b . Clean code has fewer bugs. 5. Test with your own cases Before you hit submit, run the example you made in step one in your head, line by line. Then think about the nasty inputs: empty input, one element, all elements the same, the largest allowed size, negative numbers. Most wrong answers on LeetCode are edge cases, not logic mistakes.</p>
+<h2 class="section-label">T H E E D G E C A S E S T H A T B I T E E V E R Y O N E</h2>
+<p>Empty array or string. A single element. Duplicates. Negative numbers and zero. Integer overflow in Java (an int maxes near 2.1 billion, so use long when summing or multiplying). The pointer at the very start or very end of an array. Check these every time.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p008.jpg" alt="A quick way to guess the pattern" loading="lazy" /><figcaption>A quick way to guess the pattern</figcaption></figure>
+<p>&quot;Number of ways&quot;, &quot;min or max cost&quot;, overlapping subproblems Keep this table close while you practice. Pattern recognition is the whole game, and it becomes</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

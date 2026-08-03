@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>17 · Pattern cheat sheet — Interview Prep</title>
+  <meta name="description" content="17 · Pattern cheat sheet — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="17-cheat-sheet" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 17</p>
+<h1>Pattern cheat sheet</h1>
+</header>
+<div class="chapter-body">
+<p>This is the page to reread before a contest or an interview. It compresses the whole book into signals, tools, and typical costs. When a problem lands in front of you, run down this list and something will click.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p130.jpg" alt="Signal to pattern" loading="lazy" /><figcaption>Signal to pattern</figcaption></figure>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p131.jpg" alt="The decision flow, in words" loading="lazy" /><figcaption>The decision flow, in words</figcaption></figure>
+<p>Start by reading the constraints. If n is tiny (up to about 20), an exponential backtracking solution is probably fine and maybe expected. If n is large (100,000 or more), you need roughly O(n) or O(n log Next, look at the shape of the data. Is it sorted, or would sorting help? That points to binary search, two pointers, or a greedy sweep. Is it a tree or a grid or a network? That points to DFS and BFS. Is it a string or array asking for a contiguous best? That is a sliding window. Finally, look at what is being asked. &quot;How many ways&quot; or &quot;min / max with subproblems&quot; is dynamic programming. &quot;All of something&quot; is backtracking. &quot;The Kth best&quot; is a heap. &quot;Have I seen this&quot; is a Write the brute force anyway. Getting a slow but correct solution on the board does three things: it proves you understood the problem, it often reveals the repeated work you can cut, and it gives you partial credit. Then ask the one question that unlocks most optimizations:</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

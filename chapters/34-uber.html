@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>34 · Design: Uber — Interview Prep</title>
+  <meta name="description" content="34 · Design: Uber — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="34-uber" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">System Design</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 34</p>
+<h1>Design: Uber</h1>
+</header>
+<div class="chapter-body">
+<p>A ride hailing app is a real time matching problem laid over a map.</p>
+<p>Thousands of drivers move around a city sending their location, and the moment a rider requests a ride, the system has to find a good nearby driver and connect the two within seconds.</p>
+<h2>Requirements</h2>
+<p>Track driver locations in real time, let a rider request a ride, match them to the best nearby available driver, and manage the trip from pickup to drop off and payment. The matching must be fast even with huge numbers of drivers moving at once.</p>
+<p>Geo index Rider app nearby drivers locations candidates Location gateway realtime updates ride request Matching / dispatch Trip service Driver app Drivers stream location into a geospatial index. A request queries nearby cells and dispatches a driver.</p>
+<h2>The key decisions</h2>
+<p>The central idea is a geospatial index. You cannot scan every driver in the city for each request, so you divide the map into small cells using a scheme like a grid, geohash, or H3. Now &quot;find drivers near this point&quot; becomes a quick lookup of a handful of nearby cells instead of a full scan. Drivers push frequent location updates, and you keep only their latest position in a fast in memory store keyed by cell, since a position from ten seconds ago is worthless.</p>
+<p>When a rider requests a ride, the matching service pulls the candidate drivers from the nearby cells and picks one by distance, estimated arrival time, and rating, then dispatches and holds that driver</p>
+<p>so two riders never get the same one. Everything downstream, trip updates, pricing, and payment, flows through queues so the fast matching path is not blocked by slower work.</p>
+<p>PROS CONS Cell based indexing turns a full scan into Cell size is a tuning problem, too big or a tiny lookup too small both hurt Keeping only the latest position in Dense areas create hot cells that need memory keeps it fast and small extra care Queues keep pricing and payments off Holding a driver during dispatch needs the time critical match path careful concurrency W H Y A G E O S P A T I A L I N D E X , N O T A D A T A B A S E Q U E R Y A plain database asking for every driver within two kilometers would scan and compute distances across the whole fleet on every request, which does not survive a busy city. By bucketing drivers into map cells and updating positions in memory, the system answers &quot;who is near here&quot; by reading a few cells. That single choice is what makes real time matching possible at scale.</p>
+<h3>Going Deeper</h3>
+<h2>Geospatial indexing up close</h2>
+<p>The map is divided into cells using a scheme like a grid, a geohash, or Uber&#x27;s H3 hexagons, and each driver&#x27;s latest position is filed under its cell. To find drivers near a rider you look at the rider&#x27;s cell and its immediate neighbors, a handful of cells, rather than scanning every driver in the city.</p>
+<p>Cell size is the key tuning knob: too large and each cell holds too many drivers to sort through, too small and you have to check many cells for one query. Dense downtown areas can become hot cells that need extra care, such as finer subdivision.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p183.jpg" alt="R is the rider; blue dots are drivers filed by cell" loading="lazy" /><figcaption>R is the rider; blue dots are drivers filed by cell</figcaption></figure>
+<p>look only at the rider&#x27;s cell and its neighbors, not the whole city Drivers are filed by map cell, so finding nearby ones means checking a handful Once you have candidate drivers, two riders must not be handed the same one. The match has to atomically claim a driver, marking them busy the instant they are dispatched, so a second request sees them as taken. Without that lock you get double bookings, which is why dispatch holds a driver rather than merely suggesting one. Driver apps continuously stream their location into the geospatial index, bucketed by map The matching service looks up the nearby cells and gathers the candidate drivers in them. It picks the best one by distance, arrival time, and rating, then dispatches and holds that The trip service tracks the ride to completion, with pricing and payment handled through</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

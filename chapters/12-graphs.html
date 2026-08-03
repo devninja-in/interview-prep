@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>12 · Graphs, BFS, DFS — Interview Prep</title>
+  <meta name="description" content="12 · Graphs, BFS, DFS — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="12-graphs" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 12</p>
+<h1>Graphs, BFS, DFS</h1>
+</header>
+<div class="chapter-body">
+<p>A graph is nodes connected by edges. Roads between cities, friends on a network, rooms with doors between them. Trees are just a special kind of graph. Two traversals do most of the work: breadth first (explore in rings outward) and depth first (dive down one path). Master these two and a whole category of problems opens up.</p>
+<p>A B BFS from A:</p>
+<h3>A, B, C, D, E</h3>
+<p>E DFS from A:</p>
+<h3>A, B, D, C, E</h3>
+<p>(exact order depends C D on neighbor order) BFS spreads out level by level. DFS commits to one path before backing up.</p>
+<h2>How to store a graph</h2>
+<p>The usual representation is an adjacency list: a map from each node to the list of its neighbors. It is compact and fast to iterate. For grid problems (mazes, islands), the grid itself is the graph, and a cell&#x27;s neighbors are the cells up, down, left, and right.</p>
+<h2 class="section-label">R E A C H F O R G R A P H T R A V E R S A L W H E N Y O U S E E</h2>
+<p>&quot;Number of islands / connected groups&quot;, &quot;can you reach B from A&quot;, &quot;shortest path in an unweighted grid or graph&quot; (BFS), &quot;does a cycle exist&quot;, &quot;course prerequisites / build order&quot; (topological sort). Grids of land and water, rooms and keys, and word ladders are all graphs in disguise.</p>
+<h2>BFS: shortest steps in an unweighted graph</h2>
+<p>BFS uses a queue and visits nodes in rings: all nodes one step away, then all two steps away, and so on. Because it reaches nodes in order of distance, the first time it touches the target is guaranteed to be the shortest path. Always mark nodes as visited when you enqueue them, so you never add the same node twice.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import deque
+def bfs(graph, start):
+    visited = {start}
+    queue = deque([start])
+    order = []
+    while queue:
+        node = queue.popleft()
+        order.append(node)
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)     # mark on enqueue, not on dequeue
+                queue.append(neighbor)
+    return order
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">List&lt;Integer&gt; bfs(Map&lt;Integer, List&lt;Integer&gt;&gt; graph, int start) {
+    Set&lt;Integer&gt; visited = new HashSet&lt;&gt;();
+    Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+    List&lt;Integer&gt; order = new ArrayList&lt;&gt;();
+    visited.add(start);
+    queue.offer(start);
+    while (!queue.isEmpty()) {
+        int node = queue.poll();
+        order.add(node);
+        for (int neighbor : graph.getOrDefault(node, List.of())) {
+            if (!visited.contains(neighbor)) {
+                visited.add(neighbor);    // mark on enqueue
+                queue.offer(neighbor);
+            }
+        }
+    }
+    return order;
+}
+</code></pre></div>
+<h2>DFS: explore everything reachable</h2>
+<p>DFS dives down one branch as far as it goes, then backtracks. It can be written with recursion (simplest) or with an explicit stack. Use it to count connected components, check reachability, or explore all paths.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def dfs(graph, node, visited):
+    visited.add(node)
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            dfs(graph, neighbor, visited)
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">void dfs(Map&lt;Integer, List&lt;Integer&gt;&gt; graph, int node, Set&lt;Integer&gt; visited) {
+    visited.add(node);
+    for (int neighbor : graph.getOrDefault(node, List.of())) {
+        if (!visited.contains(neighbor)) {
+            dfs(graph, neighbor, visited);
+        }
+    }
+}
+</code></pre></div>
+<h2>Worked example: number of islands</h2>
+<p>Given a grid of land (&#x27;1&#x27;) and water (&#x27;0&#x27;), count the islands. Scan the grid. Every time you hit unvisited land, you found a new island, so add one and then flood the whole island by DFS, marking every connected land cell so you do not count it again.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def num_islands(grid):
+    if not grid:
+        return 0
+    rows, cols = len(grid), len(grid[0])
+    count = 0
+    def sink(r, c):
+        if r &lt; 0 or r &gt;= rows or c &lt; 0 or c &gt;= cols or grid[r][c] != &#x27;1&#x27;:
+            return
+        grid[r][c] = &#x27;0&#x27;          # mark as visited by sinking it
+        sink(r + 1, c); sink(r - 1, c)
+        sink(r, c + 1); sink(r, c - 1)
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == &#x27;1&#x27;:
+                count += 1        # a new island
+                sink(r, c)        # flood it so we do not recount
+    return count
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int numIslands(char[][] grid) {
+    if (grid.length == 0) return 0;
+    int rows = grid.length, cols = grid[0].length, count = 0;
+    for (int r = 0; r &lt; rows; r++) {
+        for (int c = 0; c &lt; cols; c++) {
+            if (grid[r][c] == &#x27;1&#x27;) {
+                count++;          // a new island
+                sink(grid, r, c); // flood it
+            }
+        }
+    }
+    return count;
+}
+void sink(char[][] grid, int r, int c) {
+    if (r &lt; 0 || r &gt;= grid.length || c &lt; 0 || c &gt;= grid[0].length
+        || grid[r][c] != &#x27;1&#x27;) return;
+    grid[r][c] = &#x27;0&#x27;;             // mark visited
+    sink(grid, r + 1, c); sink(grid, r - 1, c);
+    sink(grid, r, c + 1); sink(grid, r, c - 1);
+}
+</code></pre></div>
+<h2>Topological sort: ordering with prerequisites</h2>
+<p>When tasks depend on each other, like courses that require other courses first, you need an order where every dependency comes before the thing that needs it. Count how many prerequisites each task has (its in-degree). Start with the tasks that have none, and each time you finish one, reduce the count of everything that depended on it. When a count hits zero, that task is ready. If you cannot finish everything, there was a cycle.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import deque, defaultdict
+def can_finish(num_courses, prerequisites):
+    graph = defaultdict(list)
+    indegree = [0] * num_courses
+    for course, need in prerequisites:
+        graph[need].append(course)
+        indegree[course] += 1
+    queue = deque(c for c in range(num_courses) if indegree[c] == 0)
+    done = 0
+    while queue:
+        course = queue.popleft()
+        done += 1
+        for nxt in graph[course]:
+            indegree[nxt] -= 1        # one prerequisite satisfied
+            if indegree[nxt] == 0:
+                queue.append(nxt)     # now ready
+    return done == num_courses        # false means a cycle blocked us
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">boolean canFinish(int numCourses, int[][] prerequisites) {
+    List&lt;List&lt;Integer&gt;&gt; graph = new ArrayList&lt;&gt;();
+    for (int i = 0; i &lt; numCourses; i++) graph.add(new ArrayList&lt;&gt;());
+    int[] indegree = new int[numCourses];
+    for (int[] p : prerequisites) {
+        graph.get(p[1]).add(p[0]);
+        indegree[p[0]]++;
+    }
+    Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+    for (int c = 0; c &lt; numCourses; c++)
+        if (indegree[c] == 0) queue.offer(c);
+    int done = 0;
+    while (!queue.isEmpty()) {
+        int course = queue.poll();
+        done++;
+        for (int nxt : graph.get(course)) {
+            if (--indegree[nxt] == 0) queue.offer(nxt);
+        }
+    }
+    return done == numCourses;   // false -&gt; cycle
+}
+</code></pre></div>
+<h2 class="section-label">W A T C H O U T</h2>
+<p>Forgetting to mark nodes visited is the classic graph bug; it causes infinite loops or exponential blowups. In BFS, mark when you enqueue, not when you dequeue, or the same node gets added many times. For shortest path in an unweighted graph use BFS, not DFS, because DFS does not find shortest paths. And if edges have weights, you need Dijkstra&#x27;s algorithm, which is BFS with a heap instead of a plain queue.</p>
+<h3>Deeper Intuition</h3>
+<h2>Why BFS finds shortest paths</h2>
+<p>Breadth first search explores in rings using a queue: everything one step from the source, then everything two steps away, and so on. Because it reaches nodes in order of distance, the very first time it touches a node it has arrived by a shortest path, which is exactly why BFS answers shortest path questions on unweighted graphs. Depth first search instead dives as far as it can, which is perfect for flooding a whole region or detecting a cycle.</p>
+<p>BFS expands in rings, so the first time it reaches a node is the shortest path a d S b e dist 0 c dist 2 dist 1 Breadth first search visits everything one step away, then two steps, and so on, which is why it finds shortest paths in an unweighted graph.</p>
+<h2>Another worked example: Rotting Oranges</h2>
+<p>Rotten oranges infect fresh neighbors each minute. Ask how many minutes until none are fresh.</p>
+<p>This is multi source BFS: start with every rotten orange in the queue at once, and each BFS level is one minute of spreading. If any fresh orange is unreachable, return minus one.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import deque
+def oranges_rotting(grid):
+    rows, cols = len(grid), len(grid[0])
+    queue, fresh = deque(), 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 2: queue.append((r, c))   # all rotten start now
+            elif grid[r][c] == 1: fresh += 1
+    minutes = 0
+    while queue and fresh:
+        minutes += 1
+        for _ in range(len(queue)):                    # one level = one
+minute
+            r, c = queue.popleft()
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r + dr, c + dc
+                if 0 &lt;= nr &lt; rows and 0 &lt;= nc &lt; cols and grid[nr][nc] == 1:
+                    grid[nr][nc] = 2
+                    fresh -= 1
+                    queue.append((nr, nc))
+    return -1 if fresh else minutes
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int orangesRotting(int[][] grid) {
+    int rows = grid.length, cols = grid[0].length, fresh = 0;
+    Queue&lt;int[]&gt; queue = new ArrayDeque&lt;&gt;();
+    for (int r = 0; r &lt; rows; r++)
+        for (int c = 0; c &lt; cols; c++) {
+            if (grid[r][c] == 2) queue.offer(new int[]{r, c});
+            else if (grid[r][c] == 1) fresh++;
+        }
+    int minutes = 0;
+    int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+    while (!queue.isEmpty() &amp;&amp; fresh &gt; 0) {
+        minutes++;
+        for (int n = queue.size(); n &gt; 0; n--) {
+            int[] cell = queue.poll();
+            for (int[] d : dirs) {
+</code></pre></div>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p098.jpg" alt="int nr = cell[0] + d[0], nc = cell[1] + d[1];" loading="lazy" /><figcaption>int nr = cell[0] + d[0], nc = cell[1] + d[1];</figcaption></figure>
+<p>if (nr &gt;= 0 &amp;&amp; nr &lt; rows &amp;&amp; nc &gt;= 0 &amp;&amp; nc &lt; cols &amp;&amp; grid[nr] Anything with things connected to other things: grids and islands, reachability and connected groups, shortest path when every step costs the same, ordering tasks with Course Schedule II, Alien Dictionary, Minimum Height Trees Word Ladder, Shortest Path in Binary Matrix, Open the Lock,</p>
+<h2>The algorithm, in a bit more detail</h2>
+<p>Two engines cover most of this chapter. Breadth first search explores in rings using a queue, so the first time it reaches a node it has found the shortest path in an unweighted graph. Depth first search dives as far as it can using recursion or a stack, which is perfect for exploring a whole region, counting components, or detecting a cycle.</p>
+<p>Topological sort orders tasks so every prerequisite comes before what depends on it. You count incoming edges for each node, start from the ones with none, and peel them off, reducing counts as you go. If you cannot peel everything, there is a cycle, which is exactly how &quot;can you finish all courses&quot; is answered.</p>
+<h2>Variations you will run into</h2>
+<p>Grid problems treat each cell as a node with up to four neighbors. Multi source BFS starts from many cells at once, which is how rotting oranges spreads. When edges have weights you move up to Dijkstra with a heap, and for pure connectivity questions union find is often the cleanest tool.</p>
+<h2>Edge cases and gotchas</h2>
+<p>Mark a node visited when you enqueue it in BFS, not when you dequeue it, or you will process it many times.</p>
+<p>Be clear whether the graph is directed or undirected, since it changes cycle detection and edge building.</p>
+<p>For grids, check bounds before you step, and remember diagonal moves only count if the problem says so.</p>
+<p>Topological sort only works on a directed acyclic graph, and a leftover node means a cycle exists.</p>
+<h3>Step By Step</h3>
+<p>Counting islands in a tiny grid where 1 is land and 0 is water. Row one is 1 1 0 and row two is 0 1 0.</p>
+<p>We scan for unvisited land and flood each island we find.</p>
+<p>Scan cells left to right, top to bottom, looking for a 1 that has not been visited. 1 Find land at the top left. Start island number 1 and begin a flood fill from there. 2</p>
+<p>The flood spreads to the connected land: the top left, its right neighbor, and the cell below 3 that. Mark all three as visited.</p>
+<p>Keep scanning. Every remaining cell is water or already visited, so no new island starts. 4 Total islands found: 1. 5</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

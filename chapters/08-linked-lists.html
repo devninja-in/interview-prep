@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>08 · Linked lists — Interview Prep</title>
+  <meta name="description" content="08 · Linked lists — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="08-linked-lists" data-part="cp">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Competitive Programming</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 08</p>
+<h1>Linked lists</h1>
+</header>
+<div class="chapter-body">
+<h2 class="section-label">L I N E A R A N D L I N K E D</h2>
+<p>A linked list is a chain of nodes. Each node holds a value and a pointer to the next node. There is no index and no jumping around; to reach the fifth node you walk through the first four. The whole skill here is managing pointers without losing the chain. before 1 2 3 null after 1 2 3 null Reversing means flipping every arrow to point backward, one node at a time.</p>
+<h2 class="section-label">R E A C H F O R L I N K E D L I S T T E C H N I Q U E S W H E N Y O U S E E</h2>
+<p>&quot;Reverse the list&quot;, &quot;find the middle&quot;, &quot;detect a cycle&quot;, &quot;merge two sorted lists&quot;, &quot;remove the Nth node from the end.&quot; The two workhorses are the fast-and-slow pointer (for middle and cycle) and the dummy head node (to simplify insertions and deletions at the front).</p>
+<h2>The node definition</h2>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int val) { this.val = val; }
+}
+</code></pre></div>
+<h2>Worked example: reverse a linked list</h2>
+<p>Walk the list. At each node, remember the next node, then point the current node backward at the previous node, then step everything forward. The trap is losing the rest of the chain, so you must save next before you overwrite it.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def reverse_list(head):
+    prev = None
+    curr = head
+    while curr:
+        nxt = curr.next      # save the rest of the chain first
+        curr.next = prev     # flip the arrow backward
+        prev = curr          # move prev forward
+        curr = nxt           # move curr forward
+    return prev              # prev is the new head
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">ListNode reverseList(ListNode head) {
+    ListNode prev = null, curr = head;
+    while (curr != null) {
+        ListNode next = curr.next;   // save the rest first
+        curr.next = prev;            // flip the arrow
+        prev = curr;                 // advance prev
+        curr = next;                 // advance curr
+    }
+    return prev;                     // new head
+}
+</code></pre></div>
+<h2>Fast and slow pointers: find the middle, and detect a cycle</h2>
+<p>Move one pointer one step at a time and another two steps at a time. When the fast one reaches the end, the slow one is exactly in the middle. And if the list secretly loops back on itself, the fast pointer will eventually lap the slow one and they will meet. This is called Floyd&#x27;s cycle detection, and it uses no extra memory.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def find_middle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next          # one step
+        fast = fast.next.next     # two steps
+    return slow                   # middle node
+def has_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow is fast:          # they met, there is a loop
+            return True
+    return False
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">ListNode findMiddle(ListNode head) {
+    ListNode slow = head, fast = head;
+    while (fast != null &amp;&amp; fast.next != null) {
+        slow = slow.next;         // one step
+        fast = fast.next.next;    // two steps
+    }
+    return slow;                  // middle
+}
+boolean hasCycle(ListNode head) {
+    ListNode slow = head, fast = head;
+    while (fast != null &amp;&amp; fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if (slow == fast) return true;  // they met
+    }
+    return false;
+}
+</code></pre></div>
+<h2>The dummy node trick: merge two sorted lists</h2>
+<p>When you build a new list or delete from the front, having a fake node in front of the real head saves you from special-casing the first element. You always attach to tail.next and return dummy.next at the end.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def merge_two_lists(a, b):
+    dummy = ListNode()        # fake head so we never special-case the start
+    tail = dummy
+    while a and b:
+        if a.val &lt;= b.val:
+            tail.next = a
+            a = a.next
+        else:
+            tail.next = b
+            b = b.next
+        tail = tail.next
+    tail.next = a or b        # attach whatever is left
+    return dummy.next
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">ListNode mergeTwoLists(ListNode a, ListNode b) {
+    ListNode dummy = new ListNode(0);   // fake head
+    ListNode tail = dummy;
+    while (a != null &amp;&amp; b != null) {
+        if (a.val &lt;= b.val) { tail.next = a; a = a.next; }
+        else { tail.next = b; b = b.next; }
+        tail = tail.next;
+    }
+    tail.next = (a != null) ? a : b;    // attach the remainder
+    return dummy.next;
+}
+</code></pre></div>
+<h2 class="section-label">W A T C H O U T</h2>
+<p>The number one linked list bug is a null pointer error. Before you write node.next.next , be sure node.next is not null. In the fast-and-slow loop, always check fast and fast.next before stepping, in that order. And when reordering pointers, save what you need before you overwrite it, or the tail of your list vanishes.</p>
+<h3>Deeper Intuition</h3>
+<h2>Why a gap of n finds the end</h2>
+<p>Two pointers that stay exactly n nodes apart turn &quot;nth from the end&quot; into a single pass. Start the lead pointer n steps ahead, then move both together. When the lead reaches the last node, the trailing pointer is sitting right before the node you want to remove, because the fixed gap guarantees it. A dummy head in front of the list means even removing the first node needs no special case. keep the two pointers a fixed gap of n apart trail lead 1 2 3 4 5 skip node 4 Start one pointer n nodes ahead. When it reaches the end, the other sits just before the target.</p>
+<h2>Another worked example: Remove Nth Node From End</h2>
+<p>Delete the nth node counting from the end in one pass. Put a lead pointer n steps ahead of a trailing pointer, then advance both until the lead hits the end. The trailing pointer now points at the node just before the target, so you skip it.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def remove_nth_from_end(head, n):
+    dummy = ListNode(0, head)
+    lead = trail = dummy
+    for _ in range(n):
+        lead = lead.next            # move lead n steps ahead
+    while lead.next:                # move both until lead is last
+        lead = lead.next
+        trail = trail.next
+    trail.next = trail.next.next    # skip the target node
+    return dummy.next
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode dummy = new ListNode(0, head);
+    ListNode lead = dummy, trail = dummy;
+    for (int i = 0; i &lt; n; i++) lead = lead.next;   // n ahead
+    while (lead.next != null) {                     // move together
+        lead = lead.next;
+        trail = trail.next;
+    }
+    trail.next = trail.next.next;                   // skip target
+    return dummy.next;
+}
+GOING DEEPER
+</code></pre></div>
+<h2>What kinds of problems this solves</h2>
+<h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
+<p>Problems where you rewire pointers rather than move data: reversing, detecting or locating a cycle, finding the middle or the kth from the end, and merging or reordering lists.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p060.jpg" alt="Problem type" loading="lazy" /><figcaption>Problem type</figcaption></figure>
+<p>Middle of the Linked List, Linked List Cycle, Linked List Two ideas cover most linked list problems. The first is the dummy head: you make a fake node that points at the real head, build your result off the dummy, and return dummy.next. This removes all the annoying special cases around an empty list or changing the first node. The second is two pointers with a gap or a speed difference. A fast pointer that moves two steps and a slow pointer that moves one will meet inside any cycle, and the slow pointer lands on the middle when the fast one reaches the end. To find the kth node from the end, start one pointer k steps ahead, then move both together until the leader hits the end. Reversal shows up either iteratively with three pointers (previous, current, next) or recursively. Cycle problems use Floyd&#x27;s tortoise and hare, and finding the cycle start needs the second phase where you reset one pointer to the head. Merging always benefits from the dummy node. Save the next pointer before you overwrite it during reversal, or you will lose the rest of the list. Guard against null at every step, especially the fast pointer moving two at a time. Use a dummy head whenever the first node might change, so you never special case the head. After building a new list, remember to terminate it by setting the final next to null when needed.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p061.jpg" alt="Reversing the list 1 to 2 to 3. We keep a previous pointer and, at each node, flip its next to point" loading="lazy" /><figcaption>Reversing the list 1 to 2 to 3. We keep a previous pointer and, at each node, flip its next to point</figcaption></figure>
+<p>Reversing the list 1 to 2 to 3. We keep a previous pointer and, at each node, flip its next to point</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

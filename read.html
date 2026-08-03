@@ -2,58 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="refresh" content="0; url=chapters/00-how-to-use.html" />
+  <link rel="canonical" href="chapters/00-how-to-use.html" />
   <title>Read — Interview Prep</title>
-  <meta name="description" content="Read Interview Prep: coding patterns, system design, and AI engineering." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f1c24'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' font-size='28' fill='%230d7a6f' font-family='Georgia'%3EIP%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <script>
+    const saved = localStorage.getItem("interview-prep-chapter");
+    if (saved) {
+      location.replace("chapters/" + saved + ".html");
+    } else {
+      location.replace("chapters/00-how-to-use.html");
+    }
+  </script>
 </head>
-<body class="reader">
-  <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
-
-  <div class="reader-shell">
-    <aside class="sidebar" id="sidebar" aria-label="Table of contents">
-      <div class="sidebar-top">
-        <a class="brand" href="./">Interview Prep <span>Book</span></a>
-        <label class="visually-hidden" for="search" style="position:absolute;left:-9999px">Search chapters</label>
-        <input class="search" id="search" type="search" placeholder="Search chapters…" autocomplete="off" />
-      </div>
-      <nav class="toc-scroll" id="toc" aria-label="Chapters"></nav>
-    </aside>
-
-    <div class="reader-main">
-      <div class="reader-toolbar">
-        <div style="display:flex;align-items:center;gap:0.5rem;min-width:0">
-          <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
-          <div class="reader-title" id="reader-title">Loading…</div>
-        </div>
-        <div class="toolbar-controls">
-          <button class="icon-btn" id="prev-btn" type="button" aria-label="Previous page">‹</button>
-          <div class="page-indicator" id="page-indicator">— / —</div>
-          <button class="icon-btn" id="next-btn" type="button" aria-label="Next page">›</button>
-        </div>
-      </div>
-
-      <div class="page-stage" id="page-stage">
-        <div class="page-frame">
-          <img id="page-image" alt="Book page" width="860" height="1218" />
-        </div>
-      </div>
-
-      <div class="reader-footer">
-        <span id="chapter-label">Chapter</span>
-        <span>
-          <a href="./">Home</a>
-          ·
-          <a href="assets/interview-prep.pdf">PDF</a>
-        </span>
-      </div>
-    </div>
-  </div>
-
-  <script src="js/book.js"></script>
+<body>
+  <p><a href="chapters/00-how-to-use.html">Continue to the book</a></p>
 </body>
 </html>

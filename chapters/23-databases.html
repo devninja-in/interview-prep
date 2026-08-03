@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>23 · SQL vs NoSQL — Interview Prep</title>
+  <meta name="description" content="23 · SQL vs NoSQL — Interview Prep book chapter" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+</head>
+<body class="chapter-page" data-chapter="23-databases" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">System Design</p>
+        <header class="chapter-hero">
+<p class="chapter-num">Chapter 23</p>
+<h1>SQL vs NoSQL</h1>
+</header>
+<div class="chapter-body">
+<p>Picking a database is one of the biggest decisions in a design, and the honest answer is always &quot;it depends on your access patterns.&quot; The split people talk about is relational (SQL) versus everything else (NoSQL), so it helps to know what each is genuinely good and bad at.</p>
+<h2>Relational databases</h2>
+<p>A relational database stores data in tables with a fixed schema, and it can join tables together to answer complex queries. Its superpower is ACID transactions, which guarantee that a group of changes either all happen or none do, keeping data correct even under concurrency. This is why banking, orders, and inventory almost always sit on a relational store like PostgreSQL or MySQL.</p>
+<p>PROS CONS Strong consistency and reliable Harder to scale writes across many transactions machines Flexible, powerful queries with joins A rigid schema slows down rapid change A schema keeps data structured and validated Joins get expensive at very large scale Mature, well understood, everywhere</p>
+<h2>NoSQL databases</h2>
+<p>NoSQL is a family, not one thing. Key value stores like Redis and DynamoDB are simple and blazing fast. Document stores like MongoDB hold flexible JSON like records. Wide column stores like Cassandra handle massive write volume across many machines. Graph databases like Neo4j specialize in relationships. What they share is a flexible schema and an easier path to horizontal scale, often by relaxing strict consistency to eventual consistency.</p>
+<p>PROS CONS Scales horizontally across many Weaker consistency, often only eventual machines with ease Limited or no joins, so you design around access patterns</p>
+<p>Flexible schema fits changing or messy Transactions are limited or absent in data many systems Very high throughput for the right Easy to model data in a way you later access pattern regret Often simpler and cheaper at huge scale</p>
+<h2>Indexing, the quiet workhorse</h2>
+<p>An index is a separate sorted structure, usually a B tree, that lets the database find rows without scanning the whole table. It turns a slow full scan into a fast lookup. The trade off is that every index costs extra storage and slows down writes, because each insert or update must also update the index. So you index the columns you filter and sort on, and no more.</p>
+<h2 class="section-label">C H O O S E B Y A C C E S S P A T T E R N</h2>
+<p>Ask how the data will be read and written before you pick. Complex queries and strict correctness point to relational. Enormous write volume with simple lookups points to a wide column or key value store. Do not choose based on which name sounds modern, choose based on what your reads and writes actually look like.</p>
+<h3>Going Deeper</h3>
+<h2>Indexes, and normalize versus denormalize</h2>
+<p>An index is usually a B tree, a shallow and very wide tree that lets the database descend to any row in a few hops instead of scanning the whole table. That speed is not free: every index costs storage and slows writes, since each insert must update it too, so you index only the columns you filter and sort on. The other big lever is the shape of the data. A relational design normalizes, splitting data into tidy tables that are joined at query time, which avoids duplication but makes reads do work. A document design denormalizes, embedding related data together, so a read is a single fetch but an update may have to touch many copies. You are trading write simplicity for read speed.</p>
+<figure class="diagram"><img src="../assets/diagrams/diagram-p147.jpg" alt="Normalized (relational)" loading="lazy" /><figcaption>Normalized (relational)</figcaption></figure>
+<p>Normalizing splits data into tidy tables joined on read. Denormalizing embeds Relational systems aim for ACID: transactions are atomic, consistent, isolated, and durable, so data is always correct even under heavy concurrency. Many distributed NoSQL systems instead offer BASE: basically available, soft state, eventually consistent, trading immediate correctness for availability and scale. Neither is better in the abstract, they match different</p>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

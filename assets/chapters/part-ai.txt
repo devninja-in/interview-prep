@@ -1,7 +1,0 @@
-P A R T T H R E E
-AI Engineering
-How modern AI systems are actually built on top of large language models.
-We start with how a model works and how to prompt it, then add
-knowledge with RAG and memory, then turn a plain model into an agent
-that uses tools through MCP and reusable skills. Every idea comes with a
-diagram and a small worked example.

@@ -1,0 +1,340 @@
+{
+  "chapters": [
+    {
+      "id": "cover",
+      "num": null,
+      "title": "Cover",
+      "part": "front",
+      "href": "chapters/cover.html"
+    },
+    {
+      "id": "contents",
+      "num": null,
+      "title": "Contents",
+      "part": "front",
+      "href": "chapters/contents.html"
+    },
+    {
+      "id": "part-cp",
+      "num": null,
+      "title": "Part One: Competitive Programming",
+      "part": "cp",
+      "href": "chapters/part-cp.html"
+    },
+    {
+      "id": "00-how-to-use",
+      "num": "00",
+      "title": "How to use this book",
+      "part": "cp",
+      "href": "chapters/00-how-to-use.html"
+    },
+    {
+      "id": "01-approaching",
+      "num": "01",
+      "title": "Approaching any problem",
+      "part": "cp",
+      "href": "chapters/01-approaching.html"
+    },
+    {
+      "id": "02-big-o",
+      "num": "02",
+      "title": "Big O and complexity",
+      "part": "cp",
+      "href": "chapters/02-big-o.html"
+    },
+    {
+      "id": "03-arrays",
+      "num": "03",
+      "title": "Arrays and hashing",
+      "part": "cp",
+      "href": "chapters/03-arrays.html"
+    },
+    {
+      "id": "04-two-pointers",
+      "num": "04",
+      "title": "Two pointers",
+      "part": "cp",
+      "href": "chapters/04-two-pointers.html"
+    },
+    {
+      "id": "05-sliding-window",
+      "num": "05",
+      "title": "Sliding window",
+      "part": "cp",
+      "href": "chapters/05-sliding-window.html"
+    },
+    {
+      "id": "06-stack",
+      "num": "06",
+      "title": "Stack",
+      "part": "cp",
+      "href": "chapters/06-stack.html"
+    },
+    {
+      "id": "07-binary-search",
+      "num": "07",
+      "title": "Binary search",
+      "part": "cp",
+      "href": "chapters/07-binary-search.html"
+    },
+    {
+      "id": "08-linked-lists",
+      "num": "08",
+      "title": "Linked lists",
+      "part": "cp",
+      "href": "chapters/08-linked-lists.html"
+    },
+    {
+      "id": "09-trees",
+      "num": "09",
+      "title": "Trees and BST",
+      "part": "cp",
+      "href": "chapters/09-trees.html"
+    },
+    {
+      "id": "10-heaps",
+      "num": "10",
+      "title": "Heaps and priority queues",
+      "part": "cp",
+      "href": "chapters/10-heaps.html"
+    },
+    {
+      "id": "11-backtracking",
+      "num": "11",
+      "title": "Backtracking",
+      "part": "cp",
+      "href": "chapters/11-backtracking.html"
+    },
+    {
+      "id": "12-graphs",
+      "num": "12",
+      "title": "Graphs, BFS, DFS",
+      "part": "cp",
+      "href": "chapters/12-graphs.html"
+    },
+    {
+      "id": "13-dp",
+      "num": "13",
+      "title": "Dynamic programming",
+      "part": "cp",
+      "href": "chapters/13-dp.html"
+    },
+    {
+      "id": "14-greedy",
+      "num": "14",
+      "title": "Greedy",
+      "part": "cp",
+      "href": "chapters/14-greedy.html"
+    },
+    {
+      "id": "15-intervals",
+      "num": "15",
+      "title": "Intervals",
+      "part": "cp",
+      "href": "chapters/15-intervals.html"
+    },
+    {
+      "id": "16-bits",
+      "num": "16",
+      "title": "Bit manipulation",
+      "part": "cp",
+      "href": "chapters/16-bits.html"
+    },
+    {
+      "id": "17-cheat-sheet",
+      "num": "17",
+      "title": "Pattern cheat sheet",
+      "part": "cp",
+      "href": "chapters/17-cheat-sheet.html"
+    },
+    {
+      "id": "18-study-plan",
+      "num": "18",
+      "title": "A study plan that works",
+      "part": "cp",
+      "href": "chapters/18-study-plan.html"
+    },
+    {
+      "id": "part-sd",
+      "num": null,
+      "title": "Part Two: System Design",
+      "part": "sd",
+      "href": "chapters/part-sd.html"
+    },
+    {
+      "id": "19-approaching-sd",
+      "num": "19",
+      "title": "Approaching system design",
+      "part": "sd",
+      "href": "chapters/19-approaching-sd.html"
+    },
+    {
+      "id": "20-estimation",
+      "num": "20",
+      "title": "Estimation and key numbers",
+      "part": "sd",
+      "href": "chapters/20-estimation.html"
+    },
+    {
+      "id": "21-scaling",
+      "num": "21",
+      "title": "Scaling and load balancing",
+      "part": "sd",
+      "href": "chapters/21-scaling.html"
+    },
+    {
+      "id": "22-caching",
+      "num": "22",
+      "title": "Caching and CDNs",
+      "part": "sd",
+      "href": "chapters/22-caching.html"
+    },
+    {
+      "id": "23-databases",
+      "num": "23",
+      "title": "SQL vs NoSQL",
+      "part": "sd",
+      "href": "chapters/23-databases.html"
+    },
+    {
+      "id": "24-replication",
+      "num": "24",
+      "title": "Replication and sharding",
+      "part": "sd",
+      "href": "chapters/24-replication.html"
+    },
+    {
+      "id": "25-cap",
+      "num": "25",
+      "title": "CAP and consistency",
+      "part": "sd",
+      "href": "chapters/25-cap.html"
+    },
+    {
+      "id": "26-queues",
+      "num": "26",
+      "title": "Queues and async",
+      "part": "sd",
+      "href": "chapters/26-queues.html"
+    },
+    {
+      "id": "27-building-blocks",
+      "num": "27",
+      "title": "More building blocks",
+      "part": "sd",
+      "href": "chapters/27-building-blocks.html"
+    },
+    {
+      "id": "28-url-shortener",
+      "num": "28",
+      "title": "Design: URL shortener",
+      "part": "sd",
+      "href": "chapters/28-url-shortener.html"
+    },
+    {
+      "id": "29-whatsapp",
+      "num": "29",
+      "title": "Design: WhatsApp",
+      "part": "sd",
+      "href": "chapters/29-whatsapp.html"
+    },
+    {
+      "id": "30-instagram",
+      "num": "30",
+      "title": "Design: Instagram",
+      "part": "sd",
+      "href": "chapters/30-instagram.html"
+    },
+    {
+      "id": "31-amazon",
+      "num": "31",
+      "title": "Design: Amazon",
+      "part": "sd",
+      "href": "chapters/31-amazon.html"
+    },
+    {
+      "id": "32-s3",
+      "num": "32",
+      "title": "Design: Amazon S3",
+      "part": "sd",
+      "href": "chapters/32-s3.html"
+    },
+    {
+      "id": "33-youtube",
+      "num": "33",
+      "title": "Design: YouTube",
+      "part": "sd",
+      "href": "chapters/33-youtube.html"
+    },
+    {
+      "id": "34-uber",
+      "num": "34",
+      "title": "Design: Uber",
+      "part": "sd",
+      "href": "chapters/34-uber.html"
+    },
+    {
+      "id": "part-ai",
+      "num": null,
+      "title": "Part Three: AI Engineering",
+      "part": "ai",
+      "href": "chapters/part-ai.html"
+    },
+    {
+      "id": "35-llms",
+      "num": "35",
+      "title": "How LLMs work",
+      "part": "ai",
+      "href": "chapters/35-llms.html"
+    },
+    {
+      "id": "36-prompting",
+      "num": "36",
+      "title": "Prompting patterns",
+      "part": "ai",
+      "href": "chapters/36-prompting.html"
+    },
+    {
+      "id": "37-rag",
+      "num": "37",
+      "title": "RAG",
+      "part": "ai",
+      "href": "chapters/37-rag.html"
+    },
+    {
+      "id": "38-memory",
+      "num": "38",
+      "title": "Memory",
+      "part": "ai",
+      "href": "chapters/38-memory.html"
+    },
+    {
+      "id": "39-agents",
+      "num": "39",
+      "title": "Agentic patterns",
+      "part": "ai",
+      "href": "chapters/39-agents.html"
+    },
+    {
+      "id": "40-mcp",
+      "num": "40",
+      "title": "MCP",
+      "part": "ai",
+      "href": "chapters/40-mcp.html"
+    },
+    {
+      "id": "41-skills",
+      "num": "41",
+      "title": "Skills",
+      "part": "ai",
+      "href": "chapters/41-skills.html"
+    },
+    {
+      "id": "42-ai-agent",
+      "num": "42",
+      "title": "Design: an AI agent",
+      "part": "ai",
+      "href": "chapters/42-ai-agent.html"
+    }
+  ]
+}
