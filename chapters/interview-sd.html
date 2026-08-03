@@ -28,12 +28,12 @@
         <p class="part-eyebrow">Interview Lab · System Design</p>
         <header class="chapter-hero">
 <h1>System design interview questions</h1>
-<p class="lab-hero-note">Ten L4–L6 prompts with full whiteboard tracks — clarify, capacity, diagrams, deep dives, and failure modes.</p>
+<p class="lab-hero-note">Eighteen L4–L6 prompts from recent FAANG loops — clarify, capacity, diagrams, deep dives, and failure modes.</p>
 </header>
 <div class="chapter-body">
-<p>This lab is for <strong>L4–L6 system design loops</strong>: the prompts that show up again and
-again — URL shortener as a warmup, then chat, feed, rides, video, or a focused building block
-like rate limiting.</p>
+<p>This lab is for <strong>L4–L6 system design loops</strong> — prompts repeatedly reported at
+Meta, Google, Amazon, Netflix, Stripe, and Uber in 2025–2026 (URL shortener warmups through
+Dropbox, payments, crawlers, and Kafka-style queues).</p>
 
 <p class="drill-intro"><strong>How to use it:</strong> Practice a 45-minute structure every time —
 <strong>clarify → capacity sketch → API → diagram → data model → deep dives → failures</strong>.
@@ -63,6 +63,14 @@ Open a card, study it, then redraw from memory on a blank page.</p>
   <li><a href="#q8"><span>Q8</span> Search autocomplete</a></li>
   <li><a href="#q9"><span>Q9</span> Distributed cache</a></li>
   <li><a href="#q10"><span>Q10</span> Ticketmaster / booking</a></li>
+  <li><a href="#q11"><span>Q11</span> Dropbox / Drive</a></li>
+  <li><a href="#q12"><span>Q12</span> Web crawler</a></li>
+  <li><a href="#q13"><span>Q13</span> Payment system</a></li>
+  <li><a href="#q14"><span>Q14</span> Leaderboard</a></li>
+  <li><a href="#q15"><span>Q15</span> Distributed KV store</a></li>
+  <li><a href="#q16"><span>Q16</span> Message queue (Kafka-like)</a></li>
+  <li><a href="#q17"><span>Q17</span> Pastebin</a></li>
+  <li><a href="#q18"><span>Q18</span> Google Maps basics</a></li>
 </ul>
 <details class="qa" id="q1">
 <summary><span>Q1. Design a URL Shortener (Bitly)</span></summary>
@@ -199,6 +207,102 @@ Open a card, study it, then redraw from memory on a blank page.</p>
 <ol class="qa-steps"><li><strong>Browse:</strong> read replicas + CDN for event pages; seat maps cached carefully.</li><li><strong>Inventory states:</strong> available → held → sold.</li><li><strong>Hold:</strong> soft lock with short TTL (2–10 min) via Redis or conditional row update.</li><li><strong>Checkout:</strong> create hold → payment intent → on success commit seats + ticket IDs; on fail/expiry release hold.</li><li><strong>Idempotency:</strong> keys on payment webhooks — no double charge / double sell.</li><li><strong>Consistency:</strong> strong on inventory (CAS / <code>UPDATE … WHERE status='available'</code>).</li><li><strong>Scale:</strong> shard by event_id; waiting rooms / queues for mega on-sales.</li></ol>
 <div class="qa-label">Strong closer</div>
 <aside class="qa-callout"><div class="qa-label">Contrast with feeds</div><p>Feeds can be eventually consistent. Ticket inventory cannot. Say that contrast out loud — interviewers love it.</p></aside>
+</div>
+</details>
+<details class="qa" id="q11">
+<summary><span>Q11. Design Dropbox / Google Drive</span></summary>
+<div class="qa-body">
+<p>Design a cloud file storage and sync service: upload/download files, sync across devices, share folders, and handle large files efficiently.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, Google, Microsoft — top file-storage design · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Chunked upload · sync · metadata vs blob</p>
+<div class="qa-label">Clarify</div>
+<ul><li>Max file size? Concurrent editors?</li><li>Version history? Offline sync?</li><li>Sharing ACLs / links?</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/dropbox-sync.svg" alt="File metadata vs chunked blob storage" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li><strong>Split metadata and bytes:</strong> metadata DB (file_id, path, versions, ACL); blobs in object storage.</li><li><strong>Chunk files</strong> (e.g. 4MB); content-hash chunks for dedupe; upload only missing chunks.</li><li><strong>Sync protocol:</strong> client keeps local revision; pull delta since last sync; conflict → last-write-wins or branch versions.</li><li><strong>Notifications:</strong> long-poll / websocket for file-change events to other devices.</li><li><strong>Large uploads:</strong> multipart / resumable; commit metadata only when all chunks ACK'd.</li><li><strong>Sharing:</strong> ACL on folder nodes; link tokens with expiry.</li></ol>
+<div class="qa-label">Deep dives</div>
+<ul><li>Namespace tree sharding by owner_id.</li><li>CDC from metadata → search index.</li><li>Client block-level sync (rsync-like) for huge files.</li></ul>
+</div>
+</details>
+<details class="qa" id="q12">
+<summary><span>Q12. Design a Web Crawler</span></summary>
+<div class="qa-body">
+<p>Design a distributed web crawler that discovers and fetches pages at large scale while respecting robots.txt and politeness limits.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon — classic distributed systems question · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> URL frontier · politeness · dedupe</p>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/web-crawler.svg" alt="Distributed crawl frontier" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li><strong>URL frontier:</strong> prioritized queue of URLs to fetch (BFS / priority by PageRank estimate).</li><li><strong>Dedupe:</strong> seen URL set (Bloom + store); canonicalize URLs.</li><li><strong>Politeness:</strong> per-host rate limits; respect robots.txt (cache rules).</li><li><strong>Workers:</strong> fetch → extract links → enqueue new URLs; store raw HTML / parse text.</li><li><strong>Distributed:</strong> shard frontier by host hash so one host stays on one worker (politeness).</li><li><strong>Failure:</strong> retries, crawl budget, blacklist bad hosts.</li></ol>
+<div class="qa-label">Google flavor</div>
+<aside class="qa-callout"><div class="qa-label">Often probed</div><p>How do you avoid drowning in low-value pages? Priority + crawl budget. How do you refresh? Recrawl based on change rate.</p></aside>
+</div>
+</details>
+<details class="qa" id="q13">
+<summary><span>Q13. Design a Payment System</span></summary>
+<div class="qa-body">
+<p>Design a payment service that charges cards, handles retries safely, supports refunds, and keeps an accurate ledger under failures.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Stripe, PayPal, Amazon, Square — money-moving design · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Idempotency · ledger · saga / outbox</p>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/payment-saga.svg" alt="Idempotent payment and ledger" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li><strong>Idempotency keys</strong> on every charge from the client — retries must not double-charge.</li><li><strong>API:</strong> create PaymentIntent → confirm → capture (or auth+capture).</li><li><strong>Ledger:</strong> append-only double-entry journal; balances derived — never overwrite money rows.</li><li><strong>Provider calls:</strong> stripe/processor behind adapter; store provider refs; reconcile webhooks with signature verify.</li><li><strong>Distributed tx:</strong> transactional outbox or saga for order ↔ payment; compensating refunds on failure.</li><li><strong>PCI:</strong> never store raw PAN; use tokens; isolate network.</li></ol>
+<div class="qa-label">Strong signal</div>
+<aside class="qa-callout"><div class="qa-label">Say this</div><p>At-least-once webhooks + idempotent handlers. Exactly-once is a ledger property you engineer, not a queue guarantee.</p></aside>
+</div>
+</details>
+<details class="qa" id="q14">
+<summary><span>Q14. Design a Leaderboard</span></summary>
+<div class="qa-body">
+<p>Design a game leaderboard that supports updating a player's score and fetching top-K and a player's rank with low latency.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, gaming companies — realtime ranking · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sorted sets · sharding · top-k</p>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/leaderboard.svg" alt="Redis sorted set leaderboard" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Redis ZSET (score → member) for one board: ZADD update, ZREVRANGE top-K, ZREVRANK for rank — O(log n).</li><li>Scale: shard by competition/season; or by player hash with aggregation for global top-K (harder).</li><li>Ties: use score + timestamp composite.</li><li>Historical boards: snapshot immutable ZSET per season.</li><li>Fan-out reads with cache; writes go to primary.</li></ol>
+</div>
+</details>
+<details class="qa" id="q15">
+<summary><span>Q15. Design a Distributed Key-Value Store</span></summary>
+<div class="qa-body">
+<p>Design a Dynamo-style distributed key-value store with put/get, high availability, and horizontal scale.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon (Dynamo), Google — fundamentals of distributed DBs · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Consistent hashing · quorum · replication</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Consistent hashing ring + virtual nodes for partition.</li><li>N replicas on successor nodes; client or coordinator uses quorum R/W (e.g. N=3, R=2, W=2).</li><li>Versioning: vector clocks / version numbers; reconcile conflicts (last-write-wins or client merge).</li><li>Hinted handoff + anti-entropy (Merkle trees) for temporary failures.</li><li>Tunable consistency: CAP — prefer AP with eventual consistency for shopping-cart style.</li></ol>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/consistent-hash-cache.svg" alt="Consistent hashing for KV shards" loading="lazy" /></figure>
+<div class="qa-label">Contrast</div>
+<p>Different from a cache: durability, replication, conflict resolution, and anti-entropy are first-class.</p>
+</div>
+</details>
+<details class="qa" id="q16">
+<summary><span>Q16. Design a Distributed Message Queue (Kafka-like)</span></summary>
+<div class="qa-body">
+<p>Design a pub/sub log that supports high-throughput producers, consumer groups, and durable retention.</p>
+<p class="qa-meta"><strong>Asked at:</strong> LinkedIn, Amazon, Uber, Confluent-style interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Partitions · consumer groups · retention</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Topics split into partitions (ordered append logs).</li><li>Producers pick partition by key (ordering per key) or round-robin.</li><li>Replicas: leader + followers; ack on ISR.</li><li>Consumer groups: each partition → one consumer in the group; commit offsets.</li><li>Retention by time/size; consumers are pull-based.</li><li>Scale: more partitions; rebalance on membership change.</li></ol>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/kafka-partitions.svg" alt="Topic partitions and consumer group" loading="lazy" /></figure>
+</div>
+</details>
+<details class="qa" id="q17">
+<summary><span>Q17. Design Pastebin</span></summary>
+<div class="qa-body">
+<p>Design a pastebin: users paste text, get a unique URL, optional expiry and syntax highlighting.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta — easier SD warmup after URL shortener · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Object storage · short IDs · expiry</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Similar to URL shortener: generate short id; store content in object store or DB (small pastes in DB, large in blob).</li><li>Metadata: id, expiry, visibility, user.</li><li>CDN/cache for public pastes; rate-limit create.</li><li>GC expired pastes with TTL sweeper.</li><li>Optional: raw vs HTML view; password-protected pastes.</li></ol>
+</div>
+</details>
+<details class="qa" id="q18">
+<summary><span>Q18. Design Google Maps (navigation basics)</span></summary>
+<div class="qa-body">
+<p>Design the core of a maps/navigation product: show maps, find places, and compute routes with ETA.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Uber — geo + routing · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Map tiles · graph routing · ETA</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li><strong>Tiles:</strong> pre-render / vector tiles by zoom; CDN heavily.</li><li><strong>Places search:</strong> geospatial index + text (similar to typeahead + geo filter).</li><li><strong>Road graph:</strong> nodes/edges with travel times; Dijkstra / A* / contraction hierarchies for speed.</li><li><strong>ETA:</strong> traffic-aware edge weights updated nearline.</li><li><strong>Client:</strong> request route → server returns polyline + steps; reroute on deviation.</li></ol>
+<div class="qa-label">Tie-in</div>
+<p>Shares geo indexing ideas with Uber matching (<a href="interview-sd.html#q5">Q5</a>) but routing graph is the heart.</p>
 </div>
 </details>
 </div>

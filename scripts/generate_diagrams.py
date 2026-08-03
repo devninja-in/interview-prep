@@ -1162,6 +1162,256 @@ DIAGRAMS["ticket-hold-checkout"] = svg(
     "Ticket booking holds",
 )
 
+# --- Extra researched interview diagrams (2025–2026) ---
+DIAGRAMS["stock-profit"] = svg(
+    820, 260,
+    f'''
+  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">prices = [7,1,5,3,6,4]</text>
+  {"".join(box(40+i*70, 100, 58, 44, ROSE if i==1 else (ACCENT_SOFT if i==4 else "#fff"), str(p)) for i,p in enumerate([7,1,5,3,6,4]))}
+  <text x="40" y="185" font-family="{SANS}" font-size="13" fill="{INK}">min so far=1 · sell at 6 → profit 5</text>
+  {caption(40, 230, "One pass: track running minimum; best = max(price − min).")}
+''',
+    "Buy/sell stock",
+)
+
+DIAGRAMS["min-window"] = svg(
+    820, 260,
+    f'''
+  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">s="ADOBECODEBANC" t="ABC"</text>
+  {box(40, 100, 200, 50, ROSE, "window covers A,B,C")}
+  {box(280, 100, 200, 50, ACCENT_SOFT, "shrink left while valid")}
+  {box(520, 100, 200, 50, SAND, "best = \"BANC\"")}
+  <path d="M245 125 H275" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M485 125 H515" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 210, "Expand until need met; shrink for minimal covering window.")}
+''',
+    "Minimum window substring",
+)
+
+DIAGRAMS["kadane"] = svg(
+    820, 260,
+    f'''
+  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">nums = [-2,1,-3,4,-1,2,1,-5,4]</text>
+  {box(40, 110, 280, 50, ROSE, "best ending here")}
+  {box(360, 110, 280, 50, ACCENT_SOFT, "global best = 6")}
+  <text x="40" y="200" font-family="{SANS}" font-size="13" fill="{INK}">subarray [4,-1,2,1] · cur = max(x, cur+x)</text>
+  {caption(40, 235, "Kadane: extend or restart at each index.")}
+''',
+    "Maximum subarray",
+)
+
+DIAGRAMS["rotated-search"] = svg(
+    820, 260,
+    f'''
+  {"".join(box(40+i*70, 100, 58, 44, ACCENT_SOFT if i<=3 else ROSE, str(v)) for i,v in enumerate([4,5,6,7,0,1,2]))}
+  <text x="40" y="180" font-family="{SANS}" font-size="13" fill="{INK}">Left half sorted · if target in range search left else right</text>
+  {caption(40, 220, "Always identify which half is sorted, then binary-search.")}
+''',
+    "Rotated sorted search",
+)
+
+DIAGRAMS["top-k-buckets"] = svg(
+    820, 260,
+    f'''
+  {box(40, 100, 140, 50, SAND, "count map")}
+  {box(220, 100, 200, 50, ROSE, "buckets[freq]→vals")}
+  {box(460, 100, 200, 50, ACCENT_SOFT, "scan high→low → k")}
+  <path d="M185 125 H215" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M425 125 H455" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 210, "O(n) bucket sort beats full sort for top-k frequent.")}
+''',
+    "Top K frequent",
+)
+
+DIAGRAMS["meeting-rooms"] = svg(
+    820, 260,
+    f'''
+  {box(40, 90, 120, 40, "#fff", "[0,30]")}
+  {box(40, 140, 120, 40, "#fff", "[5,10]")}
+  {box(40, 190, 120, 40, "#fff", "[15,20]")}
+  {box(220, 120, 200, 50, ROSE, "min-heap of ends")}
+  {box(480, 120, 200, 50, ACCENT_SOFT, "rooms = 2")}
+  <path d="M165 145 H215" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M425 145 H475" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 245, "Reuse room when start ≥ earliest end.")}
+''',
+    "Meeting Rooms II",
+)
+
+DIAGRAMS["rotting-oranges"] = svg(
+    820, 280,
+    f'''
+  {"".join(box(40+c*55, 90+r*55, 48, 48, ROSE if (r,c) in {(1,0),(1,1)} else (ACCENT_SOFT if (r,c)==(0,2) else "#fff"), "2" if (r,c) in {(1,0)} else ("1" if (r,c) in {(0,0),(0,1),(1,1),(2,1)} else "0")) for r in range(3) for c in range(3))}
+  <text x="280" y="120" font-family="{SANS}" font-size="13" fill="{INK}">Multi-source BFS from all rotten</text>
+  <text x="280" y="160" font-family="{MONO}" font-size="12" fill="{ACCENT}">each level = 1 minute</text>
+  {caption(40, 260, "If fresh remain when queue empties → -1.")}
+''',
+    "Rotting oranges",
+)
+
+DIAGRAMS["dropbox-sync"] = svg(
+    820, 280,
+    f'''
+  {box(40, 110, 120, 50, SAND, "Client")}
+  {box(200, 70, 150, 44, ROSE, "Metadata DB")}
+  {box(200, 160, 150, 44, ACCENT_SOFT, "Chunk blobs")}
+  {box(400, 110, 150, 50, "#fff", "Sync notify")}
+  {box(590, 110, 150, 50, SAND, "Other devices")}
+  <path d="M165 135 H185 V92 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M165 135 H185 V182 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M355 135 H395" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M555 135 H585" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 250, "Upload missing content-hashed chunks; commit metadata; notify peers.")}
+''',
+    "Dropbox-style sync",
+)
+
+DIAGRAMS["web-crawler"] = svg(
+    820, 260,
+    f'''
+  {box(40, 110, 130, 50, SAND, "URL frontier")}
+  {box(200, 110, 130, 50, ROSE, "Fetch workers")}
+  {box(360, 70, 140, 44, ACCENT_SOFT, "Dedupe seen")}
+  {box(360, 160, 140, 44, "#fff", "Extract links")}
+  {box(540, 110, 160, 50, SAND, "Store docs")}
+  <path d="M175 135 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M335 120 H355" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M505 135 H535" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 230, "Shard by host for politeness; cache robots.txt; prioritize carefully.")}
+''',
+    "Web crawler",
+)
+
+DIAGRAMS["payment-saga"] = svg(
+    820, 280,
+    f'''
+  {box(40, 110, 120, 50, SAND, "Client key")}
+  {box(190, 110, 130, 50, ROSE, "Payment API")}
+  {box(350, 110, 130, 50, ACCENT_SOFT, "Ledger")}
+  {box(510, 70, 140, 44, "#fff", "Processor")}
+  {box(510, 160, 140, 44, SAND, "Webhooks")}
+  <path d="M165 135 H185" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M325 135 H345" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M485 120 H505" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 250, "Idempotency keys + append-only ledger + signed webhooks.")}
+''',
+    "Payment system",
+)
+
+DIAGRAMS["leaderboard"] = svg(
+    820, 240,
+    f'''
+  {box(40, 100, 160, 50, SAND, "ZADD score")}
+  {box(240, 100, 180, 50, ROSE, "Redis ZSET")}
+  {box(460, 70, 160, 40, ACCENT_SOFT, "ZREVRANGE top-k")}
+  {box(460, 140, 160, 40, "#fff", "ZREVRANK player")}
+  <path d="M205 125 H235" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M425 125 H455" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 220, "O(log n) updates and rank queries on one board.")}
+''',
+    "Leaderboard",
+)
+
+DIAGRAMS["kafka-partitions"] = svg(
+    820, 260,
+    f'''
+  {box(40, 110, 120, 50, SAND, "Producers")}
+  {box(200, 70, 140, 40, ROSE, "Partition 0")}
+  {box(200, 120, 140, 40, ROSE, "Partition 1")}
+  {box(200, 170, 140, 40, ROSE, "Partition 2")}
+  {box(400, 110, 160, 50, ACCENT_SOFT, "Consumer group")}
+  {box(600, 110, 140, 50, "#fff", "Offsets")}
+  <path d="M165 135 H195" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M345 135 H395" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M565 135 H595" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 240, "Order per partition key; one consumer per partition in a group.")}
+''',
+    "Kafka-like queue",
+)
+
+DIAGRAMS["llm-serving"] = svg(
+    820, 280,
+    f'''
+  {box(40, 110, 110, 50, SAND, "Clients")}
+  {box(180, 110, 130, 50, ROSE, "Gateway")}
+  {box(340, 70, 150, 44, ACCENT_SOFT, "Batcher")}
+  {box(340, 160, 150, 44, "#fff", "KV cache")}
+  {box(530, 110, 140, 50, SAND, "GPU replicas")}
+  {box(700, 110, 90, 50, ROSE, "Stream")}
+  <path d="M155 135 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M315 135 H335" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M495 135 H525" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M675 135 H695" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 250, "Continuous batching + paged KV cache keeps GPUs utilized.")}
+''',
+    "LLM inference serving",
+)
+
+DIAGRAMS["agentic-rag"] = svg(
+    820, 280,
+    f'''
+  {box(40, 120, 110, 48, SAND, "Question")}
+  {box(180, 120, 120, 48, ROSE, "Router")}
+  {box(340, 70, 150, 44, ACCENT_SOFT, "Simple RAG")}
+  {box(340, 160, 150, 44, "#fff", "Agentic loop")}
+  {box(540, 120, 140, 48, SAND, "Answer")}
+  <path d="M155 144 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M305 130 H335 V92 H335" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M305 155 H335 V182" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M495 92 H510 V144 H535" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M495 182 H510 V144" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 250, "Default simple; agentic only when multi-hop metrics require it.")}
+''',
+    "Agentic RAG routing",
+)
+
+DIAGRAMS["semantic-cache"] = svg(
+    820, 240,
+    f'''
+  {box(40, 100, 120, 50, SAND, "Prompt")}
+  {box(200, 100, 140, 50, ROSE, "Embed + ANN")}
+  {box(380, 60, 150, 40, ACCENT_SOFT, "Hit → answer")}
+  {box(380, 140, 150, 40, "#fff", "Miss → LLM")}
+  <path d="M165 125 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M345 125 H375" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 220, "Threshold + tenant/model version must match or you serve wrong answers.")}
+''',
+    "Semantic cache",
+)
+
+DIAGRAMS["code-copilot"] = svg(
+    820, 260,
+    f'''
+  {box(40, 110, 120, 50, SAND, "IDE cursor")}
+  {box(190, 70, 150, 44, ROSE, "Context pack")}
+  {box(190, 160, 150, 44, ACCENT_SOFT, "Repo retrieve")}
+  {box(380, 110, 140, 50, "#fff", "FIM / chat")}
+  {box(560, 110, 140, 50, SAND, "Suggestion")}
+  <path d="M165 135 H185" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M345 135 H375" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M525 135 H555" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 240, "Tight latency for inline complete; deeper retrieval for repo Q&A.")}
+''',
+    "Coding copilot",
+)
+
+DIAGRAMS["feature-store"] = svg(
+    820, 280,
+    f'''
+  {box(40, 120, 120, 50, SAND, "Pipelines")}
+  {box(200, 70, 150, 44, ROSE, "Offline tables")}
+  {box(200, 160, 150, 44, ACCENT_SOFT, "Online KV")}
+  {box(400, 70, 150, 44, "#fff", "Training")}
+  {box(400, 160, 150, 44, SAND, "Serving")}
+  {box(600, 120, 140, 50, ROSE, "Registry")}
+  <path d="M165 135 H185" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M355 92 H395" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  <path d="M355 182 H395" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  {caption(40, 250, "Same transforms; point-in-time joins offline; watch train/serve skew.")}
+''',
+    "Feature store",
+)
+
 DIAGRAMS["prefix-sums"] = svg(
     720,
     260,
@@ -1209,18 +1459,6 @@ CHAPTER_DIAGRAMS = {
     "40-mcp": ["mcp"],
     "41-skills": ["skills"],
     "42-ai-agent": ["ai-assistant"],
-    "interview-ai": [
-        "rag-detailed",
-        "hybrid-search",
-        "eval-pipeline",
-        "agent-tools",
-        "memory-tiers",
-        "moderation-cascade",
-        "recsys-towers",
-        "multi-tenant-ai",
-        "transcription-ai",
-        "grounded-support",
-    ],
     "interview-cp": [
         "two-sum-walk",
         "longest-substr-window",
@@ -1232,6 +1470,30 @@ CHAPTER_DIAGRAMS = {
         "word-ladder-bfs",
         "serialize-tree",
         "trap-water",
+        "stock-profit",
+        "min-window",
+        "kadane",
+        "rotated-search",
+        "top-k-buckets",
+        "meeting-rooms",
+        "rotting-oranges",
+    ],
+    "interview-ai": [
+        "rag-detailed",
+        "hybrid-search",
+        "eval-pipeline",
+        "agent-tools",
+        "memory-tiers",
+        "moderation-cascade",
+        "recsys-towers",
+        "multi-tenant-ai",
+        "transcription-ai",
+        "grounded-support",
+        "llm-serving",
+        "agentic-rag",
+        "semantic-cache",
+        "code-copilot",
+        "feature-store",
     ],
     "interview-sd": [
         "url-shortener-detailed",
@@ -1244,6 +1506,11 @@ CHAPTER_DIAGRAMS = {
         "autocomplete-trie",
         "consistent-hash-cache",
         "ticket-hold-checkout",
+        "dropbox-sync",
+        "web-crawler",
+        "payment-saga",
+        "leaderboard",
+        "kafka-partitions",
     ],
 }
 

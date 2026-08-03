@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="260" viewBox="0 0 820 260" role="img" aria-label="Meeting Rooms II">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="260" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Meeting Rooms II</text>
+  
+  <rect x="40" y="90" width="120" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="100.0" y="110.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">[0,30]</text>
+  <rect x="40" y="140" width="120" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="100.0" y="160.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">[5,10]</text>
+  <rect x="40" y="190" width="120" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="100.0" y="210.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">[15,20]</text>
+  <rect x="220" y="120" width="200" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="320.0" y="145.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">min-heap of ends</text>
+  <rect x="480" y="120" width="200" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="580.0" y="145.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">rooms = 2</text>
+  <path d="M165 145 H215" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M425 145 H475" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <text x="40" y="245" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Reuse room when start ≥ earliest end.</text>
+
+</svg>

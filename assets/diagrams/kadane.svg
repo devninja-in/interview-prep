@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="260" viewBox="0 0 820 260" role="img" aria-label="Maximum subarray">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="260" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Maximum subarray</text>
+  
+  <text x="40" y="70" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">nums = [-2,1,-3,4,-1,2,1,-5,4]</text>
+  <rect x="40" y="110" width="280" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="180.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">best ending here</text>
+  <rect x="360" y="110" width="280" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="500.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">global best = 6</text>
+  <text x="40" y="200" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">subarray [4,-1,2,1] · cur = max(x, cur+x)</text>
+  <text x="40" y="235" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Kadane: extend or restart at each index.</text>
+
+</svg>

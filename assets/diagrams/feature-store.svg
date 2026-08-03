@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="280" viewBox="0 0 820 280" role="img" aria-label="Feature store">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="280" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Feature store</text>
+  
+  <rect x="40" y="120" width="120" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="100.0" y="145.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Pipelines</text>
+  <rect x="200" y="70" width="150" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="275.0" y="92.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Offline tables</text>
+  <rect x="200" y="160" width="150" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="275.0" y="182.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Online KV</text>
+  <rect x="400" y="70" width="150" height="44" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="475.0" y="92.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Training</text>
+  <rect x="400" y="160" width="150" height="44" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="475.0" y="182.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Serving</text>
+  <rect x="600" y="120" width="140" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="670.0" y="145.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Registry</text>
+  <path d="M165 135 H185" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M355 92 H395" stroke="#0f1c24" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  <path d="M355 182 H395" stroke="#0f1c24" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  <text x="40" y="250" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Same transforms; point-in-time joins offline; watch train/serve skew.</text>
+
+</svg>

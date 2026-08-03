@@ -533,10 +533,12 @@ def sd_questions() -> list[str]:
 
 
 def sd_lab_body() -> str:
+    from interview_sd_extra import sd_extra_questions
+
     intro = """
-<p>This lab is for <strong>L4–L6 system design loops</strong>: the prompts that show up again and
-again — URL shortener as a warmup, then chat, feed, rides, video, or a focused building block
-like rate limiting.</p>
+<p>This lab is for <strong>L4–L6 system design loops</strong> — prompts repeatedly reported at
+Meta, Google, Amazon, Netflix, Stripe, and Uber in 2025–2026 (URL shortener warmups through
+Dropbox, payments, crawlers, and Kafka-style queues).</p>
 
 <p class="drill-intro"><strong>How to use it:</strong> Practice a 45-minute structure every time —
 <strong>clarify → capacity sketch → API → diagram → data model → deep dives → failures</strong>.
@@ -566,9 +568,17 @@ Open a card, study it, then redraw from memory on a blank page.</p>
   <li><a href="#q8"><span>Q8</span> Search autocomplete</a></li>
   <li><a href="#q9"><span>Q9</span> Distributed cache</a></li>
   <li><a href="#q10"><span>Q10</span> Ticketmaster / booking</a></li>
+  <li><a href="#q11"><span>Q11</span> Dropbox / Drive</a></li>
+  <li><a href="#q12"><span>Q12</span> Web crawler</a></li>
+  <li><a href="#q13"><span>Q13</span> Payment system</a></li>
+  <li><a href="#q14"><span>Q14</span> Leaderboard</a></li>
+  <li><a href="#q15"><span>Q15</span> Distributed KV store</a></li>
+  <li><a href="#q16"><span>Q16</span> Message queue (Kafka-like)</a></li>
+  <li><a href="#q17"><span>Q17</span> Pastebin</a></li>
+  <li><a href="#q18"><span>Q18</span> Google Maps basics</a></li>
 </ul>
 """
-    blocks = sd_questions()
+    blocks = sd_questions() + sd_extra_questions(11)
     out = []
     for i, block in enumerate(blocks, start=1):
         out.append(block.replace('<details class="qa">', f'<details class="qa" id="q{i}">', 1))

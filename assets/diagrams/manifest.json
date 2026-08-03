@@ -62,6 +62,23 @@
     "autocomplete-trie",
     "consistent-hash-cache",
     "ticket-hold-checkout",
+    "stock-profit",
+    "min-window",
+    "kadane",
+    "rotated-search",
+    "top-k-buckets",
+    "meeting-rooms",
+    "rotting-oranges",
+    "dropbox-sync",
+    "web-crawler",
+    "payment-saga",
+    "leaderboard",
+    "kafka-partitions",
+    "llm-serving",
+    "agentic-rag",
+    "semantic-cache",
+    "code-copilot",
+    "feature-store",
     "prefix-sums"
   ],
   "chapters": {
@@ -162,18 +179,6 @@
     "42-ai-agent": [
       "ai-assistant"
     ],
-    "interview-ai": [
-      "rag-detailed",
-      "hybrid-search",
-      "eval-pipeline",
-      "agent-tools",
-      "memory-tiers",
-      "moderation-cascade",
-      "recsys-towers",
-      "multi-tenant-ai",
-      "transcription-ai",
-      "grounded-support"
-    ],
     "interview-cp": [
       "two-sum-walk",
       "longest-substr-window",
@@ -184,7 +189,31 @@
       "coin-change-dp",
       "word-ladder-bfs",
       "serialize-tree",
-      "trap-water"
+      "trap-water",
+      "stock-profit",
+      "min-window",
+      "kadane",
+      "rotated-search",
+      "top-k-buckets",
+      "meeting-rooms",
+      "rotting-oranges"
+    ],
+    "interview-ai": [
+      "rag-detailed",
+      "hybrid-search",
+      "eval-pipeline",
+      "agent-tools",
+      "memory-tiers",
+      "moderation-cascade",
+      "recsys-towers",
+      "multi-tenant-ai",
+      "transcription-ai",
+      "grounded-support",
+      "llm-serving",
+      "agentic-rag",
+      "semantic-cache",
+      "code-copilot",
+      "feature-store"
     ],
     "interview-sd": [
       "url-shortener-detailed",
@@ -196,7 +225,12 @@
       "notification-pipeline",
       "autocomplete-trie",
       "consistent-hash-cache",
-      "ticket-hold-checkout"
+      "ticket-hold-checkout",
+      "dropbox-sync",
+      "web-crawler",
+      "payment-saga",
+      "leaderboard",
+      "kafka-partitions"
     ]
   }
 }

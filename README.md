@@ -9,7 +9,7 @@ Coding, system design, and AI in one place — published as a real HTML book.
 1. **Competitive Programming** — patterns from arrays and hashing through graphs, DP, and bit manipulation (Python & Java).
 2. **System Design** — fundamentals, building blocks, and case studies (URL shortener, WhatsApp, Instagram, Amazon, S3, YouTube, Uber).
 3. **AI Engineering** — a deep story-driven path: LLMs, prompting, RAG, memory, agents, MCP, skills, and designing a full assistant (`content/ai/`).
-4. **Interview Labs** — 30 questions actually asked in FAANG / product-company loops (10 coding, 10 system design, 10 AI), plus 5-question drills at the end of major topic chapters.
+4. **Interview Labs** — 55 questions actually reported in FAANG / product-company loops (20 coding, 18 system design, 17 AI), each with step-by-step solutions, diagrams, and follow-ups.
 
 Chapters are normal web pages (selectable text + code blocks). Topic diagrams are freshly drawn SVGs — not PDF page screenshots.
 

@@ -28,12 +28,13 @@
         <p class="part-eyebrow">Interview Lab · Competitive Programming</p>
         <header class="chapter-hero">
 <h1>Coding interview questions</h1>
-<p class="lab-hero-note">Ten FAANG-frequency problems with diagrams, walkthroughs, Python/Java, and follow-ups — practice like a timed phone screen.</p>
+<p class="lab-hero-note">Twenty FAANG-frequency problems (2025–2026 report lists) with diagrams, walkthroughs, Python/Java, and follow-ups.</p>
 </header>
 <div class="chapter-body">
 <p>This lab covers the <strong>highest-frequency coding interview problems</strong> across FAANG
-and late-stage startups (Blind 75 / NeetCode lists, Amazon OAs, Google phones, Meta onsites).
-Each card is a full 25–40 minute practice: clarify → diagram → steps → code → follow-ups.</p>
+and late-stage startups — sourced from 2025–2026 interview report aggregations (Blind / LeetCode
+Discuss frequency lists, Amazon OAs, Google phones, Meta onsites). Each card is a full 25–40 minute
+practice: clarify → diagram → steps → code → follow-ups.</p>
 
 <p class="drill-intro"><strong>How to use it:</strong> Time yourself. Say the pattern name before
 coding. After you finish, close the card and re-explain the invariant from memory.</p>
@@ -60,6 +61,16 @@ coding. After you finish, close the card and re-explain the invariant from memor
   <li><a href="#q8"><span>Q8</span> Word Ladder</a></li>
   <li><a href="#q9"><span>Q9</span> Serialize / Deserialize Tree</a></li>
   <li><a href="#q10"><span>Q10</span> Trapping Rain Water</a></li>
+  <li><a href="#q11"><span>Q11</span> Best Time to Buy/Sell Stock</a></li>
+  <li><a href="#q12"><span>Q12</span> Minimum Window Substring</a></li>
+  <li><a href="#q13"><span>Q13</span> Maximum Subarray (Kadane)</a></li>
+  <li><a href="#q14"><span>Q14</span> Search in Rotated Sorted Array</a></li>
+  <li><a href="#q15"><span>Q15</span> Top K Frequent Elements</a></li>
+  <li><a href="#q16"><span>Q16</span> Meeting Rooms II</a></li>
+  <li><a href="#q17"><span>Q17</span> Valid Parentheses</a></li>
+  <li><a href="#q18"><span>Q18</span> Rotting Oranges</a></li>
+  <li><a href="#q19"><span>Q19</span> Alien Dictionary</a></li>
+  <li><a href="#q20"><span>Q20</span> Kth Largest Element</a></li>
 </ul>
 <details class="qa" id="q1">
 <summary><span>Q1. Two Sum</span></summary>
@@ -409,6 +420,290 @@ class Codec:
 </code></pre></div>
 <div class="qa-label">Why the two-pointer trick works</div>
 <aside class="qa-callout"><div class="qa-label">Intuition</div><p>If height[lo] &lt; height[hi], the water at lo cannot be limited by anything on the right taller than height[hi] — left_max is the binding constraint. Symmetric for the right side.</p></aside>
+</div>
+</details>
+<details class="qa" id="q11">
+<summary><span>Q11. Best Time to Buy and Sell Stock</span></summary>
+<div class="qa-body">
+<p>prices[i] is the stock price on day i. Choose one day to buy and a later day to sell to maximize profit. Return the max profit (0 if no profit).</p>
+<p class="qa-meta"><strong>Asked at:</strong> Every FAANG — LC 121; top-5 frequency in 2025–2026 reports · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> One pass · track min price</p>
+<div class="qa-label">Clarify</div>
+<ul><li>One transaction only (buy once, sell once).</li><li>Must sell after buy.</li><li>Empty / length-1 → 0.</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/stock-profit.svg" alt="Track running minimum price" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Brute: try every buy/sell pair O(n²) — reject it.</li><li>Keep min_price seen so far while scanning left→right.</li><li>At each price, candidate = price − min_price; track best.</li><li>Time O(n), space O(1).</li></ol>
+<div class="qa-label">Python</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def max_profit(prices):
+    min_price, best = float(&quot;inf&quot;), 0
+    for p in prices:
+        min_price = min(min_price, p)
+        best = max(best, p - min_price)
+    return best
+</code></pre></div>
+<div class="qa-label">Follow-ups</div>
+<ul><li>LC 122 unlimited transactions → sum all uphill segments.</li><li>LC 123 at most 2 → DP states.</li><li>Cooldown with cooldown → state machine DP (Amazon favorite).</li></ul>
+</div>
+</details>
+<details class="qa" id="q12">
+<summary><span>Q12. Minimum Window Substring</span></summary>
+<div class="qa-body">
+<p>Given strings s and t, return the smallest substring of s that covers every character in t (including duplicates). Return "" if impossible.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, LinkedIn — LC 76; #4 in many 2026 frequency lists · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Sliding window · need/have counts</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Build need counts for t; need_unique = number of distinct chars.</li><li>Expand right; update have counts; when a char's have hits need, increment formed.</li><li>While formed == need_unique, shrink left; record best window.</li><li>Time O(|s| + |t|), space O(alphabet).</li></ol>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/min-window.svg" alt="Shrink while window still covers t" loading="lazy" /></figure>
+<div class="qa-label">Python</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import Counter
+
+def min_window(s, t):
+    need = Counter(t)
+    missing = len(need)
+    have = {}
+    best_len, best = float(&quot;inf&quot;), &quot;&quot;
+    left = 0
+    for right, ch in enumerate(s):
+        have[ch] = have.get(ch, 0) + 1
+        if ch in need and have[ch] == need[ch]:
+            missing -= 1
+        while missing == 0:
+            if right - left + 1 &lt; best_len:
+                best_len = right - left + 1
+                best = s[left : right + 1]
+            left_ch = s[left]
+            have[left_ch] -= 1
+            if left_ch in need and have[left_ch] &lt; need[left_ch]:
+                missing += 1
+            left += 1
+    return best
+</code></pre></div>
+<div class="qa-label">Trap</div>
+<aside class="qa-callout"><div class="qa-label">Meta tip</div><p>Practice explaining the formed/missing counter — interviewers stop you if you nest O(|t|) scans inside the while loop.</p></aside>
+</div>
+</details>
+<details class="qa" id="q13">
+<summary><span>Q13. Maximum Subarray (Kadane)</span></summary>
+<div class="qa-body">
+<p>Find the contiguous subarray with the largest sum and return that sum.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft — LC 53; Amazon OA staple · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Kadane · running best ending here</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>At each index: either extend previous run or start fresh at nums[i].</li><li>best_ending = max(nums[i], best_ending + nums[i]).</li><li>Track global max. Handles all-negative by picking the largest element.</li><li>Time O(n), space O(1).</li></ol>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/kadane.svg" alt="Kadane running sum" loading="lazy" /></figure>
+<div class="qa-label">Python</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def max_sub_array(nums):
+    best = cur = nums[0]
+    for x in nums[1:]:
+        cur = max(x, cur + x)
+        best = max(best, cur)
+    return best
+</code></pre></div>
+<div class="qa-label">Follow-ups</div>
+<ul><li>Return the actual subarray indices.</li><li>Circular maximum subarray.</li><li>2D Kadane (maximal rectangle sum) — Google follow-up.</li></ul>
+</div>
+</details>
+<details class="qa" id="q14">
+<summary><span>Q14. Search in Rotated Sorted Array</span></summary>
+<div class="qa-body">
+<p>nums was sorted ascending then rotated at an unknown pivot. Search for target in O(log n). Distinct values.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, LinkedIn, Microsoft — LC 33 · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Binary search · identify sorted half</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Standard binary search frame. Mid always sits in a half that is sorted.</li><li>If nums[lo] ≤ nums[mid]: left half sorted. If target in [lo, mid), search left; else right.</li><li>Else right half sorted — symmetric check.</li><li>Draw an example like [4,5,6,7,0,1,2] every time.</li></ol>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/rotated-search.svg" alt="Binary search on rotated array" loading="lazy" /></figure>
+<div class="qa-label">Python</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def search(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo &lt;= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[lo] &lt;= nums[mid]:
+            if nums[lo] &lt;= target &lt; nums[mid]:
+                hi = mid - 1
+            else:
+                lo = mid + 1
+        else:
+            if nums[mid] &lt; target &lt;= nums[hi]:
+                lo = mid + 1
+            else:
+                hi = mid - 1
+    return -1
+</code></pre></div>
+</div>
+</details>
+<details class="qa" id="q15">
+<summary><span>Q15. Top K Frequent Elements</span></summary>
+<div class="qa-body">
+<p>Given an integer array, return the k most frequent elements. Order of the answer does not matter.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft — LC 347; universal heap question · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map + heap / bucket sort</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Count frequencies in a map O(n).</li><li>Option A: min-heap of size k → O(n log k).</li><li>Option B (often preferred): bucket sort by frequency → O(n).</li><li>Say both; implement one cleanly.</li></ol>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/top-k-buckets.svg" alt="Bucket sort by frequency" loading="lazy" /></figure>
+<div class="qa-label">Python (bucket)</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import Counter
+
+def top_k_frequent(nums, k):
+    freq = Counter(nums)
+    buckets = [[] for _ in range(len(nums) + 1)]
+    for val, c in freq.items():
+        buckets[c].append(val)
+    out = []
+    for c in range(len(buckets) - 1, 0, -1):
+        for val in buckets[c]:
+            out.append(val)
+            if len(out) == k:
+                return out
+    return out
+</code></pre></div>
+</div>
+</details>
+<details class="qa" id="q16">
+<summary><span>Q16. Meeting Rooms II</span></summary>
+<div class="qa-body">
+<p>Given meeting time intervals [start, end), find the minimum number of conference rooms required.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta (Facebook), Amazon, Bloomberg — premium classic · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Min-heap of end times / sweep line</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Sort meetings by start time.</li><li>Min-heap stores end times of rooms in use.</li><li>If next start ≥ earliest end, reuse (pop); else allocate (push).</li><li>Answer = max heap size during the scan (or final size if you track peak).</li></ol>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/meeting-rooms.svg" alt="Heap of meeting end times" loading="lazy" /></figure>
+<div class="qa-label">Python</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">import heapq
+
+def min_meeting_rooms(intervals):
+    if not intervals:
+        return 0
+    intervals.sort(key=lambda x: x[0])
+    heap = []  # end times
+    for start, end in intervals:
+        if heap and start &gt;= heap[0]:
+            heapq.heappop(heap)
+        heapq.heappush(heap, end)
+    return len(heap)
+</code></pre></div>
+<div class="qa-label">Related</div>
+<p>Merge Intervals / Insert Interval / Non-overlapping — same family. Sweep line with +1 at start and −1 at end also works.</p>
+</div>
+</details>
+<details class="qa" id="q17">
+<summary><span>Q17. Valid Parentheses</span></summary>
+<div class="qa-body">
+<p>Given a string containing just '()[]{}', determine if the input string is valid: open brackets closed by the same type in the correct order.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Bloomberg — LC 20; common warmup / phone screen · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Stack</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Scan left→right. Push opening brackets.</li><li>On closing: stack must be non-empty and top must match.</li><li>End with empty stack.</li><li>Time O(n), space O(n).</li></ol>
+<div class="qa-label">Python</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def is_valid(s):
+    pairs = {&quot;)&quot;: &quot;(&quot;, &quot;]&quot;: &quot;[&quot;, &quot;}&quot;: &quot;{&quot;}
+    stack = []
+    for ch in s:
+        if ch in pairs.values():
+            stack.append(ch)
+        elif ch in pairs:
+            if not stack or stack[-1] != pairs[ch]:
+                return False
+            stack.pop()
+        else:
+            return False
+    return not stack
+</code></pre></div>
+<div class="qa-label">Follow-ups</div>
+<ul><li>Longest valid parentheses (Hard).</li><li>Minimum remove to make valid (Meta).</li><li>Generate parentheses (backtracking).</li></ul>
+</div>
+</details>
+<details class="qa" id="q18">
+<summary><span>Q18. Rotting Oranges</span></summary>
+<div class="qa-body">
+<p>Grid of 0 (empty), 1 (fresh), 2 (rotten). Each minute, any fresh orange 4-adjacent to a rotten one becomes rotten. Return minutes until all fresh are rotten, or -1 if impossible.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft, Google — LC 994; multi-source BFS favorite · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Multi-source BFS on grid</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Enqueue <em>all</em> initially rotten cells (multi-source BFS).</li><li>Count fresh oranges.</li><li>BFS level-by-level; each level = 1 minute; rot neighbors.</li><li>If fresh remains → -1; else minutes (careful: last wave may add a minute — track correctly).</li></ol>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/rotting-oranges.svg" alt="Multi-source BFS rotting" loading="lazy" /></figure>
+<div class="qa-label">Python</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import deque
+
+def oranges_rotting(grid):
+    rows, cols = len(grid), len(grid[0])
+    q, fresh = deque(), 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 2:
+                q.append((r, c))
+            elif grid[r][c] == 1:
+                fresh += 1
+    minutes = 0
+    while q and fresh:
+        for _ in range(len(q)):
+            r, c = q.popleft()
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nr, nc = r + dr, c + dc
+                if 0 &lt;= nr &lt; rows and 0 &lt;= nc &lt; cols and grid[nr][nc] == 1:
+                    grid[nr][nc] = 2
+                    fresh -= 1
+                    q.append((nr, nc))
+        minutes += 1
+    return minutes if fresh == 0 else -1
+</code></pre></div>
+</div>
+</details>
+<details class="qa" id="q19">
+<summary><span>Q19. Alien Dictionary</span></summary>
+<div class="qa-body">
+<p>You are given a list of words sorted lexicographically in an alien language. Derive any valid order of unique letters. Return "" if invalid.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Google — LC 269; hard topo-sort phone-screen closer · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Graph · topological sort from sorted words</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Compare consecutive words; first differing chars give an edge earlier→later.</li><li>Invalid if word A is prefix of longer preceding word ("abc" before "ab").</li><li>Build graph + indegrees; Kahn BFS for a valid order.</li><li>If cycle / not all letters processed → "".</li></ol>
+<div class="qa-label">Python sketch</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import defaultdict, deque
+
+def alien_order(words):
+    graph = defaultdict(set)
+    indeg = {c: 0 for w in words for c in w}
+    for w1, w2 in zip(words, words[1:]):
+        if w1.startswith(w2) and w1 != w2 and len(w1) &gt; len(w2):
+            return &quot;&quot;
+        for a, b in zip(w1, w2):
+            if a != b:
+                if b not in graph[a]:
+                    graph[a].add(b)
+                    indeg[b] += 1
+                break
+    q = deque([c for c, d in indeg.items() if d == 0])
+    order = []
+    while q:
+        c = q.popleft()
+        order.append(c)
+        for nxt in graph[c]:
+            indeg[nxt] -= 1
+            if indeg[nxt] == 0:
+                q.append(nxt)
+    return &quot;&quot;.join(order) if len(order) == len(indeg) else &quot;&quot;
+</code></pre></div>
+</div>
+</details>
+<details class="qa" id="q20">
+<summary><span>Q20. Kth Largest Element in an Array</span></summary>
+<div class="qa-body">
+<p>Find the kth largest element in an unsorted array. Note it is the kth largest in sorted order, not the kth distinct.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Google, Microsoft — LC 215 · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Min-heap of size k / Quickselect</p>
+<div class="qa-label">Step-by-step</div>
+<ol class="qa-steps"><li>Min-heap of size k: push all; pop when size > k; peek is answer O(n log k).</li><li>Quickselect (Hoare): average O(n) — mention for strong signal.</li><li>Sorting is O(n log n) — acceptable start, then optimize.</li></ol>
+<div class="qa-label">Python (heap)</div>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">import heapq
+
+def find_kth_largest(nums, k):
+    heap = []
+    for x in nums:
+        heapq.heappush(heap, x)
+        if len(heap) &gt; k:
+            heapq.heappop(heap)
+    return heap[0]
+</code></pre></div>
+<div class="qa-label">Related Amazon ask</div>
+<p>K Closest Points to Origin (LC 973) — same heap pattern with distance.</p>
 </div>
 </details>
 </div>

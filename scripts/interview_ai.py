@@ -687,10 +687,12 @@ How many days of parental leave do we get?""",
 
 
 def ai_lab_body() -> str:
+    from interview_ai_extra import ai_extra_questions
+
     intro = """
 <p>This lab is built for <strong>AI / ML system design interviews</strong> at product companies
-and AI platforms — the loops that ask you to design RAG, agents, eval, and cost-safe platforms
-(not derive attention from scratch on a whiteboard).</p>
+and AI platforms (2025–2026 loops): RAG, agents, eval, inference serving, copilots, feature
+stores, and security — not deriving attention math on a whiteboard.</p>
 
 <p class="drill-intro"><strong>How to use it:</strong> For each question, practice a 35–45 minute
 answer: clarify → draw the diagram → narrate the step-by-step path → deep-dive one risky area
@@ -716,11 +718,16 @@ from memory without looking.</p>
   <li><a href="#q8"><span>Q8</span> Multi-tenant AI SaaS</a></li>
   <li><a href="#q9"><span>Q9</span> Hallucination-resistant support</a></li>
   <li><a href="#q10"><span>Q10</span> Long-running assistant memory</a></li>
+  <li><a href="#q11"><span>Q11</span> LLM inference serving</a></li>
+  <li><a href="#q12"><span>Q12</span> Agentic RAG</a></li>
+  <li><a href="#q13"><span>Q13</span> Semantic cache</a></li>
+  <li><a href="#q14"><span>Q14</span> Coding copilot</a></li>
+  <li><a href="#q15"><span>Q15</span> ML feature store</a></li>
+  <li><a href="#q16"><span>Q16</span> Prompt-injection defenses</a></li>
+  <li><a href="#q17"><span>Q17</span> A/B testing for LLMs</a></li>
 </ul>
 """
-    # Add id anchors on each details via wrapping — qa_block doesn't support ids.
-    # Post-process: inject id="qN" into details sequentially.
-    blocks = ai_questions()
+    blocks = ai_questions() + ai_extra_questions(11)
     out = []
     for i, block in enumerate(blocks, start=1):
         out.append(block.replace('<details class="qa">', f'<details class="qa" id="q{i}">', 1))

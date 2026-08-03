@@ -728,10 +728,13 @@ class Codec:
 
 
 def cp_lab_body() -> str:
+    from interview_cp_extra import cp_extra_questions
+
     intro = """
 <p>This lab covers the <strong>highest-frequency coding interview problems</strong> across FAANG
-and late-stage startups (Blind 75 / NeetCode lists, Amazon OAs, Google phones, Meta onsites).
-Each card is a full 25–40 minute practice: clarify → diagram → steps → code → follow-ups.</p>
+and late-stage startups — sourced from 2025–2026 interview report aggregations (Blind / LeetCode
+Discuss frequency lists, Amazon OAs, Google phones, Meta onsites). Each card is a full 25–40 minute
+practice: clarify → diagram → steps → code → follow-ups.</p>
 
 <p class="drill-intro"><strong>How to use it:</strong> Time yourself. Say the pattern name before
 coding. After you finish, close the card and re-explain the invariant from memory.</p>
@@ -758,9 +761,19 @@ coding. After you finish, close the card and re-explain the invariant from memor
   <li><a href="#q8"><span>Q8</span> Word Ladder</a></li>
   <li><a href="#q9"><span>Q9</span> Serialize / Deserialize Tree</a></li>
   <li><a href="#q10"><span>Q10</span> Trapping Rain Water</a></li>
+  <li><a href="#q11"><span>Q11</span> Best Time to Buy/Sell Stock</a></li>
+  <li><a href="#q12"><span>Q12</span> Minimum Window Substring</a></li>
+  <li><a href="#q13"><span>Q13</span> Maximum Subarray (Kadane)</a></li>
+  <li><a href="#q14"><span>Q14</span> Search in Rotated Sorted Array</a></li>
+  <li><a href="#q15"><span>Q15</span> Top K Frequent Elements</a></li>
+  <li><a href="#q16"><span>Q16</span> Meeting Rooms II</a></li>
+  <li><a href="#q17"><span>Q17</span> Valid Parentheses</a></li>
+  <li><a href="#q18"><span>Q18</span> Rotting Oranges</a></li>
+  <li><a href="#q19"><span>Q19</span> Alien Dictionary</a></li>
+  <li><a href="#q20"><span>Q20</span> Kth Largest Element</a></li>
 </ul>
 """
-    blocks = cp_questions()
+    blocks = cp_questions() + cp_extra_questions(11)
     out = []
     for i, block in enumerate(blocks, start=1):
         out.append(block.replace('<details class="qa">', f'<details class="qa" id="q{i}">', 1))
