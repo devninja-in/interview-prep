@@ -4,158 +4,213 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interview Prep — DevNinja</title>
-  <meta name="description" content="FAANG interview prep for coding, system design, and AI engineering. Interview Labs, learning paths, company guides, and professional architecture diagrams." />
+  <meta name="description" content="Professional interview preparation for coding, system design, and AI engineering. FAANG-style labs, learning paths, company guides, and architecture diagrams." />
   <meta property="og:title" content="Interview Prep — DevNinja" />
-  <meta property="og:description" content="Coding, system design, and AI interview preparation." />
+  <meta property="og:description" content="Coding, system design, and AI interview preparation by DevNinja." />
   <meta property="og:image" content="assets/cover.jpg" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2318181b'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' font-size='22' fill='%230ea5e9' font-family='system-ui'%3EIP%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
+<body class="home-page">
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header" id="site-header">
-    <a class="brand" href="./">Interview Prep <span>DevNinja</span></a>
-    <nav class="nav-links" aria-label="Primary">
-      <a class="hide-sm" href="#labs">Labs</a>
-      <a class="hide-sm" href="#guides">Guides</a>
-      <a class="hide-sm" href="#tracks">Tracks</a>
-      <a class="hide-sm" href="#topics">Topics</a>
-      <a class="hide-sm" href="https://devninja.in/" target="_blank" rel="noopener">DevNinja</a>
-      <a class="btn btn-primary" href="chapters/interview-playbook.html">Start prep</a>
-    </nav>
+    <div class="header-inner">
+      <a class="brand" href="./">Interview Prep <span>DevNinja</span></a>
+      <nav class="nav-links" aria-label="Primary">
+        <a class="hide-sm" href="#start">Start</a>
+        <a class="hide-sm" href="#labs">Labs</a>
+        <a class="hide-sm" href="#guides">Guides</a>
+        <a class="hide-sm" href="#topics">Topics</a>
+        <a class="hide-sm" href="https://devninja.in/" target="_blank" rel="noopener">DevNinja</a>
+        <a class="btn btn-primary" href="chapters/interview-playbook.html">Start prep</a>
+      </nav>
+    </div>
   </header>
 
   <main id="main">
     <section class="hero" aria-label="Interview Prep">
       <div class="hero-content">
-        <p class="hero-kicker">A <a href="https://devninja.in/">DevNinja</a> product · Coding · System design · AI</p>
+        <p class="hero-kicker">DevNinja · Interview preparation</p>
         <h1>Interview Prep</h1>
-        <p>
-          Practice the way interviewers score you — expected answers, level bars, follow-ups,
-          production examples, and architecture diagrams built for FAANG loops.
+        <p class="hero-lead">
+          Prepare for coding, system design, and AI interviews the way hiring loops actually score you —
+          expected answers, level bars, follow-ups, and production-ready diagrams.
         </p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="chapters/interview-playbook.html">Interview playbook</a>
-          <a class="btn btn-ghost" href="#labs">Browse Interview Labs</a>
+          <a class="btn btn-primary" href="chapters/interview-playbook.html">Open playbook</a>
+          <a class="btn btn-ghost" href="chapters/interview-cp.html">Start Coding Lab</a>
         </div>
       </div>
     </section>
 
-    <section class="section" id="labs">
-      <div class="section-head">
-        <h2>Interview Labs</h2>
-        <p>Expandable prompts with interviewer intent, Junior→Principal expectations, and real production context.</p>
-      </div>
-      <div class="parts">
-        <article class="part">
-          <div class="part-label coding">Coding</div>
-          <h3><a href="chapters/interview-cp.html">20 coding questions</a></h3>
-          <p>FAANG-frequency patterns with solutions, follow-ups, mistakes, and complexity talk tracks.</p>
-        </article>
-        <article class="part">
-          <div class="part-label sd">System design</div>
-          <h3><a href="chapters/interview-sd.html">18 design questions</a></h3>
-          <p>Whiteboard architectures with request flows, trade-offs, and company-scale failure modes.</p>
-        </article>
-        <article class="part">
-          <div class="part-label ai">AI engineering</div>
-          <h3><a href="chapters/interview-ai.html">17 AI questions</a></h3>
-          <p>RAG, agents, serving, eval, and security — scored the way AI hiring loops score.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section section-alt" id="guides">
-      <div class="section-head">
-        <h2>Guides &amp; roadmaps</h2>
-        <p>Structured prep paths — not documentation tours.</p>
-      </div>
-      <div class="parts parts-wide">
-        <article class="part">
-          <div class="part-label guide">Structure</div>
-          <h3><a href="chapters/interview-playbook.html">Interview playbook</a></h3>
-          <p>The answer structure every serious topic should follow.</p>
-        </article>
-        <article class="part">
-          <div class="part-label guide">Paths</div>
-          <h3><a href="chapters/learning-paths.html">Learning paths</a></h3>
-          <p>Backend, AI, Data, DevOps, and Staff/Principal roadmaps.</p>
-        </article>
-        <article class="part">
-          <div class="part-label guide">Revision</div>
-          <h3><a href="chapters/cheat-sheets.html">Cheat sheets</a></h3>
-          <p>Flashcards and one-pagers for last-minute prep.</p>
-        </article>
-        <article class="part">
-          <div class="part-label guide">Trade-offs</div>
-          <h3><a href="chapters/comparisons.html">Comparisons</a></h3>
-          <p>Kafka vs RabbitMQ, Redis vs Memcached, REST vs GraphQL, and more.</p>
-        </article>
-        <article class="part">
-          <div class="part-label guide">Companies</div>
-          <h3><a href="chapters/company-guides.html">Company guides</a></h3>
-          <p>Google, Amazon, Meta, Microsoft, Netflix, Uber, and AI labs.</p>
-        </article>
-        <article class="part">
-          <div class="part-label guide">Behavioral</div>
-          <h3><a href="chapters/behavioral.html">Behavioral &amp; HR</a></h3>
-          <p>STAR stories, Leadership Principles, resume deep-dives.</p>
-        </article>
+    <section class="section" id="start">
+      <div class="container">
+        <div class="section-head section-head-left">
+          <h2>Start here</h2>
+          <p>Three paths. Pick the one that matches your next interview.</p>
+        </div>
+        <div class="feature-grid">
+          <a class="feature-card" href="chapters/interview-playbook.html">
+            <span class="feature-index">01</span>
+            <h3>Learn the scoring lens</h3>
+            <p>Why interviewers ask, what they evaluate, and the answer structure to hit every time.</p>
+            <span class="feature-cta">Open playbook →</span>
+          </a>
+          <a class="feature-card" href="#labs">
+            <span class="feature-index">02</span>
+            <h3>Practice Interview Labs</h3>
+            <p>55 FAANG-frequency prompts across coding, system design, and AI with deep solutions.</p>
+            <span class="feature-cta">Browse labs →</span>
+          </a>
+          <a class="feature-card" href="chapters/company-guides.html">
+            <span class="feature-index">03</span>
+            <h3>Target a company</h3>
+            <p>Google, Amazon, Meta, Microsoft, Netflix, Uber, and AI platform interview patterns.</p>
+            <span class="feature-cta">Company guides →</span>
+          </a>
+        </div>
       </div>
     </section>
 
-    <section class="section" id="tracks">
-      <div class="section-head">
-        <h2>Deep-dive tracks</h2>
-        <p>Topic pages with code, diagrams, and interview drills — start anywhere.</p>
-      </div>
-      <div class="parts">
-        <article class="part">
-          <div class="part-label coding">Track</div>
-          <h3><a href="chapters/part-cp.html">Competitive Programming</a></h3>
-          <p>Arrays to DP, graphs, and bit tricks with Python and Java examples.</p>
-        </article>
-        <article class="part">
-          <div class="part-label sd">Track</div>
-          <h3><a href="chapters/part-sd.html">System Design</a></h3>
-          <p>Building blocks through WhatsApp, Amazon, YouTube, Uber, and more.</p>
-        </article>
-        <article class="part">
-          <div class="part-label ai">Track</div>
-          <h3><a href="chapters/part-ai.html">AI Engineering</a></h3>
-          <p>LLMs, prompting, RAG, memory, agents, MCP, and full assistant design.</p>
-        </article>
+    <section class="section section-alt" id="labs">
+      <div class="container">
+        <div class="section-head section-head-left">
+          <h2>Interview Labs</h2>
+          <p>Expandable questions with interviewer intent, Junior→Principal expectations, and production examples.</p>
+        </div>
+        <div class="lab-grid">
+          <a class="lab-card" href="chapters/interview-cp.html">
+            <div class="lab-card-top">
+              <span class="part-label coding">Coding</span>
+              <span class="lab-count">20 questions</span>
+            </div>
+            <h3>Coding Interview Lab</h3>
+            <p>Two Sum to Alien Dictionary — patterns, diagrams, complexity talk tracks, and common mistakes.</p>
+            <span class="feature-cta">Practice coding →</span>
+          </a>
+          <a class="lab-card" href="chapters/interview-sd.html">
+            <div class="lab-card-top">
+              <span class="part-label sd">System design</span>
+              <span class="lab-count">18 questions</span>
+            </div>
+            <h3>System Design Lab</h3>
+            <p>URL shortener through payments, crawlers, and Kafka — whiteboard flows and failure modes.</p>
+            <span class="feature-cta">Practice design →</span>
+          </a>
+          <a class="lab-card" href="chapters/interview-ai.html">
+            <div class="lab-card-top">
+              <span class="part-label ai">AI</span>
+              <span class="lab-count">17 questions</span>
+            </div>
+            <h3>AI Interview Lab</h3>
+            <p>RAG, agents, serving, eval, and security — scored the way AI hiring loops score.</p>
+            <span class="feature-cta">Practice AI →</span>
+          </a>
+        </div>
       </div>
     </section>
 
-    <section class="section section-alt" id="topics">
-      <div class="section-head">
-        <h2>All topics</h2>
-        <p>Jump into any guide or chapter. Searchable HTML — not PDF screenshots.</p>
+    <section class="section" id="guides">
+      <div class="container">
+        <div class="section-head section-head-left">
+          <h2>Guides &amp; roadmaps</h2>
+          <p>Structured preparation — comparisons, behavioral, revision, and role-based paths.</p>
+        </div>
+        <div class="guide-grid">
+          <a class="guide-card" href="chapters/learning-paths.html">
+            <span class="part-label guide">Paths</span>
+            <h3>Learning paths</h3>
+            <p>Backend, AI, Data, DevOps, Staff.</p>
+          </a>
+          <a class="guide-card" href="chapters/comparisons.html">
+            <span class="part-label guide">Trade-offs</span>
+            <h3>Comparisons</h3>
+            <p>Kafka, Redis, REST, SQL/NoSQL.</p>
+          </a>
+          <a class="guide-card" href="chapters/cheat-sheets.html">
+            <span class="part-label guide">Revision</span>
+            <h3>Cheat sheets</h3>
+            <p>Night-before flashcards.</p>
+          </a>
+          <a class="guide-card" href="chapters/behavioral.html">
+            <span class="part-label guide">Behavioral</span>
+            <h3>Behavioral &amp; HR</h3>
+            <p>STAR, LPs, resume probes.</p>
+          </a>
+          <a class="guide-card" href="chapters/company-guides.html">
+            <span class="part-label guide">Companies</span>
+            <h3>Company guides</h3>
+            <p>FAANG and enterprise.</p>
+          </a>
+          <a class="guide-card" href="chapters/interview-playbook.html">
+            <span class="part-label guide">Structure</span>
+            <h3>Playbook</h3>
+            <p>Universal answer arc.</p>
+          </a>
+        </div>
       </div>
-      <div class="toc-grid" id="toc-grid"></div>
     </section>
 
-    <section class="section" id="diagrams">
-      <div class="section-head">
-        <h2>Architecture diagrams</h2>
-        <p>FAANG-style whiteboard figures for request flows, components, and algorithms.</p>
+    <section class="section section-alt" id="tracks">
+      <div class="container">
+        <div class="section-head section-head-left">
+          <h2>Knowledge tracks</h2>
+          <p>Deep topic pages with code, diagrams, and interview drills.</p>
+        </div>
+        <div class="lab-grid">
+          <a class="lab-card compact" href="chapters/part-cp.html">
+            <span class="part-label coding">Track</span>
+            <h3>Competitive Programming</h3>
+            <p>Arrays to DP, graphs, and bit tricks — Python and Java.</p>
+          </a>
+          <a class="lab-card compact" href="chapters/part-sd.html">
+            <span class="part-label sd">Track</span>
+            <h3>System Design</h3>
+            <p>Building blocks through WhatsApp, Amazon, YouTube, Uber.</p>
+          </a>
+          <a class="lab-card compact" href="chapters/part-ai.html">
+            <span class="part-label ai">Track</span>
+            <h3>AI Engineering</h3>
+            <p>LLMs, RAG, agents, MCP, and full assistant design.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="topics">
+      <div class="container">
+        <div class="section-head section-head-left">
+          <h2>Browse all topics</h2>
+          <p>Every guide and chapter — searchable HTML pages, not PDF screenshots.</p>
+        </div>
+        <div class="toc-grid" id="toc-grid"></div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="diagrams">
+      <div class="container">
+        <div class="section-head section-head-left">
+          <h2>Architecture diagrams</h2>
+          <p>Whiteboard-ready figures for request flows, components, and algorithms.</p>
+        </div>
       </div>
       <div class="diagram-strip" id="diagram-strip"></div>
     </section>
 
-    <section class="section section-alt">
-      <div class="section-head">
-        <h2>More from DevNinja</h2>
-        <p>Interview Prep sits alongside the rest of the DevNinja ecosystem.</p>
-      </div>
-      <div class="ecosystem">
-        <a href="https://devninja.in/" target="_blank" rel="noopener">DevNinja Home</a>
-        <a href="https://systemdesign.devninja.in/" target="_blank" rel="noopener">System Design</a>
-        <a href="https://ailearning.devninja.in/" target="_blank" rel="noopener">AI Learning</a>
-        <a href="https://tools.devninja.in/" target="_blank" rel="noopener">Developer Tools</a>
-        <a href="https://presentations.devninja.in/" target="_blank" rel="noopener">Presentations</a>
+    <section class="section" id="ecosystem">
+      <div class="container">
+        <div class="section-head section-head-left">
+          <h2>More from DevNinja</h2>
+          <p>Interview Prep is part of the DevNinja engineering ecosystem.</p>
+        </div>
+        <div class="ecosystem">
+          <a href="https://devninja.in/" target="_blank" rel="noopener">DevNinja Home</a>
+          <a href="https://systemdesign.devninja.in/" target="_blank" rel="noopener">System Design</a>
+          <a href="https://ailearning.devninja.in/" target="_blank" rel="noopener">AI Learning</a>
+          <a href="https://tools.devninja.in/" target="_blank" rel="noopener">Developer Tools</a>
+          <a href="https://presentations.devninja.in/" target="_blank" rel="noopener">Presentations</a>
+        </div>
       </div>
     </section>
   </main>
@@ -167,12 +222,10 @@
         <a href="https://devninja.in/">DevNinja</a>
         · coding, system design, and AI interviews.
       </div>
-      <div>
+      <div class="footer-links">
         <a href="chapters/interview-playbook.html">Playbook</a>
-        ·
+        <a href="chapters/learning-paths.html">Paths</a>
         <a href="assets/interview-prep.pdf">PDF</a>
-        ·
-        <a href="https://interview-prep.devninja.in/">interview-prep.devninja.in</a>
       </div>
     </div>
   </footer>
