@@ -44,48 +44,48 @@
 <div class="table-wrap"><table><thead><tr><th>Balancer algorithm</th><th>How it picks a server</th></tr></thead><tbody><tr><td>Round robin</td><td>take turns evenly, simple and common</td></tr><tr><td>Least connections</td><td>send to the least busy server</td></tr><tr><td>IP hash</td><td>same client tends to hit the same server</td></tr><tr><td>Weighted</td><td>bigger servers get proportionally more traffic</td></tr></tbody></table></div>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Scaling rounds test whether you can move from one box to a fleet thoughtfully.</p>
+<h2>Interview drill — Scaling</h2>
+<p class="drill-intro">One box → fleet thoughtfully.</p>
 <p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Horizontal scale a read-heavy API</span></summary>
 <div class="qa-body">
-<p>Traffic grew 20× — what do you change first?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> LB + replicas + cache</p>
+<p>Traffic ×20 — what first?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> LB + cache</p>
 <div class="qa-label">Approach</div>
-<p>Measure bottleneck; add LB + stateless app replicas; read replicas or cache; only then shard. Order matters.</p>
+<ol class="qa-steps"><li>Measure bottleneck.</li><li>LB + stateless app replicas.</li><li>Cache / read replicas.</li><li>Shard only when needed.</li></ol>
 </div>
 </details><details class="qa">
-<summary><span>Q2. Load balancer choice</span></summary>
+<summary><span>Q2. L4 vs L7 load balancing</span></summary>
 <div class="qa-body">
-<p>When L4 vs L7? Sticky sessions?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> L4 vs L7</p>
+<p>When each? Sticky sessions?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> LB choice</p>
 <div class="qa-label">Approach</div>
-<p>L4 for raw TCP/WS scale; L7 for path-based routing and auth at edge. Prefer external session store over sticky when possible.</p>
+<p>L4 for raw TCP/WS scale; L7 for path/auth routing. Prefer external session store over sticky.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Graceful degradation</span></summary>
 <div class="qa-body">
-<p>Dependency is down — what does the user see?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Netflix-style · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Feature flags / fallbacks</p>
+<p>Dependency down?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Netflix-style · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Fallbacks</p>
 <div class="qa-label">Approach</div>
-<p>Timeouts, circuit breakers, cached fallbacks, disable non-critical widgets. Explicit SLO per dependency.</p>
+<p>Timeouts, circuit breakers, cached fallbacks, disable non-critical widgets.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Backpressure</span></summary>
 <div class="qa-body">
 <p>Producers outrun consumers.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Google, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Queues + load shedding</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Queues + shed</p>
 <div class="qa-label">Approach</div>
-<p>Bounded queues, 503/retry-after, drop low-priority work, autoscale consumers, rate-limit producers.</p>
+<p>Bounded queues, 503/retry-after, drop low priority, autoscale consumers.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Idempotent APIs</span></summary>
 <div class="qa-body">
-<p>Clients retry — how do you not double-charge?</p>
+<p>Retries without double-charge?</p>
 <p class="qa-meta"><strong>Asked at:</strong> Stripe, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Idempotency keys</p>
 <div class="qa-label">Approach</div>
-<p>Client idempotency key stored with request hash/result; replays return the first result.</p>
+<p>Client key stored with result; replays return first result. Critical for booking too — <a href="interview-sd.html#q10">Lab Q10</a>.</p>
 </div>
 </details>
 </section>

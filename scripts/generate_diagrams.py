@@ -955,6 +955,213 @@ DIAGRAMS["trap-water"] = svg(
     "Trapping Rain Water",
 )
 
+# --- System design interview deep-dive diagrams ---
+DIAGRAMS["url-shortener-detailed"] = svg(
+    820,
+    320,
+    f'''
+  <text x="40" y="68" font-family="{MONO}" font-size="12" fill="{ACCENT}">WRITE</text>
+  {box(40, 80, 100, 44, SAND, "Client")}
+  {box(160, 80, 110, 44, ROSE, "Shorten API")}
+  {box(290, 80, 120, 44, ACCENT_SOFT, "ID / base62")}
+  {box(430, 80, 130, 44, "#fff", "KV store")}
+  <path d="M145 102 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M275 102 H285" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M415 102 H425" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <text x="40" y="165" font-family="{MONO}" font-size="12" fill="{ACCENT}">READ (hot path)</text>
+  {box(40, 180, 100, 44, SAND, "GET /code")}
+  {box(160, 180, 100, 44, ROSE, "Edge/CDN")}
+  {box(280, 180, 100, 44, ACCENT_SOFT, "Redis")}
+  {box(400, 180, 100, 44, "#fff", "KV")}
+  {box(520, 180, 120, 44, SAND, "302 → URL")}
+  <path d="M145 202 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M265 202 H275" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M385 202 H395" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M505 202 H515" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {box(660, 180, 120, 44, ROSE, "Clicks → Q", "async")}
+  {caption(40, 280, "Redirect must not wait on analytics. Cache hot codes; prefer 302 for control.")}
+''',
+    "URL shortener design",
+)
+
+DIAGRAMS["feed-hybrid-fanout"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 120, 120, 50, SAND, "New post")}
+  {box(200, 70, 160, 48, ROSE, "Fan-out write", "normal users")}
+  {box(200, 170, 160, 48, ACCENT_SOFT, "Fan-out read", "celebrities")}
+  {box(400, 70, 160, 48, "#fff", "Follower timelines")}
+  {box(400, 170, 160, 48, "#fff", "Merge at read")}
+  {box(600, 120, 160, 50, SAND, "Home feed")}
+  <path d="M165 145 H185 V94 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M165 145 H185 V194 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M365 94 H395" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  <path d="M365 194 H395" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  <path d="M565 94 H580 V145 H595" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M565 194 H580 V145" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 260, "Hybrid: push for normal follow graphs; pull for mega-influencers.")}
+''',
+    "News feed hybrid fan-out",
+)
+
+DIAGRAMS["chat-message-path"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 120, 100, 48, SAND, "Sender")}
+  {box(170, 120, 120, 48, ROSE, "Chat WS")}
+  {box(320, 120, 130, 48, ACCENT_SOFT, "Durable log")}
+  {box(480, 70, 130, 44, "#fff", "Inbox A")}
+  {box(480, 160, 130, 44, "#fff", "Inbox B")}
+  {box(650, 70, 120, 44, SAND, "Online push")}
+  {box(650, 160, 120, 44, ROSE, "Store offline")}
+  <path d="M145 144 H165" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M295 144 H315" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M455 130 H475 V92 H475" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M455 144 H475 V182" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M615 92 H645" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  <path d="M615 182 H645" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  {caption(40, 260, "Persist before ACK. Online sockets get push; offline users get store-and-forward.")}
+''',
+    "Chat message delivery",
+)
+
+DIAGRAMS["rate-limiter-token"] = svg(
+    820,
+    280,
+    f'''
+  {box(40, 110, 110, 50, SAND, "Request")}
+  {box(180, 110, 130, 50, ROSE, "API gateway")}
+  {box(340, 110, 160, 50, ACCENT_SOFT, "Redis token bucket")}
+  {box(540, 70, 140, 44, "#fff", "Allow → svc")}
+  {box(540, 160, 140, 44, SAND, "429 Retry-After")}
+  <path d="M155 135 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M315 135 H335" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M505 120 H520 V92 H535" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M505 145 H520 V182 H535" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 240, "Atomic Lua/INCR in Redis. Token bucket allows controlled bursts.")}
+''',
+    "Distributed rate limiter",
+)
+
+DIAGRAMS["uber-matching"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 80, 140, 48, SAND, "Driver GPS")}
+  {box(40, 180, 140, 48, ROSE, "Ride request")}
+  {box(220, 120, 150, 50, ACCENT_SOFT, "Geo index", "S2 / geohash")}
+  {box(410, 120, 150, 50, "#fff", "Matcher", "ring + ETA")}
+  {box(600, 80, 160, 48, SAND, "Offer → driver")}
+  {box(600, 180, 160, 48, ROSE, "Trip state machine")}
+  <path d="M185 104 H205 V145 H215" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M185 204 H205 V145" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M375 145 H405" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M565 130 H580 V104 H595" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M565 155 H580 V204 H595" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 270, "Claim driver with CAS/lease. Expand search ring on timeouts. Shard by city.")}
+''',
+    "Ride matching",
+)
+
+DIAGRAMS["youtube-cdn-pipeline"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 120, 110, 48, SAND, "Upload")}
+  {box(180, 120, 120, 48, ROSE, "Object store")}
+  {box(330, 70, 140, 44, ACCENT_SOFT, "Transcode")}
+  {box(330, 160, 140, 44, "#fff", "HLS/DASH")}
+  {box(500, 120, 120, 48, SAND, "CDN edge")}
+  {box(650, 120, 120, 48, ROSE, "Player")}
+  <path d="M155 144 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M305 144 H315 V92 H325" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M305 144 H315 V182 H325" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M475 92 H485 V144 H495" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M475 182 H485 V144" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M625 144 H645" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 260, "Processing is async. Playback is CDN + adaptive bitrate — never transcode on the request path.")}
+''',
+    "Video streaming pipeline",
+)
+
+DIAGRAMS["notification-pipeline"] = svg(
+    820,
+    280,
+    f'''
+  {box(40, 110, 110, 50, SAND, "Event")}
+  {box(180, 110, 130, 50, ROSE, "Prefs gate")}
+  {box(340, 110, 140, 50, ACCENT_SOFT, "Kafka by prio")}
+  {box(510, 60, 120, 40, "#fff", "Push")}
+  {box(510, 120, 120, 40, "#fff", "Email")}
+  {box(510, 180, 120, 40, "#fff", "SMS")}
+  {box(660, 110, 110, 50, SAND, "Providers")}
+  <path d="M155 135 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M315 135 H335" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M485 120 H500 V80 H505" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M485 135 H505" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M485 150 H500 V200 H505" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M635 135 H655" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 250, "Idempotent sends, retries, DLQ. Never block the product write path on notifications.")}
+''',
+    "Notification system",
+)
+
+DIAGRAMS["autocomplete-trie"] = svg(
+    820,
+    280,
+    f'''
+  {box(40, 110, 120, 50, SAND, "Prefix \"ca\"")}
+  {box(200, 110, 140, 50, ROSE, "Trie / prefix idx")}
+  {box(380, 110, 150, 50, ACCENT_SOFT, "Top-k suggestions")}
+  {box(570, 110, 140, 50, "#fff", "Edge cache")}
+  <path d="M165 135 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M345 135 H375" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M535 135 H565" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <text x="40" y="200" font-family="{SANS}" font-size="13" fill="{INK}">Offline: query logs → top-k per prefix → ship snapshot</text>
+  {caption(40, 240, "Debounce client-side. Update index in minutes, not per keystroke.")}
+''',
+    "Search autocomplete",
+)
+
+DIAGRAMS["consistent-hash-cache"] = svg(
+    820,
+    300,
+    f'''
+  <circle cx="280" cy="150" r="90" fill="none" stroke="{LINE}" stroke-width="2"/>
+  {box(250, 40, 70, 36, ROSE, "N1")}
+  {box(380, 120, 70, 36, ACCENT_SOFT, "N2")}
+  {box(250, 220, 70, 36, SAND, "N3")}
+  {box(140, 120, 70, 36, "#fff", "N4")}
+  {box(500, 90, 160, 48, SAND, "Client / proxy")}
+  {box(500, 170, 160, 48, ROSE, "key → vnode")}
+  <path d="M500 145 H370" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  {caption(40, 280, "Consistent hashing: add/remove nodes moves ~1/N keys. Replicate hot keys; soft TTL vs stampede.")}
+''',
+    "Distributed cache ring",
+)
+
+DIAGRAMS["ticket-hold-checkout"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 120, 110, 48, SAND, "Select seats")}
+  {box(180, 120, 120, 48, ROSE, "Hold + TTL")}
+  {box(330, 120, 130, 48, ACCENT_SOFT, "Payment")}
+  {box(490, 70, 140, 44, "#fff", "Commit sold")}
+  {box(490, 160, 140, 44, SAND, "Expire hold")}
+  {box(660, 120, 120, 48, ROSE, "Ticket IDs")}
+  <path d="M155 144 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M305 144 H325" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M465 130 H480 V92 H485" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M465 155 H480 V182 H485" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M635 92 H645 V144 H655" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 260, "Strong consistency on inventory: CAS / conditional update. Idempotent payment webhooks.")}
+''',
+    "Ticket booking holds",
+)
+
 DIAGRAMS["prefix-sums"] = svg(
     720,
     260,
@@ -1025,6 +1232,18 @@ CHAPTER_DIAGRAMS = {
         "word-ladder-bfs",
         "serialize-tree",
         "trap-water",
+    ],
+    "interview-sd": [
+        "url-shortener-detailed",
+        "feed-hybrid-fanout",
+        "chat-message-path",
+        "rate-limiter-token",
+        "uber-matching",
+        "youtube-cdn-pipeline",
+        "notification-pipeline",
+        "autocomplete-trie",
+        "consistent-hash-cache",
+        "ticket-hold-checkout",
     ],
 }
 

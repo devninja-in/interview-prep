@@ -56,48 +56,48 @@
 <p>The trip service tracks the ride to completion, with pricing and payment handled through 5 queues.</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Geo + matching + state machines — keep the diagram regional.</p>
+<h2>Interview drill — Ride sharing</h2>
+<p class="drill-intro">Geo + matching + state machines — keep it regional.</p>
 <p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Design Uber</span></summary>
 <div class="qa-body">
-<p>Match riders to nearby drivers in realtime.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Uber, Lyft · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Geo index + matching</p>
-<div class="qa-label">Approach</div>
-<p>Geohash location updates; ring matching; trip state machine. <a href="interview-sd.html">Lab Q5</a>.</p>
+<p>Match riders to drivers.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Uber, Lyft · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Geo + matching</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/uber-matching.svg" alt="Matching" loading="lazy" /></figure><p><a href="interview-sd.html#q5">Lab Q5</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Avoid double dispatch</span></summary>
 <div class="qa-body">
-<p>Two riders matched to the same driver?</p>
+<p>Two riders, one driver?</p>
 <p class="qa-meta"><strong>Asked at:</strong> Uber · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Atomic claim</p>
 <div class="qa-label">Approach</div>
-<p>Driver status CAS to 'offered/busy'; offer lease with timeout; only one claim wins.</p>
+<p>CAS driver status; offer lease with timeout; one claim wins.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. ETA accuracy</span></summary>
 <div class="qa-body">
 <p>How is ETA computed?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Routing service</p>
+<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Routing</p>
 <div class="qa-label">Approach</div>
-<p>Map-matching GPS to roads; routing over traffic-aware graph; cache segments; update with live speeds.</p>
+<p>Map-match GPS; traffic-aware routing; cache segments.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Surge pricing</span></summary>
 <div class="qa-body">
-<p>Design surge without wild oscillation.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Demand/supply per cell</p>
+<p>Surge without wild oscillation?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Demand/supply</p>
 <div class="qa-label">Approach</div>
-<p>Compute per-geocell imbalance on a short window; smooth with EMA; cap rate of change; show multiplier before confirm.</p>
+<p>Per-cell imbalance; EMA smooth; cap change rate; show before confirm.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. City sharding</span></summary>
 <div class="qa-body">
-<p>How do you shard the system?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Scale follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Regional deployment</p>
+<p>How do you shard?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Scale · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Regional</p>
 <div class="qa-label">Approach</div>
-<p>Most state is city-local — shard services and data by region/city; global for identity/billing only.</p>
+<p>Most state is city-local; global only for identity/billing.</p>
 </div>
 </details>
 </section>

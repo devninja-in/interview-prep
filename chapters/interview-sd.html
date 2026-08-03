@@ -28,131 +28,177 @@
         <p class="part-eyebrow">Interview Lab · System Design</p>
         <header class="chapter-hero">
 <h1>System design interview questions</h1>
-<p class="lab-hero-note">Ten prompts that show up in real L4–L6 design loops, with full talking tracks.</p>
+<p class="lab-hero-note">Ten L4–L6 prompts with full whiteboard tracks — clarify, capacity, diagrams, deep dives, and failure modes.</p>
 </header>
 <div class="chapter-body">
-<p>These are the system-design prompts that appear again and again in L4–L6 loops:
-URL shortener as a warmup, then chat, feed, rides, video, or a focused building block like
-rate limiting. Each card mirrors how a strong 45-minute whiteboard session should unfold —
-clarify, propose API + data model, draw the path, then deep-dive.</p>
-<p class="drill-intro">Structure every answer: requirements → capacity sketch → API → high-level
-diagram → data model → deep dives → failures. Interviewers interrupt; practice recovering.</p>
-<details class="qa">
+<p>This lab is for <strong>L4–L6 system design loops</strong>: the prompts that show up again and
+again — URL shortener as a warmup, then chat, feed, rides, video, or a focused building block
+like rate limiting.</p>
+
+<p class="drill-intro"><strong>How to use it:</strong> Practice a 45-minute structure every time —
+<strong>clarify → capacity sketch → API → diagram → data model → deep dives → failures</strong>.
+Open a card, study it, then redraw from memory on a blank page.</p>
+
+<figure class="diagram native">
+<img src="../assets/diagrams/url-shortener-detailed.svg" alt="URL shortener design overview" loading="lazy" />
+</figure>
+
+<p class="drill-intro">Related chapters:
+<a href="19-approaching-sd.html">Approaching SD</a>,
+<a href="21-scaling.html">Scaling</a>,
+<a href="22-caching.html">Caching</a>,
+<a href="28-url-shortener.html">URL shortener</a>,
+<a href="29-whatsapp.html">WhatsApp</a>,
+<a href="30-instagram.html">Instagram</a>,
+<a href="34-uber.html">Uber</a>.</p>
+
+<ul class="lab-toc">
+  <li><a href="#q1"><span>Q1</span> URL shortener</a></li>
+  <li><a href="#q2"><span>Q2</span> Instagram / news feed</a></li>
+  <li><a href="#q3"><span>Q3</span> WhatsApp / chat</a></li>
+  <li><a href="#q4"><span>Q4</span> Rate limiter</a></li>
+  <li><a href="#q5"><span>Q5</span> Uber / ride sharing</a></li>
+  <li><a href="#q6"><span>Q6</span> YouTube / video</a></li>
+  <li><a href="#q7"><span>Q7</span> Notification system</a></li>
+  <li><a href="#q8"><span>Q8</span> Search autocomplete</a></li>
+  <li><a href="#q9"><span>Q9</span> Distributed cache</a></li>
+  <li><a href="#q10"><span>Q10</span> Ticketmaster / booking</a></li>
+</ul>
+<details class="qa" id="q1">
 <summary><span>Q1. Design a URL Shortener (Bitly)</span></summary>
 <div class="qa-body">
-<p>Design a service like bit.ly: users submit a long URL and get a short link; opening the short link redirects to the original. Expect ~100M new URLs/month and a much higher read:write ratio.</p>
+<p>Design a service like bit.ly: users submit a long URL and get a short link; opening the short link redirects to the original. Expect ~100M new URLs/month and a much higher read:write ratio. Walk a full 45-minute design.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft, Uber — most common system-design opener · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hashing · base62 IDs · read-heavy cache</p>
-<div class="qa-label">Clarify first</div>
-<p>Custom aliases? Expiry? Analytics? Auth? Assume: 7-character base62 codes, optional expiry, basic click counts, 100:1 read:write, 99.9% availability, redirect latency &lt; 100ms p99.</p>
-<div class="qa-label">Core design</div>
-<p><strong>API:</strong> <code>POST /shorten {url}</code> → code; <code>GET /{code}</code> → 302 to long URL.</p><p><strong>ID generation:</strong> (1) counter + base62 encode — simple, needs a distributed counter (Redis INCR / Snowflake); (2) hash long URL (MD5/sha) then take prefix — handle collisions; (3) pre-generated key pool for write bursts.</p><p><strong>Storage:</strong> key-value of code → {long_url, user, created, expires}. Cassandra/DynamoDB or sharded MySQL by code hash. Cache hot redirects in Redis with TTL.</p><p><strong>Redirect path:</strong> CDN/edge optional → load balancer → app → Redis → DB. Prefer 302 (allows updating mapping) unless they ask for browser caching with 301.</p>
-<div class="qa-label">Deep dive topics</div>
-<ul><li>Capacity: 100M/mo ≈ 40 writes/s average; reads maybe thousands/s — cache is mandatory.</li><li>Hot keys: viral links — replicate in cache, consider read replicas.</li><li>Analytics: async click events to Kafka → warehouse; do not block redirect.</li><li>Abuse: rate limit shorten API; malware URL scanning offline.</li></ul>
+<div class="qa-label">Clarify</div>
+<ul><li>Custom aliases? Expiry? Auth?</li><li>Analytics (click counts) required?</li><li>Latency: redirect p99 &lt; 100ms?</li><li>Availability target (e.g. 99.9%)?</li><li>Assume ~7-char base62 codes unless they specify otherwise.</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/url-shortener-detailed.svg" alt="URL shortener write and read paths" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li><strong>API:</strong> <code>POST /shorten {url, alias?}</code> → code; <code>GET /{code}</code> → 302 Location: long URL.</li><li><strong>Capacity:</strong> 100M/mo ≈ 40 writes/s avg; reads can be thousands/s — cache is mandatory. Storage: 100M × ~500B ≈ 50GB+/yr metadata (order-of-magnitude OK).</li><li><strong>ID generation (pick one &amp; defend):</strong> (1) distributed counter + base62; (2) hash URL + collision handling; (3) pre-generated key pool for bursts.</li><li><strong>Data model:</strong> code → {long_url, user_id, created, expires, clicks?}. KV/NoSQL or sharded SQL by code hash.</li><li><strong>Read path:</strong> edge/CDN optional → LB → app → Redis → DB. Prefer <strong>302</strong> (mapping can change; analytics stay server-side) unless they insist on 301.</li><li><strong>Analytics:</strong> async click events to Kafka/queue — never block redirect.</li><li><strong>Abuse:</strong> rate-limit shorten; malware URL scan offline.</li></ol>
+<div class="qa-label">Deep dives</div>
+<ul><li><strong>Hot keys:</strong> viral links — cache replicas / local caches.</li><li><strong>Enumeration:</strong> avoid raw sequential public IDs; salt / skip / encrypt.</li><li><strong>Multi-region:</strong> replicate read-only mappings; write to primary with async replication.</li><li><strong>Custom aliases:</strong> conditional put; reject if taken.</li></ul>
 <div class="qa-label">What strong answers sound like</div>
-<p>They pick one ID scheme and defend collision handling, draw the read path shorter than the write path, and mention why redirects must not wait on analytics.</p>
+<aside class="qa-callout"><div class="qa-label">Signal</div><p>One ID scheme with collision story, short read path, analytics explicitly async, and a clear 301 vs 302 opinion.</p></aside>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q2">
 <summary><span>Q2. Design Instagram / News Feed</span></summary>
 <div class="qa-body">
-<p>Design a photo-sharing social network: follow users, upload photos, and see a home feed of posts from people you follow, ranked roughly reverse-chronological with light ranking.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Meta, Instagram, Twitter/X interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Fan-out · timeline cache · media CDN</p>
+<p>Design a photo-sharing social network: follow users, upload photos, see a home feed of posts from people you follow (roughly reverse-chronological with light ranking).</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Instagram, Twitter/X interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Hybrid fan-out · timeline cache · media CDN</p>
 <div class="qa-label">Clarify</div>
-<p>Scale: hundreds of millions of users; celebrity fan-out problem; feed freshness vs cost; media sizes; soft deletes.</p>
-<div class="qa-label">Core design</div>
-<p><strong>Write path:</strong> upload image → object store (S3) + CDN; metadata in DB (post_id, author, caption, media_url, ts).</p><p><strong>Feed generation:</strong> <em>Fan-out on write</em> — push post_id into each follower's timeline cache (Redis lists) — great for normal users; <em>Fan-out on read</em> — merge recent posts from followees at read time — required for celebrities with millions of followers. Hybrid: fan-out write for regulars, pull for celebs.</p><p><strong>Read path:</strong> auth → timeline cache → hydrate post objects → CDN URLs for media.</p>
+<ul><li>Scale: hundreds of millions of users?</li><li>Celebrity / mega-follower problem in scope?</li><li>Stories? Likes counters? Ranking ML?</li><li>Consistency: eventual feed OK?</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/feed-hybrid-fanout.svg" alt="Hybrid fan-out for news feed" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li><strong>Write media:</strong> pre-signed upload → object store + CDN; metadata row (post_id, author, caption, media_url, ts).</li><li><strong>Fan-out on write:</strong> push post_id into each follower's timeline cache (Redis lists) — great for normal users.</li><li><strong>Fan-out on read / pull:</strong> for celebrities, do <em>not</em> push to tens of millions of timelines; merge recent posts at read time.</li><li><strong>Hybrid:</strong> write-fanout for normals, pull for celebs (or inactive users).</li><li><strong>Read path:</strong> auth → timeline cache → hydrate posts → CDN URLs.</li><li><strong>Ranking:</strong> start chronological; add retrieval + re-rank stage later.</li><li><strong>Sharding:</strong> user_id for timelines; post_id for posts.</li></ol>
 <div class="qa-label">Deep dives</div>
-<ul><li>Ranking: start chronological; add ML ranker later as a re-rank stage.</li><li>Sharding: user_id for timelines; post_id for post store.</li><li>Notifications &amp; stories: separate services, async via queues.</li><li>Consistency: feed can be eventually consistent; posting ACK after metadata durable is enough.</li></ul>
+<ul><li>Counters (likes/views): sharded in-memory with periodic flush; approximate display OK.</li><li>Notifications / stories: separate services + queues.</li><li>Feed can be eventually consistent; durable post metadata is enough for ACK.</li></ul>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q3">
 <summary><span>Q3. Design WhatsApp / Chat</span></summary>
 <div class="qa-body">
-<p>Design a 1:1 and group messaging system with delivery receipts, online presence, and media sharing. Focus on low latency and reliability.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Meta, WhatsApp, Slack, Discord-style rounds · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> WebSocket · message queue · presence</p>
-<div class="qa-label">Core design</div>
-<p><strong>Connections:</strong> sticky WebSocket/MQTT to chat servers; connection service maps user_id → server instance (Redis).</p><p><strong>Message flow:</strong> client → chat server → durable queue/log (Kafka) → fan-out to recipients' inbox stores → push to online sockets or store-and-forward for offline. Persist before ACK to sender for at-least-once; clients de-dupe by message_id.</p><p><strong>Group chat:</strong> small groups: fan-out to each member; large groups: write to group inbox + notify members (or hybrid).</p><p><strong>Media:</strong> upload to blob store, send message with URL/thumbnail; encrypt if E2E is in scope.</p>
-<div class="qa-label">Hard parts interviewers probe</div>
-<ul><li>Ordering per conversation (per-chat sequence numbers).</li><li>Unread counts and last-seen (eventual OK).</li><li>Presence heartbeats with short TTL.</li><li>E2E encryption: server stores ciphertext only; key exchange on devices.</li></ul>
+<p>Design 1:1 and group messaging with delivery receipts, online presence, and media sharing. Focus on low latency and reliability.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, WhatsApp, Slack, Discord-style rounds · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> WebSocket · durable log · presence · group fan-out</p>
+<div class="qa-label">Clarify</div>
+<ul><li>E2E encryption in scope?</li><li>Max group size?</li><li>Multi-device sync?</li><li>Message history retention?</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/chat-message-path.svg" alt="Chat message delivery path" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li><strong>Connections:</strong> sticky WebSocket/MQTT to chat servers; presence map user→server in Redis.</li><li><strong>Send path:</strong> client → chat server → durable queue/log (Kafka) → fan-out to recipient inboxes → push to online sockets or store-and-forward if offline.</li><li><strong>ACK:</strong> persist before ACK to sender (at-least-once); clients de-dupe by message_id.</li><li><strong>Ordering:</strong> per-conversation monotonic sequence from a single partition/writer.</li><li><strong>Groups:</strong> small → fan-out to members; large → group log + members catch up / notify online only.</li><li><strong>Media:</strong> upload to blob store; message carries URL/thumbnail.</li><li><strong>Presence:</strong> heartbeats with short TTL.</li><li><strong>Receipts:</strong> separate lightweight events; do not block delivery.</li></ol>
+<div class="qa-label">E2E note</div>
+<aside class="qa-callout"><div class="qa-label">If asked</div><p>Server stores ciphertext + metadata; keys on devices. Acknowledge feature tradeoffs (server-side search hard).</p></aside>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q4">
 <summary><span>Q4. Design a Rate Limiter</span></summary>
 <div class="qa-body">
-<p>Design a distributed rate limiter used by an API gateway: e.g. 100 requests per user per minute, consistent across many gateway instances.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Stripe, Cloudflare, Google — often a building-block question · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Token bucket · sliding window · Redis</p>
-<div class="qa-label">Algorithms to know</div>
-<ul><li><strong>Token bucket:</strong> tokens refill at rate r; request costs 1; allows short bursts — industry default.</li><li><strong>Leaky bucket:</strong> smooths to constant outflow.</li><li><strong>Fixed window:</strong> simple counters; burst at window edges.</li><li><strong>Sliding window log / counter:</strong> fairer, more storage/CPU.</li></ul>
-<div class="qa-label">Distributed design</div>
-<p>Centralize counters in Redis (INCR + EXPIRE, or Lua for token bucket atomicity). Gateways call Redis before forwarding. For multi-region, use regional limiters with a global budget, or accept approximate limits. Return <code>429</code> with <code>Retry-After</code>.</p>
-<div class="qa-label">Talking points</div>
-<p>Compare accuracy vs performance; mention race conditions without atomic scripts; discuss per-IP vs per-API-key vs per-endpoint limits; graceful degradation if Redis is down (fail open vs fail closed — product call).</p>
+<p>Design a distributed rate limiter for an API gateway: e.g. 100 requests per user per minute, consistent across many gateway instances.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Stripe, Cloudflare, Google — building-block favorite · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Token bucket · sliding window · Redis</p>
+<div class="qa-label">Algorithms (know 3)</div>
+<ul><li><strong>Token bucket:</strong> refill rate r; burst capacity — industry default.</li><li><strong>Leaky bucket:</strong> smooth constant outflow.</li><li><strong>Fixed window:</strong> simple counters; edge burst problem.</li><li><strong>Sliding window log/counter:</strong> fairer, more cost.</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/rate-limiter-token.svg" alt="Gateway + Redis token bucket" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li>Gateways call a shared store (Redis) before forwarding.</li><li>Use atomic ops (INCR+EXPIRE or Lua) for token bucket — avoid races.</li><li>On deny: HTTP 429 + Retry-After.</li><li>Dimensions: per API key / IP / endpoint / tenant.</li><li>Multi-region: regional limiters + global budget, or accept approximate limits.</li><li>Redis down: product call — fail open vs fail closed.</li></ol>
+<div class="qa-label">Pseudo Redis check</div>
+<div class="code-block"><div class="code-lang">TEXT</div><pre class="code"><code class="language-text"># token bucket keys: tokens={key}, ts={key}
+# atomic Lua: refill based on elapsed time, consume 1 if tokens&gt;=1
+# else return limited
+</code></pre></div>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q5">
 <summary><span>Q5. Design Uber / Ride Sharing</span></summary>
 <div class="qa-body">
-<p>Design a ride-hailing app: riders request trips, nearby drivers are matched, locations update in realtime, pricing/ETA are computed.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Uber, Lyft, DoorDash-adjacent geo interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Geo index · matching · realtime location</p>
-<div class="qa-label">Core design</div>
-<p><strong>Location stream:</strong> drivers send GPS every few seconds → location service → update geo index (geohash / S2 cells in Redis or specialized store).</p><p><strong>Matching:</strong> rider request → query drivers in nearby cells → filter by status/vehicle → ranking (ETA, rating) → offer with timeout → retry ring expansion.</p><p><strong>Trip lifecycle:</strong> state machine (requested → matched → enroute → ongoing → completed) in a trip service; events to billing, notifications, analytics.</p>
-<div class="qa-label">Deep dives</div>
-<ul><li>ETA: map/routing service; cache road graph segments.</li><li>Surge pricing: demand/supply per cell, smoothed to avoid thrash.</li><li>Consistency: matching must avoid double-booking — optimistic lock / atomic claim on driver.</li><li>Scale: shard by city/region; most traffic is local.</li></ul>
+<p>Design ride-hailing: riders request trips, nearby drivers are matched, locations update in realtime, pricing/ETA computed.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Uber, Lyft, DoorDash-adjacent geo interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Geo index · matching · trip state machine</p>
+<div class="qa-label">Clarify</div>
+<ul><li>Cities / regions in scope?</li><li>ETA accuracy expectations?</li><li>Surge pricing?</li><li>Driver app battery / update frequency?</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/uber-matching.svg" alt="Geo index and ride matching" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li><strong>Location stream:</strong> drivers send GPS every few seconds → update geo index (geohash / S2 cells in Redis or specialized store).</li><li><strong>Request:</strong> rider → query nearby cells → filter status/vehicle → rank by ETA/rating → offer with timeout → expand ring on miss.</li><li><strong>Double dispatch:</strong> atomic claim / CAS on driver status with lease; only one rider wins.</li><li><strong>Trip lifecycle:</strong> requested → matched → enroute → ongoing → completed (state machine + events to billing/notify).</li><li><strong>ETA:</strong> map-match + traffic-aware routing service; cache segments.</li><li><strong>Surge:</strong> demand/supply per cell, smoothed (EMA), capped rate of change.</li><li><strong>Scale:</strong> shard by city/region — traffic is local.</li></ol>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q6">
 <summary><span>Q6. Design YouTube / Video Streaming</span></summary>
 <div class="qa-body">
-<p>Design a video upload and streaming platform: users upload videos; millions watch with adaptive quality worldwide.</p>
+<p>Design video upload and streaming: users upload; millions watch with adaptive quality worldwide.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Netflix, Meta — storage + CDN heavy · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Transcoding pipeline · CDN · adaptive bitrate</p>
-<div class="qa-label">Core design</div>
-<p><strong>Upload:</strong> client gets pre-signed URL → direct to blob store; metadata row = processing.</p><p><strong>Processing pipeline:</strong> queue workers transcode to multiple resolutions/codecs, generate thumbnails, extract duration; store HLS/DASH segments; mark ready.</p><p><strong>Playback:</strong> client fetches manifest; CDN serves segments; origin is object store. Adaptive bitrate based on bandwidth.</p>
-<div class="qa-label">Deep dives</div>
-<ul><li>Hot videos: heavy CDN caching; popular titles at edge.</li><li>Recommendations: offline ML + online re-rank (separate from serving path).</li><li>Copyright / abuse: async fingerprinting and review queues.</li><li>Cost: storage tiers, cold archive for old rarely watched content.</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/youtube-cdn-pipeline.svg" alt="Upload, transcode, CDN playback" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li><strong>Upload:</strong> pre-signed URL → direct to object store; metadata = processing.</li><li><strong>Pipeline:</strong> queue workers transcode many resolutions/codecs, thumbs, duration → HLS/DASH segments → mark ready. Fast-start low-res first.</li><li><strong>Playback:</strong> client fetches manifest; CDN serves segments; origin is object store; ABR by bandwidth.</li><li><strong>Hot titles:</strong> heavy edge caching; short TTL for live.</li><li><strong>Live:</strong> separate ingest POPs → packager → CDN; not the VOD path.</li><li><strong>Cost:</strong> lifecycle to cold storage; fewer bitrates for rarely watched; copyright fingerprinting async.</li><li><strong>Recs:</strong> offline ML + online re-rank — off the play path.</li></ol>
+<div class="qa-label">Key principle</div>
+<aside class="qa-callout"><div class="qa-label">Never</div><p>Never transcode on the user-facing request path. Processing is a pipeline; serving is CDN.</p></aside>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q7">
 <summary><span>Q7. Design a Notification System</span></summary>
 <div class="qa-body">
-<p>Design a multi-channel notification platform: push, email, SMS, in-app, with user preferences, retries, and high throughput.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Uber, Slack · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Fan-out · priority queues · templates</p>
-<div class="qa-label">Core design</div>
-<p>Producer APIs enqueue notification jobs → Kafka topics by priority/channel → workers render templates → provider adapters (APNs/FCM, SES, Twilio) → delivery receipts back for status.</p><p>Preferences service gates channel/quiet hours. Deduplicate with idempotency keys. Rate-limit per user and per provider.</p>
-<div class="qa-label">Failure modes</div>
-<p>Provider outages → exponential backoff + DLQ. Partial fan-out for large audiences (celebrity posts) via chunked tasks. Exactly-once is unrealistic — aim for at-least-once + idempotent display.</p>
+<p>Design multi-channel notifications: push, email, SMS, in-app — with preferences, retries, and high throughput.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Uber, Slack · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Fan-out · priority queues · templates · DLQ</p>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/notification-pipeline.svg" alt="Notification fan-out pipeline" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li>Producers enqueue jobs (do not block product writes).</li><li>Preferences/quiet-hours gate before send.</li><li>Kafka topics by priority/channel → workers render templates → provider adapters (APNs/FCM, SES, Twilio).</li><li>Idempotency keys; rate-limit per user and per provider.</li><li>Retries with exponential backoff → DLQ for poison messages.</li><li>Large audiences: chunked fan-out tasks.</li><li>Aim at-least-once + idempotent display — not exactly-once fantasy.</li></ol>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q8">
 <summary><span>Q8. Design Typeahead / Search Autocomplete</span></summary>
 <div class="qa-body">
-<p>Design search autocomplete that returns top suggestions as the user types, with low latency and trending awareness.</p>
+<p>Design search autocomplete that returns top suggestions as the user types, with low latency and some trending awareness.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Amazon, Twitter · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Trie · top-k · edge cache</p>
-<div class="qa-label">Core design</div>
-<p>Offline: aggregate query logs → compute top-k per prefix → build trie or prefix index; ship snapshots to servers / edge.</p><p>Online: client debounces; request prefix → memory trie returns top-k (&lt;50ms). Personalization and trending as a light re-rank layer. Cache popular prefixes at CDN/edge.</p>
-<div class="qa-label">Scale tricks</div>
-<p>Limit prefix length; store only top-k not full postings; AJAX results tiny; update index periodically (minutes) not per keystroke. For distributed tries, shard by first character(s).</p>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/autocomplete-trie.svg" alt="Prefix index autocomplete" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li><strong>Offline:</strong> aggregate query logs → top-k per prefix → build trie/prefix index → ship snapshots to servers/edge.</li><li><strong>Online:</strong> client debounces; request prefix → memory trie returns top-k (&lt;50ms); light personalization/trending re-rank.</li><li>Cache popular prefixes at CDN/edge.</li><li>Limit prefix length; store only top-k not full postings.</li><li>Shard trie by first character(s) if needed.</li><li>Refresh index on minutes cadence — not per keystroke.</li></ol>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q9">
 <summary><span>Q9. Design a Distributed Cache</span></summary>
 <div class="qa-body">
-<p>Design a distributed in-memory cache used by many microservices: get/put/delete, TTL, high availability, horizontal scale.</p>
+<p>Design a distributed in-memory cache: get/put/delete, TTL, HA, horizontal scale.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft, Oracle — Redis/Memcached style · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Consistent hashing · replication · eviction</p>
-<div class="qa-label">Core design</div>
-<p>Client or proxy uses consistent hashing to pick a shard. Each shard is a primary + replicas (async or semi-sync). LRU/LFU/TTL eviction per node. Gossip or config service for membership.</p>
-<div class="qa-label">Deep dives</div>
-<ul><li>Hot keys: replicate popular keys to many nodes or add local caches.</li><li>Thundering herd: soft TTL + singleflight refresh.</li><li>Persistence optional (AOF/RDB) — usually cache is ephemeral.</li><li>CAP: prefer AP for cache; clients tolerate miss and load DB.</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/consistent-hash-cache.svg" alt="Consistent hashing ring" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li>Client or proxy uses consistent hashing → shard.</li><li>Each shard: primary + replicas (async or semi-sync).</li><li>Eviction: LRU/LFU + TTL per node.</li><li>Membership via gossip/config service; virtual nodes for balance.</li><li><strong>Hot keys:</strong> replicate popular keys; local caches.</li><li><strong>Stampede:</strong> soft TTL + singleflight / probabilistic early expire.</li><li>Write strategies: invalidate-on-write common; write-through / behind when justified.</li><li>CAP: prefer AP for cache; miss → load DB.</li><li>Persistence optional — usually ephemeral by design.</li></ol>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q10">
 <summary><span>Q10. Design Ticketmaster / Event Booking</span></summary>
 <div class="qa-body">
-<p>Design a ticketing system for concerts: browse events, hold seats, pay, and issue tickets — without double-selling under huge spikes.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Ticketmaster-style concurrency interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Inventory locks · idempotency · flash sales</p>
-<div class="qa-label">Core design</div>
-<p><strong>Inventory:</strong> seat map per event/section; state available → held → sold. Hold = soft lock with short TTL (2–10 min) in Redis or row-level locks.</p><p><strong>Checkout:</strong> create hold → payment intent → on success commit seats + generate ticket IDs; on fail/expiry release hold. Idempotency keys on payment webhooks.</p><p><strong>Scale:</strong> shard by event_id; queue waiting rooms for mega-events; read replicas for browse; CDN for static event pages.</p>
-<div class="qa-label">Consistency</div>
-<p>This is one design where strong consistency on inventory matters. Use conditional updates (COMPARE_AND_SET / SQL WHERE status='available'). Never trust client-side seat claims alone.</p>
+<p>Design ticketing for concerts: browse events, hold seats, pay, issue tickets — without double-selling under spikes.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Ticketmaster-style concurrency interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Inventory locks · holds · idempotent payment</p>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/ticket-hold-checkout.svg" alt="Seat hold and checkout" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step whiteboard</div>
+<ol class="qa-steps"><li><strong>Browse:</strong> read replicas + CDN for event pages; seat maps cached carefully.</li><li><strong>Inventory states:</strong> available → held → sold.</li><li><strong>Hold:</strong> soft lock with short TTL (2–10 min) via Redis or conditional row update.</li><li><strong>Checkout:</strong> create hold → payment intent → on success commit seats + ticket IDs; on fail/expiry release hold.</li><li><strong>Idempotency:</strong> keys on payment webhooks — no double charge / double sell.</li><li><strong>Consistency:</strong> strong on inventory (CAS / <code>UPDATE … WHERE status='available'</code>).</li><li><strong>Scale:</strong> shard by event_id; waiting rooms / queues for mega on-sales.</li></ol>
+<div class="qa-label">Strong closer</div>
+<aside class="qa-callout"><div class="qa-label">Contrast with feeds</div><p>Feeds can be eventually consistent. Ticket inventory cannot. Say that contrast out loud — interviewers love it.</p></aside>
 </div>
 </details>
 </div>

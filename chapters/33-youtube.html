@@ -54,48 +54,48 @@
 <p>The chunks are stored in object storage, and the metadata records which renditions exist. 3 A viewer&#x27;s player fetches the manifest, then streams chunks from the nearest CDN edge. 4 The player watches the network and switches quality up or down chunk by chunk, so 5 playback never freezes.</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Video designs are pipelines plus CDN — keep processing off the request path.</p>
+<h2>Interview drill — Video</h2>
+<p class="drill-intro">Pipelines + CDN. Keep processing off the request path.</p>
 <p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Design YouTube</span></summary>
 <div class="qa-body">
-<p>Upload and stream adaptive video worldwide.</p>
+<p>Upload and stream ABR video.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Netflix · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Transcode + CDN</p>
-<div class="qa-label">Approach</div>
-<p>Direct upload to blob; async transcode to HLS/DASH; CDN playback. <a href="interview-sd.html">Lab Q6</a>.</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/youtube-cdn-pipeline.svg" alt="Video pipeline" loading="lazy" /></figure><p><a href="interview-sd.html#q6">Lab Q6</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Processing lag</span></summary>
 <div class="qa-body">
-<p>User uploads — when is video watchable?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Queue priorities</p>
+<p>When is video watchable?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Priorities</p>
 <div class="qa-label">Approach</div>
-<p>Fast-start low-res rendition first; higher qualities land later; show processing state in UI.</p>
+<p>Fast-start low-res first; higher qualities later; show processing state.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Hot live event</span></summary>
 <div class="qa-body">
-<p>Millions watch a live stream.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Twitch/YouTube · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Live ingest + edge</p>
+<p>Millions watch live.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Twitch/YouTube · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Live ingest</p>
 <div class="qa-label">Approach</div>
-<p>Ingest → transcode ladder → packager → CDN with short segment TTL; separate from VOD pipeline; regional ingest POPs.</p>
+<p>Ingest → ladder → packager → CDN short TTL; regional ingest POPs.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q4. Storage cost control</span></summary>
+<summary><span>Q4. Storage cost</span></summary>
 <div class="qa-body">
 <p>Petabytes of old video.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Cost deep-dive · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Tiering</p>
 <div class="qa-label">Approach</div>
-<p>Lifecycle to colder storage; fewer bitrates for rarely watched; dedupe; delete derivatives on takedown.</p>
+<p>Cold tiers; fewer bitrates for rare views; delete derivatives on takedown.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q5. Thumbnails &amp;amp; previews</span></summary>
+<summary><span>Q5. Thumbnails</span></summary>
 <div class="qa-body">
-<p>Where do thumbnails fit?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Product follow-up · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Derived assets</p>
+<p>Where do thumbs fit?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Product · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Derived assets</p>
 <div class="qa-label">Approach</div>
-<p>Generated in the same pipeline; stored as objects; heavily CDN cached; can A/B multiple thumbs via metadata.</p>
+<p>Same pipeline; objects on CDN; A/B via metadata.</p>
 </div>
 </details>
 </section>

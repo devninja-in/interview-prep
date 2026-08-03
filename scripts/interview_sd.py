@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
-"""System design interview Q&As — classic FAANG / unicorn rounds."""
+"""System design interview Q&As — deep, diagrammed L4–L6 whiteboard tracks."""
 from __future__ import annotations
 
-from interview_helpers import drill_section, qa_block
+from interview_helpers import (
+    bullets,
+    callout,
+    code_block,
+    drill_section,
+    figure_diagram,
+    qa_block,
+    steps,
+)
 
 
 def sd_questions() -> list[str]:
@@ -18,45 +26,68 @@ def sd_questions() -> list[str]:
             prompt=(
                 "Design a service like bit.ly: users submit a long URL and get a short link; "
                 "opening the short link redirects to the original. Expect ~100M new URLs/month "
-                "and a much higher read:write ratio."
+                "and a much higher read:write ratio. Walk a full 45-minute design."
             ),
             sections=[
                 (
-                    "Clarify first",
-                    "<p>Custom aliases? Expiry? Analytics? Auth? Assume: 7-character base62 codes, "
-                    "optional expiry, basic click counts, 100:1 read:write, 99.9% availability, "
-                    "redirect latency &lt; 100ms p99.</p>",
+                    "Clarify",
+                    bullets(
+                        [
+                            "Custom aliases? Expiry? Auth?",
+                            "Analytics (click counts) required?",
+                            "Latency: redirect p99 &lt; 100ms?",
+                            "Availability target (e.g. 99.9%)?",
+                            "Assume ~7-char base62 codes unless they specify otherwise.",
+                        ]
+                    ),
                 ),
                 (
-                    "Core design",
-                    "<p><strong>API:</strong> <code>POST /shorten {url}</code> → code; "
-                    "<code>GET /{code}</code> → 302 to long URL.</p>"
-                    "<p><strong>ID generation:</strong> (1) counter + base62 encode — simple, "
-                    "needs a distributed counter (Redis INCR / Snowflake); (2) hash long URL "
-                    "(MD5/sha) then take prefix — handle collisions; (3) pre-generated key "
-                    "pool for write bursts.</p>"
-                    "<p><strong>Storage:</strong> key-value of code → {long_url, user, created, "
-                    "expires}. Cassandra/DynamoDB or sharded MySQL by code hash. Cache hot "
-                    "redirects in Redis with TTL.</p>"
-                    "<p><strong>Redirect path:</strong> CDN/edge optional → load balancer → "
-                    "app → Redis → DB. Prefer 302 (allows updating mapping) unless they ask "
-                    "for browser caching with 301.</p>",
+                    "Diagram",
+                    figure_diagram("url-shortener-detailed", "URL shortener write and read paths"),
                 ),
                 (
-                    "Deep dive topics",
-                    "<ul>"
-                    "<li>Capacity: 100M/mo ≈ 40 writes/s average; reads maybe thousands/s — "
-                    "cache is mandatory.</li>"
-                    "<li>Hot keys: viral links — replicate in cache, consider read replicas.</li>"
-                    "<li>Analytics: async click events to Kafka → warehouse; do not block redirect.</li>"
-                    "<li>Abuse: rate limit shorten API; malware URL scanning offline.</li>"
-                    "</ul>",
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "<strong>API:</strong> <code>POST /shorten {url, alias?}</code> → "
+                            "code; <code>GET /{code}</code> → 302 Location: long URL.",
+                            "<strong>Capacity:</strong> 100M/mo ≈ 40 writes/s avg; reads can be "
+                            "thousands/s — cache is mandatory. Storage: 100M × ~500B ≈ 50GB+/yr "
+                            "metadata (order-of-magnitude OK).",
+                            "<strong>ID generation (pick one &amp; defend):</strong> "
+                            "(1) distributed counter + base62; (2) hash URL + collision handling; "
+                            "(3) pre-generated key pool for bursts.",
+                            "<strong>Data model:</strong> code → {long_url, user_id, created, "
+                            "expires, clicks?}. KV/NoSQL or sharded SQL by code hash.",
+                            "<strong>Read path:</strong> edge/CDN optional → LB → app → Redis → "
+                            "DB. Prefer <strong>302</strong> (mapping can change; analytics stay "
+                            "server-side) unless they insist on 301.",
+                            "<strong>Analytics:</strong> async click events to Kafka/queue — "
+                            "never block redirect.",
+                            "<strong>Abuse:</strong> rate-limit shorten; malware URL scan offline.",
+                        ]
+                    ),
+                ),
+                (
+                    "Deep dives",
+                    bullets(
+                        [
+                            "<strong>Hot keys:</strong> viral links — cache replicas / local caches.",
+                            "<strong>Enumeration:</strong> avoid raw sequential public IDs; "
+                            "salt / skip / encrypt.",
+                            "<strong>Multi-region:</strong> replicate read-only mappings; write "
+                            "to primary with async replication.",
+                            "<strong>Custom aliases:</strong> conditional put; reject if taken.",
+                        ]
+                    ),
                 ),
                 (
                     "What strong answers sound like",
-                    "<p>They pick one ID scheme and defend collision handling, draw the read "
-                    "path shorter than the write path, and mention why redirects must not wait "
-                    "on analytics.</p>",
+                    callout(
+                        "Signal",
+                        "<p>One ID scheme with collision story, short read path, analytics "
+                        "explicitly async, and a clear 301 vs 302 opinion.</p>",
+                    ),
                 ),
             ],
         )
@@ -68,40 +99,59 @@ def sd_questions() -> list[str]:
             title="Design Instagram / News Feed",
             asked="Meta, Instagram, Twitter/X interviews",
             difficulty="Hard",
-            pattern="Fan-out · timeline cache · media CDN",
+            pattern="Hybrid fan-out · timeline cache · media CDN",
             prompt=(
-                "Design a photo-sharing social network: follow users, upload photos, and see a "
-                "home feed of posts from people you follow, ranked roughly reverse-chronological "
-                "with light ranking."
+                "Design a photo-sharing social network: follow users, upload photos, see a home "
+                "feed of posts from people you follow (roughly reverse-chronological with light "
+                "ranking)."
             ),
             sections=[
                 (
                     "Clarify",
-                    "<p>Scale: hundreds of millions of users; celebrity fan-out problem; feed "
-                    "freshness vs cost; media sizes; soft deletes.</p>",
+                    bullets(
+                        [
+                            "Scale: hundreds of millions of users?",
+                            "Celebrity / mega-follower problem in scope?",
+                            "Stories? Likes counters? Ranking ML?",
+                            "Consistency: eventual feed OK?",
+                        ]
+                    ),
                 ),
                 (
-                    "Core design",
-                    "<p><strong>Write path:</strong> upload image → object store (S3) + CDN; "
-                    "metadata in DB (post_id, author, caption, media_url, ts).</p>"
-                    "<p><strong>Feed generation:</strong> "
-                    "<em>Fan-out on write</em> — push post_id into each follower's timeline "
-                    "cache (Redis lists) — great for normal users; "
-                    "<em>Fan-out on read</em> — merge recent posts from followees at read time "
-                    "— required for celebrities with millions of followers. Hybrid: fan-out "
-                    "write for regulars, pull for celebs.</p>"
-                    "<p><strong>Read path:</strong> auth → timeline cache → hydrate post "
-                    "objects → CDN URLs for media.</p>",
+                    "Diagram",
+                    figure_diagram("feed-hybrid-fanout", "Hybrid fan-out for news feed"),
+                ),
+                (
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "<strong>Write media:</strong> pre-signed upload → object store + CDN; "
+                            "metadata row (post_id, author, caption, media_url, ts).",
+                            "<strong>Fan-out on write:</strong> push post_id into each follower's "
+                            "timeline cache (Redis lists) — great for normal users.",
+                            "<strong>Fan-out on read / pull:</strong> for celebrities, do <em>not</em> "
+                            "push to tens of millions of timelines; merge recent posts at read time.",
+                            "<strong>Hybrid:</strong> write-fanout for normals, pull for celebs "
+                            "(or inactive users).",
+                            "<strong>Read path:</strong> auth → timeline cache → hydrate posts → "
+                            "CDN URLs.",
+                            "<strong>Ranking:</strong> start chronological; add retrieval + re-rank "
+                            "stage later.",
+                            "<strong>Sharding:</strong> user_id for timelines; post_id for posts.",
+                        ]
+                    ),
                 ),
                 (
                     "Deep dives",
-                    "<ul>"
-                    "<li>Ranking: start chronological; add ML ranker later as a re-rank stage.</li>"
-                    "<li>Sharding: user_id for timelines; post_id for post store.</li>"
-                    "<li>Notifications &amp; stories: separate services, async via queues.</li>"
-                    "<li>Consistency: feed can be eventually consistent; posting ACK after "
-                    "metadata durable is enough.</li>"
-                    "</ul>",
+                    bullets(
+                        [
+                            "Counters (likes/views): sharded in-memory with periodic flush; "
+                            "approximate display OK.",
+                            "Notifications / stories: separate services + queues.",
+                            "Feed can be eventually consistent; durable post metadata is enough "
+                            "for ACK.",
+                        ]
+                    ),
                 ),
             ],
         )
@@ -113,33 +163,57 @@ def sd_questions() -> list[str]:
             title="Design WhatsApp / Chat",
             asked="Meta, WhatsApp, Slack, Discord-style rounds",
             difficulty="Hard",
-            pattern="WebSocket · message queue · presence",
+            pattern="WebSocket · durable log · presence · group fan-out",
             prompt=(
-                "Design a 1:1 and group messaging system with delivery receipts, online "
-                "presence, and media sharing. Focus on low latency and reliability."
+                "Design 1:1 and group messaging with delivery receipts, online presence, and "
+                "media sharing. Focus on low latency and reliability."
             ),
             sections=[
                 (
-                    "Core design",
-                    "<p><strong>Connections:</strong> sticky WebSocket/MQTT to chat servers; "
-                    "connection service maps user_id → server instance (Redis).</p>"
-                    "<p><strong>Message flow:</strong> client → chat server → durable queue/"
-                    "log (Kafka) → fan-out to recipients' inbox stores → push to online sockets "
-                    "or store-and-forward for offline. Persist before ACK to sender for "
-                    "at-least-once; clients de-dupe by message_id.</p>"
-                    "<p><strong>Group chat:</strong> small groups: fan-out to each member; "
-                    "large groups: write to group inbox + notify members (or hybrid).</p>"
-                    "<p><strong>Media:</strong> upload to blob store, send message with URL/"
-                    "thumbnail; encrypt if E2E is in scope.</p>",
+                    "Clarify",
+                    bullets(
+                        [
+                            "E2E encryption in scope?",
+                            "Max group size?",
+                            "Multi-device sync?",
+                            "Message history retention?",
+                        ]
+                    ),
                 ),
                 (
-                    "Hard parts interviewers probe",
-                    "<ul>"
-                    "<li>Ordering per conversation (per-chat sequence numbers).</li>"
-                    "<li>Unread counts and last-seen (eventual OK).</li>"
-                    "<li>Presence heartbeats with short TTL.</li>"
-                    "<li>E2E encryption: server stores ciphertext only; key exchange on devices.</li>"
-                    "</ul>",
+                    "Diagram",
+                    figure_diagram("chat-message-path", "Chat message delivery path"),
+                ),
+                (
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "<strong>Connections:</strong> sticky WebSocket/MQTT to chat servers; "
+                            "presence map user→server in Redis.",
+                            "<strong>Send path:</strong> client → chat server → durable queue/log "
+                            "(Kafka) → fan-out to recipient inboxes → push to online sockets or "
+                            "store-and-forward if offline.",
+                            "<strong>ACK:</strong> persist before ACK to sender (at-least-once); "
+                            "clients de-dupe by message_id.",
+                            "<strong>Ordering:</strong> per-conversation monotonic sequence from "
+                            "a single partition/writer.",
+                            "<strong>Groups:</strong> small → fan-out to members; large → group "
+                            "log + members catch up / notify online only.",
+                            "<strong>Media:</strong> upload to blob store; message carries URL/"
+                            "thumbnail.",
+                            "<strong>Presence:</strong> heartbeats with short TTL.",
+                            "<strong>Receipts:</strong> separate lightweight events; do not block "
+                            "delivery.",
+                        ]
+                    ),
+                ),
+                (
+                    "E2E note",
+                    callout(
+                        "If asked",
+                        "<p>Server stores ciphertext + metadata; keys on devices. Acknowledge "
+                        "feature tradeoffs (server-side search hard).</p>",
+                    ),
                 ),
             ],
         )
@@ -149,36 +223,52 @@ def sd_questions() -> list[str]:
         qa_block(
             qnum=4,
             title="Design a Rate Limiter",
-            asked="Amazon, Stripe, Cloudflare, Google — often a building-block question",
+            asked="Amazon, Stripe, Cloudflare, Google — building-block favorite",
             difficulty="Medium",
             pattern="Token bucket · sliding window · Redis",
             prompt=(
-                "Design a distributed rate limiter used by an API gateway: e.g. 100 requests "
-                "per user per minute, consistent across many gateway instances."
+                "Design a distributed rate limiter for an API gateway: e.g. 100 requests per "
+                "user per minute, consistent across many gateway instances."
             ),
             sections=[
                 (
-                    "Algorithms to know",
-                    "<ul>"
-                    "<li><strong>Token bucket:</strong> tokens refill at rate r; request costs 1; "
-                    "allows short bursts — industry default.</li>"
-                    "<li><strong>Leaky bucket:</strong> smooths to constant outflow.</li>"
-                    "<li><strong>Fixed window:</strong> simple counters; burst at window edges.</li>"
-                    "<li><strong>Sliding window log / counter:</strong> fairer, more storage/CPU.</li>"
-                    "</ul>",
+                    "Algorithms (know 3)",
+                    bullets(
+                        [
+                            "<strong>Token bucket:</strong> refill rate r; burst capacity — "
+                            "industry default.",
+                            "<strong>Leaky bucket:</strong> smooth constant outflow.",
+                            "<strong>Fixed window:</strong> simple counters; edge burst problem.",
+                            "<strong>Sliding window log/counter:</strong> fairer, more cost.",
+                        ]
+                    ),
                 ),
                 (
-                    "Distributed design",
-                    "<p>Centralize counters in Redis (INCR + EXPIRE, or Lua for token bucket "
-                    "atomicity). Gateways call Redis before forwarding. For multi-region, "
-                    "use regional limiters with a global budget, or accept approximate limits. "
-                    "Return <code>429</code> with <code>Retry-After</code>.</p>",
+                    "Diagram",
+                    figure_diagram("rate-limiter-token", "Gateway + Redis token bucket"),
                 ),
                 (
-                    "Talking points",
-                    "<p>Compare accuracy vs performance; mention race conditions without atomic "
-                    "scripts; discuss per-IP vs per-API-key vs per-endpoint limits; graceful "
-                    "degradation if Redis is down (fail open vs fail closed — product call).</p>",
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "Gateways call a shared store (Redis) before forwarding.",
+                            "Use atomic ops (INCR+EXPIRE or Lua) for token bucket — avoid races.",
+                            "On deny: HTTP 429 + Retry-After.",
+                            "Dimensions: per API key / IP / endpoint / tenant.",
+                            "Multi-region: regional limiters + global budget, or accept "
+                            "approximate limits.",
+                            "Redis down: product call — fail open vs fail closed.",
+                        ]
+                    ),
+                ),
+                (
+                    "Pseudo Redis check",
+                    code_block(
+                        "text",
+                        """# token bucket keys: tokens={key}, ts={key}
+# atomic Lua: refill based on elapsed time, consume 1 if tokens>=1
+# else return limited""",
+                    ),
                 ),
             ],
         )
@@ -190,33 +280,47 @@ def sd_questions() -> list[str]:
             title="Design Uber / Ride Sharing",
             asked="Uber, Lyft, DoorDash-adjacent geo interviews",
             difficulty="Hard",
-            pattern="Geo index · matching · realtime location",
+            pattern="Geo index · matching · trip state machine",
             prompt=(
-                "Design a ride-hailing app: riders request trips, nearby drivers are matched, "
-                "locations update in realtime, pricing/ETA are computed."
+                "Design ride-hailing: riders request trips, nearby drivers are matched, locations "
+                "update in realtime, pricing/ETA computed."
             ),
             sections=[
                 (
-                    "Core design",
-                    "<p><strong>Location stream:</strong> drivers send GPS every few seconds → "
-                    "location service → update geo index (geohash / S2 cells in Redis or "
-                    "specialized store).</p>"
-                    "<p><strong>Matching:</strong> rider request → query drivers in nearby cells "
-                    "→ filter by status/vehicle → ranking (ETA, rating) → offer with timeout → "
-                    "retry ring expansion.</p>"
-                    "<p><strong>Trip lifecycle:</strong> state machine (requested → matched → "
-                    "enroute → ongoing → completed) in a trip service; events to billing, "
-                    "notifications, analytics.</p>",
+                    "Clarify",
+                    bullets(
+                        [
+                            "Cities / regions in scope?",
+                            "ETA accuracy expectations?",
+                            "Surge pricing?",
+                            "Driver app battery / update frequency?",
+                        ]
+                    ),
                 ),
                 (
-                    "Deep dives",
-                    "<ul>"
-                    "<li>ETA: map/routing service; cache road graph segments.</li>"
-                    "<li>Surge pricing: demand/supply per cell, smoothed to avoid thrash.</li>"
-                    "<li>Consistency: matching must avoid double-booking — optimistic lock / "
-                    "atomic claim on driver.</li>"
-                    "<li>Scale: shard by city/region; most traffic is local.</li>"
-                    "</ul>",
+                    "Diagram",
+                    figure_diagram("uber-matching", "Geo index and ride matching"),
+                ),
+                (
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "<strong>Location stream:</strong> drivers send GPS every few seconds → "
+                            "update geo index (geohash / S2 cells in Redis or specialized store).",
+                            "<strong>Request:</strong> rider → query nearby cells → filter "
+                            "status/vehicle → rank by ETA/rating → offer with timeout → expand "
+                            "ring on miss.",
+                            "<strong>Double dispatch:</strong> atomic claim / CAS on driver "
+                            "status with lease; only one rider wins.",
+                            "<strong>Trip lifecycle:</strong> requested → matched → enroute → "
+                            "ongoing → completed (state machine + events to billing/notify).",
+                            "<strong>ETA:</strong> map-match + traffic-aware routing service; "
+                            "cache segments.",
+                            "<strong>Surge:</strong> demand/supply per cell, smoothed (EMA), "
+                            "capped rate of change.",
+                            "<strong>Scale:</strong> shard by city/region — traffic is local.",
+                        ]
+                    ),
                 ),
             ],
         )
@@ -230,28 +334,41 @@ def sd_questions() -> list[str]:
             difficulty="Hard",
             pattern="Transcoding pipeline · CDN · adaptive bitrate",
             prompt=(
-                "Design a video upload and streaming platform: users upload videos; millions "
-                "watch with adaptive quality worldwide."
+                "Design video upload and streaming: users upload; millions watch with adaptive "
+                "quality worldwide."
             ),
             sections=[
                 (
-                    "Core design",
-                    "<p><strong>Upload:</strong> client gets pre-signed URL → direct to blob "
-                    "store; metadata row = processing.</p>"
-                    "<p><strong>Processing pipeline:</strong> queue workers transcode to multiple "
-                    "resolutions/codecs, generate thumbnails, extract duration; store HLS/DASH "
-                    "segments; mark ready.</p>"
-                    "<p><strong>Playback:</strong> client fetches manifest; CDN serves segments; "
-                    "origin is object store. Adaptive bitrate based on bandwidth.</p>",
+                    "Diagram",
+                    figure_diagram("youtube-cdn-pipeline", "Upload, transcode, CDN playback"),
                 ),
                 (
-                    "Deep dives",
-                    "<ul>"
-                    "<li>Hot videos: heavy CDN caching; popular titles at edge.</li>"
-                    "<li>Recommendations: offline ML + online re-rank (separate from serving path).</li>"
-                    "<li>Copyright / abuse: async fingerprinting and review queues.</li>"
-                    "<li>Cost: storage tiers, cold archive for old rarely watched content.</li>"
-                    "</ul>",
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "<strong>Upload:</strong> pre-signed URL → direct to object store; "
+                            "metadata = processing.",
+                            "<strong>Pipeline:</strong> queue workers transcode many resolutions/"
+                            "codecs, thumbs, duration → HLS/DASH segments → mark ready. "
+                            "Fast-start low-res first.",
+                            "<strong>Playback:</strong> client fetches manifest; CDN serves "
+                            "segments; origin is object store; ABR by bandwidth.",
+                            "<strong>Hot titles:</strong> heavy edge caching; short TTL for live.",
+                            "<strong>Live:</strong> separate ingest POPs → packager → CDN; not "
+                            "the VOD path.",
+                            "<strong>Cost:</strong> lifecycle to cold storage; fewer bitrates for "
+                            "rarely watched; copyright fingerprinting async.",
+                            "<strong>Recs:</strong> offline ML + online re-rank — off the play path.",
+                        ]
+                    ),
+                ),
+                (
+                    "Key principle",
+                    callout(
+                        "Never",
+                        "<p>Never transcode on the user-facing request path. Processing is a "
+                        "pipeline; serving is CDN.</p>",
+                    ),
                 ),
             ],
         )
@@ -263,25 +380,30 @@ def sd_questions() -> list[str]:
             title="Design a Notification System",
             asked="Amazon, Meta, Uber, Slack",
             difficulty="Medium",
-            pattern="Fan-out · priority queues · templates",
+            pattern="Fan-out · priority queues · templates · DLQ",
             prompt=(
-                "Design a multi-channel notification platform: push, email, SMS, in-app, with "
-                "user preferences, retries, and high throughput."
+                "Design multi-channel notifications: push, email, SMS, in-app — with preferences, "
+                "retries, and high throughput."
             ),
             sections=[
                 (
-                    "Core design",
-                    "<p>Producer APIs enqueue notification jobs → Kafka topics by priority/"
-                    "channel → workers render templates → provider adapters (APNs/FCM, SES, "
-                    "Twilio) → delivery receipts back for status.</p>"
-                    "<p>Preferences service gates channel/quiet hours. Deduplicate with "
-                    "idempotency keys. Rate-limit per user and per provider.</p>",
+                    "Diagram",
+                    figure_diagram("notification-pipeline", "Notification fan-out pipeline"),
                 ),
                 (
-                    "Failure modes",
-                    "<p>Provider outages → exponential backoff + DLQ. Partial fan-out for "
-                    "large audiences (celebrity posts) via chunked tasks. Exactly-once is "
-                    "unrealistic — aim for at-least-once + idempotent display.</p>",
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "Producers enqueue jobs (do not block product writes).",
+                            "Preferences/quiet-hours gate before send.",
+                            "Kafka topics by priority/channel → workers render templates → "
+                            "provider adapters (APNs/FCM, SES, Twilio).",
+                            "Idempotency keys; rate-limit per user and per provider.",
+                            "Retries with exponential backoff → DLQ for poison messages.",
+                            "Large audiences: chunked fan-out tasks.",
+                            "Aim at-least-once + idempotent display — not exactly-once fantasy.",
+                        ]
+                    ),
                 ),
             ],
         )
@@ -295,23 +417,28 @@ def sd_questions() -> list[str]:
             difficulty="Medium",
             pattern="Trie · top-k · edge cache",
             prompt=(
-                "Design search autocomplete that returns top suggestions as the user types, "
-                "with low latency and trending awareness."
+                "Design search autocomplete that returns top suggestions as the user types, with "
+                "low latency and some trending awareness."
             ),
             sections=[
                 (
-                    "Core design",
-                    "<p>Offline: aggregate query logs → compute top-k per prefix → build trie "
-                    "or prefix index; ship snapshots to servers / edge.</p>"
-                    "<p>Online: client debounces; request prefix → memory trie returns top-k "
-                    "(&lt;50ms). Personalization and trending as a light re-rank layer. Cache "
-                    "popular prefixes at CDN/edge.</p>",
+                    "Diagram",
+                    figure_diagram("autocomplete-trie", "Prefix index autocomplete"),
                 ),
                 (
-                    "Scale tricks",
-                    "<p>Limit prefix length; store only top-k not full postings; AJAX results "
-                    "tiny; update index periodically (minutes) not per keystroke. For "
-                    "distributed tries, shard by first character(s).</p>",
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "<strong>Offline:</strong> aggregate query logs → top-k per prefix → "
+                            "build trie/prefix index → ship snapshots to servers/edge.",
+                            "<strong>Online:</strong> client debounces; request prefix → memory "
+                            "trie returns top-k (&lt;50ms); light personalization/trending re-rank.",
+                            "Cache popular prefixes at CDN/edge.",
+                            "Limit prefix length; store only top-k not full postings.",
+                            "Shard trie by first character(s) if needed.",
+                            "Refresh index on minutes cadence — not per keystroke.",
+                        ]
+                    ),
                 ),
             ],
         )
@@ -325,24 +452,30 @@ def sd_questions() -> list[str]:
             difficulty="Hard",
             pattern="Consistent hashing · replication · eviction",
             prompt=(
-                "Design a distributed in-memory cache used by many microservices: get/put/"
-                "delete, TTL, high availability, horizontal scale."
+                "Design a distributed in-memory cache: get/put/delete, TTL, HA, horizontal scale."
             ),
             sections=[
                 (
-                    "Core design",
-                    "<p>Client or proxy uses consistent hashing to pick a shard. Each shard "
-                    "is a primary + replicas (async or semi-sync). LRU/LFU/TTL eviction "
-                    "per node. Gossip or config service for membership.</p>",
+                    "Diagram",
+                    figure_diagram("consistent-hash-cache", "Consistent hashing ring"),
                 ),
                 (
-                    "Deep dives",
-                    "<ul>"
-                    "<li>Hot keys: replicate popular keys to many nodes or add local caches.</li>"
-                    "<li>Thundering herd: soft TTL + singleflight refresh.</li>"
-                    "<li>Persistence optional (AOF/RDB) — usually cache is ephemeral.</li>"
-                    "<li>CAP: prefer AP for cache; clients tolerate miss and load DB.</li>"
-                    "</ul>",
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "Client or proxy uses consistent hashing → shard.",
+                            "Each shard: primary + replicas (async or semi-sync).",
+                            "Eviction: LRU/LFU + TTL per node.",
+                            "Membership via gossip/config service; virtual nodes for balance.",
+                            "<strong>Hot keys:</strong> replicate popular keys; local caches.",
+                            "<strong>Stampede:</strong> soft TTL + singleflight / probabilistic "
+                            "early expire.",
+                            "Write strategies: invalidate-on-write common; write-through / "
+                            "behind when justified.",
+                            "CAP: prefer AP for cache; miss → load DB.",
+                            "Persistence optional — usually ephemeral by design.",
+                        ]
+                    ),
                 ),
             ],
         )
@@ -354,28 +487,43 @@ def sd_questions() -> list[str]:
             title="Design Ticketmaster / Event Booking",
             asked="Amazon, Ticketmaster-style concurrency interviews",
             difficulty="Hard",
-            pattern="Inventory locks · idempotency · flash sales",
+            pattern="Inventory locks · holds · idempotent payment",
             prompt=(
-                "Design a ticketing system for concerts: browse events, hold seats, pay, and "
-                "issue tickets — without double-selling under huge spikes."
+                "Design ticketing for concerts: browse events, hold seats, pay, issue tickets — "
+                "without double-selling under spikes."
             ),
             sections=[
                 (
-                    "Core design",
-                    "<p><strong>Inventory:</strong> seat map per event/section; state "
-                    "available → held → sold. Hold = soft lock with short TTL (2–10 min) in "
-                    "Redis or row-level locks.</p>"
-                    "<p><strong>Checkout:</strong> create hold → payment intent → on success "
-                    "commit seats + generate ticket IDs; on fail/expiry release hold. "
-                    "Idempotency keys on payment webhooks.</p>"
-                    "<p><strong>Scale:</strong> shard by event_id; queue waiting rooms for "
-                    "mega-events; read replicas for browse; CDN for static event pages.</p>",
+                    "Diagram",
+                    figure_diagram("ticket-hold-checkout", "Seat hold and checkout"),
                 ),
                 (
-                    "Consistency",
-                    "<p>This is one design where strong consistency on inventory matters. "
-                    "Use conditional updates (COMPARE_AND_SET / SQL WHERE status='available'). "
-                    "Never trust client-side seat claims alone.</p>",
+                    "Step-by-step whiteboard",
+                    steps(
+                        [
+                            "<strong>Browse:</strong> read replicas + CDN for event pages; "
+                            "seat maps cached carefully.",
+                            "<strong>Inventory states:</strong> available → held → sold.",
+                            "<strong>Hold:</strong> soft lock with short TTL (2–10 min) via Redis "
+                            "or conditional row update.",
+                            "<strong>Checkout:</strong> create hold → payment intent → on success "
+                            "commit seats + ticket IDs; on fail/expiry release hold.",
+                            "<strong>Idempotency:</strong> keys on payment webhooks — no double "
+                            "charge / double sell.",
+                            "<strong>Consistency:</strong> strong on inventory (CAS / "
+                            "<code>UPDATE … WHERE status='available'</code>).",
+                            "<strong>Scale:</strong> shard by event_id; waiting rooms / queues for "
+                            "mega on-sales.",
+                        ]
+                    ),
+                ),
+                (
+                    "Strong closer",
+                    callout(
+                        "Contrast with feeds",
+                        "<p>Feeds can be eventually consistent. Ticket inventory cannot. Say "
+                        "that contrast out loud — interviewers love it.</p>",
+                    ),
                 ),
             ],
         )
@@ -385,64 +533,103 @@ def sd_questions() -> list[str]:
 
 
 def sd_lab_body() -> str:
-    intro = """<p>These are the system-design prompts that appear again and again in L4–L6 loops:
-URL shortener as a warmup, then chat, feed, rides, video, or a focused building block like
-rate limiting. Each card mirrors how a strong 45-minute whiteboard session should unfold —
-clarify, propose API + data model, draw the path, then deep-dive.</p>
-<p class="drill-intro">Structure every answer: requirements → capacity sketch → API → high-level
-diagram → data model → deep dives → failures. Interviewers interrupt; practice recovering.</p>
+    intro = """
+<p>This lab is for <strong>L4–L6 system design loops</strong>: the prompts that show up again and
+again — URL shortener as a warmup, then chat, feed, rides, video, or a focused building block
+like rate limiting.</p>
+
+<p class="drill-intro"><strong>How to use it:</strong> Practice a 45-minute structure every time —
+<strong>clarify → capacity sketch → API → diagram → data model → deep dives → failures</strong>.
+Open a card, study it, then redraw from memory on a blank page.</p>
+
+<figure class="diagram native">
+<img src="../assets/diagrams/url-shortener-detailed.svg" alt="URL shortener design overview" loading="lazy" />
+</figure>
+
+<p class="drill-intro">Related chapters:
+<a href="19-approaching-sd.html">Approaching SD</a>,
+<a href="21-scaling.html">Scaling</a>,
+<a href="22-caching.html">Caching</a>,
+<a href="28-url-shortener.html">URL shortener</a>,
+<a href="29-whatsapp.html">WhatsApp</a>,
+<a href="30-instagram.html">Instagram</a>,
+<a href="34-uber.html">Uber</a>.</p>
+
+<ul class="lab-toc">
+  <li><a href="#q1"><span>Q1</span> URL shortener</a></li>
+  <li><a href="#q2"><span>Q2</span> Instagram / news feed</a></li>
+  <li><a href="#q3"><span>Q3</span> WhatsApp / chat</a></li>
+  <li><a href="#q4"><span>Q4</span> Rate limiter</a></li>
+  <li><a href="#q5"><span>Q5</span> Uber / ride sharing</a></li>
+  <li><a href="#q6"><span>Q6</span> YouTube / video</a></li>
+  <li><a href="#q7"><span>Q7</span> Notification system</a></li>
+  <li><a href="#q8"><span>Q8</span> Search autocomplete</a></li>
+  <li><a href="#q9"><span>Q9</span> Distributed cache</a></li>
+  <li><a href="#q10"><span>Q10</span> Ticketmaster / booking</a></li>
+</ul>
 """
-    return intro + "\n".join(sd_questions())
+    blocks = sd_questions()
+    out = []
+    for i, block in enumerate(blocks, start=1):
+        out.append(block.replace('<details class="qa">', f'<details class="qa" id="q{i}">', 1))
+    return intro + "\n".join(out)
 
 
 def sd_chapter_drills() -> dict[str, str]:
     return {
         "28-url-shortener": drill_section(
-            "Interview drill",
-            "If you only practice one design end-to-end, make it this.",
+            "Interview drill — URL shortener",
+            "If you only practice one design cold, make it this.",
             [
                 qa_block(
                     qnum=1,
-                    title="Design Bitly",
+                    title="Design Bitly (full)",
                     asked="Amazon, Google, Microsoft",
                     difficulty="Medium",
-                    pattern="KV store + cache",
-                    prompt="Shorten URLs and redirect with analytics.",
+                    pattern="KV + cache",
+                    prompt="Shorten + redirect + analytics.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Base62 IDs, KV mapping, Redis on read path, async clicks. "
-                            "Full walkthrough: <a href=\"interview-sd.html\">System Design Lab Q1</a>.</p>",
+                            "Steps",
+                            figure_diagram("url-shortener-detailed", "URL shortener")
+                            + steps(
+                                [
+                                    "Clarify + capacity (read-heavy).",
+                                    "Pick ID scheme; KV mapping; Redis on read.",
+                                    "302 redirect; analytics async.",
+                                ]
+                            )
+                            + "<p><a href=\"interview-sd.html#q1\">Lab Q1</a>.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=2,
-                    title="Custom aliases &amp; collisions",
-                    asked="Follow-up at Google/Amazon",
+                    title="Custom aliases",
+                    asked="Follow-up",
                     difficulty="Medium",
-                    pattern="Uniqueness constraints",
-                    prompt="How do you support user-chosen short codes safely?",
+                    pattern="Uniqueness",
+                    prompt="User-chosen short codes?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Reserve alias with conditional put; reject if taken; rate-limit "
-                            "alias creation; validate charset length; scan for phishing patterns.</p>",
+                            "<p>Conditional put; reject if taken; rate-limit; validate charset; "
+                            "phishing checks.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=3,
                     title="301 vs 302",
-                    asked="Common redirect follow-up",
+                    asked="Common follow-up",
                     difficulty="Easy",
-                    pattern="HTTP caching semantics",
-                    prompt="Which status code for redirects and why?",
+                    pattern="HTTP caching",
+                    prompt="Which redirect status?",
                     sections=[
                         (
                             "Approach",
-                            "<p>302/307 keep control (mapping can change, analytics stay server-side). "
-                            "301 caches in browsers — faster but harder to update or count.</p>",
+                            "<p>302/307 keep control. 301 caches in browsers — faster but harder "
+                            "to update or count.</p>",
                         ),
                     ],
                 ),
@@ -451,28 +638,26 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Global latency",
                     asked="Microsoft, Amazon",
                     difficulty="Medium",
-                    pattern="Multi-region + CDN",
-                    prompt="Users worldwide need fast redirects.",
+                    pattern="Multi-region",
+                    prompt="Fast redirects worldwide.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Replicate read-only mappings regionally; edge cache hot codes; "
-                            "writes to primary region with async replication.</p>",
+                            "<p>Regional read replicas; edge cache hot codes; primary writes.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=5,
-                    title="Predictable IDs / enumeration",
+                    title="Predictable IDs",
                     asked="Security follow-up",
                     difficulty="Medium",
-                    pattern="Security",
-                    prompt="Sequential IDs leak creation volume — what do you do?",
+                    pattern="Enumeration",
+                    prompt="Sequential IDs leak volume.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Use salted hashes, skip-count counters, or encrypted IDs; "
-                            "rate-limit guessing; do not expose autoincrement publicly.</p>",
+                            "<p>Salted hashes, skip counters, or encrypted IDs; rate-limit guessing.</p>",
                         ),
                     ],
                 ),
@@ -480,21 +665,21 @@ def sd_chapter_drills() -> dict[str, str]:
             lab_href="interview-sd.html",
         ),
         "29-whatsapp": drill_section(
-            "Interview drill",
-            "Chat designs hinge on connections, durability, and fan-out — not UI.",
+            "Interview drill — Chat",
+            "Connections, durability, fan-out — not UI.",
             [
                 qa_block(
                     qnum=1,
                     title="Design WhatsApp",
                     asked="Meta, WhatsApp",
                     difficulty="Hard",
-                    pattern="WebSocket + inbox",
-                    prompt="1:1 and group messaging with receipts.",
+                    pattern="WS + inbox",
+                    prompt="1:1 and group messaging.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Sticky sockets, durable log, per-user inbox, offline store-and-forward. "
-                            "<a href=\"interview-sd.html\">Lab Q3</a>.</p>",
+                            "Steps",
+                            figure_diagram("chat-message-path", "Chat path")
+                            + "<p><a href=\"interview-sd.html#q3\">Lab Q3</a>.</p>",
                         ),
                     ],
                 ),
@@ -504,42 +689,41 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Follow-up",
                     difficulty="Medium",
                     pattern="Async events",
-                    prompt="How do blue ticks work without melting the DB?",
+                    prompt="Blue ticks without melting DB?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Receipts are separate lightweight events; batch writes; eventual "
-                            "consistency OK; do not block message delivery on receipt fan-out.</p>",
+                            "<p>Separate lightweight events; batch writes; eventual OK; never "
+                            "block message delivery.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=3,
                     title="Large group chats",
-                    asked="Discord / Slack style follow-up",
+                    asked="Discord / Slack",
                     difficulty="Hard",
-                    pattern="Fan-out strategies",
-                    prompt="10k-member group — fan-out on write or read?",
+                    pattern="Fan-out",
+                    prompt="10k-member group?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Write to group log; members pull/catch up; push notify only online "
-                            "subscribers. Pure write fan-out explodes.</p>",
+                            "<p>Write to group log; members pull/catch up; push only online "
+                            "subscribers.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=4,
-                    title="End-to-end encryption",
-                    asked="Signal/WhatsApp rounds",
+                    title="E2E encryption",
+                    asked="Signal/WhatsApp",
                     difficulty="Hard",
-                    pattern="E2E keys",
-                    prompt="Where do keys live and what does the server store?",
+                    pattern="Keys on device",
+                    prompt="What does the server store?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Server stores ciphertext + metadata; identity/prekeys on devices; "
-                            "server cannot read bodies — acknowledge tradeoffs for search/features.</p>",
+                            "<p>Ciphertext + metadata; identity/prekeys on devices.</p>",
                         ),
                     ],
                 ),
@@ -548,13 +732,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Message ordering",
                     asked="Meta",
                     difficulty="Medium",
-                    pattern="Per-conversation seq",
-                    prompt="How do you order messages in a chat?",
+                    pattern="Per-chat seq",
+                    prompt="How do you order messages?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Per-chat monotonic sequence from a single writer partition; "
-                            "clients sort by seq; vector clocks only if multi-device concurrent edits matter.</p>",
+                            "<p>Per-chat monotonic sequence from one writer partition.</p>",
                         ),
                     ],
                 ),
@@ -562,8 +745,8 @@ def sd_chapter_drills() -> dict[str, str]:
             lab_href="interview-sd.html",
         ),
         "30-instagram": drill_section(
-            "Interview drill",
-            "Feeds are a fan-out problem dressed as a product question.",
+            "Interview drill — Feed",
+            "Feeds are a fan-out problem.",
             [
                 qa_block(
                     qnum=1,
@@ -571,12 +754,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Meta",
                     difficulty="Hard",
                     pattern="Hybrid fan-out",
-                    prompt="Home feed for follows + media.",
+                    prompt="Home feed + media.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Fan-out on write for normals, pull for celebs; CDN for media. "
-                            "<a href=\"interview-sd.html\">Lab Q2</a>.</p>",
+                            "Steps",
+                            figure_diagram("feed-hybrid-fanout", "Hybrid fan-out")
+                            + "<p><a href=\"interview-sd.html#q2\">Lab Q2</a>.</p>",
                         ),
                     ],
                 ),
@@ -586,12 +769,11 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Twitter/Meta",
                     difficulty="Hard",
                     pattern="Fan-out on read",
-                    prompt="User with 50M followers posts — what breaks?",
+                    prompt="50M followers post?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Do not push to 50M timelines. Store post; mix into followers' "
-                            "feeds at read/merge time; precompute for active users only if needed.</p>",
+                            "<p>Do not push to 50M timelines. Store post; mix at read/merge time.</p>",
                         ),
                     ],
                 ),
@@ -600,28 +782,26 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Feed ranking",
                     asked="Meta",
                     difficulty="Medium",
-                    pattern="Retrieval + ranker",
-                    prompt="Not purely chronological — how?",
+                    pattern="Retrieve + rank",
+                    prompt="Not purely chronological?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Candidate retrieval from follow graph / timeline cache → feature "
-                            "join → lightweight ranker → diversity rules. Keep ranking async-friendly.</p>",
+                            "<p>Candidates from timeline/cache → features → light ranker → diversity.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=4,
                     title="Counter service",
-                    asked="Instagram classic",
+                    asked="Instagram",
                     difficulty="Medium",
                     pattern="Sharded counters",
-                    prompt="Likes and view counts at huge QPS.",
+                    prompt="Likes at huge QPS.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Sharded in-memory counters with periodic flush; accept approximate "
-                            "display counts; exact counts via batch reconciliation.</p>",
+                            "<p>Sharded in-memory counters; flush periodically; approximate OK.</p>",
                         ),
                     ],
                 ),
@@ -631,12 +811,11 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Meta",
                     difficulty="Medium",
                     pattern="TTL data",
-                    prompt="Ephemeral stories architecture?",
+                    prompt="Ephemeral stories?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Separate store with 24h TTL; ring/view fan-out smaller; media still "
-                            "on CDN/blob with lifecycle policies.</p>",
+                            "<p>Separate store with 24h TTL; CDN/blob lifecycle policies.</p>",
                         ),
                     ],
                 ),
@@ -644,21 +823,21 @@ def sd_chapter_drills() -> dict[str, str]:
             lab_href="interview-sd.html",
         ),
         "34-uber": drill_section(
-            "Interview drill",
-            "Geo + matching + state machines — keep the diagram regional.",
+            "Interview drill — Ride sharing",
+            "Geo + matching + state machines — keep it regional.",
             [
                 qa_block(
                     qnum=1,
                     title="Design Uber",
                     asked="Uber, Lyft",
                     difficulty="Hard",
-                    pattern="Geo index + matching",
-                    prompt="Match riders to nearby drivers in realtime.",
+                    pattern="Geo + matching",
+                    prompt="Match riders to drivers.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Geohash location updates; ring matching; trip state machine. "
-                            "<a href=\"interview-sd.html\">Lab Q5</a>.</p>",
+                            "Steps",
+                            figure_diagram("uber-matching", "Matching")
+                            + "<p><a href=\"interview-sd.html#q5\">Lab Q5</a>.</p>",
                         ),
                     ],
                 ),
@@ -668,12 +847,11 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Uber",
                     difficulty="Hard",
                     pattern="Atomic claim",
-                    prompt="Two riders matched to the same driver?",
+                    prompt="Two riders, one driver?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Driver status CAS to 'offered/busy'; offer lease with timeout; "
-                            "only one claim wins.</p>",
+                            "<p>CAS driver status; offer lease with timeout; one claim wins.</p>",
                         ),
                     ],
                 ),
@@ -682,13 +860,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="ETA accuracy",
                     asked="Follow-up",
                     difficulty="Medium",
-                    pattern="Routing service",
+                    pattern="Routing",
                     prompt="How is ETA computed?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Map-matching GPS to roads; routing over traffic-aware graph; "
-                            "cache segments; update with live speeds.</p>",
+                            "<p>Map-match GPS; traffic-aware routing; cache segments.</p>",
                         ),
                     ],
                 ),
@@ -697,28 +874,26 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Surge pricing",
                     asked="Uber",
                     difficulty="Medium",
-                    pattern="Demand/supply per cell",
-                    prompt="Design surge without wild oscillation.",
+                    pattern="Demand/supply",
+                    prompt="Surge without wild oscillation?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Compute per-geocell imbalance on a short window; smooth with "
-                            "EMA; cap rate of change; show multiplier before confirm.</p>",
+                            "<p>Per-cell imbalance; EMA smooth; cap change rate; show before confirm.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=5,
                     title="City sharding",
-                    asked="Scale follow-up",
+                    asked="Scale",
                     difficulty="Medium",
-                    pattern="Regional deployment",
-                    prompt="How do you shard the system?",
+                    pattern="Regional",
+                    prompt="How do you shard?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Most state is city-local — shard services and data by region/city; "
-                            "global for identity/billing only.</p>",
+                            "<p>Most state is city-local; global only for identity/billing.</p>",
                         ),
                     ],
                 ),
@@ -726,8 +901,8 @@ def sd_chapter_drills() -> dict[str, str]:
             lab_href="interview-sd.html",
         ),
         "22-caching": drill_section(
-            "Interview drill",
-            "Caching questions separate people who have operated systems from people who memorized buzzwords.",
+            "Interview drill — Caching",
+            "Operate systems, don't recite buzzwords.",
             [
                 qa_block(
                     qnum=1,
@@ -735,12 +910,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Amazon, Microsoft",
                     difficulty="Hard",
                     pattern="Consistent hashing",
-                    prompt="Build Redis-like get/put across nodes.",
+                    prompt="Redis-like get/put fleet.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Consistent hash ring, replicas, LRU/TTL. "
-                            "<a href=\"interview-sd.html\">Lab Q9</a>.</p>",
+                            "Steps",
+                            figure_diagram("consistent-hash-cache", "Hash ring")
+                            + "<p><a href=\"interview-sd.html#q9\">Lab Q9</a>.</p>",
                         ),
                     ],
                 ),
@@ -749,13 +924,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Cache stampede",
                     asked="Amazon",
                     difficulty="Medium",
-                    pattern="Singleflight / soft TTL",
-                    prompt="Hot key expires — thousands hit DB.",
+                    pattern="Singleflight",
+                    prompt="Hot key expires → DB melt.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Soft TTL with background refresh; request coalescing; probabilistic "
-                            "early expiration.</p>",
+                            "<p>Soft TTL + background refresh; request coalescing; probabilistic early expire.</p>",
                         ),
                     ],
                 ),
@@ -764,29 +938,27 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Write strategies",
                     asked="Microsoft",
                     difficulty="Medium",
-                    pattern="Write-through / behind / around",
-                    prompt="When do you write the cache vs DB first?",
+                    pattern="Through / behind / around",
+                    prompt="Cache vs DB first?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Write-through for strong freshness; write-behind for write throughput "
-                            "(risk); write-around for write-heavy rarely-read data. Invalidate on write "
-                            "is the common microservice pattern.</p>",
+                            "<p>Write-through for freshness; write-behind for throughput (risk); "
+                            "invalidate-on-write is the common microservice pattern.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=4,
                     title="CDN vs app cache",
-                    asked="All companies",
+                    asked="All",
                     difficulty="Easy",
                     pattern="Edge vs origin",
-                    prompt="What belongs on a CDN?",
+                    prompt="What belongs on CDN?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Static &amp; cacheable HTTP responses near users. Personalized or "
-                            "auth-sensitive data stays in app/Redis closer to origin logic.</p>",
+                            "<p>Cacheable HTTP near users. Personalized/auth data stays in app/Redis.</p>",
                         ),
                     ],
                 ),
@@ -796,12 +968,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Stripe, Amazon",
                     difficulty="Medium",
                     pattern="Token bucket",
-                    prompt="Enforce per-API-key limits across gateways.",
+                    prompt="Per-API-key limits across gateways.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Atomic Redis Lua token bucket; 429 + Retry-After. "
-                            "<a href=\"interview-sd.html\">Lab Q4</a>.</p>",
+                            "Steps",
+                            figure_diagram("rate-limiter-token", "Rate limiter")
+                            + "<p><a href=\"interview-sd.html#q4\">Lab Q4</a>.</p>",
                         ),
                     ],
                 ),
@@ -809,36 +981,42 @@ def sd_chapter_drills() -> dict[str, str]:
             lab_href="interview-sd.html",
         ),
         "21-scaling": drill_section(
-            "Interview drill",
-            "Scaling rounds test whether you can move from one box to a fleet thoughtfully.",
+            "Interview drill — Scaling",
+            "One box → fleet thoughtfully.",
             [
                 qa_block(
                     qnum=1,
                     title="Horizontal scale a read-heavy API",
                     asked="Amazon, Google",
                     difficulty="Medium",
-                    pattern="LB + replicas + cache",
-                    prompt="Traffic grew 20× — what do you change first?",
+                    pattern="LB + cache",
+                    prompt="Traffic ×20 — what first?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Measure bottleneck; add LB + stateless app replicas; read replicas "
-                            "or cache; only then shard. Order matters.</p>",
+                            steps(
+                                [
+                                    "Measure bottleneck.",
+                                    "LB + stateless app replicas.",
+                                    "Cache / read replicas.",
+                                    "Shard only when needed.",
+                                ]
+                            ),
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=2,
-                    title="Load balancer choice",
+                    title="L4 vs L7 load balancing",
                     asked="Amazon",
                     difficulty="Medium",
-                    pattern="L4 vs L7",
-                    prompt="When L4 vs L7? Sticky sessions?",
+                    pattern="LB choice",
+                    prompt="When each? Sticky sessions?",
                     sections=[
                         (
                             "Approach",
-                            "<p>L4 for raw TCP/WS scale; L7 for path-based routing and auth at edge. "
-                            "Prefer external session store over sticky when possible.</p>",
+                            "<p>L4 for raw TCP/WS scale; L7 for path/auth routing. Prefer external "
+                            "session store over sticky.</p>",
                         ),
                     ],
                 ),
@@ -847,13 +1025,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Graceful degradation",
                     asked="Netflix-style",
                     difficulty="Medium",
-                    pattern="Feature flags / fallbacks",
-                    prompt="Dependency is down — what does the user see?",
+                    pattern="Fallbacks",
+                    prompt="Dependency down?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Timeouts, circuit breakers, cached fallbacks, disable non-critical "
-                            "widgets. Explicit SLO per dependency.</p>",
+                            "<p>Timeouts, circuit breakers, cached fallbacks, disable non-critical widgets.</p>",
                         ),
                     ],
                 ),
@@ -862,13 +1039,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Backpressure",
                     asked="Google, Uber",
                     difficulty="Medium",
-                    pattern="Queues + load shedding",
+                    pattern="Queues + shed",
                     prompt="Producers outrun consumers.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Bounded queues, 503/retry-after, drop low-priority work, autoscale "
-                            "consumers, rate-limit producers.</p>",
+                            "<p>Bounded queues, 503/retry-after, drop low priority, autoscale consumers.</p>",
                         ),
                     ],
                 ),
@@ -878,12 +1054,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Stripe, Amazon",
                     difficulty="Medium",
                     pattern="Idempotency keys",
-                    prompt="Clients retry — how do you not double-charge?",
+                    prompt="Retries without double-charge?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Client idempotency key stored with request hash/result; replays "
-                            "return the first result.</p>",
+                            "<p>Client key stored with result; replays return first result. "
+                            "Critical for booking too — <a href=\"interview-sd.html#q10\">Lab Q10</a>.</p>",
                         ),
                     ],
                 ),
@@ -891,8 +1067,8 @@ def sd_chapter_drills() -> dict[str, str]:
             lab_href="interview-sd.html",
         ),
         "33-youtube": drill_section(
-            "Interview drill",
-            "Video designs are pipelines plus CDN — keep processing off the request path.",
+            "Interview drill — Video",
+            "Pipelines + CDN. Keep processing off the request path.",
             [
                 qa_block(
                     qnum=1,
@@ -900,12 +1076,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Google, Netflix",
                     difficulty="Hard",
                     pattern="Transcode + CDN",
-                    prompt="Upload and stream adaptive video worldwide.",
+                    prompt="Upload and stream ABR video.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Direct upload to blob; async transcode to HLS/DASH; CDN playback. "
-                            "<a href=\"interview-sd.html\">Lab Q6</a>.</p>",
+                            "Steps",
+                            figure_diagram("youtube-cdn-pipeline", "Video pipeline")
+                            + "<p><a href=\"interview-sd.html#q6\">Lab Q6</a>.</p>",
                         ),
                     ],
                 ),
@@ -914,13 +1090,12 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Processing lag",
                     asked="Follow-up",
                     difficulty="Medium",
-                    pattern="Queue priorities",
-                    prompt="User uploads — when is video watchable?",
+                    pattern="Priorities",
+                    prompt="When is video watchable?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Fast-start low-res rendition first; higher qualities land later; "
-                            "show processing state in UI.</p>",
+                            "<p>Fast-start low-res first; higher qualities later; show processing state.</p>",
                         ),
                     ],
                 ),
@@ -929,19 +1104,18 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Hot live event",
                     asked="Twitch/YouTube",
                     difficulty="Hard",
-                    pattern="Live ingest + edge",
-                    prompt="Millions watch a live stream.",
+                    pattern="Live ingest",
+                    prompt="Millions watch live.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Ingest → transcode ladder → packager → CDN with short segment "
-                            "TTL; separate from VOD pipeline; regional ingest POPs.</p>",
+                            "<p>Ingest → ladder → packager → CDN short TTL; regional ingest POPs.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=4,
-                    title="Storage cost control",
+                    title="Storage cost",
                     asked="Cost deep-dive",
                     difficulty="Medium",
                     pattern="Tiering",
@@ -949,23 +1123,21 @@ def sd_chapter_drills() -> dict[str, str]:
                     sections=[
                         (
                             "Approach",
-                            "<p>Lifecycle to colder storage; fewer bitrates for rarely watched; "
-                            "dedupe; delete derivatives on takedown.</p>",
+                            "<p>Cold tiers; fewer bitrates for rare views; delete derivatives on takedown.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=5,
-                    title="Thumbnails &amp; previews",
-                    asked="Product follow-up",
+                    title="Thumbnails",
+                    asked="Product",
                     difficulty="Easy",
                     pattern="Derived assets",
-                    prompt="Where do thumbnails fit?",
+                    prompt="Where do thumbs fit?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Generated in the same pipeline; stored as objects; heavily CDN "
-                            "cached; can A/B multiple thumbs via metadata.</p>",
+                            "<p>Same pipeline; objects on CDN; A/B via metadata.</p>",
                         ),
                     ],
                 ),
@@ -973,36 +1145,36 @@ def sd_chapter_drills() -> dict[str, str]:
             lab_href="interview-sd.html",
         ),
         "26-queues": drill_section(
-            "Interview drill",
-            "Queues show up inside almost every other design — master the vocabulary.",
+            "Interview drill — Queues",
+            "Queues appear inside almost every other design.",
             [
                 qa_block(
                     qnum=1,
                     title="Design a notification system",
                     asked="Amazon, Uber",
                     difficulty="Medium",
-                    pattern="Priority topics + workers",
-                    prompt="Push/email/SMS with preferences and retries.",
+                    pattern="Priority topics",
+                    prompt="Push/email/SMS with prefs.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Kafka by priority/channel; template workers; provider adapters; DLQ. "
-                            "<a href=\"interview-sd.html\">Lab Q7</a>.</p>",
+                            "Steps",
+                            figure_diagram("notification-pipeline", "Notifications")
+                            + "<p><a href=\"interview-sd.html#q7\">Lab Q7</a>.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=2,
                     title="At-least-once vs exactly-once",
-                    asked="All companies",
+                    asked="All",
                     difficulty="Medium",
-                    pattern="Delivery semantics",
-                    prompt="What can you actually promise?",
+                    pattern="Semantics",
+                    prompt="What can you promise?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Most systems: at-least-once + idempotent consumers. Exactly-once "
-                            "needs transactional outbox / dedupe store — costly; use when money moves.</p>",
+                            "<p>Usually at-least-once + idempotent consumers. Exactly-once needs "
+                            "outbox/dedupe — use when money moves.</p>",
                         ),
                     ],
                 ),
@@ -1012,12 +1184,11 @@ def sd_chapter_drills() -> dict[str, str]:
                     asked="Amazon",
                     difficulty="Medium",
                     pattern="DLQ",
-                    prompt="A message crashes consumers forever.",
+                    prompt="One message crashes forever.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Max receive count → dead-letter queue; alert; replay after fix; "
-                            "never block the partition on one bad payload.</p>",
+                            "<p>Max receive count → DLQ; alert; replay after fix.</p>",
                         ),
                     ],
                 ),
@@ -1031,8 +1202,7 @@ def sd_chapter_drills() -> dict[str, str]:
                     sections=[
                         (
                             "Approach",
-                            "<p>Per partition key only. Choose key = entity_id (user/order). "
-                            "Global order does not scale — do not promise it.</p>",
+                            "<p>Per partition key only. Key = entity_id. No global order at scale.</p>",
                         ),
                     ],
                 ),
@@ -1041,13 +1211,13 @@ def sd_chapter_drills() -> dict[str, str]:
                     title="Async vs sync boundaries",
                     asked="Meta, Amazon",
                     difficulty="Easy",
-                    pattern="Product judgment",
-                    prompt="What must be synchronous in checkout?",
+                    pattern="Judgment",
+                    prompt="What must be sync in checkout?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Payment authorization and inventory commit usually sync; email, "
-                            "recommendations, search indexing async.</p>",
+                            "<p>Payment auth + inventory commit usually sync; email/search index async. "
+                            "See also <a href=\"interview-sd.html#q10\">booking</a>.</p>",
                         ),
                     ],
                 ),

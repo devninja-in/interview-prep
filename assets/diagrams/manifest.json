@@ -52,6 +52,16 @@
     "word-ladder-bfs",
     "serialize-tree",
     "trap-water",
+    "url-shortener-detailed",
+    "feed-hybrid-fanout",
+    "chat-message-path",
+    "rate-limiter-token",
+    "uber-matching",
+    "youtube-cdn-pipeline",
+    "notification-pipeline",
+    "autocomplete-trie",
+    "consistent-hash-cache",
+    "ticket-hold-checkout",
     "prefix-sums"
   ],
   "chapters": {
@@ -175,6 +185,18 @@
       "word-ladder-bfs",
       "serialize-tree",
       "trap-water"
+    ],
+    "interview-sd": [
+      "url-shortener-detailed",
+      "feed-hybrid-fanout",
+      "chat-message-path",
+      "rate-limiter-token",
+      "uber-matching",
+      "youtube-cdn-pipeline",
+      "notification-pipeline",
+      "autocomplete-trie",
+      "consistent-hash-cache",
+      "ticket-hold-checkout"
     ]
   }
 }

@@ -49,32 +49,32 @@
 <p>A topic is split into ordered partitions. Consumers share them, and messages Guaranteeing exactly once delivery is famously hard, so the practical recipe is at least once delivery combined with idempotent consumers. Give each message a stable id and have the consumer ignore ids it has already processed. That way a duplicate is harmless, and you get effectively once behavior without the cost of true exactly once machinery.</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Queues show up inside almost every other design — master the vocabulary.</p>
+<h2>Interview drill — Queues</h2>
+<p class="drill-intro">Queues appear inside almost every other design.</p>
 <p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Design a notification system</span></summary>
 <div class="qa-body">
-<p>Push/email/SMS with preferences and retries.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Priority topics + workers</p>
-<div class="qa-label">Approach</div>
-<p>Kafka by priority/channel; template workers; provider adapters; DLQ. <a href="interview-sd.html">Lab Q7</a>.</p>
+<p>Push/email/SMS with prefs.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Priority topics</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/notification-pipeline.svg" alt="Notifications" loading="lazy" /></figure><p><a href="interview-sd.html#q7">Lab Q7</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. At-least-once vs exactly-once</span></summary>
 <div class="qa-body">
-<p>What can you actually promise?</p>
-<p class="qa-meta"><strong>Asked at:</strong> All companies · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Delivery semantics</p>
+<p>What can you promise?</p>
+<p class="qa-meta"><strong>Asked at:</strong> All · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Semantics</p>
 <div class="qa-label">Approach</div>
-<p>Most systems: at-least-once + idempotent consumers. Exactly-once needs transactional outbox / dedupe store — costly; use when money moves.</p>
+<p>Usually at-least-once + idempotent consumers. Exactly-once needs outbox/dedupe — use when money moves.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Poison messages</span></summary>
 <div class="qa-body">
-<p>A message crashes consumers forever.</p>
+<p>One message crashes forever.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> DLQ</p>
 <div class="qa-label">Approach</div>
-<p>Max receive count → dead-letter queue; alert; replay after fix; never block the partition on one bad payload.</p>
+<p>Max receive count → DLQ; alert; replay after fix.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Ordering guarantees</span></summary>
@@ -82,15 +82,15 @@
 <p>When is order preserved?</p>
 <p class="qa-meta"><strong>Asked at:</strong> Kafka interviews · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Partition keys</p>
 <div class="qa-label">Approach</div>
-<p>Per partition key only. Choose key = entity_id (user/order). Global order does not scale — do not promise it.</p>
+<p>Per partition key only. Key = entity_id. No global order at scale.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Async vs sync boundaries</span></summary>
 <div class="qa-body">
-<p>What must be synchronous in checkout?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Product judgment</p>
+<p>What must be sync in checkout?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Judgment</p>
 <div class="qa-label">Approach</div>
-<p>Payment authorization and inventory commit usually sync; email, recommendations, search indexing async.</p>
+<p>Payment auth + inventory commit usually sync; email/search index async. See also <a href="interview-sd.html#q10">booking</a>.</p>
 </div>
 </details>
 </section>

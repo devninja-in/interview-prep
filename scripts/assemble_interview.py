@@ -37,7 +37,7 @@ LABS = [
         "part": "sd",
         "eyebrow": "Interview Lab · System Design",
         "title": "System design interview questions",
-        "subtitle": "Ten prompts that show up in real L4–L6 design loops, with full talking tracks.",
+        "subtitle": "Ten L4–L6 prompts with full whiteboard tracks — clarify, capacity, diagrams, deep dives, and failure modes.",
         "body": sd_lab_body,
         "after": "34-uber",
         "nav_title": "Interview Lab: System Design",

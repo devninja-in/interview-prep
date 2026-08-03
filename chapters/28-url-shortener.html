@@ -50,48 +50,48 @@
 <p>The client sends the long URL to the API. 1 The service generates a unique short code, for example by encoding a counter in base 62. 2 It stores the mapping from code to long URL in the database. 3 It returns the short code, so the full short link is ready to share. 4 Using a short link A visitor requests the short code. 1 The service checks the cache first, since popular links are read constantly. 2 On a cache miss it looks up the code in the database and fills the cache. 3 It responds with a redirect to the original long URL, and the browser follows it. 4</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">If you only practice one design end-to-end, make it this.</p>
+<h2>Interview drill — URL shortener</h2>
+<p class="drill-intro">If you only practice one design cold, make it this.</p>
 <p class="drill-intro">More drills in the <a href="interview-sd.html">Interview Lab</a>.</p>
 <details class="qa">
-<summary><span>Q1. Design Bitly</span></summary>
+<summary><span>Q1. Design Bitly (full)</span></summary>
 <div class="qa-body">
-<p>Shorten URLs and redirect with analytics.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> KV store + cache</p>
-<div class="qa-label">Approach</div>
-<p>Base62 IDs, KV mapping, Redis on read path, async clicks. Full walkthrough: <a href="interview-sd.html">System Design Lab Q1</a>.</p>
+<p>Shorten + redirect + analytics.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> KV + cache</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/url-shortener-detailed.svg" alt="URL shortener" loading="lazy" /></figure><ol class="qa-steps"><li>Clarify + capacity (read-heavy).</li><li>Pick ID scheme; KV mapping; Redis on read.</li><li>302 redirect; analytics async.</li></ol><p><a href="interview-sd.html#q1">Lab Q1</a>.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q2. Custom aliases &amp;amp; collisions</span></summary>
+<summary><span>Q2. Custom aliases</span></summary>
 <div class="qa-body">
-<p>How do you support user-chosen short codes safely?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Follow-up at Google/Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Uniqueness constraints</p>
+<p>User-chosen short codes?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Uniqueness</p>
 <div class="qa-label">Approach</div>
-<p>Reserve alias with conditional put; reject if taken; rate-limit alias creation; validate charset length; scan for phishing patterns.</p>
+<p>Conditional put; reject if taken; rate-limit; validate charset; phishing checks.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. 301 vs 302</span></summary>
 <div class="qa-body">
-<p>Which status code for redirects and why?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Common redirect follow-up · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> HTTP caching semantics</p>
+<p>Which redirect status?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Common follow-up · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> HTTP caching</p>
 <div class="qa-label">Approach</div>
-<p>302/307 keep control (mapping can change, analytics stay server-side). 301 caches in browsers — faster but harder to update or count.</p>
+<p>302/307 keep control. 301 caches in browsers — faster but harder to update or count.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Global latency</span></summary>
 <div class="qa-body">
-<p>Users worldwide need fast redirects.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Microsoft, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Multi-region + CDN</p>
+<p>Fast redirects worldwide.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Microsoft, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Multi-region</p>
 <div class="qa-label">Approach</div>
-<p>Replicate read-only mappings regionally; edge cache hot codes; writes to primary region with async replication.</p>
+<p>Regional read replicas; edge cache hot codes; primary writes.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q5. Predictable IDs / enumeration</span></summary>
+<summary><span>Q5. Predictable IDs</span></summary>
 <div class="qa-body">
-<p>Sequential IDs leak creation volume — what do you do?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Security follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Security</p>
+<p>Sequential IDs leak volume.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Security follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Enumeration</p>
 <div class="qa-label">Approach</div>
-<p>Use salted hashes, skip-count counters, or encrypted IDs; rate-limit guessing; do not expose autoincrement publicly.</p>
+<p>Salted hashes, skip counters, or encrypted IDs; rate-limit guessing.</p>
 </div>
 </details>
 </section>

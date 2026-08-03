@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Video streaming pipeline">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="300" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Video streaming pipeline</text>
+  
+  <rect x="40" y="120" width="110" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="95.0" y="144.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Upload</text>
+  <rect x="180" y="120" width="120" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="240.0" y="144.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Object store</text>
+  <rect x="330" y="70" width="140" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="400.0" y="92.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Transcode</text>
+  <rect x="330" y="160" width="140" height="44" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="400.0" y="182.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">HLS/DASH</text>
+  <rect x="500" y="120" width="120" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="560.0" y="144.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">CDN edge</text>
+  <rect x="650" y="120" width="120" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="710.0" y="144.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Player</text>
+  <path d="M155 144 H175" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M305 144 H315 V92 H325" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M305 144 H315 V182 H325" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M475 92 H485 V144 H495" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M475 182 H485 V144" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M625 144 H645" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <text x="40" y="260" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Processing is async. Playback is CDN + adaptive bitrate — never transcode on the request path.</text>
+
+</svg>
