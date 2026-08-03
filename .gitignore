@@ -5,3 +5,6 @@
 node_modules/
 dist/
 public/
+scripts/__pycache__/
+**/__pycache__/
+*.pyc
