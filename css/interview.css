@@ -1,8 +1,8 @@
-/* Interview Q&A drills */
+/* Interview Q&A drills — DevNinja theme */
 .interview-drill {
   margin-top: 2.75rem;
   padding-top: 1.75rem;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--border);
 }
 
 .interview-drill > h2 {
@@ -10,15 +10,17 @@
 }
 
 .drill-intro {
-  color: var(--ink-soft);
+  color: var(--text-secondary);
   margin: 0.5rem 0 1.25rem !important;
 }
 
 .qa {
-  border: 1px solid var(--line);
-  background: #fff;
+  border: 1px solid var(--border);
+  background: var(--surface);
   margin: 0.75rem 0;
   overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .qa + .qa {
@@ -30,7 +32,7 @@
   list-style: none;
   padding: 0.95rem 1rem;
   font-weight: 650;
-  color: var(--ink);
+  color: var(--text-primary);
   display: flex;
   gap: 0.65rem;
   align-items: flex-start;
@@ -43,7 +45,7 @@
 .qa summary::before {
   content: "+";
   font-family: var(--font-mono);
-  color: var(--accent);
+  color: var(--primary-600);
   flex: 0 0 auto;
   margin-top: 0.05rem;
 }
@@ -53,12 +55,12 @@
 }
 
 .qa summary:hover {
-  background: rgba(13, 122, 111, 0.05);
+  background: var(--primary-50);
 }
 
 .qa-body {
   padding: 0 1rem 1.1rem;
-  border-top: 1px solid rgba(15, 28, 36, 0.06);
+  border-top: 1px solid var(--border-light);
 }
 
 .qa-body > * + * {
@@ -69,22 +71,22 @@
   display: inline-block;
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--primary-700);
   font-weight: 700;
   margin-bottom: 0.25rem;
 }
 
 .qa-meta {
   font-size: 0.86rem;
-  color: var(--ink-soft);
+  color: var(--text-muted);
   margin: 0 !important;
 }
 
 .lab-hero-note {
   margin: 0.75rem 0 0;
-  color: var(--ink-soft);
+  color: var(--text-secondary);
 }
 
 .qa-body ul {
@@ -113,8 +115,9 @@
 .qa-diagram {
   margin: 1rem 0 0.35rem !important;
   background: #fbfcfd;
-  border: 1px solid rgba(15, 28, 36, 0.12);
-  box-shadow: 0 1px 2px rgba(21, 32, 43, 0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
@@ -128,8 +131,9 @@
 .qa-callout {
   margin-top: 0.85rem;
   padding: 0.85rem 1rem;
-  background: rgba(13, 122, 111, 0.06);
-  border-left: 3px solid var(--accent);
+  background: var(--primary-50);
+  border-left: 3px solid var(--primary-500);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .qa-callout .qa-label {
@@ -145,19 +149,19 @@
 }
 
 .lab-toc a {
-  color: var(--ink);
+  color: var(--text-primary);
   text-decoration: none;
   font-weight: 550;
 }
 
 .lab-toc a:hover {
-  color: var(--accent);
+  color: var(--primary-700);
 }
 
 .lab-toc span {
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--accent);
+  color: var(--primary-600);
   margin-right: 0.45rem;
 }
 
@@ -167,24 +171,24 @@
 }
 
 .chapter-page .part a:hover {
-  color: var(--accent);
+  color: var(--primary-700);
 }
 
-/* Interview lens + guide chrome */
 .page-meta-bar {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem 1.1rem;
   margin: 0.85rem 0 1.15rem;
   padding: 0.7rem 0.9rem;
-  background: linear-gradient(135deg, rgba(13, 122, 111, 0.07), rgba(15, 28, 36, 0.03));
-  border: 1px solid rgba(15, 28, 36, 0.08);
+  background: var(--primary-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   font-size: 0.86rem;
-  color: var(--ink-soft);
+  color: var(--text-secondary);
 }
 
 .page-meta-bar strong {
-  color: var(--ink);
+  color: var(--text-primary);
   font-weight: 650;
   margin-right: 0.25rem;
 }
@@ -196,7 +200,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--primary-700);
   font-weight: 700;
   margin-bottom: 0.4rem;
 }
@@ -204,20 +208,21 @@
 .level-table th[scope="row"] {
   white-space: nowrap;
   width: 6.5rem;
-  color: var(--ink);
+  color: var(--text-primary);
   font-weight: 650;
 }
 
 .learn-box {
   margin: 1rem 0 1.35rem;
   padding: 0.9rem 1rem;
-  border-left: 3px solid var(--accent);
-  background: rgba(13, 122, 111, 0.05);
+  border-left: 3px solid var(--primary-500);
+  background: var(--primary-50);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .learn-box-next {
-  border-left-color: #0f1c24;
-  background: rgba(15, 28, 36, 0.04);
+  border-left-color: var(--gray-800);
+  background: var(--surface-muted);
 }
 
 .learn-box .qa-label {
@@ -228,30 +233,6 @@
 .next-topics {
   margin: 0.25rem 0 0;
   padding-left: 1.2rem;
-}
-
-.table-wrap {
-  overflow-x: auto;
-  margin: 0.75rem 0 1rem;
-}
-
-.table-wrap table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.92rem;
-}
-
-.table-wrap th,
-.table-wrap td {
-  border: 1px solid rgba(15, 28, 36, 0.1);
-  padding: 0.55rem 0.7rem;
-  text-align: left;
-  vertical-align: top;
-}
-
-.table-wrap thead th {
-  background: rgba(13, 122, 111, 0.08);
-  font-weight: 650;
 }
 
 .progress-bar-wrap {
@@ -266,7 +247,7 @@
   flex: 1;
   min-width: 140px;
   height: 0.55rem;
-  background: rgba(15, 28, 36, 0.08);
+  background: var(--gray-200);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -275,18 +256,18 @@
   display: block;
   height: 100%;
   width: 0%;
-  background: var(--accent);
+  background: var(--primary-600);
   transition: width 0.25s ease;
 }
 
 .progress-label {
   font-size: 0.84rem;
-  color: var(--ink-soft);
+  color: var(--text-muted);
   font-family: var(--font-mono);
 }
 
 .qa.done > summary {
-  background: rgba(13, 122, 111, 0.07);
+  background: var(--primary-50);
 }
 
 .mark-done {
@@ -297,17 +278,19 @@
 .mark-done button {
   font: inherit;
   cursor: pointer;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   background: #fff;
+  border-radius: var(--radius-md);
   padding: 0.35rem 0.7rem;
-  color: var(--ink);
+  color: var(--text-primary);
 }
 
 .mark-done button:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--primary-500);
+  color: var(--primary-700);
+  background: var(--primary-50);
 }
 
 .toc-item .num.guide {
-  color: #8a5a2b;
+  color: #b45309;
 }

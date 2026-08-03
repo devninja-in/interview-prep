@@ -16,7 +16,7 @@
   ];
 
   sidebar.innerHTML = `
-    <a class="brand" href="../">Interview Prep <span>Book</span></a>
+    <a class="brand" href="../">Interview Prep <span>DevNinja</span></a>
     ${groups
       .map((g) => {
         const items = chapters.filter((c) => c.part === g.key);

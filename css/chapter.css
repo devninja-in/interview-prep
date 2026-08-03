@@ -1,9 +1,5 @@
-/* Chapter reading experience — real HTML text, not page screenshots */
-
 body.chapter-page {
-  background:
-    radial-gradient(900px 420px at 0% 0%, rgba(13, 122, 111, 0.08), transparent 55%),
-    linear-gradient(180deg, #eef3f0 0%, var(--paper) 35%, #e8efe9 100%);
+  background: var(--gray-50);
   min-height: 100vh;
 }
 
@@ -14,8 +10,8 @@ body.chapter-page {
 }
 
 .chapter-page .sidebar {
-  background: rgba(243, 246, 244, 0.96);
-  border-right: 1px solid var(--line);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -36,9 +32,9 @@ body.chapter-page {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.85rem 1.25rem;
-  border-bottom: 1px solid var(--line);
-  background: rgba(243, 246, 244, 0.88);
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
@@ -49,51 +45,53 @@ body.chapter-page {
   flex: 1;
 }
 
-.btn-small {
-  padding: 0.45rem 0.9rem;
-  font-size: 0.85rem;
-}
-
 .chapter-article {
-  width: min(760px, calc(100% - 2.5rem));
+  width: min(820px, calc(100% - 2.5rem));
   margin: 0 auto;
   padding: 2rem 0 4.5rem;
 }
 
 .part-eyebrow {
   margin: 0 0 0.75rem;
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--primary-700);
   font-weight: 700;
 }
 
 .chapter-hero {
   margin-bottom: 2rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--border);
 }
 
 .chapter-num {
   margin: 0 0 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--accent);
+  color: var(--primary-600);
 }
 
 .chapter-hero h1 {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 3rem);
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+  font-family: var(--font-sans);
+  font-size: clamp(1.85rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+
+.lab-hero-note {
+  margin: 0.75rem 0 0;
+  color: var(--text-secondary);
 }
 
 .chapter-body {
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   line-height: 1.7;
-  color: var(--ink);
+  color: var(--text-primary);
 }
 
 .chapter-body > * + * {
@@ -102,49 +100,58 @@ body.chapter-page {
 
 .chapter-body p {
   margin: 0;
-  color: var(--ink-soft);
+  color: var(--text-secondary);
 }
 
 .chapter-body h2,
 .chapter-body h3 {
   margin: 2rem 0 0;
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
+  font-weight: 650;
   letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: var(--ink);
+  line-height: 1.25;
+  color: var(--text-primary);
 }
 
 .chapter-body h2 {
-  font-size: 1.45rem;
+  font-size: 1.4rem;
 }
 
 .chapter-body h3 {
   font-size: 1.15rem;
 }
 
+.chapter-body a {
+  color: var(--primary-700);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
 .section-label {
-  font-family: var(--font-body) !important;
+  font-family: var(--font-sans) !important;
   font-size: 0.78rem !important;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent) !important;
+  color: var(--primary-700) !important;
   font-weight: 700;
 }
 
 .code-block {
   margin: 1.35rem 0;
-  border: 1px solid rgba(15, 28, 36, 0.12);
-  background: #0f1c24;
+  border: 1px solid var(--gray-700);
+  background: var(--gray-900);
   overflow: hidden;
-  box-shadow: var(--shadow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .code-lang {
   padding: 0.45rem 0.85rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  color: #7fb4f0;
+  letter-spacing: 0.08em;
+  color: var(--primary-500);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -159,23 +166,21 @@ pre.code code {
   font-family: var(--font-mono);
   font-size: 0.86rem;
   line-height: 1.55;
-  color: #e8ecf6;
+  color: #e5e7eb;
   white-space: pre;
 }
 
 figure.diagram {
-  /* architecture figures: full-bleed within article column */
   margin: 1.75rem 0;
   background: #fff;
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
 figure.diagram.native {
   background: #fbfcfd;
-  border: 1px solid rgba(15, 28, 36, 0.12);
-  box-shadow: 0 1px 2px rgba(21, 32, 43, 0.06);
 }
 
 figure.diagram img {
@@ -188,16 +193,17 @@ figure.diagram img {
 figure.diagram figcaption {
   padding: 0.7rem 0.9rem;
   font-size: 0.85rem;
-  color: var(--ink-soft);
-  border-top: 1px solid var(--line);
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border);
 }
 
 .table-wrap {
   margin: 1.35rem 0 1.6rem;
   overflow-x: auto;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   background: #fff;
-  box-shadow: var(--shadow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .table-wrap table {
@@ -212,8 +218,8 @@ figure.diagram figcaption {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   letter-spacing: 0.04em;
-  color: var(--accent);
-  border-bottom: 1px solid var(--line);
+  color: var(--primary-700);
+  border-bottom: 1px solid var(--border);
 }
 
 .table-wrap th,
@@ -221,16 +227,16 @@ figure.diagram figcaption {
   padding: 0.7rem 0.85rem;
   text-align: left;
   vertical-align: top;
-  border-bottom: 1px solid rgba(15, 28, 36, 0.08);
-  color: var(--ink-soft);
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-secondary);
 }
 
 .table-wrap th {
   font-size: 0.8rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ink);
-  background: rgba(13, 122, 111, 0.06);
+  color: var(--text-primary);
+  background: var(--primary-50);
   font-weight: 700;
 }
 
@@ -240,16 +246,8 @@ figure.diagram figcaption {
 
 .table-wrap td:first-child {
   font-weight: 650;
-  color: var(--ink);
+  color: var(--text-primary);
   white-space: nowrap;
-}
-
-.diagram-card img {
-  aspect-ratio: 16 / 10;
-  object-fit: contain;
-  object-position: center;
-  background: #f7faf8;
-  padding: 0.5rem;
 }
 
 .chapter-pager {
@@ -258,7 +256,7 @@ figure.diagram figcaption {
   gap: 1rem;
   margin-top: 3rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--border);
 }
 
 .chapter-pager a {
@@ -267,19 +265,20 @@ figure.diagram figcaption {
   gap: 0.2rem;
   max-width: 45%;
   padding: 0.85rem 0;
-  color: var(--ink-soft);
+  color: var(--text-secondary);
   transition: color 0.2s ease;
+  text-decoration: none;
 }
 
 .chapter-pager a:hover {
-  color: var(--accent-deep);
+  color: var(--primary-700);
 }
 
 .chapter-pager .dir {
   font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--primary-600);
 }
 
 .chapter-pager .next {
@@ -289,9 +288,9 @@ figure.diagram figcaption {
 
 .chapter-page .toc-group-title {
   font-size: 0.7rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--primary-700);
   padding: 0.45rem 0.65rem;
   font-weight: 700;
 }
@@ -299,22 +298,23 @@ figure.diagram figcaption {
 .chapter-page .toc-item {
   display: block;
   padding: 0.42rem 0.65rem;
-  border-radius: 8px;
-  color: var(--ink-soft);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
   font-size: 0.88rem;
+  text-decoration: none;
 }
 
 .chapter-page .toc-item:hover,
 .chapter-page .toc-item.active {
-  background: var(--accent-glow);
-  color: var(--accent-deep);
+  background: var(--primary-50);
+  color: var(--primary-700);
 }
 
 .chapter-page .toc-item .num {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   margin-right: 0.35rem;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 @media (max-width: 900px) {
@@ -329,7 +329,7 @@ figure.diagram figcaption {
     z-index: 80;
     transform: translateX(-105%);
     transition: transform 0.3s var(--ease);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-lg);
   }
 
   body.sidebar-open .chapter-page .sidebar,
