@@ -33,20 +33,30 @@
 <figure class="diagram native"><img src="../assets/diagrams/bits-xor.svg" alt="bits xor" loading="lazy" /></figure>
 <p>Computers store numbers as bits, a row of ones and zeros. A few problems become almost free if you work directly with those bits. You do not need to love binary, you just need a handful of moves.</p>
 <h2>The operators, in plain terms</h2>
-<p>Operator What it does</p>
-<h3>&amp; And</h3>
-<p>1 only where both bits are 1. Used to test or clear bits.</p>
-<h3>| Or</h3>
-<p>1 where either bit is 1. Used to set bits.</p>
-<h3>^ Xor</h3>
-<p>1 where the bits differ. A number XORed with itself is 0.</p>
-<h3>~ Not</h3>
-<p>Flips every bit. &lt;&lt; left shift Shifts bits left, which multiplies by 2 each step. &gt;&gt; right shift Shifts bits right, which divides by 2 each step. 0 1 0 1 5 = 0 0 1 1 XOR gives 1 only in the 3 = columns where the bits differ 0 1 1 0 = 6</p>
+<div class="table-wrap"><table><thead><tr><th>Operator</th><th>What it does</th></tr></thead><tbody><tr><td>&amp; AND</td><td>1 only where both bits are 1. Used to test or clear bits.</td></tr><tr><td>| OR</td><td>1 where either bit is 1. Used to set bits.</td></tr><tr><td>^ XOR</td><td>1 where the bits differ. A number XORed with itself is 0.</td></tr><tr><td>~ NOT</td><td>Flips every bit.</td></tr><tr><td>&lt;&lt; left shift</td><td>Shifts bits left, which multiplies by 2 each step.</td></tr><tr><td>&gt;&gt; right shift</td><td>Shifts bits right, which divides by 2 each step.</td></tr><tr><td>0 1 0 1 5 = 0 0 1 1 3 = XOR gives 1 only in the columns where the bits differ XOR = 0 1 1 0 = 6</td><td></td></tr></tbody></table></div>
+<p>0 1 0 1 5 = 0 0 1 1 XOR gives 1 only in the 3 = columns where the bits differ 0 1 1 0 = 6</p>
 <h3>Xor =</h3>
 <p>XOR compares bit by bit and keeps only the differences.</p>
 <h2 class="section-label">R E A C H F O R B I T S W H E N Y O U S E E</h2>
 <p>&quot;Find the one number that appears once while all others appear twice&quot; (XOR). &quot;Count the set bits.&quot; &quot;Is this a power of two.&quot; &quot;Generate all subsets using a bitmask.&quot; Anything about flags, toggles, or on/off states packed into a single integer.</p>
-<p>Every number appears twice except one. Find the lonely one. XOR is perfect here: any number XORed with itself cancels to 0, and XOR with 0 leaves a number unchanged. So XOR the whole array together; the pairs cancel out and the single number survives. This is O(n) time and O(1)</p>
+<h2>Worked example: the single number</h2>
+<p>Every number appears twice except one. Find the lonely one. XOR is perfect here: any number XORed with itself cancels to 0, and XOR with 0 leaves a number unchanged. So XOR the whole array together; the pairs cancel out and the single number survives. This is O(n) time and O(1) space, beating a hash set.</p>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def single_number(nums):
+    result = 0
+    for x in nums:
+        result ^= x        # pairs cancel, the lonely number remains
+    return result
+</code></pre></div>
+<div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int singleNumber(int[] nums) {
+    int result = 0;
+    for (int x : nums) {
+        result ^= x;       // pairs cancel out
+    }
+    return result;
+}
+</code></pre></div>
+<h2>Handy one-line tricks worth memorizing</h2>
+<div class="table-wrap"><table><thead><tr><th>Goal</th><th>Trick</th></tr></thead><tbody><tr><td>Is n even?</td><td>n &amp; 1 is 0</td></tr><tr><td>Is n a power of two?</td><td>n &gt; 0 and (n &amp; (n - 1)) == 0</td></tr><tr><td>Turn off the lowest set bit</td><td>n &amp; (n - 1)</td></tr><tr><td>Multiply / divide by 2</td><td>n &lt;&lt; 1 and n &gt;&gt; 1</td></tr><tr><td>Check if bit i is set</td><td>(n &gt;&gt; i) &amp; 1</td></tr></tbody></table></div>
 <h2>Worked example: count the set bits</h2>
 <p>Count how many 1s are in the binary form of a number. The elegant way uses the trick above: n &amp; (n - 1) removes the lowest 1 each time. So loop, removing one 1 per step, and count the steps. It runs only as many times as there are set bits, not the full bit width.</p>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def count_bits(n):
@@ -84,12 +94,9 @@
         result ^= i ^ nums[i];      // pairs cancel, missing remains
     return result;
 }
-GOING DEEPER
 </code></pre></div>
-<h2>What kinds of problems this solves</h2>
-<h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
-<p>Problems about toggles and flags, finding the odd one out among pairs, enumerating subsets with a bitmask, counting set bits, and quick checks like power of two. Also bitmask dynamic programming for small sets.</p>
-<p>Problem type Classic examples XOR tricks Single Number, Single Number II, Single Number III, Missing Number, Find the Difference Counting and checks Number of 1 Bits, Counting Bits, Power of Two, Reverse Bits Bitmask enumeration and Subsets via bitmask, Sum of Two Integers, Maximum XOR of DP Two Numbers, Partition to K Equal Sum Subsets</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>XOR tricks</td><td>Single Number, Single Number II, Single Number III, Missing Number, Find the Difference</td></tr><tr><td>Counting and checks</td><td>Number of 1 Bits, Counting Bits, Power of Two, Reverse Bits</td></tr><tr><td>Bitmask enumeration and DP</td><td>Subsets via bitmask, Sum of Two Integers, Maximum XOR of Two Numbers, Partition to K Equal Sum Subsets</td></tr></tbody></table></div>
+<p>Bitmask enumeration and Subsets via bitmask, Sum of Two Integers, Maximum XOR of DP Two Numbers, Partition to K Equal Sum Subsets</p>
 <h2>The algorithm, in a bit more detail</h2>
 <p>The three moves that carry this chapter are simple. XOR cancels pairs, since a number XORed with itself is zero, so XORing a whole array leaves only the element that appears an odd number of times. The expression n and n minus one clears the lowest set bit, which lets you count set bits in as many steps as there are ones. And a mask lets you test, set, or clear any single bit with a shift.</p>
 <p>The more advanced use is treating an integer as a set. Each bit says whether an element is in or out, so a number from zero up to two to the n covers every subset. That is the backbone of bitmask dynamic programming for problems with small n, like assigning tasks or the travelling salesman on a handful of cities.</p>

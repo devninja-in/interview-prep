@@ -31,11 +31,13 @@
     "agent-loop",
     "mcp",
     "skills",
-    "ai-assistant"
+    "ai-assistant",
+    "prefix-sums"
   ],
   "chapters": {
     "03-arrays": [
-      "hash-map"
+      "hash-map",
+      "prefix-sums"
     ],
     "04-two-pointers": [
       "two-pointers"

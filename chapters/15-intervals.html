@@ -126,12 +126,12 @@ def min_meeting_rooms(intervals):
     while (i &lt; n) result.add(intervals[i++]);            // after
     return result.toArray(new int[0][]);
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Anything about ranges on a line: merging overlaps, inserting a new range, counting how many overlap at once, finding free time, or picking the most non-overlapping ranges. Sorting is almost always the first move.</p>
-<p>Problem type Classic examples Merge and insert Merge Intervals, Insert Interval, Interval List Intersections Overlap counting Meeting Rooms, Meeting Rooms II, My Calendar I, Employee Free Time Selection and scheduling Non-overlapping Intervals, Minimum Number of Arrows to Burst Balloons</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Merge and insert</td><td>Merge Intervals, Insert Interval, Interval List Intersections</td></tr><tr><td>Overlap counting</td><td>Meeting Rooms, Meeting Rooms II, My Calendar I, Employee Free Time</td></tr><tr><td>Selection and scheduling</td><td>Non-overlapping Intervals, Minimum Number of Arrows to Burst Balloons</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>Sort by start time, then sweep left to right keeping a current range. If the next interval starts before the current one ends, they overlap, so extend the current end. If it starts later, there is a gap, so close off the current range and open a new one. That single sweep merges everything in O(n log n), dominated by the sort.</p>
 <p>For counting how many intervals are active at once, a min heap of end times works: for each meeting in start order, free any room whose end has already passed, then take a room. The largest the heap ever grows is the answer, which is how minimum meeting rooms is solved.</p>

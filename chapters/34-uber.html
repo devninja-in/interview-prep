@@ -45,7 +45,14 @@
 <h2>Geospatial indexing up close</h2>
 <p>The map is divided into cells using a scheme like a grid, a geohash, or Uber&#x27;s H3 hexagons, and each driver&#x27;s latest position is filed under its cell. To find drivers near a rider you look at the rider&#x27;s cell and its immediate neighbors, a handful of cells, rather than scanning every driver in the city.</p>
 <p>Cell size is the key tuning knob: too large and each cell holds too many drivers to sort through, too small and you have to check many cells for one query. Dense downtown areas can become hot cells that need extra care, such as finer subdivision.</p>
-<p>Drivers are filed by map cell, so finding nearby ones means checking a handful Once you have candidate drivers, two riders must not be handed the same one. The match has to atomically claim a driver, marking them busy the instant they are dispatched, so a second request sees them as taken. Without that lock you get double bookings, which is Driver apps continuously stream their location into the geospatial index, bucketed by map The matching service looks up the nearby cells and gathers the candidate drivers in them. It picks the best one by distance, arrival time, and rating, then dispatches and holds that The trip service tracks the ride to completion, with pricing and payment handled through</p>
+<p>R is the rider; blue dots are drivers filed by cell R look only at the rider&#x27;s cell and its neighbors, not the whole city Drivers are filed by map cell, so finding nearby ones means checking a handful of cells instead of scanning everyone.</p>
+<h2 class="section-label">M A T C H I N G U N D E R C O N C U R R E N C Y</h2>
+<p>Once you have candidate drivers, two riders must not be handed the same one. The match has to atomically claim a driver, marking them busy the instant they are dispatched, so a second request sees them as taken. Without that lock you get double bookings, which is why dispatch holds a driver rather than merely suggesting one.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>How a ride request finds a nearby driver in seconds.</p>
+<p>Driver apps continuously stream their location into the geospatial index, bucketed by map 1 cell.</p>
+<p>A rider requests a ride from their current location. 2 The matching service looks up the nearby cells and gathers the candidate drivers in them. 3 It picks the best one by distance, arrival time, and rating, then dispatches and holds that 4 driver.</p>
+<p>The trip service tracks the ride to completion, with pricing and payment handled through 5 queues.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

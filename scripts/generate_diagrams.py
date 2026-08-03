@@ -566,9 +566,23 @@ DIAGRAMS["ai-assistant"] = svg(
 )
 
 
+
+DIAGRAMS["prefix-sums"] = svg(
+    720,
+    260,
+    f'''
+  <text x="60" y="90" font-family="{SANS}" font-size="13" fill="{SOFT}">array</text>
+  {"".join(box(60 + i*70, 100, 58, 44, "#fff", str(v)) for i,v in enumerate([3,1,4,1,5]))}
+  <text x="60" y="175" font-family="{SANS}" font-size="13" fill="{SOFT}">prefix</text>
+  {"".join(box(60 + i*58, 185, 50, 40, ACCENT_SOFT if i else ROSE, str(v)) for i,v in enumerate([0,3,4,8,9,14]))}
+  {caption(60, 245, "sum(1..3) = prefix[4] - prefix[1] = 9 - 3 = 6")}
+''',
+    "Prefix sums",
+)
+
 # Map chapter id -> diagram keys (ordered)
 CHAPTER_DIAGRAMS = {
-    "03-arrays": ["hash-map"],
+    "03-arrays": ["hash-map", "prefix-sums"],
     "04-two-pointers": ["two-pointers"],
     "05-sliding-window": ["sliding-window"],
     "06-stack": ["stack"],

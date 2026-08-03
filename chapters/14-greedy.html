@@ -109,12 +109,12 @@
     }
     return jumps;
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Problems where taking the best looking choice at each step, usually after sorting by the right key, provably reaches the global best. Interval scheduling, reaching the end with jumps, and many buy or assign problems fit here.</p>
-<p>Problem type Classic examples Interval scheduling Non-overlapping Intervals, Minimum Number of Arrows to Burst Balloons, Merge Intervals Reach and jumps Jump Game, Jump Game II, Gas Station Sequences and Best Time to Buy and Sell Stock II, Partition Labels, Assign assignment Cookies, Task Scheduler Building numbers or Largest Number, Remove K Digits, Candy strings</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Interval scheduling</td><td>Non-overlapping Intervals, Minimum Number of Arrows to Burst Balloons, Merge Intervals</td></tr><tr><td>Reach and jumps</td><td>Jump Game, Jump Game II, Gas Station</td></tr><tr><td>Sequences and assignment</td><td>Best Time to Buy and Sell Stock II, Partition Labels, Assign Cookies, Task Scheduler</td></tr><tr><td>Building numbers or strings</td><td>Largest Number, Remove K Digits, Candy</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>A greedy algorithm commits to a locally optimal choice and never looks back. The hard part is not the code, it is being sure the local choice is safe. The usual proof is an exchange argument: show that any optimal solution can be rewritten to agree with the greedy choice without getting worse, so the greedy choice is never a mistake.</p>
 <p>Sorting is the setup move for most greedy problems. Sort intervals by their end time and you can always keep the one that finishes earliest, leaving the most room for the rest. Choosing the correct sort key is where these problems are won or lost.</p>
@@ -124,7 +124,10 @@ GOING DEEPER
 <p>Do not assume greedy works, confirm it with a proof or by testing small cases against brute force.</p>
 <p>The sort key is the crux, sort by end time for selection and by start time for merging.</p>
 <p>Greedy fails when a locally best choice blocks a better global outcome, that is your signal to switch to DP.</p>
-<p>Handle ties and empty inputs, which are common places greedy solutions quietly break. Jump Game on [2, 3, 1, 1, 4]. We track the farthest index we can reach and check that we never get</p>
+<p>Handle ties and empty inputs, which are common places greedy solutions quietly break.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>Jump Game on [2, 3, 1, 1, 4]. We track the farthest index we can reach and check that we never get stuck before it.</p>
+<div class="table-wrap"><table><caption>Worked walkthrough</caption><thead><tr><th>i</th><th>value</th><th>reachable so far</th><th>farthest now</th></tr></thead><tbody><tr><td>0</td><td>2</td><td>0 &lt;= 0, ok</td><td>max(0, 0 + 2) = 2</td></tr><tr><td>1</td><td>3</td><td>1 &lt;= 2, ok</td><td>max(2, 1 + 3) = 4</td></tr><tr><td>2</td><td>1</td><td>2 &lt;= 4, ok</td><td>max(4, 2 + 1) = 4</td></tr><tr><td>3</td><td>1</td><td>3 &lt;= 4, ok</td><td>max(4, 3 + 1) = 4</td></tr><tr><td>4</td><td>4</td><td>4 &lt;= 4, reached the end</td><td>true</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

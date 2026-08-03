@@ -49,7 +49,7 @@
 <p>do not all die at once, and to serve slightly stale data while a fresh copy is fetched in the background. each layer absorbs traffic, only misses fall through to the next miss miss miss Browser CDN App cache Database local cache edge cache in memory source of truth Caching is a stack of layers. A hit at any layer returns early, so only misses reach the database.</p>
 <h2 class="section-label">T H R E E W A Y S T O K E E P A C A C H E F R E S H</h2>
 <p>Time to live expires entries on their own after a set period, which is simple but can serve stale data until it lapses. Explicit invalidation deletes or updates the entry the moment the source changes, which is precise but needs you to catch every change. Versioned keys sidestep the problem by writing to a new key on each change, so a stale entry is simply never read again.</p>
-<h3>Step By Step</h3>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
 <p>How one read flows through cache aside, the most common caching pattern.</p>
 <p>The application receives a read request for some data. 1 It looks in the cache first. 2 On a hit, it returns the cached value immediately, never touching the database. 3 On a miss, it reads the value from the database. 4 It writes that value into the cache, then returns it, so the next identical read is a fast hit. 5</p>
 </div>

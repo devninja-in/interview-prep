@@ -33,7 +33,9 @@
 <figure class="diagram native"><img src="../assets/diagrams/dp-table.svg" alt="dp table" loading="lazy" /></figure>
 <p>Dynamic programming, or DP, sounds scary but it is one idea: break a problem into smaller versions of itself, and never solve the same small version twice. You solve each subproblem once, write down the answer, and reuse it. That is the whole trick.</p>
 <h2>How to know it is a DP problem</h2>
-<p>Two signals together mean DP. First, the problem asks for a best value (&quot;minimum cost&quot;, &quot;maximum profit&quot;, &quot;longest&quot;, &quot;number of ways&quot;). Second, the answer to the whole problem can be built from answers to smaller pieces, and those pieces overlap so you keep recomputing them. When you see &quot;how many ways&quot; or &quot;min / max&quot; and a natural notion of a smaller subproblem, think DP. grid paths: each cell = paths from above + paths from the left 1 1 1 1 1 2 3 4 10 = 4 + 6 reuse the two neighbors 1 3 6 10 Fill the table so that when you compute a cell, the cells it depends on are already done.</p>
+<p>Two signals together mean DP. First, the problem asks for a best value (&quot;minimum cost&quot;, &quot;maximum profit&quot;, &quot;longest&quot;, &quot;number of ways&quot;). Second, the answer to the whole problem can be built from answers to smaller pieces, and those pieces overlap so you keep recomputing them. When you see &quot;how many ways&quot; or &quot;min / max&quot; and a natural notion of a smaller subproblem, think DP. grid paths: each cell = paths from above + paths from the left</p>
+<div class="table-wrap"><table><thead><tr><th>1</th><th>1</th><th>1</th><th>1</th></tr></thead><tbody><tr><td>1</td><td>2</td><td>3</td><td>4</td></tr><tr><td>1</td><td>3</td><td>6</td><td>10</td></tr></tbody></table></div>
+<p>Fill the table so that when you compute a cell, the cells it depends on are already done.</p>
 <h2>Two ways to write DP</h2>
 <p>Top down (memoization). Write the natural recursion, then cache each answer in a map or array so repeated calls are instant. Easiest to think about because it mirrors the problem directly.</p>
 <p>Bottom up (tabulation). Fill a table starting from the smallest subproblems and building up to the answer. Usually a bit faster and avoids deep recursion, but you have to figure out the fill order.</p>
@@ -142,12 +144,12 @@
     }
     return curr;
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Problems asking for a count of ways, or a best possible value, where the same smaller problems keep reappearing. If a brute force recursion solves the same subproblem over and over, dynamic programming remembers each answer once.</p>
-<p>Problem type Classic examples One dimensional sequence Climbing Stairs, House Robber, House Robber II, Decode Ways, Maximum Subarray, Word Break Knapsack and coins Coin Change, Coin Change II, Partition Equal Subset Sum, Target Sum Grid paths Unique Paths, Minimum Path Sum, Maximal Square, Dungeon Game Two sequences and Longest Common Subsequence, Edit Distance, Longest strings Palindromic Substring, Distinct Subsequences Choice over positions Longest Increasing Subsequence, Best Time to Buy and Sell Stock with Cooldown, Burst Balloons</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>One dimensional sequence</td><td>Climbing Stairs, House Robber, House Robber II, Decode Ways, Maximum Subarray, Word Break</td></tr><tr><td>Knapsack and coins</td><td>Coin Change, Coin Change II, Partition Equal Subset Sum, Target Sum</td></tr><tr><td>Grid paths</td><td>Unique Paths, Minimum Path Sum, Maximal Square, Dungeon Game</td></tr><tr><td>Two sequences and strings</td><td>Longest Common Subsequence, Edit Distance, Longest Palindromic Substring, Distinct Subsequences</td></tr><tr><td>Choice over positions</td><td>Longest Increasing Subsequence, Best Time to Buy and Sell Stock with Cooldown, Burst Balloons</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>Every DP is four questions. What is the state, meaning the smallest set of facts that describe a subproblem. What is the recurrence, meaning how a state is built from smaller states. What are the base cases, the smallest states you can fill directly. And what order fills the table so every state is ready before you need it.</p>
 <p>You can write it top down as memoized recursion, where you solve naturally and cache each answer, or bottom up as a table you fill in order. They compute the same thing. Top down is often easier to reason about, bottom up is often faster and lets you shrink memory by keeping only the last row or two.</p>
@@ -155,7 +157,12 @@ GOING DEEPER
 <p>The families to recognize are linear DP over one sequence, knapsack style choices of take or skip, grid DP over a 2D board, and two sequence DP for string alignment like edit distance. Many one dimensional DPs can drop to O(1) extra space by keeping just the previous couple of values.</p>
 <h2>Edge cases and gotchas</h2>
 <p>Define the state precisely, since a vague state is the number one reason a DP is wrong.</p>
-<p>Fill the table in an order where every value you read is already computed. Watch array sizes and off by one, especially when the state runs from zero to n inclusive. Climbing stairs for 5 steps, where you can take 1 or 2 at a time. The ways to reach a step are the</p>
+<p>Get the base cases right, they anchor everything built on top of them.</p>
+<p>Fill the table in an order where every value you read is already computed.</p>
+<p>Watch array sizes and off by one, especially when the state runs from zero to n inclusive.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>Climbing stairs for 5 steps, where you can take 1 or 2 at a time. The ways to reach a step are the ways to reach the two steps below it, so we build a small table.</p>
+<div class="table-wrap"><table><thead><tr><th>step n</th><th>ways to reach it</th><th>how</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>base case</td></tr><tr><td>2</td><td>2</td><td>base case</td></tr><tr><td>3</td><td>3</td><td>ways(2) + ways(1) = 2 + 1</td></tr><tr><td>4</td><td>5</td><td>ways(3) + ways(2) = 3 + 2</td></tr><tr><td>5</td><td>8</td><td>ways(4) + ways(3) = 5 + 3</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

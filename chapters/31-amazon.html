@@ -44,7 +44,12 @@
 <h3>Going Deeper</h3>
 <h2>Checkout as a saga across services</h2>
 <p>A checkout spans several independent services, and you cannot wrap them all in one database transaction. The saga pattern runs the steps in sequence, and gives each step a compensating action that cleanly undoes it if a later step fails. Reserve the inventory, then charge the payment, then confirm the order. If the payment fails, the compensating action releases the reserved inventory so the item is not left stuck as unavailable. This gives you correctness across services without a global lock, at the cost of writing the undo logic for every step.</p>
-<p>A saga runs the steps in order, and if one fails it triggers compensating The scary case is two customers checking out the last item at the same instant. A plain read then write can let both succeed and oversell. The reservation must be atomic, a single conditional decrement that only succeeds if stock remains, so exactly one of the two wins It reserves the inventory atomically, so the last unit in stock cannot be sold to two people. It charges the payment, then records the completed order in the relational database. Slower follow ups like the confirmation email and recommendation updates are pushed onto</p>
+<p>each step has an undo, run in reverse if a later step fails Reserve inventory Charge payment Confirm order compensate: release inventory payment fails A saga runs the steps in order, and if one fails it triggers compensating actions to undo the earlier ones.</p>
+<h2 class="section-label">T H E L A S T U N I T U N D E R C O N C U R R E N C Y</h2>
+<p>The scary case is two customers checking out the last item at the same instant. A plain read then write can let both succeed and oversell. The reservation must be atomic, a single conditional decrement that only succeeds if stock remains, so exactly one of the two wins and the other is told it is out of stock.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>How a checkout flows through the store, keeping the last unit correct.</p>
+<p>The user adds items to a cart held in a fast key value store. 1 At checkout, the order service begins a database transaction. 2 It reserves the inventory atomically, so the last unit in stock cannot be sold to two people. 3 It charges the payment, then records the completed order in the relational database. 4 Slower follow ups like the confirmation email and recommendation updates are pushed onto 5 a queue, so the checkout click returns fast.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

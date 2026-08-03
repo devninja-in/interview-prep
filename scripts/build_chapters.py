@@ -55,16 +55,113 @@ def looks_like_code(text: str, x0: float | None = None) -> bool:
     return False
 
 
-def page_is_visual_only(page_num: int, text: str, drawings: int) -> bool:
-    """PDF pages that are mostly figures — keep prose only, never screenshot them."""
+def page_is_visual_only(page_num: int, text: str, drawings: int, table_count: int = 0) -> bool:
+    """PDF pages that are mostly figures — keep prose/tables only, never screenshot them."""
+    # Prefer structured extraction when tables exist (e.g. STEP BY STEP walkthroughs)
+    if table_count > 0:
+        return False
     body = re.sub(r"\s+", " ", text).strip()
     if drawings >= 40 and len(body) < 900:
         return True
-    if drawings >= 28 and any(k in text for k in ("STEP BY STEP", "Clients", "Write path", "Producer")):
+    if drawings >= 28 and any(k in text for k in ("Clients", "Write path", "Producer", "Load Balancer")):
         return True
-    # former diagram page markers from book-data
     if any(p.get("page") == page_num and p.get("is_diagram") for p in data.get("pages", [])):
+        # Still skip pure diagram screenshots, but not if content is mostly table/text
+        if "STEP BY STEP" in text or "Problem type" in text:
+            return False
         return True
+    return False
+
+
+def clean_cell(val) -> str:
+    if val is None:
+        return ""
+    return re.sub(r"\s+", " ", str(val)).strip()
+
+
+def extract_page_tables(page) -> list[dict]:
+    """Return usable tables with a tight bbox + normalized rows."""
+    out = []
+    try:
+        finder = page.find_tables()
+        tables = finder.tables if finder else []
+    except Exception:
+        return out
+
+    for t in tables:
+        raw = t.extract() or []
+        rows = [[clean_cell(c) for c in row] for row in raw]
+        rows = [r for r in rows if any(c for c in r)]
+        if len(rows) < 2:
+            continue
+
+        cols = max((len(r) for r in rows), default=0)
+        keep_cols = [ci for ci in range(cols) if any((r[ci] if ci < len(r) else "") for r in rows)]
+        if len(keep_cols) < 2:
+            continue
+        norm = [[(r[ci] if ci < len(r) else "") for ci in keep_cols] for r in rows]
+
+        # Find the real header row: short cells, not a prose paragraph
+        header_idx = None
+        for i, r in enumerate(norm):
+            lengths = [len(c) for c in r]
+            if max(lengths, default=0) <= 42 and sum(1 for c in r if c) >= 2:
+                # Prefer rows that look like labels (contain short words / symbols)
+                header_idx = i
+                break
+        if header_idx is None:
+            continue
+
+        header = norm[header_idx]
+        body = []
+        for r in norm[header_idx + 1 :]:
+            if max((len(c) for c in r), default=0) >= 160:
+                continue
+            if not any(c for c in r):
+                continue
+            # skip repeated header-like rows
+            if [c.lower() for c in r] == [c.lower() for c in header]:
+                continue
+            body.append(r)
+        if not body:
+            continue
+
+        # Tight bbox from only kept rows so prose below is not swallowed
+        y_vals = []
+        try:
+            # include header_idx and following kept body rows
+            # Table.rows aligns with extract() rows
+            for offset, _ in enumerate([header] + body):
+                ri = header_idx + offset
+                if ri < len(t.rows):
+                    rb = t.rows[ri].bbox
+                    y_vals.extend([rb[1], rb[3]])
+        except Exception:
+            y_vals = [t.bbox[1], t.bbox[3]]
+        if not y_vals:
+            y_vals = [t.bbox[1], t.bbox[3]]
+        bbox = fitz.Rect(t.bbox[0], min(y_vals) - 2, t.bbox[2], max(y_vals) + 2)
+        out.append({"bbox": bbox, "header": header, "body": body})
+    return out
+
+
+def table_html(header: list[str], body: list[list[str]], caption: str | None = None) -> str:
+    thead = "".join(f"<th>{html.escape(c)}</th>" for c in header)
+    rows = []
+    for r in body:
+        rows.append("<tr>" + "".join(f"<td>{html.escape(c)}</td>" for c in r) + "</tr>")
+    cap = f"<caption>{html.escape(caption)}</caption>" if caption else ""
+    return (
+        f'<div class="table-wrap"><table>{cap}<thead><tr>{thead}</tr></thead>'
+        f"<tbody>{''.join(rows)}</tbody></table></div>"
+    )
+
+
+def line_in_tables(y0: float, tables: list[dict], pad: float = 4.0) -> bool:
+    for t in tables:
+        y1, y2 = t["bbox"].y0 - pad, t["bbox"].y1 + pad
+        if y1 <= y0 <= y2:
+            return True
     return False
 
 
@@ -168,11 +265,12 @@ def convert_chapter(ch: dict) -> tuple[str, str]:
         drawings = len(page.get_drawings())
         raw = page.get_text()
         lines = extract_lines(page_num)
+        tables = extract_page_tables(page)
 
-        if page_is_visual_only(page_num, raw, drawings):
+        if page_is_visual_only(page_num, raw, drawings, table_count=len(tables)):
             flush_code()
             flush_para()
-            # Keep explanatory prose from visual pages; never embed PDF page screenshots.
+            # Keep explanatory prose from architecture pages; never embed PDF screenshots.
             prose_lines = [
                 ln
                 for ln in lines
@@ -185,12 +283,45 @@ def convert_chapter(ch: dict) -> tuple[str, str]:
             flush_para()
             continue
 
+        # Tables / prose are interleaved by y-position below.
+        emitted_table_ids: set[int] = set()
+
+        def maybe_emit_tables(before_y: float | None) -> None:
+            for idx, t in enumerate(tables):
+                if idx in emitted_table_ids:
+                    continue
+                # emit when we have passed the table's top (or at end)
+                if before_y is None or t["bbox"].y0 <= before_y + 2:
+                    flush_para()
+                    flush_code()
+                    caption = None
+                    if t["header"] and t["header"][0].lower().startswith("problem"):
+                        caption = "Pattern → example problems"
+                    elif any("nums[i]" in h or h == "i" for h in t["header"]):
+                        caption = "Worked walkthrough"
+                    parts.append(table_html(t["header"], t["body"], caption))
+                    emitted_table_ids.add(idx)
+
         for ln in lines:
             text = ln["text"]
             stripped = text.strip()
             x0 = ln["x0"]
             size = ln["size"]
             font = ln["font"]
+            y0 = ln["y0"]
+
+            # Skip text that belongs to an extracted table
+            if line_in_tables(y0, tables):
+                maybe_emit_tables(y0)
+                continue
+
+            maybe_emit_tables(y0)
+
+            if stripped.upper() == "STEP BY STEP":
+                flush_para()
+                flush_code()
+                parts.append('<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>')
+                continue
 
             if is_code_lang(stripped):
                 flush_para()
@@ -202,13 +333,21 @@ def convert_chapter(ch: dict) -> tuple[str, str]:
                 continue
 
             if in_code:
-                if spaced_caps(stripped) or (
-                    size >= 12 and "Spectral" in font
-                ) or (
-                    len(stripped) > 75 and not looks_like_code(stripped, x0) and x0 < CODE_BASE_X + 5
+                if (
+                    stripped in {"GOING DEEPER", "DEEPER INTUITION"}
+                    or spaced_caps(stripped)
+                    or (size >= 12 and "Spectral" in font)
+                    or (
+                        len(stripped) > 75
+                        and not looks_like_code(stripped, x0)
+                        and x0 < CODE_BASE_X + 5
+                    )
                 ):
                     flush_code()
-                    # fall through to re-handle as prose
+                    if stripped in {"GOING DEEPER", "DEEPER INTUITION"}:
+                        parts.append(f"<h3>{html.escape(stripped.title())}</h3>")
+                        continue
+                    # else fall through to re-handle as prose
                 else:
                     if not code_buf:
                         code_base = min(x0, CODE_BASE_X + 1)
@@ -245,12 +384,13 @@ def convert_chapter(ch: dict) -> tuple[str, str]:
                 parts.append(f"<h3>{html.escape(stripped.title())}</h3>")
                 continue
 
-            # Start a new paragraph on large y-gaps is hard here; break on sentence-ending previous
+            # Start a new paragraph on sentence boundary
             if para and para[-1].endswith((".", "?", "!")) and stripped[:1].isupper():
                 flush_para()
 
             para.append(stripped)
 
+        maybe_emit_tables(None)
         flush_para()
 
     flush_code()

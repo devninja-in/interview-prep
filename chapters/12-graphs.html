@@ -222,8 +222,20 @@ minute
         for (int n = queue.size(); n &gt; 0; n--) {
             int[] cell = queue.poll();
             for (int[] d : dirs) {
+                int nr = cell[0] + d[0], nc = cell[1] + d[1];
+                if (nr &gt;= 0 &amp;&amp; nr &lt; rows &amp;&amp; nc &gt;= 0 &amp;&amp; nc &lt; cols &amp;&amp; grid[nr]
+[nc] == 1) {
+                    grid[nr][nc] = 2; fresh--;
+                    queue.offer(new int[]{nr, nc});
+                }
+            }
+        }
+    }
+    return fresh == 0 ? minutes : -1;
+}
 </code></pre></div>
-<p>Anything with things connected to other things: grids and islands, reachability and connected groups, shortest path when every step costs the same, ordering tasks with</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Grid and flood fill</td><td>Number of Islands, Max Area of Island, Rotting Oranges, Flood Fill, Surrounded Regions, Walls and Gates</td></tr><tr><td>Connectivity and traversal</td><td>Clone Graph, Number of Connected Components, Course Schedule, Pacific Atlantic Water Flow</td></tr><tr><td>Topological sort</td><td>Course Schedule II, Alien Dictionary, Minimum Height Trees</td></tr><tr><td>Shortest path with BFS</td><td>Word Ladder, Shortest Path in Binary Matrix, Open the Lock, Rotting Oranges</td></tr></tbody></table></div>
+<p>Shortest path with BFS Word Ladder, Shortest Path in Binary Matrix, Open the Lock, Rotting Oranges</p>
 <h2>The algorithm, in a bit more detail</h2>
 <p>Two engines cover most of this chapter. Breadth first search explores in rings using a queue, so the first time it reaches a node it has found the shortest path in an unweighted graph. Depth first search dives as far as it can using recursion or a stack, which is perfect for exploring a whole region, counting components, or detecting a cycle.</p>
 <p>Topological sort orders tasks so every prerequisite comes before what depends on it. You count incoming edges for each node, start from the ones with none, and peel them off, reducing counts as you go. If you cannot peel everything, there is a cycle, which is exactly how &quot;can you finish all courses&quot; is answered.</p>
@@ -234,7 +246,7 @@ minute
 <p>Be clear whether the graph is directed or undirected, since it changes cycle detection and edge building.</p>
 <p>For grids, check bounds before you step, and remember diagonal moves only count if the problem says so.</p>
 <p>Topological sort only works on a directed acyclic graph, and a leftover node means a cycle exists.</p>
-<h3>Step By Step</h3>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
 <p>Counting islands in a tiny grid where 1 is land and 0 is water. Row one is 1 1 0 and row two is 0 1 0.</p>
 <p>We scan for unvisited land and flood each island we find.</p>
 <p>Scan cells left to right, top to bottom, looking for a 1 that has not been visited. 1 Find land at the top left. Start island number 1 and begin a flood fill from there. 2</p>

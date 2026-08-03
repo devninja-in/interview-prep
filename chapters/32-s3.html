@@ -45,7 +45,12 @@
 <h3>Going Deeper</h3>
 <h2>Erasure coding, and durability math</h2>
 <p>Keeping three full copies is simple but triples your storage. Erasure coding does better. You split an object into k data fragments and compute m parity fragments, then scatter all k plus m across different nodes. You can lose any m of them and still rebuild the object exactly, so you reach durability similar to replication while storing far less than three copies. Spreading the fragments across separate racks and data centers is what lets a system quote durability like eleven nines, because the chance of losing more than m fragments at the same moment becomes astronomically small.</p>
-<p>Erasure coding splits an object into data and parity fragments, so it survives The service records the object&#x27;s metadata, its key, size, and location, in the metadata store. It splits the bytes and writes copies, or erasure coded fragments, across several nodes in A background process keeps watching for failed disks and re creates any lost copies</p>
+<p>the red fragments are lost, yet the object still rebuilds d1 d2 d3 Object one file d4 p1 p2 4 data + 2 parity, spread across nodes; lose any 2 and rebuild Erasure coding splits an object into data and parity fragments, so it survives losing several of them.</p>
+<p>PROS CONS Replication is simple, and any copy Replication multiplies storage by the serves a read instantly number of copies Erasure coding reaches the same Erasure coding costs extra CPU and durability at much lower storage cost network to rebuild on read</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>How storing one object keeps it safe from any single failure.</p>
+<p>The client sends a put request with the object bytes and a key. 1 The service records the object&#x27;s metadata, its key, size, and location, in the metadata store. 2 It splits the bytes and writes copies, or erasure coded fragments, across several nodes in 3 different failure domains.</p>
+<p>It confirms success only once enough copies are safely stored. 4 A background process keeps watching for failed disks and re creates any lost copies 5 automatically.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

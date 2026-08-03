@@ -135,19 +135,27 @@ boolean canDo(int[] weights, int days, int cap) {
     }
     return lo;
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Searching sorted data, finding the first or last position that satisfies a condition, and the powerful trick of searching over an answer space when the answer has a yes or no property that flips once as the value grows.</p>
-<p>Problem type Classic examples Classic and boundaries Binary Search, Search Insert Position, Find First and Last Position, Find Peak Element Rotated and 2D Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array, Search a 2D Matrix Search on the answer Koko Eating Bananas, Capacity To Ship Packages Within D Days, Split Array Largest Sum, Minimum Number of Days to Make Bouquets</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Classic and boundaries</td><td>Binary Search, Search Insert Position, Find First and Last Position, Find Peak Element</td></tr><tr><td>Rotated and 2D</td><td>Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array, Search a 2D Matrix</td></tr><tr><td>Search on the answer</td><td>Koko Eating Bananas, Capacity To Ship Packages Within D Days, Split Array Largest Sum, Minimum Number of Days to Make Bouquets</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>Binary search keeps a range that is guaranteed to contain the answer and halves it every step. The trick is the invariant: you must be able to look at the middle and confidently throw away one half. In a sorted array that is easy, since a comparison tells you which side the target is on.</p>
 <p>Search on the answer is the version that unlocks hard problems. Instead of searching the array, you search the range of possible answers, say the smallest eating speed or the smallest ship capacity.</p>
 <p>You write a helper that asks &quot;does answer x work&quot;, which must be monotonic: if x works, everything bigger works too. Then you binary search for the smallest x that works. Recognizing that hidden monotonic property is the whole skill.</p>
 <h2>Variations you will run into</h2>
 <p>You will meet leftmost and rightmost variants (lower bound and upper bound), where a match does not stop the search but nudges a boundary to keep looking. Rotated arrays add one comparison to</p>
-<p>decide which half is sorted. The answer space version replaces the array comparison with a Compute the middle as low plus half the gap, not low plus high divided by two, to avoid integer Match your loop condition and your boundary updates, since a wrong pairing causes an infinite For first and last position, do not return on the first match, keep shrinking toward the side you Double check whether your interval is inclusive on both ends, since that decides less than Searching for 7 in the sorted array [1, 3, 5, 7, 9, 11]. Each step throws away half of what is left.</p>
+<p>decide which half is sorted. The answer space version replaces the array comparison with a feasibility check.</p>
+<h2>Edge cases and gotchas</h2>
+<p>Compute the middle as low plus half the gap, not low plus high divided by two, to avoid integer overflow in Java.</p>
+<p>Match your loop condition and your boundary updates, since a wrong pairing causes an infinite loop or a missed answer.</p>
+<p>For first and last position, do not return on the first match, keep shrinking toward the side you want.</p>
+<p>Double check whether your interval is inclusive on both ends, since that decides less than versus less than or equal.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>Searching for 7 in the sorted array [1, 3, 5, 7, 9, 11]. Each step throws away half of what is left.</p>
+<div class="table-wrap"><table><thead><tr><th>low</th><th>high</th><th>mid</th><th>value at mid</th><th>action</th></tr></thead><tbody><tr><td>0</td><td>5</td><td>2</td><td>5</td><td>5 is below 7, search right, low = 3</td></tr><tr><td>3</td><td>5</td><td>4</td><td>9</td><td>9 is above 7, search left, high = 3</td></tr><tr><td>3</td><td>3</td><td>3</td><td>7</td><td>7 equals target, return index 3</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

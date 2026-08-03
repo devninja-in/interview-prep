@@ -119,12 +119,12 @@ class MedianFinder:
         return (low.peek() + high.peek()) / 2.0;
     }
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Whenever you repeatedly need the smallest or largest item without fully sorting: top K, the kth largest, a running median, merging many sorted streams, or scheduling by priority.</p>
-<p>Problem type Classic examples Top K and Kth Kth Largest Element in an Array, Top K Frequent Elements, K Closest Points to Origin, Kth Largest in a Stream Merge and schedule Merge k Sorted Lists, Task Scheduler, Reorganize String, Meeting Rooms II Two heaps Find Median from Data Stream, Sliding Window Median, IPO</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Top K and Kth</td><td>Kth Largest Element in an Array, Top K Frequent Elements, K Closest Points to Origin, Kth Largest in a Stream</td></tr><tr><td>Merge and schedule</td><td>Merge k Sorted Lists, Task Scheduler, Reorganize String, Meeting Rooms II</td></tr><tr><td>Two heaps</td><td>Find Median from Data Stream, Sliding Window Median, IPO</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>A heap keeps the extreme element (smallest for a min heap) always at the top, ready in O(1), while pushing and popping cost only O(log n). It does not keep everything sorted, it just guarantees the top, which is exactly what you want when you only ever need the current best.</p>
 <p>The key pattern for top K is a heap of size k. Keep pushing, and whenever the heap grows past k, pop the worst. What remains is the k best, computed in O(n log k) instead of sorting everything in O(n log n). For a running median, hold a max heap of the lower half and a min heap of the upper half, and keep their sizes balanced so the median sits at the tops.</p>

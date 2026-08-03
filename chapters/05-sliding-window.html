@@ -119,12 +119,12 @@
     }
     return best == Integer.MAX_VALUE ? 0 : best;
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Any question about the best or valid contiguous run in an array or string. Longest substring with some property, shortest subarray that reaches a sum, or a fixed size window you slide across and aggregate.</p>
-<p>Problem type Classic examples Fixed size window Maximum Average Subarray, Find All Anagrams in a String, Permutation in String Longest valid window Longest Substring Without Repeating Characters, Longest Repeating Character Replacement, Max Consecutive Ones III, Fruit Into Baskets Shortest or at least Minimum Size Subarray Sum, Minimum Window Substring, window Subarrays with K Different Integers</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Fixed size window</td><td>Maximum Average Subarray, Find All Anagrams in a String, Permutation in String</td></tr><tr><td>Longest valid window</td><td>Longest Substring Without Repeating Characters, Longest Repeating Character Replacement, Max Consecutive Ones III, Fruit Into Baskets</td></tr><tr><td>Shortest or at least window</td><td>Minimum Size Subarray Sum, Minimum Window Substring, Subarrays with K Different Integers</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>You keep a window defined by a left and a right index and a small summary of what is inside, often a running sum or a map of character counts. You always grow the window by moving right forward.</p>
 <p>The moment the window breaks the rule (a repeat appears, the sum gets too big, too many distinct letters), you shrink from the left until it is valid again. You update your answer as you go.</p>
@@ -135,7 +135,10 @@ GOING DEEPER
 <p>Decide clearly when to shrink and whether you update the answer while the window is valid or while fixing it, since longest and shortest differ here.</p>
 <p>For substring problems, a count map plus a counter of how many characters still need matching is cleaner than rescanning.</p>
 <p>Do not forget to remove the character at the old left index from your summary when you shrink.</p>
-<p>Empty input and windows larger than the array are the usual off by one traps. The longest substring without repeats on &#x27;abcabcbb&#x27;. The right edge grows the window, and a</p>
+<p>Empty input and windows larger than the array are the usual off by one traps.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>The longest substring without repeats on &#x27;abcabcbb&#x27;. The right edge grows the window, and a repeat forces the left edge to shrink until the window is valid again.</p>
+<div class="table-wrap"><table><thead><tr><th>right</th><th>char</th><th>window</th><th>best length</th></tr></thead><tbody><tr><td>0</td><td>a</td><td>a</td><td>1</td></tr><tr><td>1</td><td>b</td><td>ab</td><td>2</td></tr><tr><td>2</td><td>c</td><td>abc</td><td>3</td></tr><tr><td>3</td><td>a</td><td>abc -&gt; shrink -&gt; bca</td><td>3</td></tr><tr><td>4</td><td>b</td><td>cab</td><td>3</td></tr><tr><td>5</td><td>c</td><td>abc</td><td>3</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

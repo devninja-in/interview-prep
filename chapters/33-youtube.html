@@ -44,7 +44,13 @@
 <h3>Going Deeper</h3>
 <h2>Adaptive bitrate, segment by segment</h2>
 <p>On upload, the video is transcoded into a ladder of versions at different resolutions and bitrates, and each version is cut into short segments of a few seconds. The player fetches a manifest that lists the ladder, then requests one segment at a time while measuring your bandwidth as it goes. When the network slows it steps down to a lower rung for the next segment, and steps back up when it recovers, so playback keeps flowing smoothly instead of freezing. The segments are cached in a hierarchy, edge first and origin last, so popular videos are served close to viewers.</p>
-<p>The video exists at several quality rungs. The player climbs down a rung when A viewer&#x27;s request first hits a nearby edge cache. On a miss it goes to a larger regional cache, and only a miss there reaches the origin. Because most viewers watch the same popular videos, the edges serve the vast majority of traffic, the regional caches catch the rest, and the origin is touched rarely, which is how one video reaches millions without A transcoding pipeline processes it into several resolutions and bitrates, each split into small The chunks are stored in object storage, and the metadata records which renditions exist. A viewer&#x27;s player fetches the manifest, then streams chunks from the nearest CDN edge. The player watches the network and switches quality up or down chunk by chunk, so</p>
+<p>same video encoded at several rungs, chosen per segment 1080p good network -&gt; 720p 720p Player picks a rung 480p network drops -&gt; 480p 240p The video exists at several quality rungs. The player climbs down a rung when the network slows, so it never freezes.</p>
+<h2 class="section-label">T H E C D N C A C H E H I E R A R C H Y</h2>
+<p>A viewer&#x27;s request first hits a nearby edge cache. On a miss it goes to a larger regional cache, and only a miss there reaches the origin. Because most viewers watch the same popular videos, the edges serve the vast majority of traffic, the regional caches catch the rest, and the origin is touched rarely, which is how one video reaches millions without melting the source.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>How one upload becomes smooth playback for millions of viewers.</p>
+<p>A creator uploads one large video file to the upload service. 1 A transcoding pipeline processes it into several resolutions and bitrates, each split into small 2 chunks.</p>
+<p>The chunks are stored in object storage, and the metadata records which renditions exist. 3 A viewer&#x27;s player fetches the manifest, then streams chunks from the nearest CDN edge. 4 The player watches the network and switches quality up or down chunk by chunk, so 5 playback never freezes.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

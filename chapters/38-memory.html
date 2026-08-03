@@ -52,7 +52,8 @@ context = format_memories(memories) + &quot;\n&quot; + user_message
 <h3>Going Deeper</h3>
 <h2>Managing the context budget</h2>
 <p>Because the context window is a fixed size, everything you might want the model to know competes for the same space: the system prompt, the running conversation, any retrieved documents, recalled memories, and the room left for the answer. Memory design is the craft of fitting the right things into that budget. The tools are summarizing older turns so they take fewer tokens, keeping only a sliding window of recent messages verbatim, and retrieving just the handful of past facts relevant to the current message instead of everything. Seen this way, there is no separate memory store inside the model, only clever choices about what to place in the window before each call.</p>
-<p>Everything competes for one fixed window, so memory design is really about</p>
+<p>one fixed context window, shared by everything below system conversation retrieved docs memory answer room Everything competes for one fixed window, so memory design is really about spending that budget wisely.</p>
+<div class="table-wrap"><table><thead><tr><th>Memory type</th><th>What it holds</th></tr></thead><tbody><tr><td>Episodic</td><td>things that happened, like past conversations</td></tr><tr><td>Semantic</td><td>stable facts, like a user&#x27;s name or preferences</td></tr><tr><td>Procedural</td><td>how to do things, which overlaps with skills</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

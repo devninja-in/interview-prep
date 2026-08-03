@@ -121,12 +121,12 @@ match
     }
     return answer;
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Anything with nesting or matching, anything that needs the most recent unfinished thing first, and the whole family of next greater or next smaller questions solved with a monotonic stack.</p>
-<p>Problem type Classic examples Matching and nesting Valid Parentheses, Minimum Remove to Make Valid, Simplify Path, Basic Calculator Monotonic stack Next Greater Element, Daily Temperatures, Largest Rectangle in Histogram, Trapping Rain Water, Online Stock Span Stack as history or undo Backspace String Compare, Decode String, Asteroid Collision, Remove All Adjacent Duplicates</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Matching and nesting</td><td>Valid Parentheses, Minimum Remove to Make Valid, Simplify Path, Basic Calculator</td></tr><tr><td>Monotonic stack</td><td>Next Greater Element, Daily Temperatures, Largest Rectangle in Histogram, Trapping Rain Water, Online Stock Span</td></tr><tr><td>Stack as history or undo</td><td>Backspace String Compare, Decode String, Asteroid Collision, Remove All Adjacent Duplicates</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>A stack gives you last in first out access, which is exactly what nesting needs. Every open bracket waits on the stack until its matching close arrives. If a close does not match the top, the string is invalid. This same &quot;wait until resolved&quot; idea powers path simplification and expression evaluation.</p>
 <p>A monotonic stack keeps its contents sorted, either always increasing or always decreasing. When a new element would break that order, you pop everything it beats, and each pop is the moment you have found that popped element&#x27;s answer, like its next greater value or the boundary of a rectangle.</p>
@@ -137,7 +137,10 @@ GOING DEEPER
 <p>Always check the stack is not empty before you peek or pop.</p>
 <p>For monotonic problems, decide up front whether you want increasing or decreasing order, and whether you push indices or values.</p>
 <p>In Java prefer Deque over the legacy Stack class, since Stack is synchronized and slower.</p>
-<p>Remember to handle whatever is left on the stack after the loop, since leftovers often mean Valid parentheses on the string &#x27;([])&#x27;. Each opener is pushed and waits, and each closer must match</p>
+<p>Remember to handle whatever is left on the stack after the loop, since leftovers often mean unmatched items.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>Valid parentheses on the string &#x27;([])&#x27;. Each opener is pushed and waits, and each closer must match the top of the stack.</p>
+<div class="table-wrap"><table><thead><tr><th>char</th><th>action</th><th>stack after</th></tr></thead><tbody><tr><td>(</td><td>push</td><td>(</td></tr><tr><td>[</td><td>push</td><td>( [</td></tr><tr><td>]</td><td>top is [ , match, pop</td><td>(</td></tr><tr><td>)</td><td>top is ( , match, pop</td><td>empty</td></tr><tr><td>end</td><td>stack empty, so valid</td><td>empty</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

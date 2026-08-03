@@ -166,12 +166,12 @@ TreeNode insertBST(TreeNode root, int val) {
     }
     return null;
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Anything on a hierarchy: depth and height, path and sum questions, validating or searching a binary search tree, working level by level, finding a lowest common ancestor, or building and serializing a tree.</p>
-<p>Problem type Classic examples Depth and path with DFS Maximum Depth, Diameter of Binary Tree, Path Sum, Balanced Binary Tree, Binary Tree Maximum Path Sum Level by level with BFS Binary Tree Level Order Traversal, Zigzag Level Order, Right Side View, Average of Levels Binary search tree Validate Binary Search Tree, Kth Smallest Element in a BST, properties Lowest Common Ancestor of a BST, Convert Sorted Array to BST Construct and serialize Construct Tree from Preorder and Inorder, Serialize and Deserialize Binary Tree, Flatten Binary Tree to Linked List</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Depth and path with DFS</td><td>Maximum Depth, Diameter of Binary Tree, Path Sum, Balanced Binary Tree, Binary Tree Maximum Path Sum</td></tr><tr><td>Level by level with BFS</td><td>Binary Tree Level Order Traversal, Zigzag Level Order, Right Side View, Average of Levels</td></tr><tr><td>Binary search tree properties</td><td>Validate Binary Search Tree, Kth Smallest Element in a BST, Lowest Common Ancestor of a BST, Convert Sorted Array to BST</td></tr><tr><td>Construct and serialize</td><td>Construct Tree from Preorder and Inorder, Serialize and Deserialize Binary Tree, Flatten Binary Tree to Linked List</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>Most tree problems are a recursion that solves the children first and then combines their answers.</p>
 <p>Ask &quot;if I already knew the answer for my left and right subtrees, how would I compute mine?&quot; That single question gives you height, diameter, balance, and path sums almost for free.</p>

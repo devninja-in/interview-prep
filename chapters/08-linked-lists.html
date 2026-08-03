@@ -162,13 +162,15 @@ boolean hasCycle(ListNode head) {
     trail.next = trail.next.next;                   // skip target
     return dummy.next;
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Problems where you rewire pointers rather than move data: reversing, detecting or locating a cycle, finding the middle or the kth from the end, and merging or reordering lists.</p>
-<p>Two ideas cover most linked list problems. The first is the dummy head: you make a fake node that points at the real head, build your result off the dummy, and return dummy.next. This removes all the annoying special cases around an empty list or changing the first node. The second is two pointers with a gap or a speed difference. A fast pointer that moves two steps and a slow pointer that moves one will meet inside any cycle, and the slow pointer lands on the middle when the fast one reaches the end. To find the kth node from the end, start one pointer k Reversal shows up either iteratively with three pointers (previous, current, next) or recursively. Cycle problems use Floyd&#x27;s tortoise and hare, and finding the cycle start needs the second phase where you reset one pointer to the head. Merging always benefits from the dummy node. Save the next pointer before you overwrite it during reversal, or you will lose the rest of the list. Guard against null at every step, especially the fast pointer moving two at a time. Use a dummy head whenever the first node might change, so you never special case the head. After building a new list, remember to terminate it by setting the final next to null when needed.</p>
-<p>Reversing the list 1 to 2 to 3. We keep a previous pointer and, at each node, flip its next to point</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Pointer rewiring</td><td>Reverse Linked List, Reverse Nodes in k-Group, Swap Nodes in Pairs, Rotate List</td></tr><tr><td>Fast and slow pointers</td><td>Middle of the Linked List, Linked List Cycle, Linked List Cycle II, Palindrome Linked List</td></tr><tr><td>Merging with a dummy node</td><td>Merge Two Sorted Lists, Merge k Sorted Lists, Add Two Numbers, Remove Nth Node From End of List</td></tr><tr><td>STEP BY STEP</td><td></td></tr></tbody></table></div>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>Reversing the list 1 to 2 to 3. We keep a previous pointer and, at each node, flip its next to point backward before moving on.</p>
+<div class="table-wrap"><table><thead><tr><th>prev</th><th>current</th><th>action</th><th>list built so far</th></tr></thead><tbody><tr><td>null</td><td>1</td><td>1.next = null, prev = 1, current = 2</td><td>null &lt;- 1</td></tr><tr><td>1</td><td>2</td><td>2.next = 1, prev = 2, current = 3</td><td>null &lt;- 1 &lt;- 2</td></tr><tr><td>2</td><td>3</td><td>3.next = 2, prev = 3, current = null</td><td>null &lt;- 1 &lt;- 2 &lt;- 3</td></tr><tr><td>3</td><td>null</td><td>current is null, stop, return prev</td><td>new head is 3</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

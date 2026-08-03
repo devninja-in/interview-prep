@@ -31,6 +31,7 @@
 </header>
 <div class="chapter-body">
 <figure class="diagram native"><img src="../assets/diagrams/hash-map.svg" alt="hash map" loading="lazy" /></figure>
+<figure class="diagram native"><img src="../assets/diagrams/prefix-sums.svg" alt="prefix sums" loading="lazy" /></figure>
 <h3>C O R E Pa T T E R N S</h3>
 <p>Arrays are just a row of boxes with numbered positions. Hashing is the trick of storing things by a key so you can find them again instantly. Put them together and you can solve a huge slice of all problems.</p>
 <h2>Why hashing is a superpower</h2>
@@ -134,13 +135,13 @@ def group_anagrams(words):
     }
     return count;
 }
-GOING DEEPER
 </code></pre></div>
+<h3>Going Deeper</h3>
 <h2>What kinds of problems this solves</h2>
 <h2 class="section-label">U S E T H I S P A T T E R N F O R</h2>
 <p>Anything about seeing a value before, counting how often things appear, pairing elements toward a target, grouping by a shared key, or answering range-sum questions quickly.</p>
 <p>Whenever a brute force keeps rescanning the array, a hash structure or a prefix sum usually removes the rescanning.</p>
-<p>Problem type Classic examples Have I seen this Contains Duplicate, Two Sum, Longest Consecutive Sequence, Intersection of Two Arrays Frequency counting Valid Anagram, Group Anagrams, Top K Frequent Elements, Majority Element, First Unique Character Prefix sums Subarray Sum Equals K, Range Sum Query, Product of Array Except Self, Contiguous Array Grouping by a key Group Anagrams, Sort Characters By Frequency, Find All Duplicates in an Array</p>
+<div class="table-wrap"><table><caption>Pattern → example problems</caption><thead><tr><th>Problem type</th><th>Classic examples</th></tr></thead><tbody><tr><td>Have I seen this</td><td>Contains Duplicate, Two Sum, Longest Consecutive Sequence, Intersection of Two Arrays</td></tr><tr><td>Frequency counting</td><td>Valid Anagram, Group Anagrams, Top K Frequent Elements, Majority Element, First Unique Character</td></tr><tr><td>Prefix sums</td><td>Subarray Sum Equals K, Range Sum Query, Product of Array Except Self, Contiguous Array</td></tr><tr><td>Grouping by a key</td><td>Group Anagrams, Sort Characters By Frequency, Find All Duplicates in an Array</td></tr></tbody></table></div>
 <h2>The algorithm, in a bit more detail</h2>
 <p>A hash map trades memory for speed. Instead of scanning the array again to answer &quot;have I seen x&quot;, you record every value you pass in a map, so the next lookup is a single O(1) step. That one move turns many O(n squared) brute forces into O(n).</p>
 <p>Prefix sums are the other core idea. If you precompute a running total, then the sum of any range from i to j is just prefix[j] - prefix[i-1] , computed in O(1). Combine a prefix sum with a hash map and you can count subarrays that hit a target sum in a single pass, which is exactly how &quot;Subarray Sum Equals K&quot; works.</p>
@@ -149,7 +150,11 @@ GOING DEEPER
 <h2>Edge cases and gotchas</h2>
 <p>Store a number in the map only after you check for its partner, otherwise a value can wrongly pair with itself.</p>
 <p>Hash maps do not keep insertion or sorted order, so never rely on iteration order for correctness.</p>
-<p>In Java use getOrDefault or merge for counting, and remember keys must be objects, so Lookups are O(1) on average but degrade in rare worst cases, which almost never matters for Watch Two Sum run on nums = [2, 7, 11, 15] with target = 9. We store each number as we pass it, so</p>
+<p>In Java use getOrDefault or merge for counting, and remember keys must be objects, so autoboxing of int to Integer is happening under the hood.</p>
+<p>Lookups are O(1) on average but degrade in rare worst cases, which almost never matters for interviews but is worth knowing.</p>
+<h2 class="section-label">S T E P &nbsp; B Y &nbsp; S T E P</h2>
+<p>Watch Two Sum run on nums = [2, 7, 11, 15] with target = 9. We store each number as we pass it, so the check is a single lookup.</p>
+<div class="table-wrap"><table><caption>Worked walkthrough</caption><thead><tr><th>i</th><th>nums[i]</th><th>need = target - nums[i]</th><th>seen so far</th><th>action</th></tr></thead><tbody><tr><td>0</td><td>2</td><td>7</td><td>{}</td><td>7 not seen, store 2 to 0</td></tr><tr><td>1</td><td>7</td><td>2</td><td>{2: 0}</td><td>2 is in seen, return [0, 1]</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

@@ -55,7 +55,8 @@ description: &gt;
 <h3>Going Deeper</h3>
 <h2>Progressive disclosure, layer by layer</h2>
 <p>Skills work because they are revealed in layers rather than dumped into the context all at once. At the cheapest layer, the agent sees only each skill&#x27;s name and one line description, which costs almost nothing even across a large library. When a task matches a description, the agent loads that skill&#x27;s full instructions, the SKILL.md body. And only if the procedure calls for it does it reach the deepest layer, the bundled scripts, templates, and reference files. This layering is what lets an agent carry hundreds of skills without drowning its context, and it is exactly why a skill&#x27;s description has to name its situations precisely, since that one line is what triggers everything below it.</p>
-<p>Skills reveal themselves in layers, so the agent pays only for the detail a</p>
+<p>Name + description always loaded, cheap Full SKILL.md load on loaded when the task matches demand Bundled scripts and resources loaded only when actually needed Skills reveal themselves in layers, so the agent pays only for the detail a task actually requires.</p>
+<div class="table-wrap"><table><thead><tr><th></th><th>What it is</th><th>When it runs</th></tr></thead><tbody><tr><td>Skill</td><td>reusable instructions and resources</td><td>loaded when a task matches</td></tr><tr><td>Tool</td><td>an action the model can call</td><td>invoked mid task for a result</td></tr><tr><td>RAG</td><td>facts fetched from your data</td><td>retrieved to ground an answer</td></tr></tbody></table></div>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>
