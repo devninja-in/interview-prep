@@ -1,35 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>35 · How LLMs work — Interview Prep</title>
-  <meta name="description" content="35 · How LLMs work — deep AI engineering guide for interviews" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/chapter.css" />
-</head>
-<body class="chapter-page" data-chapter="35-llms" data-part="ai">
-  <a class="skip-link" href="#content">Skip to content</a>
-  <div class="chapter-shell">
-    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
-    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
-    <main class="chapter-main" id="content">
-      <div class="chapter-toolbar">
-        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
-        <a class="brand" href="../">Interview Prep <span>Book</span></a>
-        <div class="toolbar-spacer"></div>
-        <a class="btn btn-ghost btn-small" href="../">Home</a>
-      </div>
-      <article class="chapter-article">
-        <p class="part-eyebrow">AI Engineering</p>
-        <header class="chapter-hero">
-<p class="chapter-num">Chapter 35</p>
-<h1>How LLMs work</h1>
-</header>
-<div class="chapter-body">
 <p>Start with a small scene. You type: “The cat sat on the.” A large language model does not “know cats” the way a person does. It has seen billions of similar fragments during training, and it answers a narrower question: given everything so far, what token is most likely next?</p>
 <p>It might put high probability on “mat”, lower on “rug”, and a little on “roof”. You sample one token, append it, and ask again. That loop — predict, sample, append — is the entire runtime story. Essays, code, and multi-step plans are long chains of that same move.</p>
 <figure class="diagram native"><img src="../assets/diagrams/llm-flow.svg" alt="How an LLM answers" loading="lazy" /></figure>
@@ -81,11 +49,3 @@ print(response.choices[0].message.content)
 <p>Pretraining is reading the internet (and more) to learn statistics of language. Alignment stages afterward — supervised instruction data, preference tuning, safety policies — bend the same engine toward being helpful and constrained. In system design talks, separate “what the weights know” from “what we put in the prompt today.” One changes rarely and costs a fortune; the other changes every deploy.</p>
 <h2>Multimodal note</h2>
 <p>Some models also take images or audio by mapping those inputs into the same kind of token stream. The story does not change: everything becomes conditioning for the next token. When you design products, ask whether vision is required or whether a captioning tool plus text RAG is enough.</p>
-</div>
-        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
-      </article>
-    </main>
-  </div>
-  <script src="../js/nav.js"></script>
-</body>
-</html>

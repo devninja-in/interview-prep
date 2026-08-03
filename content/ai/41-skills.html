@@ -1,35 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>41 · Skills — Interview Prep</title>
-  <meta name="description" content="41 · Skills — deep AI engineering guide for interviews" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/chapter.css" />
-</head>
-<body class="chapter-page" data-chapter="41-skills" data-part="ai">
-  <a class="skip-link" href="#content">Skip to content</a>
-  <div class="chapter-shell">
-    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
-    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
-    <main class="chapter-main" id="content">
-      <div class="chapter-toolbar">
-        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
-        <a class="brand" href="../">Interview Prep <span>Book</span></a>
-        <div class="toolbar-spacer"></div>
-        <a class="btn btn-ghost btn-small" href="../">Home</a>
-      </div>
-      <article class="chapter-article">
-        <p class="part-eyebrow">AI Engineering</p>
-        <header class="chapter-hero">
-<p class="chapter-num">Chapter 41</p>
-<h1>Skills</h1>
-</header>
-<div class="chapter-body">
 <p>As agents take bigger jobs, stuffing every procedure into one mega-prompt collapses. Skills are the modular storytelling device: folders of instructions and helpers that the agent loads only when a task calls for them.</p>
 <figure class="diagram native"><img src="../assets/diagrams/skills.svg" alt="Skills loading" loading="lazy" /></figure>
 <h2>What a skill is</h2>
@@ -67,11 +35,3 @@ Never invent timestamps. Ask if gaps exist.
 <p>If descriptions overlap, the agent loads the wrong skill. Write exclusions (“Do not use for legal advice”). Optionally add an embedding match over skill descriptions with a confidence floor, then fall back to asking the user which procedure to follow.</p>
 <h2>Skills plus MCP</h2>
 <p>A skill can instruct the agent which MCP tools to prefer and how to interpret results. Skills are the playbook; MCP tools are the hands. Separating them keeps playbooks editable by domain experts without redeploying connectors.</p>
-</div>
-        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
-      </article>
-    </main>
-  </div>
-  <script src="../js/nav.js"></script>
-</body>
-</html>

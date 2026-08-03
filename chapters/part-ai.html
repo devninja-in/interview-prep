@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Part Three: AI Engineering — Interview Prep</title>
-  <meta name="description" content="Part Three: AI Engineering — Interview Prep book chapter" />
+  <meta name="description" content="Part Three: AI Engineering — deep AI engineering guide for interviews" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -29,10 +29,19 @@
 <h1>Part Three: AI Engineering</h1>
 </header>
 <div class="chapter-body">
-<h2 class="section-label">P A R T T H R E E</h2>
-<h2>AI Engineering</h2>
-<p>How modern AI systems are actually built on top of large language models.</p>
-<p>We start with how a model works and how to prompt it, then add knowledge with RAG and memory, then turn a plain model into an agent that uses tools through MCP and reusable skills. Every idea comes with a diagram and a small worked example.</p>
+<p>Imagine you are building an assistant for a real company. Someone asks: “What did we promise customer X last quarter, and can you open a follow-up ticket?” A plain chatbot will invent an answer. A useful system will find the right documents, remember the conversation, call tools safely, and leave a trail you can trust.</p>
+<p>This part is the story of how that system is built — not as magic, but as a stack of ideas you can explain on a whiteboard.</p>
+<ul>
+<li><strong>How LLMs work</strong> — why next-token prediction is enough to get reasoning, code, and conversation.</li>
+<li><strong>Prompting</strong> — the control surface: roles, examples, structure, and evaluation.</li>
+<li><strong>RAG</strong> — giving the model your private knowledge at question time.</li>
+<li><strong>Memory</strong> — carrying the right context across turns without drowning the window.</li>
+<li><strong>Agents</strong> — the think → act → observe loop that turns answers into actions.</li>
+<li><strong>MCP</strong> — a standard way to plug tools and data into any host.</li>
+<li><strong>Skills</strong> — reusable procedures loaded only when a task needs them.</li>
+<li><strong>Design walkthrough</strong> — wiring every piece into one assistant.</li>
+</ul>
+<p>Read it as a continuous story. Each chapter adds one capability. By the end you should be able to design, critique, and interview on modern AI systems with the same confidence you bring to coding patterns and distributed design.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

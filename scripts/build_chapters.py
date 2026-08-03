@@ -409,8 +409,21 @@ def main() -> None:
     }
 
     for ch in chapters:
-        body, heading = convert_chapter(ch)
         slug = ch["id"]
+        # Hand-authored deep AI chapters live under content/ai/ — do not clobber.
+        if (ROOT / "content" / "ai" / f"{slug}.html").exists():
+            print(f"skip {slug}.html (hand-authored AI content)")
+            nav_items.append(
+                {
+                    "id": slug,
+                    "num": ch.get("num"),
+                    "title": ch["title"],
+                    "part": ch.get("part") or "front",
+                    "href": f"chapters/{slug}.html",
+                }
+            )
+            continue
+        body, heading = convert_chapter(ch)
         part = ch.get("part") or "front"
         num = ch.get("num")
         title = ch["title"]

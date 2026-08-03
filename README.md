@@ -8,7 +8,7 @@ Coding, system design, and AI in one place — published as a real HTML book.
 
 1. **Competitive Programming** — patterns from arrays and hashing through graphs, DP, and bit manipulation (Python & Java).
 2. **System Design** — fundamentals, building blocks, and case studies (URL shortener, WhatsApp, Instagram, Amazon, S3, YouTube, Uber).
-3. **AI Engineering** — LLMs, prompting, RAG, memory, agents, MCP, skills, and designing an AI assistant.
+3. **AI Engineering** — a deep story-driven path: LLMs, prompting, RAG, memory, agents, MCP, skills, and designing a full assistant (`content/ai/`).
 
 Chapters are normal web pages (selectable text + code blocks). Topic diagrams are freshly drawn SVGs — not PDF page screenshots.
 
@@ -25,7 +25,8 @@ Then open `http://localhost:8080` or any file under `chapters/`.
 ```bash
 pip install pymupdf
 python3 scripts/generate_diagrams.py   # native SVG topic diagrams
-python3 scripts/build_chapters.py      # HTML chapters + embed diagrams
+python3 scripts/build_chapters.py      # HTML chapters from PDF (skips hand-authored AI)
+python3 scripts/assemble_ai_chapters.py  # deep AI section from content/ai/
 ```
 
 ## Cloudflare Workers
