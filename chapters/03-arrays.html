@@ -30,6 +30,7 @@
 <h1>Arrays and hashing</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/hash-map.svg" alt="hash map" loading="lazy" /></figure>
 <h3>C O R E Pa T T E R N S</h3>
 <p>Arrays are just a row of boxes with numbered positions. Hashing is the trick of storing things by a key so you can find them again instantly. Put them together and you can solve a huge slice of all problems.</p>
 <h2>Why hashing is a superpower</h2>
@@ -148,8 +149,7 @@ GOING DEEPER
 <h2>Edge cases and gotchas</h2>
 <p>Store a number in the map only after you check for its partner, otherwise a value can wrongly pair with itself.</p>
 <p>Hash maps do not keep insertion or sorted order, so never rely on iteration order for correctness.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p022.jpg" alt="In Java use getOrDefault or merge for counting, and remember keys must be objects, so" loading="lazy" /><figcaption>In Java use getOrDefault or merge for counting, and remember keys must be objects, so</figcaption></figure>
-<p>In Java use getOrDefault or merge for counting, and remember keys must be objects, so autoboxing of int to Integer is happening under the hood. Lookups are O(1) on average but degrade in rare worst cases, which almost never matters for Watch Two Sum run on nums = [2, 7, 11, 15] with target = 9. We store each number as we pass it, so</p>
+<p>In Java use getOrDefault or merge for counting, and remember keys must be objects, so Lookups are O(1) on average but degrade in rare worst cases, which almost never matters for Watch Two Sum run on nums = [2, 7, 11, 15] with target = 9. We store each number as we pass it, so</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

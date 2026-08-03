@@ -30,6 +30,7 @@
 <h1>CAP and consistency</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/cap.svg" alt="cap" loading="lazy" /></figure>
 <p>Once data lives on more than one machine, physics forces a trade off. The CAP theorem names it. In the moment two parts of your system cannot talk to each other, you have to choose between giving every request a correct answer and giving every request an answer at all.</p>
 <p>Consistency C CP AP A P CA (only without partitions) Availability Partition tolerance During a network partition you must give up either strong consistency or availability.</p>
 <h2>What the three letters mean</h2>
@@ -46,8 +47,7 @@
 <h3>Going Deeper</h3>
 <h2>Tuning consistency with quorums</h2>
 <p>You do not have to choose strong or eventual for the whole system. Quorums let you dial it per operation. With N replicas, if every write must reach W of them and every read must reach R of them, then as long as W plus R is greater than N the read set and the write set always share at least one replica, so a read is guaranteed to see the latest write. Turn W and R up for stronger consistency at the cost of slower, less available operations, or down for speed and weaker guarantees. This is exactly how systems like Dynamo make the trade off a knob rather than a fixed choice.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p153.jpg" alt="N = 3, W = 2, R = 2, and W + R &gt; N, so read and write sets overlap" loading="lazy" /><figcaption>N = 3, W = 2, R = 2, and W + R &gt; N, so read and write sets overlap</figcaption></figure>
-<p>N = 3, W = 2, R = 2, and W + R &gt; N, so read and write sets overlap With enough overlap between the write set and the read set, a read is Strong consistency means every read reflects the latest write. Eventual consistency means replicas converge given a little time. Read your writes guarantees you at least see your own recent changes. Causal consistency preserves cause and effect ordering. Real systems mix these, tight for payments, loose for view counts, rather than picking one globally.</p>
+<p>Strong consistency means every read reflects the latest write. Eventual consistency means replicas converge given a little time. Read your writes guarantees you at least see your own recent changes. Causal consistency preserves cause and effect ordering. Real systems mix these, tight for payments, loose for view counts, rather than picking one globally.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

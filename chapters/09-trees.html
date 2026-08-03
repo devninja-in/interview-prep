@@ -30,6 +30,7 @@
 <h1>Trees and BST</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/tree-bst.svg" alt="tree bst" loading="lazy" /></figure>
 <h2 class="section-label">T R E E S A N D H E A P S</h2>
 <p>A tree is a branching structure. One node at the top (the root), and each node points to its children below. There are no loops. Most tree problems are solved by recursion, because a tree is made of smaller trees: every node is itself the root of its own subtree. root 8 3 10 1 6 14 leaves have no children A binary tree: each node has at most a left child and a right child.</p>
 <h2>The two ways to walk a tree</h2>
@@ -180,7 +181,6 @@ GOING DEEPER
 <h2>Edge cases and gotchas</h2>
 <p>To validate a BST you must pass down an allowed range, not just compare a node with its direct parent.</p>
 <p>Handle the null node as your base case cleanly, it is the root of most tree bugs.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p071.jpg" alt="Level order needs to capture the queue size at the start of each level so you know where one" loading="lazy" /><figcaption>Level order needs to capture the queue size at the start of each level so you know where one</figcaption></figure>
 <p>Level order needs to capture the queue size at the start of each level so you know where one Recursion depth can be large on a skewed tree, so very deep trees may need an iterative</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>

@@ -30,6 +30,7 @@
 <h1>Bit manipulation</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/bits-xor.svg" alt="bits xor" loading="lazy" /></figure>
 <p>Computers store numbers as bits, a row of ones and zeros. A few problems become almost free if you work directly with those bits. You do not need to love binary, you just need a handful of moves.</p>
 <h2>The operators, in plain terms</h2>
 <p>Operator What it does</p>
@@ -45,8 +46,7 @@
 <p>XOR compares bit by bit and keeps only the differences.</p>
 <h2 class="section-label">R E A C H F O R B I T S W H E N Y O U S E E</h2>
 <p>&quot;Find the one number that appears once while all others appear twice&quot; (XOR). &quot;Count the set bits.&quot; &quot;Is this a power of two.&quot; &quot;Generate all subsets using a bitmask.&quot; Anything about flags, toggles, or on/off states packed into a single integer.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p124.jpg" alt="Worked example: the single number" loading="lazy" /><figcaption>Worked example: the single number</figcaption></figure>
-<p>Every number appears twice except one. Find the lonely one. XOR is perfect here: any number XORed with itself cancels to 0, and XOR with 0 leaves a number unchanged. So XOR the whole array together; the pairs cancel out and the single number survives. This is O(n) time and O(1) result ^= x # pairs cancel, the lonely number remains</p>
+<p>Every number appears twice except one. Find the lonely one. XOR is perfect here: any number XORed with itself cancels to 0, and XOR with 0 leaves a number unchanged. So XOR the whole array together; the pairs cancel out and the single number survives. This is O(n) time and O(1)</p>
 <h2>Worked example: count the set bits</h2>
 <p>Count how many 1s are in the binary form of a number. The elegant way uses the trick above: n &amp; (n - 1) removes the lowest 1 each time. So loop, removing one 1 per step, and count the steps. It runs only as many times as there are set bits, not the full bit width.</p>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def count_bits(n):

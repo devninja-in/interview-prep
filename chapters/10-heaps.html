@@ -30,6 +30,7 @@
 <h1>Heaps and priority queues</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/heap.svg" alt="heap" loading="lazy" /></figure>
 <p>A heap is a container that always hands you the smallest (or largest) item first, and lets you add new items cheaply. It is the perfect tool whenever you repeatedly need &quot;the best remaining thing&quot; without sorting everything each time. a min-heap: every parent is smaller than its children 1 3 2 7 5 4 stored as a plain array, no pointers needed: 1 3 2 7 5 4 The smallest value is always at the top. Adding or removing takes O(log n).</p>
 <h2 class="section-label">R E A C H F O R A H E A P W H E N Y O U S E E</h2>
 <p>&quot;Kth largest&quot; or &quot;Kth smallest&quot;. &quot;Top K frequent&quot;. &quot;Merge K sorted lists&quot;. &quot;Find the running median&quot;. Anything where you keep needing the current best or worst item as data streams in. If you catch yourself wanting to sort inside a loop, a heap is almost always the fix.</p>

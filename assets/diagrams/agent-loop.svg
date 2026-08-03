@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="260" viewBox="0 0 760 260" role="img" aria-label="Agent loop">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="760" height="260" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Agent loop</text>
+  
+  <rect x="60" y="110" width="120" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="120.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Think</text>
+  <rect x="240" y="110" width="120" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="300.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Act / tool</text>
+  <rect x="420" y="110" width="120" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="480.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Observe</text>
+  <path d="M185 135 H235" stroke="#0f1c24" stroke-width="1.5"/>
+  <path d="M365 135 H415" stroke="#0f1c24" stroke-width="1.5"/>
+  <path d="M540 135 H580 Q610 135 610 180 H120 Q90 180 90 145" fill="none" stroke="#0d7a6f" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="60" y="220" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">ReAct-style loop: reason, call a tool, read the result, repeat.</text>
+
+</svg>

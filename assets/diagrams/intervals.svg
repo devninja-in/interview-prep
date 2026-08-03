@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="240" viewBox="0 0 720 240" role="img" aria-label="Intervals">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="720" height="240" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Intervals</text>
+  
+  <rect x="60" y="100" width="180" height="28" rx="6" fill="#d7ebe7" stroke="#c5d5ce"/>
+  <rect x="200" y="145" width="160" height="28" rx="6" fill="#f7ddd4" stroke="#c5d5ce"/>
+  <rect x="390" y="100" width="140" height="28" rx="6" fill="#f3e8d8" stroke="#c5d5ce"/>
+  <line x1="50" y1="200" x2="560" y2="200" stroke="#0f1c24" stroke-width="1.2"/>
+  <text x="60" y="225" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Sort by start, then merge overlaps as you scan.</text>
+
+</svg>

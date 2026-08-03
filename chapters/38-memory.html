@@ -30,6 +30,7 @@
 <h1>Memory</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/memory.svg" alt="memory" loading="lazy" /></figure>
 <p>By default a model remembers nothing between calls. It is completely stateless. Any sense of memory is something you build by choosing what to carry back into the context window. Good memory design is really just good context management. when it fills store Conversation Summarize Memory store in the context window and extract facts facts, past chats retrieve only what is relevant, back into context Memory is built, not given. Summarize and save what matters, then retrieve only the relevant pieces later.</p>
 <h2>The kinds of memory</h2>
 <p>Working memory is just the current conversation sitting in the context window. It is immediate but limited, and it disappears when the window fills or the session ends. Long term memory is anything you store outside the model and pull back in when it is relevant, which uses the very same embedding and retrieval idea as RAG, only now the documents are your own past interactions and facts.</p>
@@ -51,7 +52,6 @@ context = format_memories(memories) + &quot;\n&quot; + user_message
 <h3>Going Deeper</h3>
 <h2>Managing the context budget</h2>
 <p>Because the context window is a fixed size, everything you might want the model to know competes for the same space: the system prompt, the running conversation, any retrieved documents, recalled memories, and the room left for the answer. Memory design is the craft of fitting the right things into that budget. The tools are summarizing older turns so they take fewer tokens, keeping only a sliding window of recent messages verbatim, and retrieving just the handful of past facts relevant to the current message instead of everything. Seen this way, there is no separate memory store inside the model, only clever choices about what to place in the window before each call.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p198.jpg" alt="one fixed context window, shared by everything below" loading="lazy" /><figcaption>one fixed context window, shared by everything below</figcaption></figure>
 <p>Everything competes for one fixed window, so memory design is really about</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>

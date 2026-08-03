@@ -374,9 +374,11 @@ img {
 }
 
 .diagram-card img {
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  object-position: top;
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  object-position: center;
+  background: #f7faf8;
+  padding: 0.65rem;
 }
 
 .diagram-card figcaption {

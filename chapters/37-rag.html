@@ -30,6 +30,7 @@
 <h1>RAG</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/rag.svg" alt="rag" loading="lazy" /></figure>
 <h2 class="section-label">K N O W L E D G E A N D M E M O R Y</h2>
 <h2>generation</h2>
 <p>A model only knows what was in its training data and what fits in the context window. RAG fixes both. It fetches the most relevant pieces of your own data at question time and drops them into the prompt, so the model answers from fresh, private knowledge instead of guessing, and can even cite its sources.</p>
@@ -56,10 +57,8 @@ E M B E D D I N G S A N D V E C T O R S E A R C H , P L A I N L Y
 </code></pre></div>
 <p>An embedding turns a piece of text into a point in a high dimensional space where nearness means similar meaning. So &quot;how do I reset my password&quot; lands near a support article about password resets, even if they share no exact words. Vector search is just finding the nearest points to your question, which is why RAG retrieves by meaning rather than keyword.</p>
 <p>PROS CONS Answers from fresh, private data the Bad retrieval means a confident but model never trained on wrong answer Fewer hallucinations, since the model is Chunking and embedding choices grounded in real text strongly affect quality You can show citations back to the Retrieved text still competes for the source chunks context budget Cheaper and faster to update than Adds a vector database and a pipeline retraining the model to maintain</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p194.jpg" alt="GOING DEEPER" loading="lazy" /><figcaption>GOING DEEPER</figcaption></figure>
-<p>RAG lives or dies on what you retrieve, because the model can only answer from the chunks you hand it. Two levers dominate. Chunking decides how documents are split: chunks too large dilute the relevant sentence, too small lose context, so a sensible size with a little overlap matters a lot. Retrieval decides what comes back: pure vector search finds semantic matches, but combining it with keyword search (hybrid search) and then re ranking the top results with a stronger model catches cases where meaning and exact terms both matter. Get retrieval right and the generation step is easy; get it wrong and no prompt can save the answer. Q = question, teal = relevant chunks nearby, grey = irrelevant chunks far away Embeddings place text so that similar meaning sits close together, so retrieval is just finding the nearest points to the question. RAG has two phases: build the index once, then use it on every question.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p195.jpg" alt="Indexing, once" loading="lazy" /><figcaption>Indexing, once</figcaption></figure>
-<p>Search the vector database for the closest chunks by meaning. Ask the model to answer using only that context, and return the answer with citations.</p>
+<p>RAG lives or dies on what you retrieve, because the model can only answer from the chunks you hand it. Two levers dominate. Chunking decides how documents are split: chunks too large dilute the relevant sentence, too small lose context, so a sensible size with a little overlap matters a lot. Retrieval decides what comes back: pure vector search finds semantic matches, but combining it with keyword search (hybrid search) and then re ranking the top results with a stronger model catches cases where meaning and exact terms both matter. Get retrieval right and the generation Q = question, teal = relevant chunks nearby, grey = irrelevant chunks far away RAG has two phases: build the index once, then use it on every question.</p>
+<p>Ask the model to answer using only that context, and return the answer with citations.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

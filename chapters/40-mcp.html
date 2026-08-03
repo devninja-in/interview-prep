@@ -30,6 +30,7 @@
 <h1>MCP</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/mcp.svg" alt="mcp" loading="lazy" /></figure>
 <p>Once agents start using tools, every application ends up reinventing how to connect a model to data and actions. The Model Context Protocol is an open standard that fixes this. It is a common way for an AI app to plug into external tools, data, and prompts, a bit like a universal port for AI, so any compatible app can use any compatible integration.</p>
 <p>Files server tools · resources · prompts Host app Database server model + MCP client tools · resources · prompts GitHub server tools · resources · prompts One standard way for an AI app to plug into many external tools, data sources, and prompt templates.</p>
 <h2>How it fits together</h2>
@@ -51,7 +52,6 @@ def get_weather(city: str) -&gt; str:
 <h3>Going Deeper</h3>
 <h2>The M times N problem it solves</h2>
 <p>Before a standard, connecting M applications to N tools meant building M times N custom integrations, a tangle that grows impossibly fast. MCP collapses this to M plus N: each application implements one MCP client, each tool is wrapped once as an MCP server, and any client can talk to any server. When a client connects, it asks the server what it offers and the server describes its tools, resources, and prompts, so the discovery is automatic and nothing is hard coded. That single decoupling is why an integration written once becomes usable everywhere.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p205.jpg" alt="MCP" loading="lazy" /><figcaption>MCP</figcaption></figure>
 <p>Without a standard, every app must integrate every tool. MCP turns that tangle An MCP server can run locally over standard input and output, or remotely over HTTP with server sent events for streaming. On connecting, the client and server negotiate capabilities, then the client can list and call tools, read resources, and fetch prompt templates through the same standard messages, regardless of what the server does underneath.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>

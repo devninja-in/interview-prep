@@ -37,21 +37,21 @@
     .join("");
 
   const strip = document.getElementById("diagram-strip");
-  const diagramFiles = [
-    "diagram-p008.jpg",
-    "diagram-p140.jpg",
-    "diagram-p161.jpg",
-    "diagram-p165.jpg",
-    "diagram-p195.jpg",
-    "diagram-p205.jpg",
+  const featured = [
+    { file: "hash-map.svg", href: "chapters/03-arrays.html", label: "Hash map" },
+    { file: "load-balancer.svg", href: "chapters/21-scaling.html", label: "Load balancer" },
+    { file: "url-shortener.svg", href: "chapters/28-url-shortener.html", label: "URL shortener" },
+    { file: "rag.svg", href: "chapters/37-rag.html", label: "RAG" },
+    { file: "agent-loop.svg", href: "chapters/39-agents.html", label: "Agent loop" },
+    { file: "mcp.svg", href: "chapters/40-mcp.html", label: "MCP" },
   ];
-  strip.innerHTML = diagramFiles
+  strip.innerHTML = featured
     .map(
-      (f, i) => `
+      (d) => `
       <figure class="diagram-card">
-        <a href="chapters/00-how-to-use.html">
-          <img src="assets/diagrams/${f}" alt="Book diagram ${i + 1}" loading="lazy" />
-          <figcaption>Diagram</figcaption>
+        <a href="${d.href}">
+          <img src="assets/diagrams/${d.file}" alt="${d.label}" loading="lazy" />
+          <figcaption>${d.label}</figcaption>
         </a>
       </figure>`
     )

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="280" viewBox="0 0 760 280" role="img" aria-label="Chat message flow">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="760" height="280" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Chat message flow</text>
+  
+  <rect x="40" y="110" width="100" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="90.0" y="134.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Client A</text>
+  <rect x="190" y="110" width="120" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="250.0" y="134.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Gateway</text>
+  <rect x="360" y="110" width="130" height="48" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="425.0" y="134.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Chat service</text>
+  <rect x="540" y="70" width="130" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="605.0" y="90.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Store</text>
+  <rect x="540" y="160" width="130" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="605.0" y="180.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Client B</text>
+  <path d="M145 134 H185" stroke="#0f1c24" stroke-width="1.4"/>
+  <path d="M315 134 H355" stroke="#0f1c24" stroke-width="1.4"/>
+  <path d="M495 125 H535" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M495 145 H535" stroke="#0f1c24" stroke-width="1.3"/>
+  <text x="40" y="240" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Persist first, then fan out to connected recipients.</text>
+
+</svg>

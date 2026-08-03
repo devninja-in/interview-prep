@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300" role="img" aria-label="Geo matching">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="760" height="300" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Geo matching</text>
+  
+  <rect x="80" y="70" width="280" height="180" fill="#fff" stroke="#c5d5ce"/>
+  <path d="M150 70 V250 M220 70 V250 M290 70 V250 M80 130 H360 M80 190 H360" stroke="#c5d5ce"/>
+  <circle cx="200" cy="160" r="10" fill="#f7ddd4" stroke="#0f1c24"/>
+  <text x="214" y="164" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0f1c24">R</text>
+  <circle cx="175" cy="145" r="5" fill="#0d7a6f"/>
+  <circle cx="230" cy="175" r="5" fill="#0d7a6f"/>
+  <circle cx="250" cy="140" r="5" fill="#0d7a6f"/>
+  <text x="400" y="140" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Rider R</text>
+  <text x="400" y="165" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Drivers in nearby cells</text>
+  <text x="80" y="280" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Search the rider cell and neighbors — not the whole map.</text>
+
+</svg>

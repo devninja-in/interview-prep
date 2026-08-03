@@ -30,6 +30,7 @@
 <h1>Queues and async</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/queue.svg" alt="queue" loading="lazy" /></figure>
 <h2>processing</h2>
 <p>Not everything has to happen while the user waits. Sending an email, resizing an image, updating a feed, these can happen in the background. A message queue is the piece that lets one part of the system hand off work to another without waiting, which makes systems more resilient and much easier to scale.</p>
 <p>Producer Consumer Queue / Topic holds messages Producer Consumer buffer absorbs spikes A queue decouples producers from consumers, so each side works at its own pace.</p>
@@ -44,7 +45,6 @@
 <h2>Partitions, ordering, and messages that will not process</h2>
 <p>A log based system like Kafka splits a topic into partitions, and order is only guaranteed within a partition, so you choose a partition key such as user id to keep related messages in order.</p>
 <p>Consumers form a group and divide the partitions between them, so adding consumers raises throughput. Because delivery is usually at least once, a message can arrive twice, so consumers must be idempotent, producing the same result no matter how many times they see it. A message that keeps failing is moved to a dead letter queue after a few retries, so one poison message does not block everything behind it.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p156.jpg" alt="Topic (partitioned log)" loading="lazy" /><figcaption>Topic (partitioned log)</figcaption></figure>
 <p>A topic is split into ordered partitions. Consumers share them, and messages Guaranteeing exactly once delivery is famously hard, so the practical recipe is at least once delivery combined with idempotent consumers. Give each message a stable id and have the consumer ignore ids it has already processed. That way a duplicate is harmless, and you get effectively once behavior without the cost of true exactly once machinery.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>

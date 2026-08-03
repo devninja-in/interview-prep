@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="240" viewBox="0 0 720 240" role="img" aria-label="Linked list reverse">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="720" height="240" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Linked list reverse</text>
+  
+  <rect x="50" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="85.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text>
+  <rect x="170" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="205.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text>
+  <rect x="290" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="325.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text>
+  <path d="M120 125 H165" stroke="#0f1c24" stroke-width="1.6"/>
+  <path d="M240 125 H285" stroke="#0f1c24" stroke-width="1.6"/>
+  <text x="400" y="110" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">reverse →</text>
+  <rect x="500" y="100" width="70" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="535.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text>
+  <rect x="590" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="625.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text>
+  <path d="M570 125 H585" stroke="#0f1c24" stroke-width="1.6"/>
+  <text x="50" y="210" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Rewire next pointers carefully — null checks catch most bugs.</text>
+
+</svg>

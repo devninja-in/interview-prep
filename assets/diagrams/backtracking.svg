@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="260" viewBox="0 0 720 260" role="img" aria-label="Backtracking loop">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="720" height="260" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Backtracking loop</text>
+  
+  <rect x="40" y="100" width="140" height="56" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="110.0" y="128.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1. Choose</text>
+  <rect x="240" y="100" width="140" height="56" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="310.0" y="128.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2. Explore</text>
+  <rect x="440" y="100" width="140" height="56" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="510.0" y="128.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3. Unchoose</text>
+  <path d="M185 128 H235" stroke="#0f1c24" stroke-width="1.6"/>
+  <path d="M385 128 H435" stroke="#0f1c24" stroke-width="1.6"/>
+  <text x="40" y="210" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Build a candidate, recurse, then undo the choice and try the next.</text>
+
+</svg>

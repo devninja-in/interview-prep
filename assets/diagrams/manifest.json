@@ -1,0 +1,134 @@
+{
+  "diagrams": [
+    "hash-map",
+    "two-pointers",
+    "sliding-window",
+    "stack",
+    "binary-search",
+    "linked-list",
+    "tree-bst",
+    "heap",
+    "backtracking",
+    "bfs-graph",
+    "dp-table",
+    "intervals",
+    "bits-xor",
+    "load-balancer",
+    "cache-cdn",
+    "sql-nosql",
+    "replication",
+    "cap",
+    "queue",
+    "url-shortener",
+    "chat-flow",
+    "feed-fanout",
+    "object-storage",
+    "video-pipeline",
+    "geo-matching",
+    "llm-flow",
+    "rag",
+    "memory",
+    "agent-loop",
+    "mcp",
+    "skills",
+    "ai-assistant"
+  ],
+  "chapters": {
+    "03-arrays": [
+      "hash-map"
+    ],
+    "04-two-pointers": [
+      "two-pointers"
+    ],
+    "05-sliding-window": [
+      "sliding-window"
+    ],
+    "06-stack": [
+      "stack"
+    ],
+    "07-binary-search": [
+      "binary-search"
+    ],
+    "08-linked-lists": [
+      "linked-list"
+    ],
+    "09-trees": [
+      "tree-bst"
+    ],
+    "10-heaps": [
+      "heap"
+    ],
+    "11-backtracking": [
+      "backtracking"
+    ],
+    "12-graphs": [
+      "bfs-graph"
+    ],
+    "13-dp": [
+      "dp-table"
+    ],
+    "15-intervals": [
+      "intervals"
+    ],
+    "16-bits": [
+      "bits-xor"
+    ],
+    "21-scaling": [
+      "load-balancer"
+    ],
+    "22-caching": [
+      "cache-cdn"
+    ],
+    "23-databases": [
+      "sql-nosql"
+    ],
+    "24-replication": [
+      "replication"
+    ],
+    "25-cap": [
+      "cap"
+    ],
+    "26-queues": [
+      "queue"
+    ],
+    "28-url-shortener": [
+      "url-shortener"
+    ],
+    "29-whatsapp": [
+      "chat-flow"
+    ],
+    "30-instagram": [
+      "feed-fanout"
+    ],
+    "32-s3": [
+      "object-storage"
+    ],
+    "33-youtube": [
+      "video-pipeline"
+    ],
+    "34-uber": [
+      "geo-matching"
+    ],
+    "35-llms": [
+      "llm-flow"
+    ],
+    "37-rag": [
+      "rag"
+    ],
+    "38-memory": [
+      "memory"
+    ],
+    "39-agents": [
+      "agent-loop"
+    ],
+    "40-mcp": [
+      "mcp"
+    ],
+    "41-skills": [
+      "skills"
+    ],
+    "42-ai-agent": [
+      "ai-assistant"
+    ]
+  }
+}

@@ -30,6 +30,7 @@
 <h1>Caching and CDNs</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/cache-cdn.svg" alt="cache cdn" loading="lazy" /></figure>
 <p>A cache is a small, fast copy of data kept close to where it is needed, so you avoid a slow trip to the database every time. Caching is the single highest leverage move for read heavy systems, which is most systems. It also brings the hardest problem in the field: knowing when the cached copy is stale.</p>
 <h2>Where caching happens</h2>
 <p>Caching lives at many layers. The browser caches on the client. A content delivery network caches near the user at the edge. Your application caches hot data in memory using something like Redis or Memcached. Even the database caches its own frequent queries. Each layer you add removes load from the layer behind it.</p>

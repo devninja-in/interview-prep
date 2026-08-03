@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="300" viewBox="0 0 720 300" role="img" aria-label="Graph BFS layers">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="720" height="300" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Graph BFS layers</text>
+  
+  <rect x="60" y="130" width="60" height="40" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="90.0" y="150.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">A</text>
+  <rect x="200" y="70" width="60" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="230.0" y="90.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">B</text>
+  <rect x="200" y="190" width="60" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="230.0" y="210.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">C</text>
+  <rect x="340" y="40" width="60" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="370.0" y="60.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">D</text>
+  <rect x="340" y="120" width="60" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="370.0" y="140.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">E</text>
+  <rect x="340" y="220" width="60" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="370.0" y="240.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">F</text>
+  <path d="M120 145 H195" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M120 155 H195 M200 165" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M120 150 Q160 200 200 205" fill="none" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M260 90 H335" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M260 100 H335 M340 135" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M260 210 H335" stroke="#0f1c24" stroke-width="1.3"/>
+  <text x="40" y="280" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">BFS explores layer by layer using a queue — shortest path in unweighted graphs.</text>
+
+</svg>

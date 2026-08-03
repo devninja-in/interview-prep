@@ -30,6 +30,7 @@
 <h1>Sliding window</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/sliding-window.svg" alt="sliding window" loading="lazy" /></figure>
 <p>A window is a range of the array or string that you keep looking at. Instead of recomputing everything for every possible range, you slide the window along and only update what changed at the edges. This is how &quot;check every substring&quot; goes from O(n²) down to O(n).</p>
 <h2>Two kinds of window</h2>
 <p>Fixed size. The window is always k wide. You slide it one step at a time: add the new element on the right, drop the old one on the left. Great for &quot;max sum of any k consecutive elements.&quot; Variable size. The window grows and shrinks based on a condition. You expand the right edge to include more, and when a rule is broken you shrink from the left until it holds again. Great for &quot;longest substring with no repeats&quot; or &quot;smallest subarray with sum at least X.&quot; window (size 3) 2 1 5 1 3 2 4 1 sum here = 9 slide right: add the new number, subtract the one that left When the window slides, only the two edge values change, so you never recount the middle.</p>
@@ -134,8 +135,7 @@ GOING DEEPER
 <p>Decide clearly when to shrink and whether you update the answer while the window is valid or while fixing it, since longest and shortest differ here.</p>
 <p>For substring problems, a count map plus a counter of how many characters still need matching is cleaner than rescanning.</p>
 <p>Do not forget to remove the character at the old left index from your summary when you shrink.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p037.jpg" alt="Empty input and windows larger than the array are the usual off by one traps." loading="lazy" /><figcaption>Empty input and windows larger than the array are the usual off by one traps.</figcaption></figure>
-<p>Empty input and windows larger than the array are the usual off by one traps. The longest substring without repeats on &#x27;abcabcbb&#x27;. The right edge grows the window, and a repeat forces the left edge to shrink until the window is valid again.</p>
+<p>Empty input and windows larger than the array are the usual off by one traps. The longest substring without repeats on &#x27;abcabcbb&#x27;. The right edge grows the window, and a</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

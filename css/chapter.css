@@ -171,6 +171,11 @@ figure.diagram {
   overflow: hidden;
 }
 
+figure.diagram.native {
+  background: transparent;
+  border: 1px solid var(--line);
+}
+
 figure.diagram img {
   width: 100%;
   height: auto;
@@ -182,6 +187,14 @@ figure.diagram figcaption {
   font-size: 0.85rem;
   color: var(--ink-soft);
   border-top: 1px solid var(--line);
+}
+
+.diagram-card img {
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  object-position: center;
+  background: #f7faf8;
+  padding: 0.5rem;
 }
 
 .chapter-pager {

@@ -21,11 +21,12 @@ OUT_DIAG.mkdir(parents=True, exist_ok=True)
 doc = fitz.open(PDF)
 data = json.loads(BOOK_DATA.read_text())
 chapters = data["chapters"]
-diagram_pages = {p["page"] for p in data["pages"] if p.get("is_diagram")}
-
 CODE_LANGS = {"PYTHON", "JAVA", "SKILL.MD", "MCP SERVER"}
 INDENT_UNIT = 24.6
 CODE_BASE_X = 58.0
+
+DIAGRAM_MANIFEST = json.loads((OUT_DIAG / "manifest.json").read_text()) if (OUT_DIAG / "manifest.json").exists() else {"chapters": {}}
+CHAPTER_DIAGRAMS = DIAGRAM_MANIFEST.get("chapters", {})
 
 
 def spaced_caps(s: str) -> bool:
@@ -54,23 +55,33 @@ def looks_like_code(text: str, x0: float | None = None) -> bool:
     return False
 
 
-def page_is_diagram(page_num: int, text: str, drawings: int) -> bool:
-    if page_num in diagram_pages:
-        return True
+def page_is_visual_only(page_num: int, text: str, drawings: int) -> bool:
+    """PDF pages that are mostly figures — keep prose only, never screenshot them."""
     body = re.sub(r"\s+", " ", text).strip()
     if drawings >= 40 and len(body) < 900:
         return True
     if drawings >= 28 and any(k in text for k in ("STEP BY STEP", "Clients", "Write path", "Producer")):
         return True
+    # former diagram page markers from book-data
+    if any(p.get("page") == page_num and p.get("is_diagram") for p in data.get("pages", [])):
+        return True
     return False
 
 
-def render_diagram(page_num: int) -> str:
-    page = doc[page_num - 1]
-    pix = page.get_pixmap(matrix=fitz.Matrix(1.8, 1.8), alpha=False)
-    fname = f"diagram-p{page_num:03d}.jpg"
-    pix.save(str(OUT_DIAG / fname), jpg_quality=85)
-    return f"assets/diagrams/{fname}"
+def native_diagram_html(chapter_id: str) -> str:
+    keys = CHAPTER_DIAGRAMS.get(chapter_id) or []
+    chunks = []
+    for key in keys:
+        src = OUT_DIAG / f"{key}.svg"
+        if not src.exists():
+            continue
+        title = key.replace("-", " ")
+        chunks.append(
+            f'<figure class="diagram native">'
+            f'<img src="../assets/diagrams/{key}.svg" alt="{html.escape(title)}" loading="lazy" />'
+            f"</figure>"
+        )
+    return "\n".join(chunks)
 
 
 def extract_lines(page_num: int) -> list[dict]:
@@ -119,6 +130,9 @@ def convert_chapter(ch: dict) -> tuple[str, str]:
     parts.append(f"<h1>{html.escape(title)}</h1>")
     parts.append("</header>")
     parts.append('<div class="chapter-body">')
+    native = native_diagram_html(ch["id"])
+    if native:
+        parts.append(native)
 
     in_code = False
     code_lang = "text"
@@ -155,24 +169,14 @@ def convert_chapter(ch: dict) -> tuple[str, str]:
         raw = page.get_text()
         lines = extract_lines(page_num)
 
-        if page_is_diagram(page_num, raw, drawings):
+        if page_is_visual_only(page_num, raw, drawings):
             flush_code()
             flush_para()
-            src = render_diagram(page_num)
-            caption = title if page_num == ch["start"] else (lines[0]["text"].strip() if lines else f"Page {page_num}")
-            if spaced_caps(caption):
-                caption = re.sub(r"\s+", "", caption).title()
-            parts.append(
-                f'<figure class="diagram">'
-                f'<img src="../{src}" alt="{html.escape(caption)}" loading="lazy" />'
-                f"<figcaption>{html.escape(caption)}</figcaption>"
-                f"</figure>"
-            )
-            # Skip dumping diagram chrome/labels; keep only longer prose lines if any
+            # Keep explanatory prose from visual pages; never embed PDF page screenshots.
             prose_lines = [
                 ln
                 for ln in lines
-                if len(ln["text"].strip()) > 55
+                if len(ln["text"].strip()) > 70
                 and not spaced_caps(ln["text"].strip())
                 and ln["text"].strip().upper() not in {"PROS", "CONS", "GOING DEEPER", "STEP BY STEP"}
             ]

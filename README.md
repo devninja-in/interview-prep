@@ -10,7 +10,7 @@ Coding, system design, and AI in one place — published as a real HTML book.
 2. **System Design** — fundamentals, building blocks, and case studies (URL shortener, WhatsApp, Instagram, Amazon, S3, YouTube, Uber).
 3. **AI Engineering** — LLMs, prompting, RAG, memory, agents, MCP, skills, and designing an AI assistant.
 
-Chapters are normal web pages (selectable text + code blocks). Diagrams are images only where the book used a figure — not full-page PDF screenshots.
+Chapters are normal web pages (selectable text + code blocks). Topic diagrams are freshly drawn SVGs — not PDF page screenshots.
 
 ## Local preview
 
@@ -20,11 +20,12 @@ python3 -m http.server 8080
 
 Then open `http://localhost:8080` or any file under `chapters/`.
 
-## Regenerate chapters from the PDF
+## Regenerate from the PDF / diagrams
 
 ```bash
 pip install pymupdf
-python3 scripts/build_chapters.py
+python3 scripts/generate_diagrams.py   # native SVG topic diagrams
+python3 scripts/build_chapters.py      # HTML chapters + embed diagrams
 ```
 
 ## Cloudflare Workers

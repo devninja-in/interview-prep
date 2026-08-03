@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="260" viewBox="0 0 760 260" role="img" aria-label="Message queues">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="760" height="260" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Message queues</text>
+  
+  <rect x="40" y="110" width="120" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="100.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Producer</text>
+  <rect x="240" y="100" width="200" height="70" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="340.0" y="129.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Queue / topic</text>
+<text x="340.0" y="149.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">async buffer</text>
+  <rect x="520" y="90" width="120" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="580.0" y="112.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Worker A</text>
+  <rect x="520" y="150" width="120" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="580.0" y="172.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Worker B</text>
+  <path d="M165 135 H235" stroke="#0f1c24" stroke-width="1.5"/>
+  <path d="M445 125 H515" stroke="#0f1c24" stroke-width="1.4"/>
+  <path d="M445 145 H515" stroke="#0f1c24" stroke-width="1.4"/>
+  <text x="40" y="230" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Decouple producers from consumers and smooth traffic spikes.</text>
+
+</svg>

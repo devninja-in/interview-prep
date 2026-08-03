@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300" role="img" aria-label="RAG pipeline">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="760" height="300" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">RAG pipeline</text>
+  
+  <rect x="40" y="70" width="140" height="44" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="110.0" y="92.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Documents</text>
+  <rect x="40" y="150" width="140" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="110.0" y="172.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24"> Embeddings</text>
+  <rect x="40" y="220" width="140" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="110.0" y="242.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Vector index</text>
+  <rect x="280" y="150" width="140" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="350.0" y="175.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Question</text>
+  <rect x="480" y="90" width="160" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="560.0" y="115.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Retrieve top-k</text>
+  <rect x="480" y="180" width="160" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="560.0" y="205.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">LLM + context</text>
+  <path d="M110 118 V145" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M110 198 V215" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M185 240 H470" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M425 175 H475" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M560 145 V175" stroke="#0f1c24" stroke-width="1.3"/>
+  <text x="280" y="280" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Index once; on each question retrieve, then generate.</text>
+
+</svg>

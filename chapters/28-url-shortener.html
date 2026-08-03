@@ -30,6 +30,7 @@
 <h1>Design: URL shortener</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/url-shortener.svg" alt="url shortener" loading="lazy" /></figure>
 <h2 class="section-label">D E S I G N C A S E S T U D I E S</h2>
 <h2>shortener</h2>
 <p>This is the classic warm up design. It looks tiny, but it touches unique ID generation, heavy read caching, and horizontal scale, so it is a great place to practice the whole framework end to end.</p>
@@ -37,7 +38,6 @@
 <p>Functionally, take a long URL and return a short code, and when someone visits the short code, redirect them to the original. Non functionally, it is extremely read heavy, since a link is created once but clicked many times, and redirects must be fast. That read to write ratio drives the whole design toward caching and read replicas.</p>
 <h2>The API and data model</h2>
 <p>Two endpoints cover it: a write, POST with the long URL that returns a short code, and a read, GET on the short code that returns a redirect. The data is just a mapping: short code to long URL, plus a creation time. It is a simple key value shape, which means it shards and caches beautifully.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p161.jpg" alt="Write path" loading="lazy" /><figcaption>Write path</figcaption></figure>
 <p>Writes generate a unique code and store it. Reads hit the cache first, then You need a short, unique code for each URL. Three approaches come up. Hashing the URL and taking the first few characters is simple but produces collisions you must handle. Encoding an auto incrementing id in base 62 (letters and digits) gives short, guaranteed unique codes, but a single counter is a bottleneck and reveals how many links exist. A key generation service pre generates random unique codes in advance and hands them out, which avoids both collisions and a hot Because reads dominate, cache the popular codes in memory so most redirects never touch the database. Put the mapping in a store that shards by code, and add read replicas so lookups spread out. For the redirect itself, a 301 (permanent) lets browsers cache it and cut future load, while a 302 (temporary) keeps every click coming to you, which is useful if you want to count clicks.</p>
 <h3>Going Deeper</h3>
 <h2>Generating unique codes without a bottleneck</h2>

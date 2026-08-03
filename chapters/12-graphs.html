@@ -30,6 +30,7 @@
 <h1>Graphs, BFS, DFS</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/bfs-graph.svg" alt="bfs graph" loading="lazy" /></figure>
 <p>A graph is nodes connected by edges. Roads between cities, friends on a network, rooms with doors between them. Trees are just a special kind of graph. Two traversals do most of the work: breadth first (explore in rings outward) and depth first (dive down one path). Master these two and a whole category of problems opens up.</p>
 <p>A B BFS from A:</p>
 <h3>A, B, C, D, E</h3>
@@ -222,8 +223,7 @@ minute
             int[] cell = queue.poll();
             for (int[] d : dirs) {
 </code></pre></div>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p098.jpg" alt="int nr = cell[0] + d[0], nc = cell[1] + d[1];" loading="lazy" /><figcaption>int nr = cell[0] + d[0], nc = cell[1] + d[1];</figcaption></figure>
-<p>if (nr &gt;= 0 &amp;&amp; nr &lt; rows &amp;&amp; nc &gt;= 0 &amp;&amp; nc &lt; cols &amp;&amp; grid[nr] Anything with things connected to other things: grids and islands, reachability and connected groups, shortest path when every step costs the same, ordering tasks with Course Schedule II, Alien Dictionary, Minimum Height Trees Word Ladder, Shortest Path in Binary Matrix, Open the Lock,</p>
+<p>Anything with things connected to other things: grids and islands, reachability and connected groups, shortest path when every step costs the same, ordering tasks with</p>
 <h2>The algorithm, in a bit more detail</h2>
 <p>Two engines cover most of this chapter. Breadth first search explores in rings using a queue, so the first time it reaches a node it has found the shortest path in an unweighted graph. Depth first search dives as far as it can using recursion or a stack, which is perfect for exploring a whole region, counting components, or detecting a cycle.</p>
 <p>Topological sort orders tasks so every prerequisite comes before what depends on it. You count incoming edges for each node, start from the ones with none, and peel them off, reducing counts as you go. If you cannot peel everything, there is a cycle, which is exactly how &quot;can you finish all courses&quot; is answered.</p>

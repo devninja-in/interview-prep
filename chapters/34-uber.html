@@ -30,6 +30,7 @@
 <h1>Design: Uber</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/geo-matching.svg" alt="geo matching" loading="lazy" /></figure>
 <p>A ride hailing app is a real time matching problem laid over a map.</p>
 <p>Thousands of drivers move around a city sending their location, and the moment a rider requests a ride, the system has to find a good nearby driver and connect the two within seconds.</p>
 <h2>Requirements</h2>
@@ -44,8 +45,7 @@
 <h2>Geospatial indexing up close</h2>
 <p>The map is divided into cells using a scheme like a grid, a geohash, or Uber&#x27;s H3 hexagons, and each driver&#x27;s latest position is filed under its cell. To find drivers near a rider you look at the rider&#x27;s cell and its immediate neighbors, a handful of cells, rather than scanning every driver in the city.</p>
 <p>Cell size is the key tuning knob: too large and each cell holds too many drivers to sort through, too small and you have to check many cells for one query. Dense downtown areas can become hot cells that need extra care, such as finer subdivision.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p183.jpg" alt="R is the rider; blue dots are drivers filed by cell" loading="lazy" /><figcaption>R is the rider; blue dots are drivers filed by cell</figcaption></figure>
-<p>look only at the rider&#x27;s cell and its neighbors, not the whole city Drivers are filed by map cell, so finding nearby ones means checking a handful Once you have candidate drivers, two riders must not be handed the same one. The match has to atomically claim a driver, marking them busy the instant they are dispatched, so a second request sees them as taken. Without that lock you get double bookings, which is why dispatch holds a driver rather than merely suggesting one. Driver apps continuously stream their location into the geospatial index, bucketed by map The matching service looks up the nearby cells and gathers the candidate drivers in them. It picks the best one by distance, arrival time, and rating, then dispatches and holds that The trip service tracks the ride to completion, with pricing and payment handled through</p>
+<p>Drivers are filed by map cell, so finding nearby ones means checking a handful Once you have candidate drivers, two riders must not be handed the same one. The match has to atomically claim a driver, marking them busy the instant they are dispatched, so a second request sees them as taken. Without that lock you get double bookings, which is Driver apps continuously stream their location into the geospatial index, bucketed by map The matching service looks up the nearby cells and gathers the candidate drivers in them. It picks the best one by distance, arrival time, and rating, then dispatches and holds that The trip service tracks the ride to completion, with pricing and payment handled through</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

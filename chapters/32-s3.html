@@ -30,6 +30,7 @@
 <h1>Design: Amazon S3</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/object-storage.svg" alt="object storage" loading="lazy" /></figure>
 <p>S3 is a service that stores files, called objects, and simply never loses them. That is the whole game: durability at massive scale. Store trillions of objects across cheap, failure prone machines while guaranteeing that a dead disk, or even a whole dead building, never loses your data.</p>
 <h2>Requirements</h2>
 <p>Put and get objects by a key, group them into buckets, store objects of any size, and offer extremely high durability and availability with effectively unlimited capacity. Reads and writes are simple by key, but the durability bar is the hard part.</p>
@@ -44,8 +45,7 @@
 <h3>Going Deeper</h3>
 <h2>Erasure coding, and durability math</h2>
 <p>Keeping three full copies is simple but triples your storage. Erasure coding does better. You split an object into k data fragments and compute m parity fragments, then scatter all k plus m across different nodes. You can lose any m of them and still rebuild the object exactly, so you reach durability similar to replication while storing far less than three copies. Spreading the fragments across separate racks and data centers is what lets a system quote durability like eleven nines, because the chance of losing more than m fragments at the same moment becomes astronomically small.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p177.jpg" alt="the red fragments are lost, yet the object still rebuilds" loading="lazy" /><figcaption>the red fragments are lost, yet the object still rebuilds</figcaption></figure>
-<p>the red fragments are lost, yet the object still rebuilds 4 data + 2 parity, spread across nodes; lose any 2 and rebuild Erasure coding splits an object into data and parity fragments, so it survives How storing one object keeps it safe from any single failure. The client sends a put request with the object bytes and a key. The service records the object&#x27;s metadata, its key, size, and location, in the metadata store. It splits the bytes and writes copies, or erasure coded fragments, across several nodes in It confirms success only once enough copies are safely stored. A background process keeps watching for failed disks and re creates any lost copies</p>
+<p>Erasure coding splits an object into data and parity fragments, so it survives The service records the object&#x27;s metadata, its key, size, and location, in the metadata store. It splits the bytes and writes copies, or erasure coded fragments, across several nodes in A background process keeps watching for failed disks and re creates any lost copies</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

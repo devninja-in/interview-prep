@@ -30,6 +30,7 @@
 <h1>Replication and sharding</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/replication.svg" alt="replication" loading="lazy" /></figure>
 <p>One database eventually runs out of room, either for traffic or for data. Two techniques fix the two different problems. Replication makes copies for safety and read speed. Sharding splits the data so writes and storage spread across many machines. They solve different things and are often used together.</p>
 <p>Replication Primary takes writes copy copy Replica Replica serves reads serves reads Sharding Shard A users A to H Router by shard key Shard B users I to P Shard C users Q to Z Replication copies the same data for safety and read scale. Sharding splits different data for write scale.</p>
 <h2>Replication</h2>

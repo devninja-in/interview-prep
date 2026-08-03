@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="280" viewBox="0 0 760 280" role="img" aria-label="Feed fanout">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="760" height="280" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Feed fanout</text>
+  
+  <rect x="40" y="110" width="110" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="95.0" y="134.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">New post</text>
+  <rect x="210" y="110" width="130" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="275.0" y="134.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Fanout worker</text>
+  <rect x="410" y="60" width="140" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="480.0" y="80.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Follower feed 1</text>
+  <rect x="410" y="120" width="140" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="480.0" y="140.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Follower feed 2</text>
+  <rect x="410" y="180" width="140" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="480.0" y="200.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Follower feed N</text>
+  <path d="M155 134 H205" stroke="#0f1c24" stroke-width="1.4"/>
+  <path d="M345 120 H405" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M345 134 H405" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M345 148 H405" stroke="#0f1c24" stroke-width="1.3"/>
+  <text x="40" y="250" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Push fanout writes the post id into follower inboxes ahead of time.</text>
+
+</svg>

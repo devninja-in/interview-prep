@@ -30,6 +30,7 @@
 <h1>Dynamic programming</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/dp-table.svg" alt="dp table" loading="lazy" /></figure>
 <p>Dynamic programming, or DP, sounds scary but it is one idea: break a problem into smaller versions of itself, and never solve the same small version twice. You solve each subproblem once, write down the answer, and reuse it. That is the whole trick.</p>
 <h2>How to know it is a DP problem</h2>
 <p>Two signals together mean DP. First, the problem asks for a best value (&quot;minimum cost&quot;, &quot;maximum profit&quot;, &quot;longest&quot;, &quot;number of ways&quot;). Second, the answer to the whole problem can be built from answers to smaller pieces, and those pieces overlap so you keep recomputing them. When you see &quot;how many ways&quot; or &quot;min / max&quot; and a natural notion of a smaller subproblem, think DP. grid paths: each cell = paths from above + paths from the left 1 1 1 1 1 2 3 4 10 = 4 + 6 reuse the two neighbors 1 3 6 10 Fill the table so that when you compute a cell, the cells it depends on are already done.</p>
@@ -154,8 +155,7 @@ GOING DEEPER
 <p>The families to recognize are linear DP over one sequence, knapsack style choices of take or skip, grid DP over a 2D board, and two sequence DP for string alignment like edit distance. Many one dimensional DPs can drop to O(1) extra space by keeping just the previous couple of values.</p>
 <h2>Edge cases and gotchas</h2>
 <p>Define the state precisely, since a vague state is the number one reason a DP is wrong.</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p108.jpg" alt="Get the base cases right, they anchor everything built on top of them." loading="lazy" /><figcaption>Get the base cases right, they anchor everything built on top of them.</figcaption></figure>
-<p>Get the base cases right, they anchor everything built on top of them. Fill the table in an order where every value you read is already computed. Watch array sizes and off by one, especially when the state runs from zero to n inclusive. Climbing stairs for 5 steps, where you can take 1 or 2 at a time. The ways to reach a step are the ways to reach the two steps below it, so we build a small table.</p>
+<p>Fill the table in an order where every value you read is already computed. Watch array sizes and off by one, especially when the state runs from zero to n inclusive. Climbing stairs for 5 steps, where you can take 1 or 2 at a time. The ways to reach a step are the</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
       </article>

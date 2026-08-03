@@ -30,6 +30,7 @@
 <h1>How LLMs work</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/llm-flow.svg" alt="llm flow" loading="lazy" /></figure>
 <h2 class="section-label">F O U N D A T I O N S</h2>
 <p>A large language model is, at its heart, a very good next word guesser.</p>
 <p>Everything impressive it does, answering questions, writing code, reasoning through a problem, comes from one simple loop: predict the most likely next token given everything so far, then do it again.</p>
@@ -58,8 +59,7 @@ print(resp.content[0].text)
 <h2 class="section-label">T H E C O N T E X T W I N D O W I S Y O U R B U D G E T</h2>
 <p>Think of every token in the context as costing money and attention. Long conversations, big documents, and verbose instructions all compete for the same fixed space. Almost every technique later in this part, retrieval, memory, summarization, is really about spending that budget wisely.</p>
 <h3>Going Deeper</h3>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p187.jpg" alt="Where the model&#x27;s ability comes from" loading="lazy" /><figcaption>Where the model&#x27;s ability comes from</figcaption></figure>
-<p>The reason a model can write and reason is a two stage upbringing. In pretraining it reads an enormous amount of text and learns only to predict the next token, which forces it to absorb grammar, facts, and patterns of reasoning as a side effect. That produces a raw base model that is knowledgeable but not especially helpful. Fine tuning on curated examples, followed by reinforcement learning from human feedback, then teaches it to follow instructions, stay on task, and avoid harmful output. The mechanism that lets it use context at all is attention, which lets each learn to predict text, then learn to follow instructions and behave A model is grown in stages: pretraining teaches language, then fine-tuning and flatten or sharpen the distribution, higher is more varied sample only from the smallest set of tokens covering p of the What actually happens when a model generates a reply, one token at a time. Your text is broken into tokens, the word pieces the model works with. The model reads all the tokens and produces a probability for every possible next token.</p>
+<p>The reason a model can write and reason is a two stage upbringing. In pretraining it reads an enormous amount of text and learns only to predict the next token, which forces it to absorb grammar, facts, and patterns of reasoning as a side effect. That produces a raw base model that is knowledgeable but not especially helpful. Fine tuning on curated examples, followed by reinforcement learning from human feedback, then teaches it to follow instructions, stay on task, and avoid harmful output. The mechanism that lets it use context at all is attention, which lets each A model is grown in stages: pretraining teaches language, then fine-tuning and What actually happens when a model generates a reply, one token at a time. The model reads all the tokens and produces a probability for every possible next token.</p>
 <p>One token is sampled from that distribution, with temperature deciding how adventurous the 3 choice is.</p>
 <p>The chosen token is appended to the sequence. 4 Steps two through four repeat on the slightly longer sequence, until a stop token appears or 5 the length limit is hit.</p>
 </div>

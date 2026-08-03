@@ -30,6 +30,7 @@
 <h1>Binary search</h1>
 </header>
 <div class="chapter-body">
+<figure class="diagram native"><img src="../assets/diagrams/binary-search.svg" alt="binary search" loading="lazy" /></figure>
 <p>If your data is sorted, you never need to check every element. Look at the middle. If it is too small, throw away the left half. If it is too big, throw away the right half. Each step halves what is left, so even a billion items take only about thirty checks. step 1: look at the middle 1 3 5 7 9 11 13 mid=7, target 11 &gt; 7 step 2: keep only the right half 9 11 13 mid=11, found it Each comparison discards half the remaining elements. That is why it is O(log n).</p>
 <h2 class="section-label">R E A C H F O R B I N A R Y S E A R C H W H E N Y O U S E E</h2>
 <p>A sorted array plus &quot;find X&quot; or &quot;find the position where X would go.&quot; Also the sneaky version: &quot;find the smallest value that satisfies some condition&quot; or &quot;minimize the maximum.&quot; If you can phrase the problem as &quot;is a candidate answer good enough, yes or no,&quot; and the yes/no flips at one point, you can binary search on the answer itself even when there is no array to search.</p>
@@ -146,7 +147,6 @@ GOING DEEPER
 <p>You write a helper that asks &quot;does answer x work&quot;, which must be monotonic: if x works, everything bigger works too. Then you binary search for the smallest x that works. Recognizing that hidden monotonic property is the whole skill.</p>
 <h2>Variations you will run into</h2>
 <p>You will meet leftmost and rightmost variants (lower bound and upper bound), where a match does not stop the search but nudges a boundary to keep looking. Rotated arrays add one comparison to</p>
-<figure class="diagram"><img src="../assets/diagrams/diagram-p052.jpg" alt="decide which half is sorted. The answer space version replaces the array comparison with a" loading="lazy" /><figcaption>decide which half is sorted. The answer space version replaces the array comparison with a</figcaption></figure>
 <p>decide which half is sorted. The answer space version replaces the array comparison with a Compute the middle as low plus half the gap, not low plus high divided by two, to avoid integer Match your loop condition and your boundary updates, since a wrong pairing causes an infinite For first and last position, do not return on the first match, keep shrinking toward the side you Double check whether your interval is inclusive on both ends, since that decides less than Searching for 7 in the sorted array [1, 3, 5, 7, 9, 11]. Each step throws away half of what is left.</p>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
