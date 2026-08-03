@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Technology comparisons for interviews — Interview Prep</title>
+  <meta name="description" content="Technology comparisons for interviews — Interview Prep" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
+</head>
+<body class="chapter-page" data-chapter="comparisons" data-part="sd">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Trade-offs</p>
+        <header class="chapter-hero">
+<h1>Technology comparisons for interviews</h1>
+<p class="lab-hero-note">Kafka vs RabbitMQ, Redis vs Memcached, REST vs GraphQL, and more — with expected answers.</p>
+</header>
+<div class="chapter-body">
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Medium→Hard</span>
+  <span><strong>Read</strong> ~25 min</span>
+  <span><strong>Master</strong> 1–2 weeks</span>
+  <span><strong>Levels</strong> Mid–Staff</span>
+</div>
+<aside class="learn-box"><div class="qa-label">Prerequisites</div><ul><li>Basic HTTP and databases</li><li>One message queue exposure helps</li></ul></aside>
+
+<p>Interviewers love comparisons because they force <strong>trade-offs</strong>, not memorized
+definitions. For each pair: say when to use A, when to use B, and when neither.</p>
+
+<h2>Kafka vs RabbitMQ</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Hard</span>
+  <span><strong>Read</strong> ~8 min</span>
+  <span><strong>Master</strong> 3–5 days</span>
+  <span><strong>Levels</strong> Senior</span>
+</div>
+<div class="table-wrap"><table>
+<caption>Interview cheat comparison</caption>
+<thead><tr><th>Dimension</th><th>Kafka</th><th>RabbitMQ</th></tr></thead>
+<tbody>
+<tr><td>Model</td><td>Durable partitioned log</td><td>Smart broker queues / exchanges</td></tr>
+<tr><td>Ordering</td><td>Per partition key</td><td>Per queue (with caveats)</td></tr>
+<tr><td>Replay</td><td>Native via offsets / retention</td><td>Not the primary design</td></tr>
+<tr><td>Routing</td><td>Coarse (topics/keys)</td><td>Rich exchanges/bindings</td></tr>
+<tr><td>Throughput</td><td>Very high sequential I/O</td><td>Lower; flexible patterns</td></tr>
+<tr><td>Use when</td><td>Event streaming, analytics, replay</td><td>Task queues, complex routing, RPC-ish</td></tr>
+</tbody></table></div>
+<aside class="qa-callout"><div class="qa-label">Expected interview answer</div><p>Kafka is a distributed commit log for high-throughput streams and replay. RabbitMQ is a message broker optimized for flexible routing and work queues. Choose Kafka for event sourcing/stream processing; Rabbit for task distribution with rich routing. Never promise global order on Kafka.</p></aside>
+<aside class="qa-callout"><div class="qa-label">Common mistakes</div><ul><li>Calling Kafka a 'queue' only</li><li>Using Rabbit for multi-day replay lakes</li><li>Ignoring consumer group rebalance costs</li></ul></aside>
+<aside class="qa-callout"><div class="qa-label">Production</div><ul><li>LinkedIn created Kafka for activity streams</li><li>Many Uber/Netflix pipelines are log-centric</li><li>Rabbit remains common for background jobs in Rails/JVM apps</li></ul></aside>
+<p><strong>Follow-ups:</strong> Exactly-once? Poison messages? Multi-region mirror?</p>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="interview-sd.html#q16">SD Lab: Message queue</a></li><li><a href="26-queues.html">Queues chapter</a></li></ul></aside>
+
+<h2>Redis vs Memcached</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Medium</span>
+  <span><strong>Read</strong> ~6 min</span>
+  <span><strong>Master</strong> 2–3 days</span>
+  <span><strong>Levels</strong> Mid–Senior</span>
+</div>
+<div class="table-wrap"><table>
+<thead><tr><th>Dimension</th><th>Redis</th><th>Memcached</th></tr></thead>
+<tbody>
+<tr><td>Data structures</td><td>Rich (strings, ZSET, hashes, streams)</td><td>Simple key/value blobs</td></tr>
+<tr><td>Persistence</td><td>Optional AOF/RDB</td><td>Ephemeral</td></tr>
+<tr><td>Clustering</td><td>Redis Cluster</td><td>Client-side sharding historically</td></tr>
+<tr><td>Use when</td><td>Counters, leaderboards, locks, queues, cache</td><td>Simple hot-blob cache at huge QPS</td></tr>
+</tbody></table></div>
+<aside class="qa-callout"><div class="qa-label">Expected answer</div><p>Memcached is a fast ephemeral slab allocator for opaque values. Redis is a data-structure server that can also cache. Prefer Memcached for simple massive get/set caches; Redis when you need atomic structures, TTLs with logic, or persistence.</p></aside>
+<aside class="qa-callout"><div class="qa-label">Production</div><ul><li>Facebook historic Memcached scale</li><li>GitHub/Twitter Redis use cases</li><li>AWS ElastiCache offers both</li></ul></aside>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="interview-sd.html#q9">SD Lab: Distributed cache</a></li><li><a href="22-caching.html">Caching chapter</a></li></ul></aside>
+
+<h2>REST vs GraphQL</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Medium</span>
+  <span><strong>Read</strong> ~7 min</span>
+  <span><strong>Master</strong> 2–4 days</span>
+  <span><strong>Levels</strong> Mid–Senior</span>
+</div>
+<div class="table-wrap"><table>
+<thead><tr><th>Dimension</th><th>REST</th><th>GraphQL</th></tr></thead>
+<tbody>
+<tr><td>Contract</td><td>Resources + verbs</td><td>Schema + queries/mutations</td></tr>
+<tr><td>Over/under fetch</td><td>Common without BFF</td><td>Client specifies fields</td></tr>
+<tr><td>Caching</td><td>HTTP cache-friendly</td><td>Harder at edge; need persisted queries</td></tr>
+<tr><td>Complexity</td><td>Many endpoints</td><td>Resolver/N+1 risks</td></tr>
+<tr><td>Use when</td><td>Public APIs, simple CRUD, cacheable GETs</td><td>BFF for varied clients, graph-shaped data</td></tr>
+</tbody></table></div>
+<aside class="qa-callout"><div class="qa-label">Expected answer</div><p>REST maps cleanly to HTTP semantics and CDNs. GraphQL reduces round-trips for product UIs but shifts complexity to the server (authz per field, query cost limits, N+1). Many companies use both: REST/gRPC internally, GraphQL at the BFF edge.</p></aside>
+<aside class="qa-callout"><div class="qa-label">Common mistakes</div><ul><li>No query depth/cost limits in GraphQL</li><li>Ignoring HTTP caching benefits of REST</li><li>Equating GraphQL with 'no versioning needed'</li></ul></aside>
+<aside class="qa-callout"><div class="qa-label">Production</div><ul><li>GitHub public GraphQL API</li><li>Netflix/Shopify BFF patterns</li><li>Twitter/X and many mobile BFFs</li></ul></aside>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="19-approaching-sd.html">Approaching SD</a></li><li><a href="interview-sd.html#q4">Rate limiter (API edge)</a></li></ul></aside>
+
+<h2>SQL vs NoSQL (interview framing)</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Medium</span>
+  <span><strong>Read</strong> ~6 min</span>
+  <span><strong>Master</strong> 3–5 days</span>
+  <span><strong>Levels</strong> Mid–Senior</span>
+</div>
+<p>See also the book chapter <a href="23-databases.html">SQL vs NoSQL</a>. In interviews, lead with
+<strong>access patterns</strong>, transactions, and query flexibility — not hype.</p>
+<aside class="qa-callout"><div class="qa-label">Expected answer</div><p>SQL when relations + multi-row transactions matter. NoSQL when partition key access dominates and you need horizontal scale with simpler transactions. Secondary access patterns need indexes, search, or carefully designed dual writes.</p></aside>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="23-databases.html">Databases chapter</a></li><li><a href="24-replication.html">Replication</a></li></ul></aside>
+
+<h2>Strong consistency vs availability (CAP lite)</h2>
+<p>Ticket booking and payments need strong inventory/ledger correctness. Feeds and likes often
+choose availability + eventual consistency. Say the product consequence out loud — that is the
+interview.</p>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="25-cap.html">CAP chapter</a></li><li><a href="interview-sd.html#q10">Ticketmaster lab</a></li><li><a href="interview-sd.html#q13">Payments lab</a></li></ul></aside>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+  <script src="../js/progress.js"></script>
+</body>
+</html>

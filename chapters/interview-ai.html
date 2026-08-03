@@ -28,7 +28,7 @@
         <p class="part-eyebrow">Interview Lab · AI Engineering</p>
         <header class="chapter-hero">
 <h1>AI interview questions</h1>
-<p class="lab-hero-note">Seventeen AI/ML design prompts from 2025–2026 hiring loops — RAG to inference serving, copilots, and security.</p>
+<p class="lab-hero-note">Seventeen AI/ML prompts with interviewer scoring lenses, level bars, and production patterns.</p>
 </header>
 <div class="chapter-body">
 <p>This lab is built for <strong>AI / ML system design interviews</strong> at product companies
@@ -72,6 +72,14 @@ from memory without looking.</p>
 <div class="qa-body">
 <p>Design an internal chatbot that answers employee questions using private wikis, tickets, and PDFs. It must cite sources, respect permissions, and minimize hallucinations. Walk the interviewer from requirements to a production architecture.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Meta, Stripe, OpenAI-adjacent, enterprise AI (most common AI design) · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> RAG · chunking · hybrid retrieval · grounded generation · ACL</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~25 min to rehearse aloud</p><p>Default AI system design in 2025–2026 — grounded enterprise Q&A.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Ingest vs query</li><li>ACL in retrieval</li><li>Abstain</li><li>Eval</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Naive vector RAG</td></tr><tr><th scope="row">Mid</th><td>Hybrid+rerank+cite</td></tr><tr><th scope="row">Senior</th><td>ACL+freshness+eval</td></tr><tr><th scope="row">Staff</th><td>Multi-corpus platform</td></tr><tr><th scope="row">Principal</th><td>Org-wide knowledge mesh</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Ingest pipeline → hybrid retrieve → grounded generate → eval.</p></aside>
 <div class="qa-label">Clarify (say these out loud)</div>
 <ul><li><strong>Users &amp; ACL:</strong> all employees, or role-based doc access?</li><li><strong>Latency:</strong> streaming first token &lt;1s? full answer &lt;5s?</li><li><strong>Freshness:</strong> wiki updates visible in minutes or hours?</li><li><strong>Modalities:</strong> text only, or tables/images/code?</li><li><strong>Languages:</strong> English only vs multilingual?</li><li><strong>Escalation:</strong> handoff to human / ticket create?</li><li><strong>Compliance:</strong> retention, audit logs, no training on prompts?</li></ul>
 <div class="qa-label">Whiteboard diagram</div>
@@ -97,13 +105,26 @@ How many days of parental leave do we get?
 <ul><li><strong>Tables/code?</strong> Keep table chunks intact; use structure-aware splitters; sometimes summarize tables into facts.</li><li><strong>ACL?</strong> Filter at retrieval with the user's groups — never retrieve then hope the LLM hides secrets.</li><li><strong>Updates?</strong> CDC / webhooks → rechunk changed docs; tombstone deletes; show <code>updated_at</code> in citations.</li><li><strong>Eval?</strong> Gold Q&amp;A: retrieval recall@k, groundedness, citation accuracy, latency, cost.</li></ul>
 <div class="qa-label">Common failure modes</div>
 <aside class="qa-callout"><div class="qa-label">What fails interviews</div><ul><li>Drawing only "LLM + vector DB" with no ingest, ACL, or eval.</li><li>Putting permissions only in the system prompt.</li><li>No abstain path — model always invents an answer.</li><li>Ignoring chunking / metadata as "implementation details".</li></ul></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Tables/code?</li><li>Multilingual?</li><li>Agentic RAG?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>ACL only in prompt</li><li>No abstain path</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Google Vertex RAG patterns</li><li>Notion AI / Glean-style search</li><li>Amazon Q Business</li></ul></div>
 </details>
 <details class="qa" id="q2">
 <summary><span>Q2. Design Semantic Search / Vector Search at Scale</span></summary>
 <div class="qa-body">
 <p>Design search that finds relevant documents by meaning for ~100M documents with p95 retrieval under ~100ms (before generation). Cover indexing, query path, and tradeoffs.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Amazon, Notion, OpenAI platform, search-infra interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Embeddings · ANN (HNSW/IVF-PQ) · hybrid · rerank</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~20 min to rehearse aloud</p><p>Retrieval infra depth — ANN tradeoffs at scale.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>HNSW/IVF-PQ</li><li>Hybrid</li><li>Versioned embeddings</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Single FAISS index</td></tr><tr><th scope="row">Mid</th><td>Sharded hybrid</td></tr><tr><th scope="row">Senior</th><td>Filtered ANN</td></tr><tr><th scope="row">Staff</th><td>Multi-billion vectors</td></tr><tr><th scope="row">Principal</th><td>Embedding platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Embed → ANN → hybrid fuse → rerank → versioning.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>Recall target (e.g. recall@100 ≥ 0.95)?</li><li>Freshness: seconds, minutes, or daily rebuilds?</li><li>Multilingual? Filters (time, type, tenant)?</li><li>Is this retrieval-only or part of RAG?</li></ul>
 <div class="qa-label">Diagram</div>
@@ -114,13 +135,26 @@ How many days of parental leave do we get?
 <p>100M × 768-d float32 ≈ 300GB raw vectors — compression (PQ) and sharding are not optional. Query embed ~10–30ms; ANN ~5–20ms; rerank dominates if naive. Cap candidates early.</p>
 <div class="qa-label">Tradeoffs interviewers expect</div>
 <ul><li>Recall vs latency vs memory (efSearch / nprobe knobs).</li><li>Filtered ANN: pre-filter vs post-filter vs metadata-aware indexes.</li><li>Exact kNN is a non-starter at this scale — say so.</li><li>Multilingual: one multilingual encoder vs per-language indexes.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Filtered search?</li><li>Re-embed migrations?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Exact kNN at 100M</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Pinecone/Weaviate/Vertex Matching Engine</li><li>Pinterest PinCLIP-style retrieval</li><li>Spotify search/recs</li></ul></div>
 </details>
 <details class="qa" id="q3">
 <summary><span>Q3. Design an LLM Evaluation Pipeline</span></summary>
 <div class="qa-body">
 <p>You ship prompt, model, and RAG changes weekly. Design a system that catches quality regressions before and after production — without blocking the team forever.</p>
 <p class="qa-meta"><strong>Asked at:</strong> OpenAI, Anthropic-adjacent, Google, AI platform / applied-science loops · <strong>Difficulty:</strong> Medium–Hard · <strong>Pattern:</strong> Offline gates · online metrics · LLM-as-judge · traces</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~18 min to rehearse aloud</p><p>Shipping LLMs without eval is a fail — platforms probe this.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Offline gates</li><li>Online metrics</li><li>Judge calibration</li><li>Slice failures</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Manual spot check</td></tr><tr><th scope="row">Mid</th><td>Gold set + judges</td></tr><tr><th scope="row">Senior</th><td>Shadow/A/B</td></tr><tr><th scope="row">Staff</th><td>Eval platform</td></tr><tr><th scope="row">Principal</th><td>Org quality program</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Datasets → metrics → gate → online → humans.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/eval-pipeline.svg" alt="Offline eval gates plus online feedback" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -137,13 +171,26 @@ How many days of parental leave do we get?
 </tbody></table></div>
 <div class="qa-label">Pitfalls</div>
 <ul><li>Judges without rubrics → noisy, gameable scores.</li><li>Only online thumbs → slow and biased.</li><li>One aggregate score hides slice failures (e.g. ACL questions).</li><li>Ignoring cost — a "better" model can be 10× spend.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Jailbreak suite?</li><li>Cost as metric?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>One aggregate score only</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>OpenAI eval harness culture</li><li>Anthropic constitutional checks</li><li>Google side-by-side evals</li></ul></div>
 </details>
 <details class="qa" id="q4">
 <summary><span>Q4. Design a Tool-Using Agent (Flight Booking Assistant)</span></summary>
 <div class="qa-body">
 <p>Design an agent that searches flights, compares options, and books with user confirmation. It must call external APIs safely and not run away on cost or side effects.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Amazon, Microsoft, AI startups — top 2024–2026 agent question · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Planner · tool schemas · HITL · budgets · idempotency</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~22 min to rehearse aloud</p><p>Tool-using agents are the 2024–2026 hiring wave.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Tool schemas</li><li>HITL gates</li><li>Budgets</li><li>Injection</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Single tool call</td></tr><tr><th scope="row">Mid</th><td>ReAct loop</td></tr><tr><th scope="row">Senior</th><td>Confirm irreversible</td></tr><tr><th scope="row">Staff</th><td>Multi-agent with policies</td></tr><tr><th scope="row">Principal</th><td>Agent platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Tools → loop → confirm pay → budgets → audit.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/agent-tools.svg" alt="Agent planner with gated tools and budgets" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -180,65 +227,130 @@ How many days of parental leave do we get?
 </code></pre></div>
 <div class="qa-label">Follow-ups</div>
 <ul><li><strong>Why not one giant prompt?</strong> Tools keep side effects explicit and testable.</li><li><strong>MCP?</strong> Same idea — discovered schemas, scoped auth (see MCP chapter / Q follow-ups in drills).</li><li><strong>When NOT to use an agent?</strong> Fixed workflows → plain API + form; agents add latency and failure modes.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>MCP?</li><li>When not agent?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>LLM-only authorization</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Amazon Alexa tasking</li><li>Google Assistant routines</li><li>Intercom/Fin agent patterns</li></ul></div>
 </details>
 <details class="qa" id="q5">
 <summary><span>Q5. Design Content Moderation with ML + LLMs</span></summary>
 <div class="qa-body">
 <p>Design a system that detects policy-violating user content (text, images, video) at upload and in feeds — balancing precision, recall, latency, and cost.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta, TikTok, OpenAI, Trust &amp; Safety / integrity interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Cascaded classifiers · human review · appeals · policy packs</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~18 min to rehearse aloud</p><p>Trust & safety systems — Meta/TikTok/OpenAI.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Cascade cost</li><li>Critical vs gray</li><li>Appeals</li><li>Latency tiers</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>One classifier</td></tr><tr><th scope="row">Mid</th><td>Cascade + humans</td></tr><tr><th scope="row">Senior</th><td>Policy packs</td></tr><tr><th scope="row">Staff</th><td>Adversarial robustness</td></tr><tr><th scope="row">Principal</th><td>Integrity platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Hash → classifiers → LLM gray → human → feedback.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/moderation-cascade.svg" alt="Cascaded moderation pipeline" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
 <ol class="qa-steps"><li><strong>Policy packs:</strong> machine-readable rules per region/product (severity, spam, NSFW, self-harm, etc.).</li><li><strong>Cascade for cost:</strong> (1) exact/perceptual hashes for known CSAM/terror; (2) cheap classifiers; (3) multimodal LLM only on uncertain scores; (4) human review for high-severity or appeals.</li><li><strong>Actions:</strong> block, blur, age-gate, demonetize, queue — not only binary delete.</li><li><strong>Latency tiers:</strong> chat may need &lt;100ms heuristics; VOD can be async before publish.</li><li><strong>Feedback:</strong> moderator labels → training data; shadow-deploy new models; track FP/FN by policy.</li><li><strong>Adversaries:</strong> rate limits, graph features, obfuscation detectors — LLM alone is not enough for critical classes.</li></ol>
 <div class="qa-label">Interview depth</div>
 <aside class="qa-callout"><div class="qa-label">Say this</div><p>Critical categories must not depend on a generative model as the only line of defense. Use deterministic matchers + specialized classifiers; LLMs help on gray areas and explanations for reviewers.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Regional policy?</li><li>Generative video?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>LLM-only for CSAM-class</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Meta Integrity</li><li>YouTube Trusted Flaggers pipeline</li><li>OpenAI Moderation API</li></ul></div>
 </details>
 <details class="qa" id="q6">
 <summary><span>Q6. Design Recommendations with Embeddings</span></summary>
 <div class="qa-body">
 <p>Design recommendations for a media app that suggests what a user engages with next. Cover candidate generation, ranking, cold start, and metrics.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Netflix, Spotify, YouTube, Amazon, Meta ranking interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Two-tower retrieval · candidate gen · ranking · exploration</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~20 min to rehearse aloud</p><p>Two-tower + ranker — Netflix/YouTube/Spotify staple.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Retrieve vs rank</li><li>Cold start</li><li>Metrics beyond CTR</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Popularity baseline</td></tr><tr><th scope="row">Mid</th><td>Two-tower ANN</td></tr><tr><th scope="row">Senior</th><td>Ranker + diversity</td></tr><tr><th scope="row">Staff</th><td>Multi-objective</td></tr><tr><th scope="row">Principal</th><td>Recs platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Candidates → rank → rules → A/B metrics.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/recsys-towers.svg" alt="Two-tower retrieval plus ranking" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
 <ol class="qa-steps"><li><strong>Problem split:</strong> retrieve ~O(10³–10⁴) candidates cheaply, then rank with a heavier model.</li><li><strong>Two-tower:</strong> user tower and item tower → dot product / cosine; ANN over item embeddings for retrieval.</li><li><strong>Features:</strong> history, context (time/device), freshness, popularity priors for cold start.</li><li><strong>Ranker:</strong> gradient-boosted trees or deep ranker on candidates with cross features.</li><li><strong>Business rules:</strong> diversity, creator fairness, exploration budget (ε-greedy / bandits).</li><li><strong>Serving:</strong> precompute user embeddings; nearline updates from session; feature store for ranker.</li><li><strong>Metrics:</strong> not only CTR — dwell, completion, long-term retention; offline replay + online A/B.</li></ol>
 <div class="qa-label">Cold start</div>
 <ul><li>New items: content embeddings from title/metadata/audio/video.</li><li>New users: onboarding preferences + popular-in-locale priors.</li><li>Do not wait for collaborative signal only.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Exploration?</li><li>Position bias?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Optimizing only clicks</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Netflix recommendations</li><li>YouTube home</li><li>Spotify Discover Weekly</li></ul></div>
 </details>
 <details class="qa" id="q7">
 <summary><span>Q7. Design Real-Time Meeting Transcription + Summarization</span></summary>
 <div class="qa-body">
 <p>Design a system that live-transcribes meetings and produces summaries, action items, and searchable notes afterward.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Zoom, Microsoft, Google, Otter-style product interviews · <strong>Difficulty:</strong> Medium–Hard · <strong>Pattern:</strong> Streaming ASR · diarization · structured LLM notes · search</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Streaming multimodal + structured notes — Zoom/Meet style.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Partial ASR</li><li>Diarization</li><li>Cost batching</li><li>Privacy</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Batch transcript</td></tr><tr><th scope="row">Mid</th><td>Streaming captions</td></tr><tr><th scope="row">Senior</th><td>Structured actions</td></tr><tr><th scope="row">Staff</th><td>Org search over meetings</td></tr><tr><th scope="row">Principal</th><td>Meeting intelligence platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Stream ASR → diarize → captions → summarize schema → index.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/transcription-ai.svg" alt="Streaming ASR to summary and search" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
 <ol class="qa-steps"><li><strong>Ingest audio:</strong> client or SFU sends stream → streaming ASR with partial hypotheses.</li><li><strong>Diarization:</strong> speaker labels (and optional voice profiles) aligned to transcript segments.</li><li><strong>Live UX:</strong> push partials over WebSocket; accept revisions as ASR stabilizes.</li><li><strong>Notes:</strong> on end (or every N minutes) LLM fills a schema: decisions, action items {owner, due}, risks — not free prose only.</li><li><strong>Search:</strong> index segments with BM25 + embeddings; link back to timestamps.</li><li><strong>Privacy:</strong> PII redaction options, retention TTLs, region lock; do not train on customer audio by default.</li></ol>
 <div class="qa-label">Cost control</div>
 <p>Do not summarize every utterance. Batch windows. Offer "transcript only" tiers. Cache repeated meeting templates.</p>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Code-switching?</li><li>PII redaction?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Summarize every utterance</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Zoom AI Companion</li><li>Google Meet notes</li><li>Otter/Fireflies</li></ul></div>
 </details>
 <details class="qa" id="q8">
 <summary><span>Q8. Design Multi-Tenant AI SaaS with Cost Controls</span></summary>
 <div class="qa-body">
 <p>You sell an API that wraps foundation models to thousands of tenants. Design tenancy, billing, noisy-neighbor protection, and data isolation.</p>
 <p class="qa-meta"><strong>Asked at:</strong> B2B AI startups, Amazon Bedrock-style, platform engineering interviews · <strong>Difficulty:</strong> Medium–Hard · <strong>Pattern:</strong> Quotas · routing · isolation · metering · abuse</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>B2B AI is quotas and tenancy — not just prompts.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Quotas</li><li>Routing</li><li>Isolation</li><li>Abuse</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>API key + limit</td></tr><tr><th scope="row">Mid</th><td>TPM/$ budgets</td></tr><tr><th scope="row">Senior</th><td>Residency + audit</td></tr><tr><th scope="row">Staff</th><td>Priority lanes</td></tr><tr><th scope="row">Principal</th><td>AI gateway platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Auth → quota → router → meter → isolate.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/multi-tenant-ai.svg" alt="Gateway quotas and model routing" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
 <ol class="qa-steps"><li><strong>Identity:</strong> per-tenant API keys / OAuth; map to plan limits.</li><li><strong>Gateway:</strong> auth → rate limit (RPM + TPM) → daily/$ quotas → model router (policy: default model, allowed providers, data residency).</li><li><strong>Metering:</strong> tokens in/out, tool calls, retrieval units → billing pipeline; show usage dashboards.</li><li><strong>Isolation:</strong> encrypt data per tenant where required; strict retrieval ACL; no cross-tenant caches of prompts with PII.</li><li><strong>Abuse:</strong> anomaly detection on token spikes; fail closed on quota; priority lanes for enterprise.</li><li><strong>Agent runaway:</strong> require max_steps / max_$ on agent endpoints; estimate cost before loops.</li></ol>
 <div class="qa-label">Strong closer</div>
 <aside class="qa-callout"><div class="qa-label">Product sense</div><p>Quotas, residency, and audit logs are the enterprise product — the LLM call is the commodity. Lead with tenancy, then models.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Agent runaway?</li><li>Exact token billing?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Shared cache leaking tenants</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Amazon Bedrock</li><li>Azure OpenAI</li><li>OpenAI platform orgs</li></ul></div>
 </details>
 <details class="qa" id="q9">
 <summary><span>Q9. Design a Hallucination-Resistant Customer Support Bot</span></summary>
 <div class="qa-body">
 <p>A support bot can explain policies, refund within limits, and reset passwords. Keep it truthful and prevent unsafe or unauthorized actions.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Shopify, Intercom-like, Stripe support-AI interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Intent route · grounded RAG · deterministic actions · escalation</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~18 min to rehearse aloud</p><p>Grounding + authz — Amazon/Shopify support AI.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Knowledge vs action split</li><li>Server authz</li><li>Escalation</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>FAQ bot</td></tr><tr><th scope="row">Mid</th><td>RAG+cite</td></tr><tr><th scope="row">Senior</th><td>Tool refunds with caps</td></tr><tr><th scope="row">Staff</th><td>Fraud-aware</td></tr><tr><th scope="row">Principal</th><td>Support AI platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Intent → RAG cite / tool authz → escalate.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/grounded-support.svg" alt="Knowledge vs action paths for support" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -252,13 +364,26 @@ How many days of parental leave do we get?
     # LLM cannot bypass these checks
     return payments.refund(order_id, amount_cents, idempotency_key=...)
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Jailbreaks?</li><li>Multi-order users?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>LLM deciding refund eligibility alone</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Amazon customer service AI</li><li>Shopify Sidekick</li><li>Intercom Fin</li></ul></div>
 </details>
 <details class="qa" id="q10">
 <summary><span>Q10. Design Memory for a Long-Running Personal Assistant</span></summary>
 <div class="qa-body">
 <p>Design memory so an assistant remembers preferences and projects across months without stuffing the entire history into every prompt.</p>
 <p class="qa-meta"><strong>Asked at:</strong> OpenAI, Google Assistant-style, agent platform interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Short-term · working state · long-term facts · semantic recall</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Long-context products need memory tiers — assistant interviews.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Short vs long-term</li><li>Editable memory</li><li>Privacy delete</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Window only</td></tr><tr><th scope="row">Mid</th><td>Summaries</td></tr><tr><th scope="row">Senior</th><td>Fact store + recall</td></tr><tr><th scope="row">Staff</th><td>Org vs user memory</td></tr><tr><th scope="row">Principal</th><td>Memory platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Tiers → extract → retrieve → forget APIs.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/memory-tiers.svg" alt="Tiered memory architecture" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -274,13 +399,26 @@ How many days of parental leave do we get?
   deleted_at?
 }
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Wrong memory UX?</li><li>GDPR wipe?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Dumping full history every turn</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>ChatGPT memory</li><li>Google Gemini apps memory</li><li>Apple Intelligence personal context (on-device angles)</li></ul></div>
 </details>
 <details class="qa" id="q11">
 <summary><span>Q11. Design LLM Inference Serving at Scale</span></summary>
 <div class="qa-body">
 <p>Design a service that serves a large language model to thousands of concurrent users with low latency and high GPU utilization.</p>
 <p class="qa-meta"><strong>Asked at:</strong> OpenAI-adjacent, Anthropic-adjacent, Google, Meta, Databricks, Fireworks-style · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Batching · KV cache · model parallelism · routing</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~20 min to rehearse aloud</p><p>Inference economics — AI infra interviews.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Batching</li><li>KV cache</li><li>TTFT vs TPS</li><li>Autoscaling</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>One GPU one request</td></tr><tr><th scope="row">Mid</th><td>Continuous batching</td></tr><tr><th scope="row">Senior</th><td>Multi-LoRA</td></tr><tr><th scope="row">Staff</th><td>Disaggregated prefill/decode</td></tr><tr><th scope="row">Principal</th><td>Global inference fabric</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Gateway → batch → KV → parallel → stream → scale.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>Interactive chat vs batch jobs?</li><li>One model or many adapters/LoRAs?</li><li>SLO: TTFT and tokens/sec?</li><li>Multi-tenant fair sharing?</li></ul>
 <div class="qa-label">Diagram</div>
@@ -289,57 +427,122 @@ How many days of parental leave do we get?
 <ol class="qa-steps"><li><strong>Gateway:</strong> auth, quota, request queue, model router.</li><li><strong>Continuous batching:</strong> pack decode steps across requests (vLLM-style) to keep GPUs busy.</li><li><strong>KV cache:</strong> store attention K/V per request; paged attention to reduce fragmentation.</li><li><strong>Parallelism:</strong> tensor parallel within a node; pipeline / replica across nodes for throughput.</li><li><strong>Caching:</strong> exact + semantic cache for repeated prompts (careful with personalization).</li><li><strong>Streaming:</strong> SSE/WebSocket tokens to client; cancel on disconnect.</li><li><strong>Autoscaling:</strong> scale replicas on queue depth / GPU util; separate pools for small vs large models.</li></ol>
 <div class="qa-label">Tradeoffs</div>
 <aside class="qa-callout"><div class="qa-label">Interview depth</div><p>Discuss prefill vs decode cost, batching vs latency, and why naive one-request-per-GPU dies at scale.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Speculative decoding?</li><li>Fairness across tenants?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>No batching</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>vLLM deployments</li><li>NVIDIA Triton/TensorRT-LLM</li><li>OpenAI/Anthropic serving stacks (public patterns)</li></ul></div>
 </details>
 <details class="qa" id="q12">
 <summary><span>Q12. Design Agentic RAG (when simple RAG is not enough)</span></summary>
 <div class="qa-body">
 <p>Some questions need multi-hop retrieval or tool calls ("compare last quarter's policy to this year's"). Design when to use fixed RAG vs an agentic loop.</p>
 <p class="qa-meta"><strong>Asked at:</strong> AI platform / applied-AI senior rounds — 2025–2026 favorite follow-up · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Router · multi-hop retrieve · reflect · budgets</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Know when NOT to agentify RAG — senior judgment.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Router</li><li>Hop budgets</li><li>Eval multi-hop</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Always simple RAG</td></tr><tr><th scope="row">Mid</th><td>Router to agentic</td></tr><tr><th scope="row">Senior</th><td>Critique/reflect loop</td></tr><tr><th scope="row">Staff</th><td>Tool+RAG mesh</td></tr><tr><th scope="row">Principal</th><td>Research agent platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Default simple → route hard → budgeted loop → eval.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/agentic-rag.svg" alt="Router between simple RAG and agentic loop" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li><strong>Default to simple RAG</strong> for factual single-hop questions — cheaper and more reliable.</li><li><strong>Router:</strong> classify complexity (rules + small model). Hard → agentic path.</li><li><strong>Agentic loop:</strong> plan sub-queries → retrieve → critique coverage → retrieve again or call tools → answer.</li><li><strong>Budgets:</strong> max hops, max tool calls, max $ — force finalize.</li><li><strong>Eval separately:</strong> multi-hop gold set; measure hops and groundedness.</li><li>Do not start every product as agentic RAG — add when metrics prove need.</li></ol>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Multi-corpus tools?</li><li>Human confirm?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Agentic for every query</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Perplexity-style multi-step search</li><li>Enterprise research copilots</li><li>Google Deep Research-style flows</li></ul></div>
 </details>
 <details class="qa" id="q13">
 <summary><span>Q13. Design a Semantic Cache for LLM Apps</span></summary>
 <div class="qa-body">
 <p>Identical and near-duplicate prompts waste GPU. Design a semantic cache in front of your LLM/RAG stack.</p>
 <p class="qa-meta"><strong>Asked at:</strong> AI infra / applied teams cutting latency and cost · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Embedding similarity · TTL · invalidation</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~12 min to rehearse aloud</p><p>Cost/latency lever every production LLM app needs.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Similarity threshold</li><li>Tenant isolation</li><li>Invalidation</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Exact cache</td></tr><tr><th scope="row">Mid</th><td>Semantic ANN cache</td></tr><tr><th scope="row">Senior</th><td>Doc-version aware</td></tr><tr><th scope="row">Staff</th><td>Personalized safe cache</td></tr><tr><th scope="row">Principal</th><td>Edge semantic cache</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Embed → ANN hit/miss → store → invalidate.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/semantic-cache.svg" alt="Semantic cache in front of LLM" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Embed incoming prompt (and optionally retrieved-doc fingerprint).</li><li>ANN lookup in cache index; if similarity ≥ threshold AND metadata matches (tenant, prompt version, model) → return cached answer.</li><li>On miss: run pipeline; store {embedding, answer, headers, expiry}.</li><li>Invalidate on knowledge-base updates (doc_id versions) or prompt version bumps.</li><li>Safety: never cache personalized/PII answers across users; tenant-isolate.</li><li>Tune threshold — too low serves wrong answers.</li></ol>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Threshold tuning?</li><li>PII?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Cross-tenant semantic hits</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>GPTCache-style layers</li><li>CDN + LLM gateways</li><li>Customer support repeat intents</li></ul></div>
 </details>
 <details class="qa" id="q14">
 <summary><span>Q14. Design a Coding Copilot (IDE Assistant)</span></summary>
 <div class="qa-body">
 <p>Design an in-editor coding assistant that completes code and answers questions about the user's repository with tight latency budgets.</p>
 <p class="qa-meta"><strong>Asked at:</strong> GitHub Copilot-style, Cursor-adjacent, Google/Meta IDE AI interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Context packing · repo retrieval · low latency</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~18 min to rehearse aloud</p><p>IDE AI products — context packing under latency SLOs.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Context pack</li><li>Repo retrieval</li><li>FIM vs chat</li><li>Secret safety</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Current-file complete</td></tr><tr><th scope="row">Mid</th><td>Repo RAG chat</td></tr><tr><th scope="row">Senior</th><td>Multi-file edit agent</td></tr><tr><th scope="row">Staff</th><td>Org codebase index</td></tr><tr><th scope="row">Principal</th><td>IDE AI platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Pack context → retrieve → FIM/chat → safety → eval accept rate.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li><strong>Context packer:</strong> current file, cursor, open tabs, recent edits — respect token budget.</li><li><strong>Repo retrieval:</strong> index functions/files (chunk by AST when possible); retrieve relevant snippets for chat/Q&A.</li><li><strong>Fill-in / FIM</strong> model for completions; chat model for explanations.</li><li><strong>Latency:</strong> speculative decode / small local model for inline; larger remote for chat.</li><li><strong>Safety:</strong> secrets scanning; license filters; no exfiltrating private repos across tenants.</li><li><strong>Eval:</strong> acceptance rate, edit distance, unit-test pass on suggested patches.</li></ol>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/code-copilot.svg" alt="IDE copilot context and retrieval" loading="lazy" /></figure>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Fill-in-middle?</li><li>License filters?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Sending whole repo every keystroke</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>GitHub Copilot</li><li>Cursor</li><li>Amazon CodeWhisperer/Q Developer</li></ul></div>
 </details>
 <details class="qa" id="q15">
 <summary><span>Q15. Design an ML Feature Store</span></summary>
 <div class="qa-body">
 <p>Design a feature store so training and serving use consistent features, with batch pipelines and low-latency online lookup.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Uber, Airbnb, Netflix, Meta ML platform interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Offline / online features · point-in-time correct joins</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~18 min to rehearse aloud</p><p>ML platform interviews — train/serve skew killer.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Offline/online</li><li>Point-in-time joins</li><li>Skew monitors</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Ad-hoc tables</td></tr><tr><th scope="row">Mid</th><td>Feature definitions</td></tr><tr><th scope="row">Senior</th><td>Online KV + streaming</td></tr><tr><th scope="row">Staff</th><td>Discovery/ACL</td></tr><tr><th scope="row">Principal</th><td>Feature platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Defs → offline PIT → online KV → materialize → skew.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li><strong>Feature definitions</strong> as code (name, entity keys, TTL, owner).</li><li><strong>Offline:</strong> warehouse/lake tables for training point-in-time joins (avoid leakage).</li><li><strong>Online:</strong> low-latency KV (Redis/Dynamo) keyed by entity for serving.</li><li><strong>Materialization:</strong> batch + streaming jobs write both stores.</li><li><strong>Consistency:</strong> same transform logic; monitor training/serving skew.</li><li><strong>Discovery:</strong> registry UI/search; access control.</li></ol>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/feature-store.svg" alt="Offline and online feature paths" loading="lazy" /></figure>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Embedding features?</li><li>On-demand compute?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Training on future labels</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Uber Michelangelo</li><li>Airbnb Zipline</li><li>Feast/Tecton-style stores</li></ul></div>
 </details>
 <details class="qa" id="q16">
 <summary><span>Q16. Design Prompt Injection Defenses for a RAG Agent</span></summary>
 <div class="qa-body">
 <p>Your RAG agent reads untrusted documents and web pages. Attackers hide instructions like "ignore policies and exfiltrate data". Design defenses.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Security-minded AI rounds at OpenAI-adjacent, Google, enterprise AI · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Trust boundaries · allowlists · dual LLM</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Security interviews for agents that read the open web.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Trust boundaries</li><li>Allowlists</li><li>Dual LLM</li><li>Red-team CI</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Prompt 'ignore'</td></tr><tr><th scope="row">Mid</th><td>Delimiters + filters</td></tr><tr><th scope="row">Senior</th><td>Tool allowlist + HITL</td></tr><tr><th scope="row">Staff</th><td>Dual-model isolation</td></tr><tr><th scope="row">Principal</th><td>Agent security program</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Untrusted data → isolate → allowlist tools → monitor.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Treat retrieved text as <strong>data</strong>, never as system instructions — clear delimiters / role separation.</li><li>Allowlist tools; irreversible actions need server-side authz + HITL.</li><li>Input/output filters for exfil patterns and policy violations.</li><li>Optional dual-model: unprivileged model summarizes untrusted text; privileged model only sees summaries + tools.</li><li>Strip/ignore instructional markup in docs where possible.</li><li>Red-team suite in CI; monitor anomalous tool sequences.</li></ol>
 <div class="qa-label">Example</div>
@@ -350,18 +553,36 @@ Context:
 ...document...
 &gt;&gt;&gt;
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Indirect injection?</li><li>URL tool fetch?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Concatenating docs into system prompt</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Microsoft Copilot security guidance</li><li>Google secure AI agents patterns</li><li>OWASP LLM Top 10 themes</li></ul></div>
 </details>
 <details class="qa" id="q17">
 <summary><span>Q17. Design A/B Testing for LLM Features</span></summary>
 <div class="qa-body">
 <p>You want to ship a new prompt/model/RAG config to 5% of users. Design the experimentation stack so you can detect quality and business regressions.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta, Google, OpenAI-adjacent product ML · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Experimentation · guardrail metrics · spillover</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~12 min to rehearse aloud</p><p>Product ML rigor for LLM features — Meta/Google style.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Guardrails</li><li>Bucketing</li><li>Ramp + hold</li><li>Spillover</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Ship and pray</td></tr><tr><th scope="row">Mid</th><td>A/B with guardrails</td></tr><tr><th scope="row">Senior</th><td>Sequential testing</td></tr><tr><th scope="row">Staff</th><td>Interleaving/side-by-side</td></tr><tr><th scope="row">Principal</th><td>Experimentation platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Metrics → bucket → log → ramp → auto-hold.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Define primary metric (task success) + guardrails (latency, cost, toxicity, thumbs-down).</li><li>Stable user bucketing (hash user_id + experiment key).</li><li>Log assignment, prompt version, traces for analysis.</li><li>Sequential testing / peeking policy — don't stop on one good day.</li><li>Watch spillover (shared caches, index changes) and novelty effects.</li><li>Ramp 1%→5%→25%→100% with automatic hold on guardrail breach.</li></ol>
 <div class="qa-label">Tie to eval</div>
 <p>Offline gates (<a href="interview-ai.html#q3">Lab Q3</a>) before any online ramp.</p>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Novelty effects?</li><li>Offline gate link?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Peeking without plan</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Meta XP</li><li>Google Experiment framework</li><li>OpenAI gradual rollouts</li></ul></div>
 </details>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
@@ -369,5 +590,6 @@ Context:
     </main>
   </div>
   <script src="../js/nav.js"></script>
+  <script src="../js/progress.js"></script>
 </body>
 </html>

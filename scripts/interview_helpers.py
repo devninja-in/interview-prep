@@ -125,6 +125,7 @@ CHAPTER_SHELL = """<!DOCTYPE html>
     </main>
   </div>
   <script src="../js/nav.js"></script>
+  <script src="../js/progress.js"></script>
 </body>
 </html>
 """

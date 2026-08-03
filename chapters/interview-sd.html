@@ -28,7 +28,7 @@
         <p class="part-eyebrow">Interview Lab · System Design</p>
         <header class="chapter-hero">
 <h1>System design interview questions</h1>
-<p class="lab-hero-note">Eighteen L4–L6 prompts from recent FAANG loops — clarify, capacity, diagrams, deep dives, and failure modes.</p>
+<p class="lab-hero-note">Eighteen L4–L6 prompts with why-asked, level expectations, whiteboard steps, and real company examples.</p>
 </header>
 <div class="chapter-body">
 <p>This lab is for <strong>L4–L6 system design loops</strong> — prompts repeatedly reported at
@@ -77,6 +77,14 @@ Open a card, study it, then redraw from memory on a blank page.</p>
 <div class="qa-body">
 <p>Design a service like bit.ly: users submit a long URL and get a short link; opening the short link redirects to the original. Expect ~100M new URLs/month and a much higher read:write ratio. Walk a full 45-minute design.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft, Uber — most common system-design opener · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hashing · base62 IDs · read-heavy cache</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~20 min to rehearse aloud</p><p>Perfect first SD question: read-heavy KV, ID generation, caching.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Clarify + capacity</li><li>ID scheme</li><li>Read vs write path</li><li>Analytics async</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Basic API + DB + redirect</td></tr><tr><th scope="row">Mid</th><td>Cache + base62 + 302 vs 301</td></tr><tr><th scope="row">Senior</th><td>Multi-region + abuse</td></tr><tr><th scope="row">Staff</th><td>Global edge + consistency story</td></tr><tr><th scope="row">Principal</th><td>Platform constraints / multi-tenant shorteners</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Clarify → nums → API → ID → KV+cache → deep dive.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>Custom aliases? Expiry? Auth?</li><li>Analytics (click counts) required?</li><li>Latency: redirect p99 &lt; 100ms?</li><li>Availability target (e.g. 99.9%)?</li><li>Assume ~7-char base62 codes unless they specify otherwise.</li></ul>
 <div class="qa-label">Diagram</div>
@@ -87,13 +95,26 @@ Open a card, study it, then redraw from memory on a blank page.</p>
 <ul><li><strong>Hot keys:</strong> viral links — cache replicas / local caches.</li><li><strong>Enumeration:</strong> avoid raw sequential public IDs; salt / skip / encrypt.</li><li><strong>Multi-region:</strong> replicate read-only mappings; write to primary with async replication.</li><li><strong>Custom aliases:</strong> conditional put; reject if taken.</li></ul>
 <div class="qa-label">What strong answers sound like</div>
 <aside class="qa-callout"><div class="qa-label">Signal</div><p>One ID scheme with collision story, short read path, analytics explicitly async, and a clear 301 vs 302 opinion.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Custom aliases?</li><li>Enumerate IDs?</li><li>Global latency?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Blocking redirect on analytics</li><li>No collision story</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>bit.ly / t.co style redirects</li><li>Amazon product short links</li><li>Firebase Dynamic Links patterns</li></ul></div>
 </details>
 <details class="qa" id="q2">
 <summary><span>Q2. Design Instagram / News Feed</span></summary>
 <div class="qa-body">
 <p>Design a photo-sharing social network: follow users, upload photos, see a home feed of posts from people you follow (roughly reverse-chronological with light ranking).</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta, Instagram, Twitter/X interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Hybrid fan-out · timeline cache · media CDN</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~25 min to rehearse aloud</p><p>Tests fan-out tradeoffs — Meta’s signature problem.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Celebrity problem</li><li>Hybrid fan-out</li><li>Media CDN</li><li>Eventual consistency</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Chronological pull</td></tr><tr><th scope="row">Mid</th><td>Push fan-out</td></tr><tr><th scope="row">Senior</th><td>Hybrid + ranking stage</td></tr><tr><th scope="row">Staff</th><td>ML ranker + diversity</td></tr><tr><th scope="row">Principal</th><td>Feed platform multi-surface</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Upload → fan-out strategy → read path → celebrity → ranking.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>Scale: hundreds of millions of users?</li><li>Celebrity / mega-follower problem in scope?</li><li>Stories? Likes counters? Ranking ML?</li><li>Consistency: eventual feed OK?</li></ul>
 <div class="qa-label">Diagram</div>
@@ -102,13 +123,26 @@ Open a card, study it, then redraw from memory on a blank page.</p>
 <ol class="qa-steps"><li><strong>Write media:</strong> pre-signed upload → object store + CDN; metadata row (post_id, author, caption, media_url, ts).</li><li><strong>Fan-out on write:</strong> push post_id into each follower's timeline cache (Redis lists) — great for normal users.</li><li><strong>Fan-out on read / pull:</strong> for celebrities, do <em>not</em> push to tens of millions of timelines; merge recent posts at read time.</li><li><strong>Hybrid:</strong> write-fanout for normals, pull for celebs (or inactive users).</li><li><strong>Read path:</strong> auth → timeline cache → hydrate posts → CDN URLs.</li><li><strong>Ranking:</strong> start chronological; add retrieval + re-rank stage later.</li><li><strong>Sharding:</strong> user_id for timelines; post_id for posts.</li></ol>
 <div class="qa-label">Deep dives</div>
 <ul><li>Counters (likes/views): sharded in-memory with periodic flush; approximate display OK.</li><li>Notifications / stories: separate services + queues.</li><li>Feed can be eventually consistent; durable post metadata is enough for ACK.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Stories?</li><li>Live counters?</li><li>Unfollow consistency?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Push to 50M followers</li><li>No CDN for media</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Instagram/FB feed</li><li>LinkedIn feed fanout</li><li>Twitter/X home timeline</li></ul></div>
 </details>
 <details class="qa" id="q3">
 <summary><span>Q3. Design WhatsApp / Chat</span></summary>
 <div class="qa-body">
 <p>Design 1:1 and group messaging with delivery receipts, online presence, and media sharing. Focus on low latency and reliability.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta, WhatsApp, Slack, Discord-style rounds · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> WebSocket · durable log · presence · group fan-out</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~25 min to rehearse aloud</p><p>Realtime systems, durability, fan-out — Meta/Slack loops.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>WS/sticky</li><li>Persist before ACK</li><li>Group strategy</li><li>Presence</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>1:1 WS + DB</td></tr><tr><th scope="row">Mid</th><td>Offline store-and-forward</td></tr><tr><th scope="row">Senior</th><td>Large groups + E2E talk</td></tr><tr><th scope="row">Staff</th><td>Multi-device sync</td></tr><tr><th scope="row">Principal</th><td>Global chat fabric</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Connections → durable log → inbox → push/offline → groups.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>E2E encryption in scope?</li><li>Max group size?</li><li>Multi-device sync?</li><li>Message history retention?</li></ul>
 <div class="qa-label">Diagram</div>
@@ -117,13 +151,26 @@ Open a card, study it, then redraw from memory on a blank page.</p>
 <ol class="qa-steps"><li><strong>Connections:</strong> sticky WebSocket/MQTT to chat servers; presence map user→server in Redis.</li><li><strong>Send path:</strong> client → chat server → durable queue/log (Kafka) → fan-out to recipient inboxes → push to online sockets or store-and-forward if offline.</li><li><strong>ACK:</strong> persist before ACK to sender (at-least-once); clients de-dupe by message_id.</li><li><strong>Ordering:</strong> per-conversation monotonic sequence from a single partition/writer.</li><li><strong>Groups:</strong> small → fan-out to members; large → group log + members catch up / notify online only.</li><li><strong>Media:</strong> upload to blob store; message carries URL/thumbnail.</li><li><strong>Presence:</strong> heartbeats with short TTL.</li><li><strong>Receipts:</strong> separate lightweight events; do not block delivery.</li></ol>
 <div class="qa-label">E2E note</div>
 <aside class="qa-callout"><div class="qa-label">If asked</div><p>Server stores ciphertext + metadata; keys on devices. Acknowledge feature tradeoffs (server-side search hard).</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>E2E encryption?</li><li>Read receipts scale?</li><li>Message edit/delete?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>No durability before ACK</li><li>Fan-out write to huge groups</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>WhatsApp</li><li>Slack channels</li><li>Discord large guilds patterns</li></ul></div>
 </details>
 <details class="qa" id="q4">
 <summary><span>Q4. Design a Rate Limiter</span></summary>
 <div class="qa-body">
 <p>Design a distributed rate limiter for an API gateway: e.g. 100 requests per user per minute, consistent across many gateway instances.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Stripe, Cloudflare, Google — building-block favorite · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Token bucket · sliding window · Redis</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Building block that appears inside every API design.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Algorithm choice</li><li>Atomic Redis</li><li>Fail open/closed</li><li>Dimensions</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Fixed window</td></tr><tr><th scope="row">Mid</th><td>Token bucket + Redis</td></tr><tr><th scope="row">Senior</th><td>Multi-region approx</td></tr><tr><th scope="row">Staff</th><td>Adaptive limits</td></tr><tr><th scope="row">Principal</th><td>Mesh-wide policy engine</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Pick algorithm → distributed store → 429 → failure mode.</p></aside>
 <div class="qa-label">Algorithms (know 3)</div>
 <ul><li><strong>Token bucket:</strong> refill rate r; burst capacity — industry default.</li><li><strong>Leaky bucket:</strong> smooth constant outflow.</li><li><strong>Fixed window:</strong> simple counters; edge burst problem.</li><li><strong>Sliding window log/counter:</strong> fairer, more cost.</li></ul>
 <div class="qa-label">Diagram</div>
@@ -135,85 +182,176 @@ Open a card, study it, then redraw from memory on a blank page.</p>
 # atomic Lua: refill based on elapsed time, consume 1 if tokens&gt;=1
 # else return limited
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Per-user vs per-IP?</li><li>Burst vs smooth?</li><li>Redis down?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Non-atomic INCR races</li><li>Only local in-memory limits</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>AWS API Gateway</li><li>Cloudflare rate limiting</li><li>Stripe API limits</li></ul></div>
 </details>
 <details class="qa" id="q5">
 <summary><span>Q5. Design Uber / Ride Sharing</span></summary>
 <div class="qa-body">
 <p>Design ride-hailing: riders request trips, nearby drivers are matched, locations update in realtime, pricing/ETA computed.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Uber, Lyft, DoorDash-adjacent geo interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Geo index · matching · trip state machine</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~25 min to rehearse aloud</p><p>Geo + matching + state machines — Uber/Lyft signature.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Geo index</li><li>Double-dispatch</li><li>Trip FSM</li><li>City sharding</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Basic nearby query</td></tr><tr><th scope="row">Mid</th><td>Ring matching + ETA</td></tr><tr><th scope="row">Senior</th><td>Surge + CAS claim</td></tr><tr><th scope="row">Staff</th><td>Multi-product dispatch</td></tr><tr><th scope="row">Principal</th><td>Marketplace optimization</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>GPS stream → geo index → match → claim → trip events.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>Cities / regions in scope?</li><li>ETA accuracy expectations?</li><li>Surge pricing?</li><li>Driver app battery / update frequency?</li></ul>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/uber-matching.svg" alt="Geo index and ride matching" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step whiteboard</div>
 <ol class="qa-steps"><li><strong>Location stream:</strong> drivers send GPS every few seconds → update geo index (geohash / S2 cells in Redis or specialized store).</li><li><strong>Request:</strong> rider → query nearby cells → filter status/vehicle → rank by ETA/rating → offer with timeout → expand ring on miss.</li><li><strong>Double dispatch:</strong> atomic claim / CAS on driver status with lease; only one rider wins.</li><li><strong>Trip lifecycle:</strong> requested → matched → enroute → ongoing → completed (state machine + events to billing/notify).</li><li><strong>ETA:</strong> map-match + traffic-aware routing service; cache segments.</li><li><strong>Surge:</strong> demand/supply per cell, smoothed (EMA), capped rate of change.</li><li><strong>Scale:</strong> shard by city/region — traffic is local.</li></ol>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Surge?</li><li>ETA accuracy?</li><li>Airport queues?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Global single DB</li><li>No atomic driver claim</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Uber/Lyft dispatch</li><li>DoorDash courier matching</li><li>Gojek regional stacks</li></ul></div>
 </details>
 <details class="qa" id="q6">
 <summary><span>Q6. Design YouTube / Video Streaming</span></summary>
 <div class="qa-body">
 <p>Design video upload and streaming: users upload; millions watch with adaptive quality worldwide.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Netflix, Meta — storage + CDN heavy · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Transcoding pipeline · CDN · adaptive bitrate</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~25 min to rehearse aloud</p><p>Pipeline + CDN — Google/Netflix media systems.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Async transcode</li><li>ABR</li><li>CDN hot path</li><li>Cost/tiering</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Upload + single bitrate</td></tr><tr><th scope="row">Mid</th><td>Ladder + CDN</td></tr><tr><th scope="row">Senior</th><td>Live vs VOD</td></tr><tr><th scope="row">Staff</th><td>Global POP ingest</td></tr><tr><th scope="row">Principal</th><td>Encoding marketplace</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Upload blob → queue encode → HLS/DASH → CDN play.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/youtube-cdn-pipeline.svg" alt="Upload, transcode, CDN playback" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step whiteboard</div>
 <ol class="qa-steps"><li><strong>Upload:</strong> pre-signed URL → direct to object store; metadata = processing.</li><li><strong>Pipeline:</strong> queue workers transcode many resolutions/codecs, thumbs, duration → HLS/DASH segments → mark ready. Fast-start low-res first.</li><li><strong>Playback:</strong> client fetches manifest; CDN serves segments; origin is object store; ABR by bandwidth.</li><li><strong>Hot titles:</strong> heavy edge caching; short TTL for live.</li><li><strong>Live:</strong> separate ingest POPs → packager → CDN; not the VOD path.</li><li><strong>Cost:</strong> lifecycle to cold storage; fewer bitrates for rarely watched; copyright fingerprinting async.</li><li><strong>Recs:</strong> offline ML + online re-rank — off the play path.</li></ol>
 <div class="qa-label">Key principle</div>
 <aside class="qa-callout"><div class="qa-label">Never</div><p>Never transcode on the user-facing request path. Processing is a pipeline; serving is CDN.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Viral cold cache?</li><li>DRM?</li><li>Thumbnails A/B?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Transcode on request path</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>YouTube</li><li>Netflix encoding + Open Connect</li><li>Twitch live ladder</li></ul></div>
 </details>
 <details class="qa" id="q7">
 <summary><span>Q7. Design a Notification System</span></summary>
 <div class="qa-body">
 <p>Design multi-channel notifications: push, email, SMS, in-app — with preferences, retries, and high throughput.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Uber, Slack · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Fan-out · priority queues · templates · DLQ</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~18 min to rehearse aloud</p><p>Async fan-out with preferences — almost every company.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Channels</li><li>Prefs</li><li>Retries/DLQ</li><li>Idempotency</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Single channel worker</td></tr><tr><th scope="row">Mid</th><td>Multi-channel + prefs</td></tr><tr><th scope="row">Senior</th><td>Priority + chunking</td></tr><tr><th scope="row">Staff</th><td>Global quiet hours/compliance</td></tr><tr><th scope="row">Principal</th><td>Notification platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Enqueue → gate prefs → workers → providers → DLQ.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/notification-pipeline.svg" alt="Notification fan-out pipeline" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step whiteboard</div>
 <ol class="qa-steps"><li>Producers enqueue jobs (do not block product writes).</li><li>Preferences/quiet-hours gate before send.</li><li>Kafka topics by priority/channel → workers render templates → provider adapters (APNs/FCM, SES, Twilio).</li><li>Idempotency keys; rate-limit per user and per provider.</li><li>Retries with exponential backoff → DLQ for poison messages.</li><li>Large audiences: chunked fan-out tasks.</li><li>Aim at-least-once + idempotent display — not exactly-once fantasy.</li></ol>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Exactly-once?</li><li>Celebrity fan-out?</li><li>Digest bundling?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Sync send on request path</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Amazon SES+SNS</li><li>Uber notifications</li><li>LinkedIn notification service</li></ul></div>
 </details>
 <details class="qa" id="q8">
 <summary><span>Q8. Design Typeahead / Search Autocomplete</span></summary>
 <div class="qa-body">
 <p>Design search autocomplete that returns top suggestions as the user types, with low latency and some trending awareness.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Amazon, Twitter · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Trie · top-k · edge cache</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Prefix systems + offline top-k — Google classic.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Trie/top-k</li><li>Offline vs online</li><li>Edge cache</li><li>Personalization light touch</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>In-memory trie</td></tr><tr><th scope="row">Mid</th><td>Snapshots + CDN</td></tr><tr><th scope="row">Senior</th><td>Trending re-rank</td></tr><tr><th scope="row">Staff</th><td>Personalization + spell</td></tr><tr><th scope="row">Principal</th><td>Multi-locale platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Offline top-k → trie → debounce → cache.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/autocomplete-trie.svg" alt="Prefix index autocomplete" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step whiteboard</div>
 <ol class="qa-steps"><li><strong>Offline:</strong> aggregate query logs → top-k per prefix → build trie/prefix index → ship snapshots to servers/edge.</li><li><strong>Online:</strong> client debounces; request prefix → memory trie returns top-k (&lt;50ms); light personalization/trending re-rank.</li><li>Cache popular prefixes at CDN/edge.</li><li>Limit prefix length; store only top-k not full postings.</li><li>Shard trie by first character(s) if needed.</li><li>Refresh index on minutes cadence — not per keystroke.</li></ol>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Personalization?</li><li>Typo tolerance?</li><li>Abuse?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Query DB per keystroke</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Google Suggest</li><li>Amazon search box</li><li>Twitter typeahead</li></ul></div>
 </details>
 <details class="qa" id="q9">
 <summary><span>Q9. Design a Distributed Cache</span></summary>
 <div class="qa-body">
 <p>Design a distributed in-memory cache: get/put/delete, TTL, HA, horizontal scale.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft, Oracle — Redis/Memcached style · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Consistent hashing · replication · eviction</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~20 min to rehearse aloud</p><p>Distributed systems fundamentals — Amazon/Microsoft.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Consistent hashing</li><li>Replication</li><li>Stampede</li><li>CAP for cache</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Single Redis</td></tr><tr><th scope="row">Mid</th><td>Shard + replica</td></tr><tr><th scope="row">Senior</th><td>Hot keys + soft TTL</td></tr><tr><th scope="row">Staff</th><td>Multi-region cache</td></tr><tr><th scope="row">Principal</th><td>Cache platform SLOs</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Ring → replicas → eviction → stampede → miss path.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/consistent-hash-cache.svg" alt="Consistent hashing ring" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step whiteboard</div>
 <ol class="qa-steps"><li>Client or proxy uses consistent hashing → shard.</li><li>Each shard: primary + replicas (async or semi-sync).</li><li>Eviction: LRU/LFU + TTL per node.</li><li>Membership via gossip/config service; virtual nodes for balance.</li><li><strong>Hot keys:</strong> replicate popular keys; local caches.</li><li><strong>Stampede:</strong> soft TTL + singleflight / probabilistic early expire.</li><li>Write strategies: invalidate-on-write common; write-through / behind when justified.</li><li>CAP: prefer AP for cache; miss → load DB.</li><li>Persistence optional — usually ephemeral by design.</li></ol>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Write-through vs invalidate?</li><li>Persistence?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Treating cache as source of truth</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>ElastiCache/Memorystore</li><li>Netflix EVCache</li><li>Facebook Memcached fleet</li></ul></div>
 </details>
 <details class="qa" id="q10">
 <summary><span>Q10. Design Ticketmaster / Event Booking</span></summary>
 <div class="qa-body">
 <p>Design ticketing for concerts: browse events, hold seats, pay, issue tickets — without double-selling under spikes.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Ticketmaster-style concurrency interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Inventory locks · holds · idempotent payment</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~22 min to rehearse aloud</p><p>Strong consistency under flash sales — inventory correctness.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Holds/TTL</li><li>CAS</li><li>Idempotent pay</li><li>Waiting room</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Row lock booking</td></tr><tr><th scope="row">Mid</th><td>Hold+pay saga</td></tr><tr><th scope="row">Senior</th><td>Event shard + queue</td></tr><tr><th scope="row">Staff</th><td>Global onsale fabric</td></tr><tr><th scope="row">Principal</th><td>Marketplace inventory mesh</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>States → hold → pay → commit → failure paths.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/ticket-hold-checkout.svg" alt="Seat hold and checkout" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step whiteboard</div>
 <ol class="qa-steps"><li><strong>Browse:</strong> read replicas + CDN for event pages; seat maps cached carefully.</li><li><strong>Inventory states:</strong> available → held → sold.</li><li><strong>Hold:</strong> soft lock with short TTL (2–10 min) via Redis or conditional row update.</li><li><strong>Checkout:</strong> create hold → payment intent → on success commit seats + ticket IDs; on fail/expiry release hold.</li><li><strong>Idempotency:</strong> keys on payment webhooks — no double charge / double sell.</li><li><strong>Consistency:</strong> strong on inventory (CAS / <code>UPDATE … WHERE status='available'</code>).</li><li><strong>Scale:</strong> shard by event_id; waiting rooms / queues for mega on-sales.</li></ol>
 <div class="qa-label">Strong closer</div>
 <aside class="qa-callout"><div class="qa-label">Contrast with feeds</div><p>Feeds can be eventually consistent. Ticket inventory cannot. Say that contrast out loud — interviewers love it.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Overbooking airlines?</li><li>Seat maps cache?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Eventual consistency on seats</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Ticketmaster</li><li>Amazon Lightning Deals inventory</li><li>Airline PSS holds</li></ul></div>
 </details>
 <details class="qa" id="q11">
 <summary><span>Q11. Design Dropbox / Google Drive</span></summary>
 <div class="qa-body">
 <p>Design a cloud file storage and sync service: upload/download files, sync across devices, share folders, and handle large files efficiently.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, Google, Microsoft — top file-storage design · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Chunked upload · sync · metadata vs blob</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~22 min to rehearse aloud</p><p>Metadata vs blob + sync protocol — Dropbox/Drive interviews.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Chunking/dedupe</li><li>Conflict handling</li><li>Notify devices</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Upload whole file</td></tr><tr><th scope="row">Mid</th><td>Chunked hash sync</td></tr><tr><th scope="row">Senior</th><td>Conflicts + sharing ACL</td></tr><tr><th scope="row">Staff</th><td>Block-level sync</td></tr><tr><th scope="row">Principal</th><td>Collab editing add-on</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Metadata DB + object chunks → sync delta → notify.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>Max file size? Concurrent editors?</li><li>Version history? Offline sync?</li><li>Sharing ACLs / links?</li></ul>
 <div class="qa-label">Diagram</div>
@@ -222,88 +360,184 @@ Open a card, study it, then redraw from memory on a blank page.</p>
 <ol class="qa-steps"><li><strong>Split metadata and bytes:</strong> metadata DB (file_id, path, versions, ACL); blobs in object storage.</li><li><strong>Chunk files</strong> (e.g. 4MB); content-hash chunks for dedupe; upload only missing chunks.</li><li><strong>Sync protocol:</strong> client keeps local revision; pull delta since last sync; conflict → last-write-wins or branch versions.</li><li><strong>Notifications:</strong> long-poll / websocket for file-change events to other devices.</li><li><strong>Large uploads:</strong> multipart / resumable; commit metadata only when all chunks ACK'd.</li><li><strong>Sharing:</strong> ACL on folder nodes; link tokens with expiry.</li></ol>
 <div class="qa-label">Deep dives</div>
 <ul><li>Namespace tree sharding by owner_id.</li><li>CDC from metadata → search index.</li><li>Client block-level sync (rsync-like) for huge files.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Simultaneous edits?</li><li>Very large files?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Storing huge blobs in SQL</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Dropbox</li><li>Google Drive</li><li>OneDrive</li></ul></div>
 </details>
 <details class="qa" id="q12">
 <summary><span>Q12. Design a Web Crawler</span></summary>
 <div class="qa-body">
 <p>Design a distributed web crawler that discovers and fetches pages at large scale while respecting robots.txt and politeness limits.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Amazon — classic distributed systems question · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> URL frontier · politeness · dedupe</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~20 min to rehearse aloud</p><p>Distributed scheduling + politeness — Google classic.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Frontier</li><li>Dedupe</li><li>Per-host limits</li><li>Budget/priority</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Single crawler</td></tr><tr><th scope="row">Mid</th><td>Distributed frontier</td></tr><tr><th scope="row">Senior</th><td>Freshness/recrawl</td></tr><tr><th scope="row">Staff</th><td>JS rendering farm</td></tr><tr><th scope="row">Principal</th><td>Web-scale crawl platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Frontier → fetch → extract → dedupe → politeness.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/web-crawler.svg" alt="Distributed crawl frontier" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li><strong>URL frontier:</strong> prioritized queue of URLs to fetch (BFS / priority by PageRank estimate).</li><li><strong>Dedupe:</strong> seen URL set (Bloom + store); canonicalize URLs.</li><li><strong>Politeness:</strong> per-host rate limits; respect robots.txt (cache rules).</li><li><strong>Workers:</strong> fetch → extract links → enqueue new URLs; store raw HTML / parse text.</li><li><strong>Distributed:</strong> shard frontier by host hash so one host stays on one worker (politeness).</li><li><strong>Failure:</strong> retries, crawl budget, blacklist bad hosts.</li></ol>
 <div class="qa-label">Google flavor</div>
 <aside class="qa-callout"><div class="qa-label">Often probed</div><p>How do you avoid drowning in low-value pages? Priority + crawl budget. How do you refresh? Recrawl based on change rate.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>JavaScript-heavy pages?</li><li>Change rates?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Ignoring robots.txt</li><li>Hammering one host</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Googlebot</li><li>Amazon product crawlers</li><li>Bing crawler</li></ul></div>
 </details>
 <details class="qa" id="q13">
 <summary><span>Q13. Design a Payment System</span></summary>
 <div class="qa-body">
 <p>Design a payment service that charges cards, handles retries safely, supports refunds, and keeps an accurate ledger under failures.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Stripe, PayPal, Amazon, Square — money-moving design · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Idempotency · ledger · saga / outbox</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~25 min to rehearse aloud</p><p>Money systems — Stripe/Amazon bar for correctness.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Idempotency</li><li>Ledger</li><li>Webhooks</li><li>PCI boundary</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Charge API + DB flag</td></tr><tr><th scope="row">Mid</th><td>Idempotent intents + ledger</td></tr><tr><th scope="row">Senior</th><td>Saga/outbox</td></tr><tr><th scope="row">Staff</th><td>Multi-rail orchestration</td></tr><tr><th scope="row">Principal</th><td>Global payments platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Idempotency → intent → ledger → processor → webhooks.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/payment-saga.svg" alt="Idempotent payment and ledger" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li><strong>Idempotency keys</strong> on every charge from the client — retries must not double-charge.</li><li><strong>API:</strong> create PaymentIntent → confirm → capture (or auth+capture).</li><li><strong>Ledger:</strong> append-only double-entry journal; balances derived — never overwrite money rows.</li><li><strong>Provider calls:</strong> stripe/processor behind adapter; store provider refs; reconcile webhooks with signature verify.</li><li><strong>Distributed tx:</strong> transactional outbox or saga for order ↔ payment; compensating refunds on failure.</li><li><strong>PCI:</strong> never store raw PAN; use tokens; isolate network.</li></ol>
 <div class="qa-label">Strong signal</div>
 <aside class="qa-callout"><div class="qa-label">Say this</div><p>At-least-once webhooks + idempotent handlers. Exactly-once is a ledger property you engineer, not a queue guarantee.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Partial capture?</li><li>Chargebacks?</li><li>Multi-currency?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Mutable balance rows as source of truth</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Stripe</li><li>PayPal</li><li>Amazon Payments</li></ul></div>
 </details>
 <details class="qa" id="q14">
 <summary><span>Q14. Design a Leaderboard</span></summary>
 <div class="qa-body">
 <p>Design a game leaderboard that supports updating a player's score and fetching top-K and a player's rank with low latency.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, gaming companies — realtime ranking · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sorted sets · sharding · top-k</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~12 min to rehearse aloud</p><p>Realtime ranking primitives — games + social.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>ZSET ops</li><li>Shard strategy</li><li>Ties</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>One Redis ZSET</td></tr><tr><th scope="row">Mid</th><td>Season snapshots</td></tr><tr><th scope="row">Senior</th><td>Sharded boards</td></tr><tr><th scope="row">Staff</th><td>Approx global top-k</td></tr><tr><th scope="row">Principal</th><td>Tournament platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>ZADD/ZREVRANGE/ZREVRANK → scale story.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/leaderboard.svg" alt="Redis sorted set leaderboard" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Redis ZSET (score → member) for one board: ZADD update, ZREVRANGE top-K, ZREVRANK for rank — O(log n).</li><li>Scale: shard by competition/season; or by player hash with aggregation for global top-K (harder).</li><li>Ties: use score + timestamp composite.</li><li>Historical boards: snapshot immutable ZSET per season.</li><li>Fan-out reads with cache; writes go to primary.</li></ol>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Historical seasons?</li><li>Friends-only board?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>ORDER BY on hot SQL without care</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Game leaderboards</li><li>Duolingo leagues</li><li>Amazon bestseller ranks</li></ul></div>
 </details>
 <details class="qa" id="q15">
 <summary><span>Q15. Design a Distributed Key-Value Store</span></summary>
 <div class="qa-body">
 <p>Design a Dynamo-style distributed key-value store with put/get, high availability, and horizontal scale.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon (Dynamo), Google — fundamentals of distributed DBs · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Consistent hashing · quorum · replication</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~25 min to rehearse aloud</p><p>Dynamo paper literacy — Amazon/Google distributed DB.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Hash ring</li><li>Quorum R/W</li><li>Conflict versions</li><li>Anti-entropy</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Replicated KV</td></tr><tr><th scope="row">Mid</th><td>Tunable quorum</td></tr><tr><th scope="row">Senior</th><td>Vector clocks</td></tr><tr><th scope="row">Staff</th><td>Multi-datacenter</td></tr><tr><th scope="row">Principal</th><td>Storage engine internals</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Ring → N replicas → quorum → conflicts → repair.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Consistent hashing ring + virtual nodes for partition.</li><li>N replicas on successor nodes; client or coordinator uses quorum R/W (e.g. N=3, R=2, W=2).</li><li>Versioning: vector clocks / version numbers; reconcile conflicts (last-write-wins or client merge).</li><li>Hinted handoff + anti-entropy (Merkle trees) for temporary failures.</li><li>Tunable consistency: CAP — prefer AP with eventual consistency for shopping-cart style.</li></ol>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/consistent-hash-cache.svg" alt="Consistent hashing for KV shards" loading="lazy" /></figure>
 <div class="qa-label">Contrast</div>
 <p>Different from a cache: durability, replication, conflict resolution, and anti-entropy are first-class.</p>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Why not Paxos always?</li><li>Sloppy quorum?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Equating with cache design</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Amazon DynamoDB lineage</li><li>Cassandra</li><li>Riak</li></ul></div>
 </details>
 <details class="qa" id="q16">
 <summary><span>Q16. Design a Distributed Message Queue (Kafka-like)</span></summary>
 <div class="qa-body">
 <p>Design a pub/sub log that supports high-throughput producers, consumer groups, and durable retention.</p>
 <p class="qa-meta"><strong>Asked at:</strong> LinkedIn, Amazon, Uber, Confluent-style interviews · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Partitions · consumer groups · retention</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~20 min to rehearse aloud</p><p>Log-based messaging — LinkedIn/Uber data infra.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Partitions/order</li><li>Consumer groups</li><li>Retention</li><li>ISR acks</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Single topic queue</td></tr><tr><th scope="row">Mid</th><td>Partitions + groups</td></tr><tr><th scope="row">Senior</th><td>Exactly-once talk</td></tr><tr><th scope="row">Staff</th><td>Multi-cluster mirror</td></tr><tr><th scope="row">Principal</th><td>Streaming platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Partitions → keys → consumers → offsets → retention.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Topics split into partitions (ordered append logs).</li><li>Producers pick partition by key (ordering per key) or round-robin.</li><li>Replicas: leader + followers; ack on ISR.</li><li>Consumer groups: each partition → one consumer in the group; commit offsets.</li><li>Retention by time/size; consumers are pull-based.</li><li>Scale: more partitions; rebalance on membership change.</li></ol>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/kafka-partitions.svg" alt="Topic partitions and consumer group" loading="lazy" /></figure>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Kafka vs RabbitMQ?</li><li>Reorder?</li><li>Poison messages?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Promising global order</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>LinkedIn Kafka</li><li>Uber uReplicator era</li><li>Amazon MSK/Kinesis cousins</li></ul></div>
 </details>
 <details class="qa" id="q17">
 <summary><span>Q17. Design Pastebin</span></summary>
 <div class="qa-body">
 <p>Design a pastebin: users paste text, get a unique URL, optional expiry and syntax highlighting.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta — easier SD warmup after URL shortener · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Object storage · short IDs · expiry</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~10 min to rehearse aloud</p><p>Easier SD warmup after URL shortener.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>ID + storage tier</li><li>Expiry GC</li><li>Abuse</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>DB paste</td></tr><tr><th scope="row">Mid</th><td>Blob for large</td></tr><tr><th scope="row">Senior</th><td>CDN + TTL</td></tr><tr><th scope="row">Staff</th><td>Enterprise private pastes</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Create id → store → fetch → expire.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Similar to URL shortener: generate short id; store content in object store or DB (small pastes in DB, large in blob).</li><li>Metadata: id, expiry, visibility, user.</li><li>CDN/cache for public pastes; rate-limit create.</li><li>GC expired pastes with TTL sweeper.</li><li>Optional: raw vs HTML view; password-protected pastes.</li></ol>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Syntax highlight?</li><li>Password pastes?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>No rate limits</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>pastebin.com</li><li>GitHub gists</li><li>Internal snippet tools</li></ul></div>
 </details>
 <details class="qa" id="q18">
 <summary><span>Q18. Design Google Maps (navigation basics)</span></summary>
 <div class="qa-body">
 <p>Design the core of a maps/navigation product: show maps, find places, and compute routes with ETA.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Uber — geo + routing · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Map tiles · graph routing · ETA</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~22 min to rehearse aloud</p><p>Geo + routing — Google Maps / Uber adjacency.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Tiles</li><li>Road graph</li><li>ETA traffic</li><li>Reroute</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Static route</td></tr><tr><th scope="row">Mid</th><td>A*/CH routing</td></tr><tr><th scope="row">Senior</th><td>Traffic-aware ETA</td></tr><tr><th scope="row">Staff</th><td>Lane-level / multimodal</td></tr><tr><th scope="row">Principal</th><td>Global maps platform</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Tiles CDN → places → graph route → ETA → client polyline.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li><strong>Tiles:</strong> pre-render / vector tiles by zoom; CDN heavily.</li><li><strong>Places search:</strong> geospatial index + text (similar to typeahead + geo filter).</li><li><strong>Road graph:</strong> nodes/edges with travel times; Dijkstra / A* / contraction hierarchies for speed.</li><li><strong>ETA:</strong> traffic-aware edge weights updated nearline.</li><li><strong>Client:</strong> request route → server returns polyline + steps; reroute on deviation.</li></ol>
 <div class="qa-label">Tie-in</div>
 <p>Shares geo indexing ideas with Uber matching (<a href="interview-sd.html#q5">Q5</a>) but routing graph is the heart.</p>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Offline maps?</li><li>Traffic incidents?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Dijkstra on raw planetary graph without preprocessing</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Google Maps</li><li>Apple Maps</li><li>Uber route service</li></ul></div>
 </details>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
@@ -311,5 +545,6 @@ Open a card, study it, then redraw from memory on a blank page.</p>
     </main>
   </div>
   <script src="../js/nav.js"></script>
+  <script src="../js/progress.js"></script>
 </body>
 </html>

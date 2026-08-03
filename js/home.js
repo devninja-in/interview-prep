@@ -1,9 +1,10 @@
 (async function () {
   const res = await fetch("assets/nav.json");
   const data = await res.json();
-  const chapters = data.chapters.filter((c) => c.num || c.lab);
+  const chapters = data.chapters.filter((c) => c.num || c.lab || c.guide);
 
   const parts = {
+    front: { title: "Interview prep guides", items: [] },
     cp: { title: "Competitive Programming", items: [] },
     sd: { title: "System Design", items: [] },
     ai: { title: "AI Engineering", items: [] },
@@ -15,6 +16,7 @@
 
   const grid = document.getElementById("toc-grid");
   grid.innerHTML = Object.values(parts)
+    .filter((part) => part.items.length)
     .map(
       (part) => `
       <div class="toc-col">
@@ -25,7 +27,7 @@
               (ch) => `
             <li>
               <a href="${ch.href}">
-                <span class="num">${ch.lab ? "Lab" : ch.num}</span>
+                <span class="num">${ch.lab ? "Lab" : ch.guide ? "Guide" : ch.num}</span>
                 <span>${ch.title}</span>
               </a>
             </li>`

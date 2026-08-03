@@ -15,6 +15,46 @@
       "href": "chapters/contents.html"
     },
     {
+      "id": "interview-playbook",
+      "num": null,
+      "title": "Interview playbook",
+      "part": "front",
+      "href": "chapters/interview-playbook.html",
+      "guide": true
+    },
+    {
+      "id": "learning-paths",
+      "num": null,
+      "title": "Learning paths",
+      "part": "front",
+      "href": "chapters/learning-paths.html",
+      "guide": true
+    },
+    {
+      "id": "cheat-sheets",
+      "num": null,
+      "title": "Cheat sheets",
+      "part": "front",
+      "href": "chapters/cheat-sheets.html",
+      "guide": true
+    },
+    {
+      "id": "company-guides",
+      "num": null,
+      "title": "Company guides",
+      "part": "front",
+      "href": "chapters/company-guides.html",
+      "guide": true
+    },
+    {
+      "id": "behavioral",
+      "num": null,
+      "title": "Behavioral & HR",
+      "part": "front",
+      "href": "chapters/behavioral.html",
+      "guide": true
+    },
+    {
       "id": "part-cp",
       "num": null,
       "title": "Part One: Competitive Programming",
@@ -288,6 +328,14 @@
       "part": "sd",
       "href": "chapters/interview-sd.html",
       "lab": true
+    },
+    {
+      "id": "comparisons",
+      "num": null,
+      "title": "Comparisons",
+      "part": "sd",
+      "href": "chapters/comparisons.html",
+      "guide": true
     },
     {
       "id": "part-ai",

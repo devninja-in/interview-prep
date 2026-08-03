@@ -28,7 +28,7 @@
         <p class="part-eyebrow">Interview Lab · Competitive Programming</p>
         <header class="chapter-hero">
 <h1>Coding interview questions</h1>
-<p class="lab-hero-note">Twenty FAANG-frequency problems (2025–2026 report lists) with diagrams, walkthroughs, Python/Java, and follow-ups.</p>
+<p class="lab-hero-note">Twenty FAANG-frequency problems with interviewer intent, level bars, solutions, follow-ups, mistakes, and production examples.</p>
 </header>
 <div class="chapter-body">
 <p>This lab covers the <strong>highest-frequency coding interview problems</strong> across FAANG
@@ -77,6 +77,14 @@ coding. After you finish, close the card and re-explain the invariant from memor
 <div class="qa-body">
 <p>Given an array of integers nums and an integer target, return the indices of the two numbers that add up to target. Exactly one solution exists; you may not use the same element twice. Narrate brute force → optimal, then code.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft, Apple — classic FAANG warmup · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Hash map · complement lookup</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~8 min to rehearse aloud</p><p>Warmup that reveals whether you reach for hash maps instinctively instead of nested loops.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Clarify indices vs values</li><li>Brute → optimal narrative</li><li>Self-pair edge case</li><li>Complexity</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Working O(n) map solution</td></tr><tr><th scope="row">Mid</th><td>Clean code + edge cases + follow-ups</td></tr><tr><th scope="row">Senior</th><td>Discuss streaming / multi-pair variants</td></tr><tr><th scope="row">Staff</th><td>API design if generalized to k-sum service</td></tr><tr><th scope="row">Principal</th><td>Rarely asked; expect teaching clarity</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>State O(n²) → complement map → code → complexity → one follow-up.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>Return indices or values? (indices — LeetCode default)</li><li>Duplicates allowed in the array?</li><li>Negative numbers? (yes — hash map still works)</li><li>Guaranteed one answer, or return empty if none?</li></ul>
 <div class="qa-label">Diagram</div>
@@ -116,13 +124,26 @@ coding. After you finish, close the card and re-explain the invariant from memor
 <ul><li>All pairs / duplicates → frequency map or multiset.</li><li>Sorted array → two pointers, O(1) extra space.</li><li>Streaming input → same map, bound memory if needed.</li></ul>
 <div class="qa-label">Common mistakes</div>
 <aside class="qa-callout"><div class="qa-label">Watch for</div><ul><li>Storing before checking → pairing with self when 2x = target.</li><li>Returning values instead of indices.</li><li>Using a list scan for "seen" → accidental O(n²).</li></ul></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Return all pairs?</li><li>Sorted array variant?</li><li>Memory-constrained stream?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Store before check (self-pair)</li><li>Return values not indices</li><li>List.contains → O(n²)</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Ad targeting join keys</li><li>Deduping request IDs in gateways</li><li>Amazon cart coupon matching patterns</li></ul></div>
 </details>
 <details class="qa" id="q2">
 <summary><span>Q2. Longest Substring Without Repeating Characters</span></summary>
 <div class="qa-body">
 <p>Given a string s, find the length of the longest substring without repeating characters. Example: "abcabcbb" → 3 ("abc").</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft — Blind 75 staple · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sliding window · last-seen index</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~10 min to rehearse aloud</p><p>Tests sliding-window fluency — Meta/Amazon medium staple.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Window invariant</li><li>Last-seen index correctness</li><li>Empty/all-unique edges</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Correct O(n) window</td></tr><tr><th scope="row">Mid</th><td>Articulate invariant</td></tr><tr><th scope="row">Senior</th><td>Variant: at most k distinct</td></tr><tr><th scope="row">Staff</th><td>Optimize for unicode/streams</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Define duplicate-free window → expand/shrink rule → code → traps.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>ASCII / Unicode? (map works either way)</li><li>Empty string → 0</li><li>All unique → n; all same → 1</li></ul>
 <div class="qa-label">Diagram</div>
@@ -142,13 +163,26 @@ coding. After you finish, close the card and re-explain the invariant from memor
 </code></pre></div>
 <div class="qa-label">Trap</div>
 <aside class="qa-callout"><div class="qa-label">Invariant</div><p>Only move left when the previous occurrence is still <em>inside</em> the window (<code>last[ch] &gt;= left</code>). Otherwise you can accidentally shrink past a valid window.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Longest with at most k distinct?</li><li>Minimum window covering t?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Moving left without last[ch] >= left check</li><li>Off-by-one length</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Session uniqueness checks</li><li>Log tokenization windows</li><li>Rate windows in analytics</li></ul></div>
 </details>
 <details class="qa" id="q3">
 <summary><span>Q3. Merge Intervals</span></summary>
 <div class="qa-body">
 <p>Given intervals[i] = [start_i, end_i], merge all overlapping intervals and return the covering non-overlapping set.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft — scheduling / calendar rounds · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sort + linear merge</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~10 min to rehearse aloud</p><p>Scheduling/calendar signal — sort + linear merge is the expected pattern.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Sort justification</li><li>Overlap definition</li><li>Touching intervals</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Correct merge</td></tr><tr><th scope="row">Mid</th><td>Meeting Rooms II link</td></tr><tr><th scope="row">Senior</th><td>Online insert into merged list</td></tr><tr><th scope="row">Staff</th><td>Calendar product constraints</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Sort by start → single pass merge → complexity → rooms follow-up.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/merge-intervals-walk.svg" alt="Merge overlapping intervals" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -166,13 +200,26 @@ coding. After you finish, close the card and re-explain the invariant from memor
 </code></pre></div>
 <div class="qa-label">Follow-ups</div>
 <ul><li>Insert Interval into an already-merged list (O(n), no full resort).</li><li>Meeting Rooms II → min heap of end times / sweep line.</li><li>Min removals to make non-overlapping → greedy by end.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Insert interval?</li><li>Min rooms?</li><li>Min removals?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Forgetting sort</li><li>Using < instead of ≤ for touching</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Google Calendar free/busy</li><li>AWS capacity reservation windows</li><li>Ad flight dates</li></ul></div>
 </details>
 <details class="qa" id="q4">
 <summary><span>Q4. LRU Cache</span></summary>
 <div class="qa-body">
 <p>Design LRUCache with get(key) and put(key, value) in O(1) average time. Evict the least recently used key when over capacity.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Apple, Microsoft — highest cross-company design+code · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map + doubly linked list</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Highest cross-company design+code question — composition under O(1) constraints.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Why map+DLL</li><li>Draw structure</li><li>Update vs insert</li><li>Capacity-1</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>OrderedDict OK if explained</td></tr><tr><th scope="row">Mid</th><td>Hand-rolled DLL</td></tr><tr><th scope="row">Senior</th><td>Thread-safety discussion</td></tr><tr><th scope="row">Staff</th><td>Distributed LRU / cache tiering</td></tr><tr><th scope="row">Principal</th><td>Multi-tier cache policy design</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Explain structures → helpers → get/put → eviction → complexity.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>Capacity ≥ 1?</li><li>get miss → -1</li><li>put on existing key updates value AND recency</li><li>Thread safety? (usually out of scope unless asked)</li></ul>
 <div class="qa-label">Diagram</div>
@@ -221,13 +268,26 @@ class LRUCache:
 </code></pre></div>
 <div class="qa-label">What interviewers listen for</div>
 <aside class="qa-callout"><div class="qa-label">Signal</div><p>Explain composition out loud. Handle capacity 1 and update-existing without growing size. OrderedDict is OK if you explain <code>move_to_end</code> — many still want the list drawn.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>LFU?</li><li>TTL?</li><li>Concurrent access?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>O(n) scan for LRU</li><li>Forgetting update refreshes recency</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Redis approximate LRU</li><li>CDN edge caches</li><li>CPU page cache intuition</li></ul></div>
 </details>
 <details class="qa" id="q5">
 <summary><span>Q5. Number of Islands</span></summary>
 <div class="qa-body">
 <p>Given an m×n grid of '1' (land) and '0' (water), return the number of islands. Land connects 4-directionally (not diagonally).</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta — grid / flood-fill classic · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> DFS / BFS on grid</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~10 min to rehearse aloud</p><p>Grid DFS/BFS literacy — Amazon/Google classic.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Component counting</li><li>Visited discipline</li><li>4 vs 8 connectivity</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>DFS flood fill</td></tr><tr><th scope="row">Mid</th><td>BFS + recursion limits</td></tr><tr><th scope="row">Senior</th><td>Variants (max area)</td></tr><tr><th scope="row">Staff</th><td>Union-find framing</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Scan → flood → count → complexity → one variant.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/islands-dfs.svg" alt="Flood-fill islands on a grid" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -255,13 +315,26 @@ class LRUCache:
 </code></pre></div>
 <div class="qa-label">Variants</div>
 <ul><li>Max area of island</li><li>Number of closed islands</li><li>Pacific Atlantic water flow (multi-source DFS)</li><li>Surrounded regions</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Max area?</li><li>Closed islands?</li><li>Pacific Atlantic?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Diagonal connections</li><li>Not marking visited</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Map region labeling</li><li>Image connected components</li><li>Game fog-of-war floods</li></ul></div>
 </details>
 <details class="qa" id="q6">
 <summary><span>Q6. Course Schedule (can finish all courses?)</span></summary>
 <div class="qa-body">
 <p>numCourses labeled 0..n-1. prerequisites[i]=[a,b] means take b before a. Return true iff you can finish all courses (DAG / no cycle).</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Intuit — topological sort / cycle detection · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Graph · Kahn BFS or DFS colors</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~12 min to rehearse aloud</p><p>Cycle detection / topo sort — dependency systems.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Graph model</li><li>Kahn vs DFS colors</li><li>Order vs boolean</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>canFinish correct</td></tr><tr><th scope="row">Mid</th><td>Return order (II)</td></tr><tr><th scope="row">Senior</th><td>Parallel semesters</td></tr><tr><th scope="row">Staff</th><td>Build systems analogy</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Edges b→a → indegree Kahn → compare count to n.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/topo-kahn.svg" alt="Kahn topological sort for courses" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -288,13 +361,26 @@ def can_finish(num_courses, prerequisites):
 </code></pre></div>
 <div class="qa-label">Follow-ups</div>
 <ul><li>Course Schedule II → return any valid order (Kahn visit order).</li><li>Parallel semesters → longest path in DAG / level BFS.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Course Schedule II?</li><li>Minimum semesters?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Wrong edge direction</li><li>Forgetting nodes with no edges</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>CI pipeline deps</li><li>Package managers</li><li>Airflow/DAG schedulers</li></ul></div>
 </details>
 <details class="qa" id="q7">
 <summary><span>Q7. Coin Change</span></summary>
 <div class="qa-body">
 <p>coins of various denominations, total amount. Return fewest coins to make amount, or -1 if impossible. Unlimited supply of each coin.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Google — unbounded knapsack DP · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Dynamic programming · bottom-up</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~12 min to rehearse aloud</p><p>Unbounded knapsack DP — distinguishes DP from greedy.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>State definition</li><li>Why greedy fails</li><li>Bottom-up loops</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>dp[] works</td></tr><tr><th scope="row">Mid</th><td>Explain counterexample</td></tr><tr><th scope="row">Senior</th><td>Coin Change II contrast</td></tr><tr><th scope="row">Staff</th><td>Memory optimize</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>dp[x] definition → transition → code → greedy trap.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/coin-change-dp.svg" alt="Bottom-up coin change DP table" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -311,13 +397,26 @@ def can_finish(num_courses, prerequisites):
 </code></pre></div>
 <div class="qa-label">Related</div>
 <p>Coin Change II counts combinations — different transition order/meaning. Do not confuse them in the interview.</p>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Number of combinations?</li><li>Limited coin counts?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Confusing with Coin Change II</li><li>Assuming US coins greedy</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Change-making POS</li><li>Resource allocation DP</li><li>Game economy crafting</li></ul></div>
 </details>
 <details class="qa" id="q8">
 <summary><span>Q8. Word Ladder</span></summary>
 <div class="qa-body">
 <p>beginWord → endWord, changing one letter at a time; each intermediate in wordList. Return length of shortest transformation sequence (words in path), or 0 if impossible.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, LinkedIn, Amazon — BFS shortest path in word graph · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS · implicit graph</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~14 min to rehearse aloud</p><p>BFS shortest path in an implicit graph — Google classic.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Model as graph</li><li>Neighbor generation</li><li>Visited discipline</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>BFS correct</td></tr><tr><th scope="row">Mid</th><td>Wildcard buckets optimize</td></tr><tr><th scope="row">Senior</th><td>Bidirectional BFS</td></tr><tr><th scope="row">Staff</th><td>Production dictionary scale</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Words as nodes → BFS → remove on enqueue → complexity.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/word-ladder-bfs.svg" alt="BFS over one-letter neighbors" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -342,13 +441,26 @@ def ladder_length(begin_word, end_word, word_list):
                     q.append((nxt, dist + 1))
     return 0
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Return the path?</li><li>Bidirectional BFS?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>DFS (not shortest)</li><li>Not removing visited words</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Typo correction graphs</li><li>Chemical edit distance search</li><li>Knowledge graph hops</li></ul></div>
 </details>
 <details class="qa" id="q9">
 <summary><span>Q9. Serialize and Deserialize Binary Tree</span></summary>
 <div class="qa-body">
 <p>Design serialize(root)→string and deserialize(string)→tree. Format is your choice; the pair must be invertible.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta (Facebook), Amazon, Microsoft — tree encoding classic · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS / preorder with null markers</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~14 min to rehearse aloud</p><p>Encoding/decoding + tree fluency — Meta favorite.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Invertible format</li><li>Null markers</li><li>Empty tree</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>BFS serialize works</td></tr><tr><th scope="row">Mid</th><td>Preorder alternative</td></tr><tr><th scope="row">Senior</th><td>Compact encodings</td></tr><tr><th scope="row">Staff</th><td>Schema evolution talk</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Choose format → serialize → deserialize → edge cases.</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/serialize-tree.svg" alt="BFS serialize with null markers" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -390,13 +502,26 @@ class Codec:
             i += 1
         return root
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>BST serialize without nulls?</li><li>Compress?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Losing null structure</li><li>Delimiter bugs</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Protobuf-like tree payloads</li><li>UI component trees</li><li>AST persistence</li></ul></div>
 </details>
 <details class="qa" id="q10">
 <summary><span>Q10. Trapping Rain Water</span></summary>
 <div class="qa-body">
 <p>n non-negative heights (bar width 1). How much water can the elevation map trap after raining?</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Bloomberg — two pointers / monotonic stack · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Two pointers · left/right max</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~12 min to rehearse aloud</p><p>Hard two-pointer / geometry reasoning under pressure.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Water formula</li><li>Two-pointer justification</li><li>O(1) space</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Prefix arrays OK</td></tr><tr><th scope="row">Mid</th><td>Two pointers</td></tr><tr><th scope="row">Senior</th><td>Monotonic stack</td></tr><tr><th scope="row">Staff</th><td>Generalize to 2D</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>min(left_max,right_max)-h → two pointers → O(1).</p></aside>
 <div class="qa-label">Diagram</div>
 <figure class="diagram native qa-diagram"><img src="../assets/diagrams/trap-water.svg" alt="Trapped water between bars" loading="lazy" /></figure>
 <div class="qa-label">Step-by-step solution</div>
@@ -420,13 +545,26 @@ class Codec:
 </code></pre></div>
 <div class="qa-label">Why the two-pointer trick works</div>
 <aside class="qa-callout"><div class="qa-label">Intuition</div><p>If height[lo] &lt; height[hi], the water at lo cannot be limited by anything on the right taller than height[hi] — left_max is the binding constraint. Symmetric for the right side.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Return trapped indices?</li><li>Histogram largest rectangle?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Wrong bound when advancing pointers</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Hydrology sims</li><li>Capacity planning metaphors</li><li>Image pooling analogies</li></ul></div>
 </details>
 <details class="qa" id="q11">
 <summary><span>Q11. Best Time to Buy and Sell Stock</span></summary>
 <div class="qa-body">
 <p>prices[i] is the stock price on day i. Choose one day to buy and a later day to sell to maximize profit. Return the max profit (0 if no profit).</p>
 <p class="qa-meta"><strong>Asked at:</strong> Every FAANG — LC 121; top-5 frequency in 2025–2026 reports · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> One pass · track min price</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~6 min to rehearse aloud</p><p>One-pass scan with running state — easiest DP gateway.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Single transaction constraint</li><li>All decreasing → 0</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Correct one pass</td></tr><tr><th scope="row">Mid</th><td>Relate to Kadane</td></tr><tr><th scope="row">Senior</th><td>Multi-transaction variants</td></tr><tr><th scope="row">Staff</th><td>Online trading constraints</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Track min → max profit → variants.</p></aside>
 <div class="qa-label">Clarify</div>
 <ul><li>One transaction only (buy once, sell once).</li><li>Must sell after buy.</li><li>Empty / length-1 → 0.</li></ul>
 <div class="qa-label">Diagram</div>
@@ -443,13 +581,26 @@ class Codec:
 </code></pre></div>
 <div class="qa-label">Follow-ups</div>
 <ul><li>LC 122 unlimited transactions → sum all uphill segments.</li><li>LC 123 at most 2 → DP states.</li><li>Cooldown with cooldown → state machine DP (Amazon favorite).</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Unlimited transactions?</li><li>Cooldown + cooldown?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Allowing sell before buy</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Simple PnL calculators</li><li>Promo best-discount windows</li></ul></div>
 </details>
 <details class="qa" id="q12">
 <summary><span>Q12. Minimum Window Substring</span></summary>
 <div class="qa-body">
 <p>Given strings s and t, return the smallest substring of s that covers every character in t (including duplicates). Return "" if impossible.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, LinkedIn — LC 76; #4 in many 2026 frequency lists · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Sliding window · need/have counts</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Hard window with counts — Meta speed round staple.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>need/have counters</li><li>Minimal window shrink</li><li>Duplicates in t</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Correct window</td></tr><tr><th scope="row">Mid</th><td>O(1) validation</td></tr><tr><th scope="row">Senior</th><td>Unicode / streaming</td></tr><tr><th scope="row">Staff</th><td>Library API design</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>need map → expand → shrink while valid → best.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Build need counts for t; need_unique = number of distinct chars.</li><li>Expand right; update have counts; when a char's have hits need, increment formed.</li><li>While formed == need_unique, shrink left; record best window.</li><li>Time O(|s| + |t|), space O(alphabet).</li></ol>
 <div class="qa-label">Diagram</div>
@@ -480,13 +631,26 @@ def min_window(s, t):
 </code></pre></div>
 <div class="qa-label">Trap</div>
 <aside class="qa-callout"><div class="qa-label">Meta tip</div><p>Practice explaining the formed/missing counter — interviewers stop you if you nest O(|t|) scans inside the while loop.</p></aside>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Permutation in string?</li><li>Find all anagram starts?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>O(|t|) scans inside while</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Log field extractors</li><li>DNA motif covering</li><li>Search snippet covering queries</li></ul></div>
 </details>
 <details class="qa" id="q13">
 <summary><span>Q13. Maximum Subarray (Kadane)</span></summary>
 <div class="qa-body">
 <p>Find the contiguous subarray with the largest sum and return that sum.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft — LC 53; Amazon OA staple · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Kadane · running best ending here</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~8 min to rehearse aloud</p><p>Kadane — Amazon OA classic for array DP.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Extend vs restart</li><li>All-negative arrays</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Kadane code</td></tr><tr><th scope="row">Mid</th><td>Return indices</td></tr><tr><th scope="row">Senior</th><td>2D maximal rectangle</td></tr><tr><th scope="row">Staff</th><td>Streaming version</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>best_ending transition → global max.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>At each index: either extend previous run or start fresh at nums[i].</li><li>best_ending = max(nums[i], best_ending + nums[i]).</li><li>Track global max. Handles all-negative by picking the largest element.</li><li>Time O(n), space O(1).</li></ol>
 <div class="qa-label">Diagram</div>
@@ -501,13 +665,26 @@ def min_window(s, t):
 </code></pre></div>
 <div class="qa-label">Follow-ups</div>
 <ul><li>Return the actual subarray indices.</li><li>Circular maximum subarray.</li><li>2D Kadane (maximal rectangle sum) — Google follow-up.</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Circular max?</li><li>Return subarray bounds?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Resetting to 0 on all-negative</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Max streak metrics</li><li>Signal processing windows</li></ul></div>
 </details>
 <details class="qa" id="q14">
 <summary><span>Q14. Search in Rotated Sorted Array</span></summary>
 <div class="qa-body">
 <p>nums was sorted ascending then rotated at an unknown pivot. Search for target in O(log n). Distinct values.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, LinkedIn, Microsoft — LC 33 · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Binary search · identify sorted half</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~12 min to rehearse aloud</p><p>Binary search with a twist — Meta/Amazon favorite.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Identify sorted half</li><li>Invariant</li><li>Duplicates follow-up</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Distinct rotated search</td></tr><tr><th scope="row">Mid</th><td>With duplicates</td></tr><tr><th scope="row">Senior</th><td>Find min in rotated</td></tr><tr><th scope="row">Staff</th><td>General rotated structures</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Draw array → sorted-half test → code.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Standard binary search frame. Mid always sits in a half that is sorted.</li><li>If nums[lo] ≤ nums[mid]: left half sorted. If target in [lo, mid), search left; else right.</li><li>Else right half sorted — symmetric check.</li><li>Draw an example like [4,5,6,7,0,1,2] every time.</li></ol>
 <div class="qa-label">Diagram</div>
@@ -531,13 +708,26 @@ def min_window(s, t):
                 hi = mid - 1
     return -1
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Find minimum?</li><li>Duplicates allowed?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Searching unsorted half</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Rotated ring buffers</li><li>Time-wrapped schedules</li></ul></div>
 </details>
 <details class="qa" id="q15">
 <summary><span>Q15. Top K Frequent Elements</span></summary>
 <div class="qa-body">
 <p>Given an integer array, return the k most frequent elements. Order of the answer does not matter.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft — LC 347; universal heap question · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map + heap / bucket sort</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~10 min to rehearse aloud</p><p>Heap vs bucket tradeoff — universal medium.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Count then select</li><li>O(n log k) vs O(n)</li><li>Stability not required</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Heap solution</td></tr><tr><th scope="row">Mid</th><td>Bucket sort</td></tr><tr><th scope="row">Senior</th><td>Quickselect talk</td></tr><tr><th scope="row">Staff</th><td>Distributed top-k</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Counter → heap or buckets → return k.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Count frequencies in a map O(n).</li><li>Option A: min-heap of size k → O(n log k).</li><li>Option B (often preferred): bucket sort by frequency → O(n).</li><li>Say both; implement one cleanly.</li></ol>
 <div class="qa-label">Diagram</div>
@@ -558,13 +748,26 @@ def top_k_frequent(nums, k):
                 return out
     return out
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Top-k by other metrics?</li><li>Approximate top-k?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Full sort only</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Trending topics</li><li>Error-code dashboards</li><li>Search query popularity</li></ul></div>
 </details>
 <details class="qa" id="q16">
 <summary><span>Q16. Meeting Rooms II</span></summary>
 <div class="qa-body">
 <p>Given meeting time intervals [start, end), find the minimum number of conference rooms required.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta (Facebook), Amazon, Bloomberg — premium classic · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Min-heap of end times / sweep line</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~10 min to rehearse aloud</p><p>Interval + heap — Meta premium classic.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Sort by start</li><li>Reuse rule</li><li>Peak rooms</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Heap solution</td></tr><tr><th scope="row">Mid</th><td>Sweep line</td></tr><tr><th scope="row">Senior</th><td>Online bookings</td></tr><tr><th scope="row">Staff</th><td>Resource packing product</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Sort → min-heap ends → len(heap).</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Sort meetings by start time.</li><li>Min-heap stores end times of rooms in use.</li><li>If next start ≥ earliest end, reuse (pop); else allocate (push).</li><li>Answer = max heap size during the scan (or final size if you track peak).</li></ol>
 <div class="qa-label">Diagram</div>
@@ -585,13 +788,26 @@ def min_meeting_rooms(intervals):
 </code></pre></div>
 <div class="qa-label">Related</div>
 <p>Merge Intervals / Insert Interval / Non-overlapping — same family. Sweep line with +1 at start and −1 at end also works.</p>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Merge intervals link?</li><li>Max concurrent online?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Sorting by end first incorrectly</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Meeting room products</li><li>Cloud VM concurrent capacity</li><li>Call-center staffing</li></ul></div>
 </details>
 <details class="qa" id="q17">
 <summary><span>Q17. Valid Parentheses</span></summary>
 <div class="qa-body">
 <p>Given a string containing just '()[]{}', determine if the input string is valid: open brackets closed by the same type in the correct order.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Bloomberg — LC 20; common warmup / phone screen · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Stack</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~6 min to rehearse aloud</p><p>Stack literacy warmup across companies.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Push/pop matching</li><li>Empty stack rules</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Correct validator</td></tr><tr><th scope="row">Mid</th><td>Min remove to valid</td></tr><tr><th scope="row">Senior</th><td>Generate parentheses</td></tr><tr><th scope="row">Staff</th><td>Parser talk</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Stack openings → match closings → empty at end.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Scan left→right. Push opening brackets.</li><li>On closing: stack must be non-empty and top must match.</li><li>End with empty stack.</li><li>Time O(n), space O(n).</li></ol>
 <div class="qa-label">Python</div>
@@ -611,13 +827,26 @@ def min_meeting_rooms(intervals):
 </code></pre></div>
 <div class="qa-label">Follow-ups</div>
 <ul><li>Longest valid parentheses (Hard).</li><li>Minimum remove to make valid (Meta).</li><li>Generate parentheses (backtracking).</li></ul>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Longest valid?</li><li>Min add/remove?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Not checking type match</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>IDE bracket matchers</li><li>Config/JSON validators</li><li>Template engines</li></ul></div>
 </details>
 <details class="qa" id="q18">
 <summary><span>Q18. Rotting Oranges</span></summary>
 <div class="qa-body">
 <p>Grid of 0 (empty), 1 (fresh), 2 (rotten). Each minute, any fresh orange 4-adjacent to a rotten one becomes rotten. Return minutes until all fresh are rotten, or -1 if impossible.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft, Google — LC 994; multi-source BFS favorite · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Multi-source BFS on grid</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~12 min to rehearse aloud</p><p>Multi-source BFS — Amazon graph/grid favorite.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Queue all sources</li><li>Level = time</li><li>Impossible case</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>BFS correct</td></tr><tr><th scope="row">Mid</th><td>In-place mutation</td></tr><tr><th scope="row">Senior</th><td>0-1 BFS variants</td></tr><tr><th scope="row">Staff</th><td>Epidemic models</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Enqueue all rotten → level BFS → fresh left?</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Enqueue <em>all</em> initially rotten cells (multi-source BFS).</li><li>Count fresh oranges.</li><li>BFS level-by-level; each level = 1 minute; rot neighbors.</li><li>If fresh remains → -1; else minutes (careful: last wave may add a minute — track correctly).</li></ol>
 <div class="qa-label">Diagram</div>
@@ -647,13 +876,26 @@ def oranges_rotting(grid):
         minutes += 1
     return minutes if fresh == 0 else -1
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Walls and gates?</li><li>Shortest path in grid?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Single-source BFS only</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Content freshness propagation</li><li>Infection/simulation jobs</li><li>Warehouse spill models</li></ul></div>
 </details>
 <details class="qa" id="q19">
 <summary><span>Q19. Alien Dictionary</span></summary>
 <div class="qa-body">
 <p>You are given a list of words sorted lexicographically in an alien language. Derive any valid order of unique letters. Return "" if invalid.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta, Google — LC 269; hard topo-sort phone-screen closer · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Graph · topological sort from sorted words</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~15 min to rehearse aloud</p><p>Build graph from constraints — Meta/Google hard closer.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>Edge from consecutive words</li><li>Invalid prefix case</li><li>Cycle → empty</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Build edges + Kahn</td></tr><tr><th scope="row">Mid</th><td>All invalid cases</td></tr><tr><th scope="row">Senior</th><td>Unique vs any order</td></tr><tr><th scope="row">Staff</th><td>Grammar induction talk</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Compare pairs → edges → topo → cycle check.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Compare consecutive words; first differing chars give an edge earlier→later.</li><li>Invalid if word A is prefix of longer preceding word ("abc" before "ab").</li><li>Build graph + indegrees; Kahn BFS for a valid order.</li><li>If cycle / not all letters processed → "".</li></ol>
 <div class="qa-label">Python sketch</div>
@@ -682,13 +924,26 @@ def alien_order(words):
                 q.append(nxt)
     return &quot;&quot;.join(order) if len(order) == len(indeg) else &quot;&quot;
 </code></pre></div>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>Multiple valid orders?</li><li>Verify order against words?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Comparing non-consecutive words only</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Locale collation debugging</li><li>Build order from logs</li><li>Schema evolution ordering</li></ul></div>
 </details>
 <details class="qa" id="q20">
 <summary><span>Q20. Kth Largest Element in an Array</span></summary>
 <div class="qa-body">
 <p>Find the kth largest element in an unsorted array. Note it is the kth largest in sorted order, not the kth distinct.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Google, Microsoft — LC 215 · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Min-heap of size k / Quickselect</p>
+<div class="qa-label">Why interviewers ask this</div>
+<p class="qa-meta">~8 min to rehearse aloud</p><p>Selection algorithms — heap vs quickselect signal.</p>
+<div class="qa-label">What they are evaluating</div>
+<ul><li>kth largest vs smallest</li><li>Heap size k</li><li>Average O(n) option</li></ul>
+<div class="qa-label">Level expectations</div>
+<div class="table-wrap level-table"><table><caption>What interviewers expect by level</caption><thead><tr><th>Level</th><th>Expectation</th></tr></thead><tbody><tr><th scope="row">Junior</th><td>Heap</td></tr><tr><th scope="row">Mid</th><td>Quickselect</td></tr><tr><th scope="row">Senior</th><td>Worst-case linear</td></tr><tr><th scope="row">Staff</th><td>Distributed quantile</td></tr></tbody></table></div>
+<div class="qa-label">Expected answer shape</div>
+<aside class="qa-callout"><div class="qa-label">Hit this arc</div><p>Clarify kth largest → heap or quickselect → complexity.</p></aside>
 <div class="qa-label">Step-by-step</div>
 <ol class="qa-steps"><li>Min-heap of size k: push all; pop when size > k; peek is answer O(n log k).</li><li>Quickselect (Hoare): average O(n) — mention for strong signal.</li><li>Sorting is O(n log n) — acceptable start, then optimize.</li></ol>
 <div class="qa-label">Python (heap)</div>
@@ -704,7 +959,12 @@ def find_kth_largest(nums, k):
 </code></pre></div>
 <div class="qa-label">Related Amazon ask</div>
 <p>K Closest Points to Origin (LC 973) — same heap pattern with distance.</p>
-</div>
+<div class="qa-label">Follow-up questions</div>
+<ul><li>K closest points?</li><li>Running median?</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Avoid these</div><ul><li>Off-by-one k</li></ul></aside>
+<div class="qa-label">Real-world production examples</div>
+<ul><li>Latency percentile approx</li><li>Leaderboard cutoffs</li><li>Priority aging</li></ul></div>
 </details>
 </div>
         <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
@@ -712,5 +972,6 @@ def find_kth_largest(nums, k):
     </main>
   </div>
   <script src="../js/nav.js"></script>
+  <script src="../js/progress.js"></script>
 </body>
 </html>

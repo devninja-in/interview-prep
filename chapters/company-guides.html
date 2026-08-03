@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Company-specific interview guides — Interview Prep</title>
+  <meta name="description" content="Company-specific interview guides — Interview Prep" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
+</head>
+<body class="chapter-page" data-chapter="company-guides" data-part="front">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Company prep</p>
+        <header class="chapter-hero">
+<h1>Company-specific interview guides</h1>
+<p class="lab-hero-note">Google, Amazon, Meta, Microsoft, Netflix, Uber, AI labs, and enterprise patterns.</p>
+</header>
+<div class="chapter-body">
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Guide</span>
+  <span><strong>Read</strong> ~20 min</span>
+  <span><strong>Master</strong> per-company 1–2 weeks</span>
+  <span><strong>Levels</strong> All</span>
+</div>
+<aside class="learn-box"><div class="qa-label">Prerequisites</div><ul><li>Coding Lab basics</li><li>One system design drill</li></ul></aside>
+
+<p>Company guides below are distilled from publicly discussed interview patterns (candidate
+reports, engineering blogs). They are <strong>preparation heuristics</strong>, not leaked
+questions.</p>
+
+<h2>Google</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Hard</span>
+  <span><strong>Read</strong> ~5 min</span>
+  <span><strong>Master</strong> 2–4 weeks</span>
+  <span><strong>Levels</strong> L3–L6</span>
+</div>
+<ul>
+<li><strong>Coding:</strong> Prefer patterns over memorization — graphs, BS on answer, hard DP.
+Labs: Islands, Word Ladder, Alien Dictionary, Median/rotated search family.</li>
+<li><strong>Design:</strong> Crawler, Maps, Drive, YouTube, rate limiter, KV. Emphasize scale +
+freshness + failure.</li>
+<li><strong>AI roles:</strong> RAG eval, serving, retrieval quality.</li>
+<li><strong>Evaluating:</strong> Clarity, generalization, testing mindset.</li>
+</ul>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="interview-sd.html#q12">Web crawler</a></li><li><a href="interview-sd.html#q18">Maps</a></li><li><a href="interview-ai.html">AI Lab</a></li></ul></aside>
+
+<h2>Amazon</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Medium→Hard</span>
+  <span><strong>Read</strong> ~5 min</span>
+  <span><strong>Master</strong> 2–4 weeks</span>
+  <span><strong>Levels</strong> SDE I–II / L5–L6</span>
+</div>
+<ul>
+<li><strong>Behavioral first:</strong> Leadership Principles with STAR — Ownership, Customer
+Obsession, Dive Deep, Bias for Action, Disagree and Commit. See <a href="behavioral.html">Behavioral</a>.</li>
+<li><strong>Coding:</strong> Speed + working code. OA favorites: Two Sum family, LRU, islands,
+rotting oranges, stock, top-k.</li>
+<li><strong>Design:</strong> Shortener, rate limiter, Dynamo-style KV, payments, notifications.</li>
+</ul>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="behavioral.html">Behavioral</a></li><li><a href="interview-sd.html#q15">KV store</a></li><li><a href="interview-sd.html#q13">Payments</a></li></ul></aside>
+
+<h2>Meta</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Hard</span>
+  <span><strong>Read</strong> ~5 min</span>
+  <span><strong>Master</strong> 2–4 weeks</span>
+  <span><strong>Levels</strong> E3–E5+</span>
+</div>
+<ul>
+<li><strong>Coding:</strong> Often two mediums in one round — windows, trees, intervals, heaps.
+Min window, meeting rooms, serialize tree.</li>
+<li><strong>Design:</strong> News feed, chat, Instagram stories adjacency, counters.</li>
+<li><strong>Speed + product sense</strong> matter.</li>
+</ul>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="interview-sd.html#q2">Feed lab</a></li><li><a href="interview-sd.html#q3">Chat lab</a></li><li><a href="interview-cp.html#q12">Min window</a></li></ul></aside>
+
+<h2>Microsoft</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Medium→Hard</span>
+  <span><strong>Read</strong> ~4 min</span>
+  <span><strong>Master</strong> 2–3 weeks</span>
+  <span><strong>Levels</strong> L59–L63+</span>
+</div>
+<ul>
+<li>Coding similar to FAANG mediums; design often Teams/Azure flavored: chat, storage, identity.</li>
+<li>Expect collaboration and debugging narratives.</li>
+</ul>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="interview-sd.html#q11">Dropbox/Drive</a></li><li><a href="interview-sd.html#q3">Chat</a></li></ul></aside>
+
+<h2>Netflix</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Hard</span>
+  <span><strong>Read</strong> ~4 min</span>
+  <span><strong>Master</strong> 1–3 weeks</span>
+  <span><strong>Levels</strong> Senior+</span>
+</div>
+<ul>
+<li>Video edge + recommendations + resilience culture (circuit breakers, chaos).</li>
+<li>Labs: YouTube/video Q6, recsys AI Q6, caching Q9, comparisons CDN/cache.</li>
+</ul>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="interview-sd.html#q6">Video lab</a></li><li><a href="interview-ai.html#q6">Recsys</a></li></ul></aside>
+
+<h2>Uber / Lyft</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Hard</span>
+  <span><strong>Read</strong> ~4 min</span>
+  <span><strong>Master</strong> 1–3 weeks</span>
+  <span><strong>Levels</strong> Senior+</span>
+</div>
+<ul>
+<li>Geo, marketplace dispatch, ETA, city sharding — SD Q5. Kafka-heavy data paths Q16.</li>
+</ul>
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="interview-sd.html#q5">Uber lab</a></li><li><a href="26-queues.html">Queues</a></li></ul></aside>
+
+<h2>OpenAI-adjacent / AI platforms</h2>
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Hard</span>
+  <span><strong>Read</strong> ~4 min</span>
+  <span><strong>Master</strong> 2–4 weeks</span>
+  <span><strong>Levels</strong> Mid–Staff</span>
+</div>
+<ul>
+<li>Full <a href="interview-ai.html">AI Lab</a>: RAG, agents, eval, serving, tenancy, security.</li>
+</ul>
+
+<h2>Red Hat / enterprise open source</h2>
+<ul>
+<li>Expect Linux/Kubernetes, operators, observability, and design for on-prem constraints.</li>
+<li>Map to scaling, queues, and reliable upgrades — emphasize operable systems.</li>
+</ul>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+  <script src="../js/progress.js"></script>
+</body>
+</html>

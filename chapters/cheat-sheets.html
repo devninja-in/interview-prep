@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cheat sheets &amp; flashcards — Interview Prep</title>
+  <meta name="description" content="Cheat sheets &amp; flashcards — Interview Prep" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/chapter.css" />
+  <link rel="stylesheet" href="../css/interview.css" />
+</head>
+<body class="chapter-page" data-chapter="cheat-sheets" data-part="front">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="chapter-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Table of contents"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+    <main class="chapter-main" id="content">
+      <div class="chapter-toolbar">
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open contents">☰</button>
+        <a class="brand" href="../">Interview Prep <span>Book</span></a>
+        <div class="toolbar-spacer"></div>
+        <a class="btn btn-ghost btn-small" href="../">Home</a>
+      </div>
+      <article class="chapter-article">
+        <p class="part-eyebrow">Quick revision</p>
+        <header class="chapter-hero">
+<h1>Cheat sheets &amp; flashcards</h1>
+<p class="lab-hero-note">Last-minute one-pagers for coding patterns, system design arcs, AI, and behavioral.</p>
+</header>
+<div class="chapter-body">
+<div class="page-meta-bar" role="group" aria-label="Topic meta">
+  <span><strong>Difficulty</strong> Easy→Hard</span>
+  <span><strong>Read</strong> ~15 min</span>
+  <span><strong>Master</strong> night-before refresh</span>
+  <span><strong>Levels</strong> All</span>
+</div>
+<aside class="learn-box"><div class="qa-label">Prerequisites</div><ul><li>Have practiced the labs once</li><li>Do not first-learn from cheat sheets</li></ul></aside>
+
+<p>One-page revision notes for last-minute prep. Expand a card, say it aloud in under two minutes,
+then close it.</p>
+
+<details class="qa" open><summary><span>Coding patterns flashcard</span></summary>
+<div class="qa-body">
+<ul><li>Hash map — complement, frequency, first unique</li><li>Two pointers — sorted pair, container, linked-list mid</li><li>Sliding window — fixed / variable; maintain invariant</li><li>Binary search — on index or on answer space</li><li>BFS/DFS — islands, shortest unweighted, topo</li><li>Heap — top-k, merge k, streaming median</li><li>Intervals — sort by start; sweep for rooms</li><li>DP — define state, transition, base; space optimize last</li></ul>
+<p><a href="interview-cp.html">Open Coding Lab</a> · <a href="17-cheat-sheet.html">CP chapter cheat sheet</a></p>
+</div></details>
+
+<details class="qa"><summary><span>System design whiteboard arc</span></summary>
+<div class="qa-body">
+<ol class="qa-steps">
+<li>Clarify functional + non-functional (QPS, size, latency, consistency).</li>
+<li>API + data model sketch.</li>
+<li>High-level boxes + request flow.</li>
+<li>Deep dive hottest path (cache, shard key, queue).</li>
+<li>Failure modes + scale bottlenecks.</li>
+<li>Trade-offs and what you’d build in v1 vs v2.</li>
+</ol>
+<p><a href="interview-sd.html">System Design Lab</a> · <a href="comparisons.html">Comparisons</a></p>
+</div></details>
+
+<details class="qa"><summary><span>AI / RAG interview flashcard</span></summary>
+<div class="qa-body">
+<ul><li>RAG = retrieve → augment prompt → generate; eval retrieval and answer separately</li><li>Chunking, embeddings, hybrid search, rerank — name failure modes</li><li>Agents = loop with tools + memory + stop conditions; watch cost/latency</li><li>MCP = tool/protocol boundary; authz and least privilege</li><li>Serving: batching, KV cache, quantization, tenancy quotas</li></ul>
+<p><a href="interview-ai.html">AI Lab</a></p>
+</div></details>
+
+<details class="qa"><summary><span>Behavioral STAR in 60 seconds</span></summary>
+<div class="qa-body">
+<p><strong>S/T</strong> 15s context · <strong>A</strong> 30s your moves · <strong>R</strong> 15s metric + learning.</p>
+<p><a href="behavioral.html">Behavioral lab</a></p>
+</div></details>
+
+<aside class="learn-box learn-box-next"><div class="qa-label">What to learn next</div><ul><li><a href="interview-playbook.html">Interview playbook</a></li><li><a href="company-guides.html">Company guides</a></li></ul></aside>
+</div>
+        <nav class="chapter-pager" id="chapter-pager" aria-label="Chapter pagination"></nav>
+      </article>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+  <script src="../js/progress.js"></script>
+</body>
+</html>
