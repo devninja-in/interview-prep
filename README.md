@@ -2,7 +2,7 @@
 
 Coding, system design, and AI in one place — published as a static book.
 
-**Cloudflare:** [https://interview-prep.devninja.workers.dev/](https://interview-prep.devninja.workers.dev/)  
+**Live site:** [https://interview-prep.devninja.in/](https://interview-prep.devninja.in/)  
 **GitHub Pages:** [https://devninja-in.github.io/interview-prep/](https://devninja-in.github.io/interview-prep/)
 
 ## What's inside
@@ -19,13 +19,13 @@ python3 -m http.server 8080
 
 ## Cloudflare Workers
 
+Primary URL: [https://interview-prep.devninja.in/](https://interview-prep.devninja.in/)
+
 Deployed as a **Worker + Static Assets** (`wrangler.jsonc`).
 
 - `src/index.js` serves `env.ASSETS` (replaces the default Hello World Worker)
 - `.assetsignore` excludes `.git` so deploys stay under the 25 MiB file limit
 - Dashboard build command can stay empty; deploy command: `npx wrangler deploy`
-
-**Deploy trigger:** 2026-08-03 replace Hello World with book assets
 
 ## Files
 
