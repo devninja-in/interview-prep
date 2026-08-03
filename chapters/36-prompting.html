@@ -90,48 +90,48 @@ def repair_prompt(raw: str, err: str) -> str:
 </ul>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Prompting interviews test judgment: structure, examples, and evaluation — not poetry.</p>
+<h2>Interview drill — Prompting &amp;amp; grounding</h2>
+<p class="drill-intro">Judgment over poetry: structure, grounding, eval, versioning.</p>
 <p class="drill-intro">More drills in the <a href="interview-ai.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Support bot that must not hallucinate policy</span></summary>
 <div class="qa-body">
 <p>Customer asks about refund windows.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Shopify · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Grounded prompting</p>
-<div class="qa-label">Approach</div>
-<p>Retrieve policy snippets; instruct model to quote only context; abstain otherwise; actions via tools. <a href="interview-ai.html">Lab Q9</a>.</p>
+<div class="qa-label">Answer</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/grounded-support.svg" alt="Grounded support" loading="lazy" /></figure><p>Retrieve policy; cite; abstain if missing; actions via authz tools. <a href="interview-ai.html#q9">Lab Q9</a>.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q2. Few-shot vs fine-tune</span></summary>
+<summary><span>Q2. Few-shot vs fine-tune vs RAG</span></summary>
 <div class="qa-body">
-<p>When is fine-tuning worth it?</p>
+<p>When each?</p>
 <p class="qa-meta"><strong>Asked at:</strong> Applied LLM · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Adaptation</p>
-<div class="qa-label">Approach</div>
-<p>Few-shot/prompt for style and light format; fine-tune for stable format at huge volume or domain jargon when RAG cannot help; prefer RAG for changing facts.</p>
+<div class="qa-label">Answer</div>
+<ul><li>RAG for changing facts.</li><li>Few-shot for format/style.</li><li>Fine-tune for stable high-volume formats when prompting plateaus.</li></ul>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Jailbreak resistance</span></summary>
 <div class="qa-body">
 <p>User tries to override system rules.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Trust &amp;amp; safety · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> System prompts + filters</p>
-<div class="qa-label">Approach</div>
-<p>Clear system/developer priority; input/output classifiers; no secrets in prompts; monitor; do not rely on "please ignore" alone.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Trust &amp;amp; safety · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Defense in depth</p>
+<div class="qa-label">Answer</div>
+<p>Priority of system/developer messages; input/output filters; no secrets in prompts; monitors — never "pretty please" alone.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q4. Chain-of-thought in production</span></summary>
-<div class="qa-body">
-<p>Should users see chain-of-thought?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Google-style · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Reasoning exposure</p>
-<div class="qa-label">Approach</div>
-<p>Often hide raw CoT; show short justifications. Hidden reasoning can leak private data — scrub. Prefer structured rationales.</p>
-</div>
-</details><details class="qa">
-<summary><span>Q5. Prompt versioning</span></summary>
+<summary><span>Q4. Prompt versioning</span></summary>
 <div class="qa-body">
 <p>How do teams manage prompts?</p>
 <p class="qa-meta"><strong>Asked at:</strong> Platform teams · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Ops</p>
-<div class="qa-label">Approach</div>
-<p>Version prompts like code; eval on change; feature-flag rollouts; trace which version produced each answer.</p>
+<div class="qa-label">Answer</div>
+<p>Version like code; eval on change; flag rollouts; trace which version produced each answer.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Showing chain-of-thought</span></summary>
+<div class="qa-body">
+<p>Should users see raw CoT?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google-style · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> UX + privacy</p>
+<div class="qa-label">Answer</div>
+<p>Usually no — show short justifications; scrub private data; prefer structured rationales.</p>
 </div>
 </details>
 </section>

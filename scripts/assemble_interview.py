@@ -47,7 +47,7 @@ LABS = [
         "part": "ai",
         "eyebrow": "Interview Lab · AI Engineering",
         "title": "AI interview questions",
-        "subtitle": "RAG, agents, eval, memory, and multi-tenant AI — how hiring loops actually run.",
+        "subtitle": "Deep, diagrammed solutions for RAG, agents, eval, memory, and platform design — practice like a real 45-minute loop.",
         "body": ai_lab_body,
         "after": "42-ai-agent",
         "nav_title": "Interview Lab: AI",

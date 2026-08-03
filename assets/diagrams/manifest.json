@@ -32,6 +32,16 @@
     "mcp",
     "skills",
     "ai-assistant",
+    "rag-detailed",
+    "hybrid-search",
+    "eval-pipeline",
+    "agent-tools",
+    "memory-tiers",
+    "moderation-cascade",
+    "recsys-towers",
+    "multi-tenant-ai",
+    "transcription-ai",
+    "grounded-support",
     "prefix-sums"
   ],
   "chapters": {
@@ -131,6 +141,18 @@
     ],
     "42-ai-agent": [
       "ai-assistant"
+    ],
+    "interview-ai": [
+      "rag-detailed",
+      "hybrid-search",
+      "eval-pipeline",
+      "agent-tools",
+      "memory-tiers",
+      "moderation-cascade",
+      "recsys-towers",
+      "multi-tenant-ai",
+      "transcription-ai",
+      "grounded-support"
     ]
   }
 }

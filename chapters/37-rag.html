@@ -85,48 +85,48 @@ Question: {question}
 <p>Return chunk ids that map to URLs or doc anchors in your UI. If the model cites [12] but [12] was not in the prompt, treat that as a failure in validation. Grounding is a product feature, not a vibe.</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">RAG is the default AI system-design question — practice it cold.</p>
+<h2>Interview drill — RAG</h2>
+<p class="drill-intro">Practice the full whiteboard: ingest vs query, ACL in retrieval, abstain, eval.</p>
 <p class="drill-intro">More drills in the <a href="interview-ai.html">Interview Lab</a>.</p>
 <details class="qa">
-<summary><span>Q1. Company knowledge chatbot</span></summary>
+<summary><span>Q1. Company knowledge chatbot (full design)</span></summary>
 <div class="qa-body">
-<p>Answer from private docs with citations.</p>
+<p>Answer from private docs with citations and permissions.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Meta, Stripe, OpenAI-adjacent · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> RAG</p>
-<div class="qa-label">Approach</div>
-<p>Ingest→chunk→embed→hybrid retrieve→rerank→grounded generate. <a href="interview-ai.html">AI Interview Lab Q1</a>.</p>
+<div class="qa-label">Step-by-step (short)</div>
+<ol class="qa-steps"><li>Clarify ACL, freshness, latency, languages.</li><li>Draw ingest (chunk→embed→index) separate from query.</li><li>Hybrid retrieve + ACL filter + rerank + grounded generate.</li><li>Abstain on low confidence; log traces for eval.</li></ol><figure class="diagram native qa-diagram"><img src="../assets/diagrams/rag-detailed.svg" alt="RAG detailed pipeline" loading="lazy" /></figure><p>Full solution with prompt skeleton and failure modes: <a href="interview-ai.html#q1">AI Lab Q1</a>.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q2. Chunking strategy</span></summary>
+<summary><span>Q2. Chunking strategy deep-dive</span></summary>
 <div class="qa-body">
-<p>How big should chunks be?</p>
+<p>How do you choose chunk size and boundaries?</p>
 <p class="qa-meta"><strong>Asked at:</strong> Follow-up everywhere · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Ingestion</p>
-<div class="qa-label">Approach</div>
-<p>Start 400–800 tokens with overlap; respect headings; special-case tables/code; evaluate recall on a gold set — do not guess forever.</p>
+<div class="qa-label">Answer</div>
+<ol class="qa-steps"><li>Start 400–800 tokens with overlap; split on headings.</li><li>Keep tables/code blocks intact when possible.</li><li>Evaluate recall@k on a gold set — do not bike-shed forever.</li><li>Store metadata (title, url, updated_at, acl) with every chunk.</li></ol>
 </div>
 </details><details class="qa">
 <summary><span>Q3. ACL-aware retrieval</span></summary>
 <div class="qa-body">
 <p>User must not see docs they cannot access.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Enterprise AI · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Security</p>
-<div class="qa-label">Approach</div>
-<p>Filter by ACL in the retriever query itself; never retrieve then hope the LLM hides it. Index permissions with the vectors.</p>
+<div class="qa-label">Answer</div>
+<p>Enforce ACL <em>inside</em> the retriever query (metadata filter / partition). Post-hoc prompt instructions are not a control. Index permission tags with vectors; test with adversarial users in eval.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Hybrid search</span></summary>
 <div class="qa-body">
 <p>When do keywords beat embeddings?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Search + AI rounds · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> BM25 + vectors</p>
-<div class="qa-label">Approach</div>
-<p>IDs, error codes, rare proper nouns — BM25 wins. Fuse with RRF; rerank. <a href="interview-ai.html">Lab Q2</a>.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Search + AI · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> BM25 + vectors</p>
+<div class="qa-label">Answer</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/hybrid-search.svg" alt="Hybrid search" loading="lazy" /></figure><p>IDs, error codes, SKUs, rare proper nouns → BM25. Paraphrases → dense. Fuse (RRF) then rerank. <a href="interview-ai.html#q2">Lab Q2</a>.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q5. Stale index</span></summary>
+<summary><span>Q5. Measuring RAG quality</span></summary>
 <div class="qa-body">
-<p>Wiki page updated — answers still old.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Ops follow-up · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Freshness</p>
-<div class="qa-label">Approach</div>
-<p>Change-data-capture → rechunk/re-embed; version metadata; tombstone deleted pages; show doc updated_at in citations.</p>
+<p>What do you measure before shipping a retriever change?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Applied science / platform · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Eval</p>
+<div class="qa-label">Answer</div>
+<p>Retrieval recall@k on gold questions, groundedness of answers, citation accuracy, latency, cost. Separate retrieve vs generate failures. <a href="interview-ai.html#q3">Lab Q3</a>.</p>
 </div>
 </details>
 </section>

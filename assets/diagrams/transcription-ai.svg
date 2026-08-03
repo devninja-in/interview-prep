@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="280" viewBox="0 0 820 280" role="img" aria-label="Realtime transcription + summary">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="280" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Realtime transcription + summary</text>
+  
+  <rect x="40" y="110" width="100" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="90.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Audio</text>
+  <rect x="170" y="110" width="120" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="230.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Streaming ASR</text>
+  <rect x="320" y="110" width="120" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="380.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Diarize</text>
+  <rect x="470" y="70" width="140" height="44" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="540.0" y="92.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Live captions</text>
+  <rect x="470" y="140" width="140" height="44" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="540.0" y="162.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">LLM summary</text>
+  <rect x="640" y="110" width="130" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="705.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Search index</text>
+  <path d="M145 135 H165" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M295 135 H315" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M445 135 H465" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M615 135 H635" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <text x="40" y="240" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Stream partials for UX; batch structured notes; index for later search.</text>
+
+</svg>

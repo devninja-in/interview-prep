@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Hybrid retrieval">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="300" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Hybrid retrieval</text>
+  
+  <rect x="40" y="120" width="120" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="100.0" y="145.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Query</text>
+  <rect x="220" y="70" width="140" height="48" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="290.0" y="94.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">BM25 / lexical</text>
+  <rect x="220" y="160" width="140" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="290.0" y="184.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Dense / ANN</text>
+  <rect x="420" y="115" width="140" height="50" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="490.0" y="140.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Fuse (RRF)</text>
+  <rect x="620" y="115" width="140" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="690.0" y="140.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Rerank top-n</text>
+  <path d="M165 145 H215" stroke="#0f1c24" stroke-width="1.4"/>
+  <path d="M200 145 V94 H215" fill="none" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M200 145 V184 H215" fill="none" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M365 94 H390 V140 H415" fill="none" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M365 184 H390 V140" fill="none" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M565 140 H615" stroke="#0f1c24" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+  <text x="40" y="260" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Lexical catches IDs & rare tokens; dense catches paraphrases; fuse then rerank.</text>
+
+</svg>

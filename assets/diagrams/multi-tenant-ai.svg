@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Multi-tenant AI platform">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="300" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Multi-tenant AI platform</text>
+  
+  <rect x="40" y="120" width="110" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="95.0" y="145.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Tenant A</text>
+  <rect x="40" y="190" width="110" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="95.0" y="215.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Tenant B</text>
+  <rect x="200" y="145" width="140" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="270.0" y="164.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">API gateway</text>
+<text x="270.0" y="184.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">auth + quota</text>
+  <rect x="390" y="100" width="140" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="460.0" y="122.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Model router</text>
+  <rect x="390" y="160" width="140" height="44" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="460.0" y="182.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Meter / bill</text>
+  <rect x="390" y="220" width="140" height="44" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="460.0" y="242.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Trace store</text>
+  <rect x="580" y="145" width="180" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="670.0" y="170.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Providers / models</text>
+  <path d="M155 145 H195" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M155 215 H175 V170 H195" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M345 170 H385" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M535 170 H575" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <text x="40" y="280" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Quotas and tenancy are product features — not afterthoughts on the LLM call.</text>
+
+</svg>

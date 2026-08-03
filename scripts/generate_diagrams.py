@@ -565,7 +565,227 @@ DIAGRAMS["ai-assistant"] = svg(
     "AI assistant design",
 )
 
+# --- AI interview deep-dive diagrams ---
+DIAGRAMS["rag-detailed"] = svg(
+    820,
+    360,
+    f'''
+  <text x="40" y="68" font-family="{MONO}" font-size="12" fill="{ACCENT}">INGEST (offline / nearline)</text>
+  {box(40, 80, 100, 44, SAND, "Connectors")}
+  {box(160, 80, 90, 44, "#fff", "Clean")}
+  {box(270, 80, 90, 44, ROSE, "Chunk")}
+  {box(380, 80, 90, 44, ACCENT_SOFT, "Embed")}
+  {box(490, 80, 120, 44, SAND, "Vector + meta")}
+  <path d="M140 102 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M250 102 H265" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M360 102 H375" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M470 102 H485" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <text x="40" y="175" font-family="{MONO}" font-size="12" fill="{ACCENT}">QUERY (online, &lt;2–3s)</text>
+  {box(40, 190, 100, 44, SAND, "Question")}
+  {box(160, 190, 100, 44, ROSE, "Rewrite")}
+  {box(280, 190, 110, 44, ACCENT_SOFT, "Hybrid retrieve")}
+  {box(410, 190, 90, 44, "#fff", "Rerank")}
+  {box(520, 190, 110, 44, SAND, "Ground LLM")}
+  {box(650, 190, 110, 44, ROSE, "Cite + stream")}
+  <path d="M140 212 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M260 212 H275" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M390 212 H405" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M500 212 H515" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M630 212 H645" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {box(280, 260, 110, 40, ROSE, "ACL filter", "at retrieve")}
+  {box(410, 260, 90, 40, ACCENT_SOFT, "Abstain", "low conf.")}
+  <path d="M335 234 V255" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M455 234 V255" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 335, "Separate ingest from query. Filter permissions in retrieval — never only in the prompt.")}
+''',
+    "RAG interview whiteboard",
+)
 
+DIAGRAMS["hybrid-search"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 120, 120, 50, SAND, "Query")}
+  {box(220, 70, 140, 48, ACCENT_SOFT, "BM25 / lexical")}
+  {box(220, 160, 140, 48, ROSE, "Dense / ANN")}
+  {box(420, 115, 140, 50, "#fff", "Fuse (RRF)")}
+  {box(620, 115, 140, 50, SAND, "Rerank top-n")}
+  <path d="M165 145 H215" stroke="{INK}" stroke-width="1.4"/>
+  <path d="M200 145 V94 H215" fill="none" stroke="{INK}" stroke-width="1.3"/>
+  <path d="M200 145 V184 H215" fill="none" stroke="{INK}" stroke-width="1.3"/>
+  <path d="M365 94 H390 V140 H415" fill="none" stroke="{INK}" stroke-width="1.3"/>
+  <path d="M365 184 H390 V140" fill="none" stroke="{INK}" stroke-width="1.3"/>
+  <path d="M565 140 H615" stroke="{INK}" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+  {caption(40, 260, "Lexical catches IDs & rare tokens; dense catches paraphrases; fuse then rerank.")}
+''',
+    "Hybrid retrieval",
+)
+
+DIAGRAMS["eval-pipeline"] = svg(
+    820,
+    320,
+    f'''
+  {box(40, 90, 130, 50, SAND, "Gold sets")}
+  {box(200, 90, 140, 50, ROSE, "Candidate run")}
+  {box(370, 70, 150, 44, ACCENT_SOFT, "Auto metrics")}
+  {box(370, 130, 150, 44, "#fff", "LLM judge")}
+  {box(560, 90, 140, 50, SAND, "Gate vs baseline")}
+  {box(720, 90, 60, 50, ROSE, "Ship?")}
+  <path d="M175 115 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M345 115 H365" stroke="{INK}" stroke-width="1.3"/>
+  <path d="M525 115 H555" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M705 115 H715" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {box(40, 210, 160, 48, ACCENT_SOFT, "Online: A/B")}
+  {box(230, 210, 160, 48, "#fff", "Traces + feedback")}
+  {box(420, 210, 180, 48, ROSE, "Human spot-check")}
+  <path d="M630 140 V180 H120 V205" fill="none" stroke="{ACCENT}" stroke-width="1.3" stroke-dasharray="4 3"/>
+  {caption(40, 295, "Offline gates block bad deploys; online + humans catch what metrics miss.")}
+''',
+    "LLM evaluation pipeline",
+)
+
+DIAGRAMS["agent-tools"] = svg(
+    820,
+    340,
+    f'''
+  {box(40, 100, 110, 48, SAND, "User goal")}
+  {box(180, 100, 130, 48, ROSE, "Planner LLM")}
+  {box(350, 60, 130, 40, ACCENT_SOFT, "search_*")}
+  {box(350, 115, 130, 40, ACCENT_SOFT, "hold / book")}
+  {box(350, 170, 130, 40, "#fff", "pay (gated)")}
+  {box(530, 100, 130, 48, SAND, "Tool runtime")}
+  {box(690, 100, 100, 48, ROSE, "APIs")}
+  <path d="M155 124 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M315 124 H345" stroke="{INK}" stroke-width="1.3"/>
+  <path d="M485 80 H510 V124 H525" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M485 135 H525" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M485 190 H510 V124" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M665 124 H685" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {box(180, 240, 160, 44, ROSE, "Confirm UI", "before pay/book")}
+  {box(370, 240, 160, 44, ACCENT_SOFT, "Budgets", "steps / $ / tokens")}
+  {box(560, 240, 160, 44, "#fff", "Audit log")}
+  {caption(40, 315, "Tools are the product. Schema-validate args; gate irreversible actions; cap loops.")}
+''',
+    "Tool-using agent",
+)
+
+DIAGRAMS["memory-tiers"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 110, 160, 70, SAND, "Short-term", "thread window")}
+  {box(240, 110, 160, 70, ROSE, "Working state", "slots / summary")}
+  {box(440, 110, 160, 70, ACCENT_SOFT, "Long-term facts", "editable store")}
+  {box(640, 110, 140, 70, "#fff", "Semantic recall", "embeddings")}
+  <path d="M205 145 H235" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M405 145 H435" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M605 145 H635" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 230, "Do not dump months of chat into the prompt — retrieve the right memories each turn.")}
+  {caption(40, 255, "User must be able to see, edit, and delete long-term memory.")}
+''',
+    "Assistant memory tiers",
+)
+
+DIAGRAMS["moderation-cascade"] = svg(
+    820,
+    280,
+    f'''
+  {box(40, 110, 100, 50, SAND, "Content")}
+  {box(170, 110, 120, 50, ROSE, "Hash / rules")}
+  {box(320, 110, 130, 50, ACCENT_SOFT, "Classifiers")}
+  {box(480, 110, 130, 50, "#fff", "LLM (gray)")}
+  {box(640, 70, 130, 40, ROSE, "Auto action")}
+  {box(640, 130, 130, 40, SAND, "Human queue")}
+  {box(640, 190, 130, 40, ACCENT_SOFT, "Allow")}
+  <path d="M145 135 H165" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M295 135 H315" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M455 135 H475" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M615 135 H635" stroke="{INK}" stroke-width="1.2"/>
+  {caption(40, 255, "Cheap filters first; LLM only on uncertain band; humans for high-severity appeals.")}
+''',
+    "Moderation cascade",
+)
+
+DIAGRAMS["recsys-towers"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 80, 140, 48, SAND, "User features")}
+  {box(40, 180, 140, 48, SAND, "Item features")}
+  {box(230, 80, 140, 48, ROSE, "User tower")}
+  {box(230, 180, 140, 48, ROSE, "Item tower")}
+  {box(420, 130, 140, 48, ACCENT_SOFT, "ANN retrieve")}
+  {box(610, 130, 150, 48, "#fff", "Ranker → top N")}
+  <path d="M185 104 H225" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M185 204 H225" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M375 104 H395 V154 H415" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M375 204 H395 V154" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M565 154 H605" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 270, "Retrieve thousands cheaply with towers; spend compute only on ranking candidates.")}
+''',
+    "Two-tower recommendations",
+)
+
+DIAGRAMS["multi-tenant-ai"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 120, 110, 50, SAND, "Tenant A")}
+  {box(40, 190, 110, 50, SAND, "Tenant B")}
+  {box(200, 145, 140, 50, ROSE, "API gateway", "auth + quota")}
+  {box(390, 100, 140, 44, ACCENT_SOFT, "Model router")}
+  {box(390, 160, 140, 44, "#fff", "Meter / bill")}
+  {box(390, 220, 140, 44, SAND, "Trace store")}
+  {box(580, 145, 180, 50, ROSE, "Providers / models")}
+  <path d="M155 145 H195" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M155 215 H175 V170 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M345 170 H385" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M535 170 H575" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 280, "Quotas and tenancy are product features — not afterthoughts on the LLM call.")}
+''',
+    "Multi-tenant AI platform",
+)
+
+DIAGRAMS["transcription-ai"] = svg(
+    820,
+    280,
+    f'''
+  {box(40, 110, 100, 50, SAND, "Audio")}
+  {box(170, 110, 120, 50, ROSE, "Streaming ASR")}
+  {box(320, 110, 120, 50, ACCENT_SOFT, "Diarize")}
+  {box(470, 70, 140, 44, "#fff", "Live captions")}
+  {box(470, 140, 140, 44, SAND, "LLM summary")}
+  {box(640, 110, 130, 50, ROSE, "Search index")}
+  <path d="M145 135 H165" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M295 135 H315" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M445 135 H465" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M615 135 H635" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 240, "Stream partials for UX; batch structured notes; index for later search.")}
+''',
+    "Realtime transcription + summary",
+)
+
+DIAGRAMS["grounded-support"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 130, 110, 48, SAND, "Ticket")}
+  {box(180, 130, 130, 48, ROSE, "Intent route")}
+  {box(350, 70, 150, 48, ACCENT_SOFT, "RAG policies")}
+  {box(350, 160, 150, 48, "#fff", "Action tools")}
+  {box(540, 70, 140, 48, SAND, "Cited answer")}
+  {box(540, 160, 140, 48, ROSE, "Authz + caps")}
+  {box(720, 115, 70, 48, ACCENT_SOFT, "Human")}
+  <path d="M155 154 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M315 154 H330 V94 H345" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M315 154 H330 V184 H345" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M505 94 H535" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M505 184 H535" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M685 154 H715" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  {caption(40, 260, "Knowledge path cites policy; action path is deterministic server auth — not LLM vibes.")}
+''',
+    "Grounded support bot",
+)
 
 DIAGRAMS["prefix-sums"] = svg(
     720,
@@ -614,6 +834,18 @@ CHAPTER_DIAGRAMS = {
     "40-mcp": ["mcp"],
     "41-skills": ["skills"],
     "42-ai-agent": ["ai-assistant"],
+    "interview-ai": [
+        "rag-detailed",
+        "hybrid-search",
+        "eval-pipeline",
+        "agent-tools",
+        "memory-tiers",
+        "moderation-cascade",
+        "recsys-towers",
+        "multi-tenant-ai",
+        "transcription-ai",
+        "grounded-support",
+    ],
 }
 
 

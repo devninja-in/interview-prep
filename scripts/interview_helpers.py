@@ -18,6 +18,30 @@ def code_block(lang: str, code: str) -> str:
     )
 
 
+def figure_diagram(name: str, alt: str) -> str:
+    return (
+        f'<figure class="diagram native qa-diagram">'
+        f'<img src="../assets/diagrams/{html.escape(name)}.svg" alt="{esc(alt)}" loading="lazy" />'
+        f"</figure>"
+    )
+
+
+def steps(items: list[str]) -> str:
+    """Numbered whiteboard steps; items may include safe HTML."""
+    return '<ol class="qa-steps">' + "".join(f"<li>{item}</li>" for item in items) + "</ol>"
+
+
+def bullets(items: list[str]) -> str:
+    return "<ul>" + "".join(f"<li>{item}</li>" for item in items) + "</ul>"
+
+
+def callout(title: str, body: str) -> str:
+    return (
+        f'<aside class="qa-callout"><div class="qa-label">{esc(title)}</div>'
+        f"{body}</aside>"
+    )
+
+
 def qa_block(
     *,
     qnum: int,

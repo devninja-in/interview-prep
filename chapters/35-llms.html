@@ -84,48 +84,48 @@ print(response.choices[0].message.content)
 <p>Some models also take images or audio by mapping those inputs into the same kind of token stream. The story does not change: everything becomes conditioning for the next token. When you design products, ask whether vision is required or whether a captioning tool plus text RAG is enough.</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">They may not ask you to derive softmax — they will ask what breaks in production.</p>
+<h2>Interview drill — LLMs in production</h2>
+<p class="drill-intro">Production LLM questions: context, decoding, structure, cost, eval.</p>
 <p class="drill-intro">More drills in the <a href="interview-ai.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Context window overflow</span></summary>
 <div class="qa-body">
 <p>Conversation exceeds model context.</p>
 <p class="qa-meta"><strong>Asked at:</strong> All AI product interviews · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Context management</p>
-<div class="qa-label">Approach</div>
-<p>Summarize older turns; retrieve long-term memory; truncate least relevant; prefer models with larger windows only as one lever.</p>
+<div class="qa-label">Answer</div>
+<ol class="qa-steps"><li>Summarize older turns; pin entities into working state.</li><li>Retrieve long-term memory instead of full history.</li><li>Truncate least relevant; larger windows are only one lever.</li></ol><p>See also <a href="interview-ai.html#q10">Lab Q10 memory</a>.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q2. Temperature &amp;amp; determinism</span></summary>
+<summary><span>Q2. Structured output you can trust</span></summary>
 <div class="qa-body">
-<p>When temperature 0 vs higher?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Applied ML · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Decoding</p>
-<div class="qa-label">Approach</div>
-<p>Low/0 for extraction, tool args, classification; higher for brainstorming. Even temp 0 is not fully deterministic across infra.</p>
+<p>Pipeline needs reliable JSON.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Platform interviews · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> JSON / schema</p>
+<div class="qa-label">Answer</div>
+<p>Constrained decoding / JSON schema; validate; retry with repair; for critical paths prefer deterministic code over free-form LLM.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q3. Structured output</span></summary>
-<div class="qa-body">
-<p>Need reliable JSON for a pipeline.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Platform interviews · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> JSON mode / schema</p>
-<div class="qa-label">Approach</div>
-<p>JSON schema / constrained decoding; validate; retry with repair prompt; fall back to smaller deterministic parser for critical paths.</p>
-</div>
-</details><details class="qa">
-<summary><span>Q4. Eval before ship</span></summary>
+<summary><span>Q3. Eval before ship</span></summary>
 <div class="qa-body">
 <p>How do you know a prompt change is safe?</p>
 <p class="qa-meta"><strong>Asked at:</strong> OpenAI-adjacent / Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Offline gates</p>
-<div class="qa-label">Approach</div>
-<p>Gold sets + LLM judges + regression thresholds. <a href="interview-ai.html">Lab Q3</a>.</p>
+<div class="qa-label">Answer</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/eval-pipeline.svg" alt="Eval pipeline" loading="lazy" /></figure><p>Gold sets, rubrics, regression gates, online A/B. <a href="interview-ai.html#q3">Lab Q3</a>.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q5. Cost/latency tradeoff</span></summary>
+<summary><span>Q4. Cost / latency routing</span></summary>
 <div class="qa-body">
-<p>Every query uses the biggest model — bankrupt.</p>
+<p>Biggest model on every query is too expensive.</p>
 <p class="qa-meta"><strong>Asked at:</strong> All companies · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Model routing</p>
-<div class="qa-label">Approach</div>
-<p>Router: small model for easy intents; large for hard; cache; retrieve less context; stream for UX while capping max tokens.</p>
+<div class="qa-label">Answer</div>
+<p>Router: small model for easy intents; large for hard; cache; trim context; stream for UX; hard max tokens.</p>
+</div>
+</details><details class="qa">
+<summary><span>Q5. Temperature &amp;amp; determinism</span></summary>
+<div class="qa-body">
+<p>When temperature 0 vs higher?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Applied ML · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Decoding</p>
+<div class="qa-label">Answer</div>
+<p>Low/0 for extraction and tool args; higher for brainstorming. Even temp 0 is not perfectly deterministic across infra — say so.</p>
 </div>
 </details>
 </section>

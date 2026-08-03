@@ -95,48 +95,48 @@
 <p>A trusted internal assistant: 80%+ of policy questions answered with citations, average two tool calls on action workflows, human approval on sends, weekly eval report in Slack, and a skills library owned by ops. The model is almost boring. The system around it is the product.</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Capstone AI design: combine RAG, tools, memory, and eval into one story.</p>
+<h2>Interview drill — Capstone AI design</h2>
+<p class="drill-intro">Combine RAG, tools, memory, eval, and tenancy into one coherent story.</p>
 <p class="drill-intro">More drills in the <a href="interview-ai.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. End-to-end AI assistant</span></summary>
 <div class="qa-body">
-<p>Design the assistant from this book's final chapter for interviews.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Staff/senior AI design · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Full stack AI</p>
-<div class="qa-label">Approach</div>
-<p>Gateway → intent router → RAG and/or agent tools → memory → guardrails → streaming UI; offline eval + online metrics. Tie to <a href="interview-ai.html">AI Lab</a> Q1, Q4, Q8, Q10.</p>
+<p>Design the production assistant.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Staff / senior AI design · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Full stack AI</p>
+<div class="qa-label">Answer</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/ai-assistant.svg" alt="AI assistant" loading="lazy" /></figure><ol class="qa-steps"><li>Gateway: auth, quota, tracing.</li><li>Router: chat vs RAG vs agent tools.</li><li>Memory + retrieval with ACL.</li><li>Guardrails + HITL for irreversible actions.</li><li>Offline eval gates + online metrics.</li></ol><p>Drill the pieces in <a href="interview-ai.html">AI Lab Q1, Q4, Q8, Q10</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Multi-tenant cost controls</span></summary>
 <div class="qa-body">
 <p>Tenants share model capacity.</p>
 <p class="qa-meta"><strong>Asked at:</strong> B2B · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Quotas</p>
-<div class="qa-label">Approach</div>
-<p>Token budgets, routers, metering. <a href="interview-ai.html">Lab Q8</a>.</p>
+<div class="qa-label">Answer</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/multi-tenant-ai.svg" alt="Multi-tenant AI" loading="lazy" /></figure><p><a href="interview-ai.html#q8">Lab Q8</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Observability</span></summary>
 <div class="qa-body">
-<p>What do you log for an AI request?</p>
-<p class="qa-meta"><strong>Asked at:</strong> All senior rounds · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Tracing</p>
-<div class="qa-label">Approach</div>
-<p>Request id, prompt version, retrieved doc ids, tool calls, token counts, latency, user feedback — redact PII.</p>
+<p>What do you log?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Senior rounds · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Tracing</p>
+<div class="qa-label">Answer</div>
+<p>request id, prompt version, retrieved doc ids, tool calls, token counts, latency, cost, feedback — redact PII.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Streaming UX</span></summary>
 <div class="qa-body">
-<p>How do you stream tokens safely?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Product + eng · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> SSE / WebSocket</p>
-<div class="qa-label">Approach</div>
-<p>SSE from gateway; cancelation; buffer tool-call JSON until valid; backpressure if client disconnects.</p>
+<p>Stream tokens safely.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Product + eng · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> SSE</p>
+<div class="qa-label">Answer</div>
+<p>SSE from gateway; cancel on disconnect; buffer tool JSON until valid; backpressure.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q5. When not to use an agent</span></summary>
+<summary><span>Q5. Moderation in the assistant</span></summary>
 <div class="qa-body">
-<p>Interviewers love this.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Judgment check · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Product sense</p>
-<div class="qa-label">Approach</div>
-<p>Prefer single-shot LLM+RAG or plain software when the workflow is fixed. Agents add latency, cost, and failure modes — use when tool choice genuinely branches.</p>
+<p>User pastes disallowed content.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Trust · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Cascade</p>
+<div class="qa-label">Answer</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/moderation-cascade.svg" alt="Moderation" loading="lazy" /></figure><p><a href="interview-ai.html#q5">Lab Q5</a>.</p>
 </div>
 </details>
 </section>

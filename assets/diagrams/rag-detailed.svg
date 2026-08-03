@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="360" viewBox="0 0 820 360" role="img" aria-label="RAG interview whiteboard">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="360" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">RAG interview whiteboard</text>
+  
+  <text x="40" y="68" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">INGEST (offline / nearline)</text>
+  <rect x="40" y="80" width="100" height="44" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="90.0" y="102.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Connectors</text>
+  <rect x="160" y="80" width="90" height="44" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="205.0" y="102.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Clean</text>
+  <rect x="270" y="80" width="90" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="315.0" y="102.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Chunk</text>
+  <rect x="380" y="80" width="90" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="425.0" y="102.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Embed</text>
+  <rect x="490" y="80" width="120" height="44" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="550.0" y="102.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Vector + meta</text>
+  <path d="M140 102 H155" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M250 102 H265" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M360 102 H375" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M470 102 H485" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <text x="40" y="175" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">QUERY (online, &lt;2–3s)</text>
+  <rect x="40" y="190" width="100" height="44" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="90.0" y="212.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Question</text>
+  <rect x="160" y="190" width="100" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="210.0" y="212.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Rewrite</text>
+  <rect x="280" y="190" width="110" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="335.0" y="212.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Hybrid retrieve</text>
+  <rect x="410" y="190" width="90" height="44" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="455.0" y="212.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Rerank</text>
+  <rect x="520" y="190" width="110" height="44" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="575.0" y="212.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Ground LLM</text>
+  <rect x="650" y="190" width="110" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="705.0" y="212.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Cite + stream</text>
+  <path d="M140 212 H155" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M260 212 H275" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M390 212 H405" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M500 212 H515" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M630 212 H645" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <rect x="280" y="260" width="110" height="40" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="335.0" y="274.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">ACL filter</text>
+<text x="335.0" y="294.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">at retrieve</text>
+  <rect x="410" y="260" width="90" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="455.0" y="274.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Abstain</text>
+<text x="455.0" y="294.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">low conf.</text>
+  <path d="M335 234 V255" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M455 234 V255" stroke="#0f1c24" stroke-width="1.2"/>
+  <text x="40" y="335" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Separate ingest from query. Filter permissions in retrieval — never only in the prompt.</text>
+
+</svg>

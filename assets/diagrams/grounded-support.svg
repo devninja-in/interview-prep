@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Grounded support bot">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="300" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Grounded support bot</text>
+  
+  <rect x="40" y="130" width="110" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="95.0" y="154.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Ticket</text>
+  <rect x="180" y="130" width="130" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="245.0" y="154.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Intent route</text>
+  <rect x="350" y="70" width="150" height="48" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="425.0" y="94.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">RAG policies</text>
+  <rect x="350" y="160" width="150" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="425.0" y="184.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Action tools</text>
+  <rect x="540" y="70" width="140" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="610.0" y="94.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Cited answer</text>
+  <rect x="540" y="160" width="140" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="610.0" y="184.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Authz + caps</text>
+  <rect x="720" y="115" width="70" height="48" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="755.0" y="139.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Human</text>
+  <path d="M155 154 H175" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M315 154 H330 V94 H345" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M315 154 H330 V184 H345" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
+  <path d="M505 94 H535" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M505 184 H535" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M685 154 H715" stroke="#0f1c24" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  <text x="40" y="260" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Knowledge path cites policy; action path is deterministic server auth — not LLM vibes.</text>
+
+</svg>

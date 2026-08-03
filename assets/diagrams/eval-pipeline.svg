@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="320" viewBox="0 0 820 320" role="img" aria-label="LLM evaluation pipeline">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="320" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">LLM evaluation pipeline</text>
+  
+  <rect x="40" y="90" width="130" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="105.0" y="115.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Gold sets</text>
+  <rect x="200" y="90" width="140" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="270.0" y="115.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Candidate run</text>
+  <rect x="370" y="70" width="150" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="445.0" y="92.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Auto metrics</text>
+  <rect x="370" y="130" width="150" height="44" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="445.0" y="152.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">LLM judge</text>
+  <rect x="560" y="90" width="140" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="630.0" y="115.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Gate vs baseline</text>
+  <rect x="720" y="90" width="60" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="750.0" y="115.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Ship?</text>
+  <path d="M175 115 H195" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M345 115 H365" stroke="#0f1c24" stroke-width="1.3"/>
+  <path d="M525 115 H555" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M705 115 H715" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <rect x="40" y="210" width="160" height="48" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="120.0" y="234.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Online: A/B</text>
+  <rect x="230" y="210" width="160" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="310.0" y="234.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Traces + feedback</text>
+  <rect x="420" y="210" width="180" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="510.0" y="234.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Human spot-check</text>
+  <path d="M630 140 V180 H120 V205" fill="none" stroke="#0d7a6f" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <text x="40" y="295" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Offline gates block bad deploys; online + humans catch what metrics miss.</text>
+
+</svg>
