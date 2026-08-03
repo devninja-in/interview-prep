@@ -20,6 +20,16 @@ python3 -m http.server 8080
 
 Then visit `http://localhost:8080`.
 
+## Cloudflare deploy
+
+This repo includes `wrangler.jsonc` and `.assetsignore` so Workers Static Assets do **not** upload `.git` (which exceeds the 25 MiB file limit).
+
+In Cloudflare, use:
+- **Framework preset:** None / Static
+- **Build command:** leave empty (or `echo "static site"`)
+- **Deploy / output directory:** `.` (repo root)
+- Ensure the committed `wrangler.jsonc` is used (do not let setup recreate assets as the full git checkout without `.assetsignore`)
+
 ## Files
 
 | Path | Purpose |
