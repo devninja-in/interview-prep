@@ -1,8 +1,11 @@
 <p>Start with a small scene. You type: “The cat sat on the.” A large language model does not “know cats” the way a person does. It has seen billions of similar fragments during training, and it answers a narrower question: given everything so far, what token is most likely next?</p>
-<p>It might put high probability on “mat”, lower on “rug”, and a little on “roof”. You sample one token, append it, and ask again. That loop — predict, sample, append — is the entire runtime story. Essays, code, and multi-step plans are long chains of that same move.</p>
-<figure class="diagram native"><img src="../assets/diagrams/llm-flow.svg" alt="How an LLM answers" loading="lazy" /></figure>
+<p>It might put high probability on “mat”, lower on “rug”, and a little on “roof”. You sample one token, append it, and ask again. That loop — predict, sample, append — is the entire runtime story. Essays, code, and multi-step plans are long chains of that same move. Everything else in this part of the book — prompting, retrieval, memory, agents — is scaffolding around that one humble operation.</p>
+<figure class="diagram native"><img src="../assets/diagrams/llm-flow.svg" alt="How an LLM answers" loading="lazy" /><figcaption>One request becomes many next-token predictions, each conditioned on everything before it.</figcaption></figure>
+<h2>The product story and the failure it must prevent</h2>
+<p>Picture the launch of a customer-facing assistant at a fintech. Marketing wants it to “answer any question about the product in a friendly voice.” Week one, a user asks, “Is my money FDIC insured up to $500,000?” The real answer is $250,000 per depositor. The model, having seen many confident financial sentences, produces a fluent, plausible, and wrong number. No exception is thrown. Nothing is logged as an error. The user acts on it. That is the failure mode that defines LLM engineering: the system is <em>most</em> dangerous exactly when it is most fluent, because fluency and correctness are produced by the same next-token machinery.</p>
+<p>So the job of the architect is not to make the model “smarter.” It is to draw a boundary around what the token engine is allowed to assert on its own, and to route everything outside that boundary to retrieval, tools, or a human. To draw that boundary well, you have to understand what the model is actually doing.</p>
 <h2>Tokens, not words</h2>
-<p>Models do not read characters or whole English words by default. Text is cut into <strong>tokens</strong>: common words stay whole; rarer ones split into pieces. Limits and pricing are in tokens, not characters. Code with dense punctuation burns tokens differently than prose. Truncating the wrong end of a prompt can delete the instruction that mattered.</p>
+<p>Models do not read characters or whole English words by default. Text is cut into <strong>tokens</strong>: common words stay whole; rarer ones split into pieces. A rough rule for English is that one token is about four characters, or roughly ¾ of a word, so 1,000 tokens is about 750 words. Limits and pricing are in tokens, not characters. Code with dense punctuation, JSON, and non-English scripts tokenize far less efficiently — a paragraph of Hindi or a minified config can cost two to three times the tokens of equivalent English prose. This matters in production: truncating the wrong end of a prompt can silently delete the instruction that mattered, and a “cheap” multilingual feature can quietly double your bill.</p>
 <h2>The forward pass in plain English</h2>
 <p>Modern LLMs are transformers. You do not need every matrix name, but you do need the plot:</p>
 <ol>
@@ -11,41 +14,89 @@
 <li>Layers of attention and feed-forward networks refine those vectors.</li>
 <li>The final layer scores every vocabulary token; softmax turns scores into probabilities.</li>
 </ol>
-<p>Training taught those weights by predicting the next token on huge corpora, then usually instruction and preference tuning so the model follows requests instead of only continuing internet prose.</p>
+<p>Training taught those weights by predicting the next token on huge corpora, then usually instruction and preference tuning so the model follows requests instead of only continuing internet prose. Two facts from this picture drive real system design. First, attention is quadratic in sequence length, which is why long contexts are expensive and why “just paste everything” is not a strategy. Second, the weights are frozen at serving time: the model’s parametric knowledge has a training cutoff and cannot learn your new refund policy from a conversation. That single fact is the reason RAG and memory exist.</p>
+<h2>The model boundary: what to trust the weights for</h2>
+<p>Before writing any code, decide four things for the feature at hand:</p>
+<ul>
+<li><strong>What the model may know from its weights</strong> — general language, common code idioms, broad world knowledge up to its cutoff. Trust this for phrasing, summarization shape, and reasoning scaffolds, not for facts that change or that carry liability.</li>
+<li><strong>What must be retrieved</strong> — anything private, recent, or accountable: policies, prices, account state, documentation. If a wrong answer here costs money or trust, it must come from a source you can cite.</li>
+<li><strong>What must be deterministic code</strong> — math, currency conversion, date arithmetic, ID lookups. Do not ask the token engine to compute a loan amortization schedule; give it a tool.</li>
+<li><strong>What needs a human</strong> — irreversible or high-liability actions: moving money, deleting data, medical or legal conclusions.</li>
+</ul>
+<p>Every later chapter is an implementation of one of these lanes. Getting the lanes right on a whiteboard is the difference between a senior answer and a demo.</p>
 <h2>Sampling is a design choice</h2>
-<div class="table-wrap"><table><caption>Generation controls you should explain</caption><thead><tr><th>Knob</th><th>What it changes</th><th>When to turn it</th></tr></thead><tbody>
-<tr><td>Temperature</td><td>How peaky vs flat the next-token distribution is</td><td>Low for code/JSON; higher for brainstorming</td></tr>
-<tr><td>Top-p</td><td>Sample only from a probable nucleus</td><td>Stabilize creative tasks</td></tr>
-<tr><td>Max tokens</td><td>Hard stop on generation length</td><td>Always set in production</td></tr>
-<tr><td>Stop sequences</td><td>End early on a marker</td><td>Tool protocols and field delimiters</td></tr>
+<div class="table-wrap"><table><caption>Generation controls you should be able to explain</caption><thead><tr><th>Knob</th><th>What it changes</th><th>When to turn it</th></tr></thead><tbody>
+<tr><td>Temperature</td><td>How peaky vs flat the next-token distribution is</td><td>Near 0 for code/JSON/extraction; 0.7–1.0 for brainstorming</td></tr>
+<tr><td>Top-p (nucleus)</td><td>Sample only from the smallest set of tokens covering probability p</td><td>Stabilize creative tasks without full determinism</td></tr>
+<tr><td>Max tokens</td><td>Hard stop on generation length</td><td>Always set in production to cap latency and cost</td></tr>
+<tr><td>Stop sequences</td><td>End generation on a marker</td><td>Tool protocols, field delimiters, JSON boundaries</td></tr>
+<tr><td>Seed / logprobs</td><td>Reproducibility and confidence signals</td><td>Evals, debugging, calibrated abstention</td></tr>
 </tbody></table></div>
+<p>Note that “temperature 0” is not fully deterministic in most hosted APIs — batching, hardware, and mixture-of-experts routing introduce small nondeterminism. Do not build a correctness guarantee on exact-string reproduction; build it on validation.</p>
 <h2>Context window: the whole stage</h2>
-<p>Everything the model can see for this call — system instructions, tools, retrieved docs, chat history, the user message — shares one context window. There is no hidden long-term mind unless you build it. When the window fills, something must go. That constraint is why RAG, memory, and agents exist: they decide what earns a seat on stage.</p>
+<p>Everything the model can see for this call — system instructions, tool schemas, retrieved docs, chat history, the user message — shares one context window. There is no hidden long-term mind unless you build it. When the window fills, something must go. That constraint is why RAG, memory, and agents exist: they decide what earns a seat on stage. Two practical warnings: models exhibit a “lost in the middle” effect where facts buried in the center of a long context are recalled worse than those at the start or end, and effective quality often degrades well before the advertised token limit. A 200k-token window is a budget, not a promise that all 200k tokens are used equally.</p>
 <h2>What “reasoning” actually is</h2>
-<p>When a model works a problem step by step, it is not running a separate logic engine. It is generating intermediate tokens that make the eventual answer more likely — a scratchpad in the same stream. Asking for chain of thought often helps because those tokens reshape later predictions.</p>
+<p>When a model works a problem step by step, it is not running a separate logic engine. It is generating intermediate tokens that make the eventual answer more likely — a scratchpad in the same stream. Asking for chain of thought often helps because those tokens reshape later predictions. Newer “reasoning” models (OpenAI’s o-series, Claude’s extended thinking, DeepSeek-R1) are trained to spend many hidden tokens deliberating before answering; they trade latency and cost for accuracy on hard problems. The design lesson: reasoning is a dial you pay for, not a free upgrade. Use it for genuinely multi-step tasks and skip it for classification or extraction.</p>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from openai import OpenAI
 client = OpenAI()
 
 response = client.chat.completions.create(
     model="gpt-4.1-mini",
     temperature=0.2,
+    max_tokens=300,
     messages=[
-        {"role": "system", "content": "You are a precise interview coach. Prefer short, correct answers."},
+        {"role": "system", "content": "You are a precise interview coach. If unsure, say so."},
         {"role": "user", "content": "In one paragraph, what is an LLM doing at inference time?"},
     ],
 )
 print(response.choices[0].message.content)
+print(response.usage)  # prompt_tokens, completion_tokens — this is your bill
 </code></pre></div>
-<h2>Failure modes interviewers love</h2>
+<h2>How serving actually works — and why latency has two numbers</h2>
+<p>To reason about latency and cost you must know how generation is served. A request has two phases. <strong>Prefill</strong> reads your whole prompt in one parallel pass and populates the <em>KV cache</em> (the attention keys and values for every input token). <strong>Decode</strong> then emits output tokens one at a time, each reusing the cache. This is why you feel two latencies: <strong>time-to-first-token (TTFT)</strong>, dominated by prompt length and queueing, and <strong>time-per-output-token (TPOT)</strong>, dominated by model size and memory bandwidth. Streaming the response hides TTFT+TPOT behind a typing effect, which is why nearly every chat product streams.</p>
+<figure class="diagram native"><img src="../assets/diagrams/llm-serving.svg" alt="LLM serving path" loading="lazy" /><figcaption>Prefill fills the KV cache; decode reuses it token by token. Batching many requests keeps the GPU busy.</figcaption></figure>
+<p>Serving stacks like <strong>vLLM</strong> (which introduced PagedAttention to manage the KV cache like virtual memory), <strong>TensorRT-LLM</strong>, and hosted APIs squeeze throughput with <strong>continuous batching</strong> (adding and retiring requests from a running batch every step), <strong>prefix caching</strong> (reusing the KV cache for a shared system prompt across users), <strong>quantization</strong> (FP8/INT8/INT4 weights to fit bigger models and go faster), and <strong>speculative decoding</strong> (a small draft model proposes tokens a big model verifies in bulk). You rarely implement these, but you must know them, because they explain your options: a shared, cacheable system prompt is cheaper than per-user prose; long outputs cost more than long inputs per token because decode is serial; and provider-side batching means p99 latency spikes under load even when p50 is fine.</p>
+<h2>Latency, cost, and quality — the real trade space</h2>
+<div class="table-wrap"><table><caption>Order-of-magnitude figures to anchor an interview (they shift monthly)</caption><thead><tr><th>Dimension</th><th>Small/mini model</th><th>Frontier model</th></tr></thead><tbody>
+<tr><td>Blended cost / 1M tokens</td><td>~$0.15–$1</td><td>~$3–$30+</td></tr>
+<tr><td>TTFT (streaming)</td><td>~100–300 ms</td><td>~300 ms–2 s (more with reasoning)</td></tr>
+<tr><td>Throughput felt by user</td><td>~50–150 tokens/s</td><td>~20–80 tokens/s</td></tr>
+<tr><td>Best fit</td><td>Routing, extraction, classification, drafts</td><td>Hard reasoning, final customer-facing answers</td></tr>
+</tbody></table></div>
+<p>The levers that move these numbers: <strong>route</strong> easy turns to a small model and reserve the frontier model for hard ones; <strong>cache</strong> exact and semantically similar responses; <strong>cap</strong> output length and stream; <strong>trim</strong> context aggressively (fewer, better tokens beat more tokens); and <strong>batch</strong> offline workloads. A concrete mental model: if a chat turn sends 2k prompt tokens and returns 500 output tokens on a mid model at roughly $0.60/$2.40 per million in/out, that turn costs about $0.0025 — trivial alone, but at 10M turns a month it is a $25k line item that routing and caching can cut by half.</p>
+<h2>Evaluation: how you know it works</h2>
+<p>You cannot ship what you cannot measure, and LLM output is not pass/fail on a diff. Build evaluation at the model layer before you build features on top:</p>
 <ul>
-<li><strong>Hallucination</strong> — fluent next tokens that are not grounded in evidence.</li>
-<li><strong>Context overflow</strong> — silently dropping early instructions when you stuff the window.</li>
-<li><strong>Prompt injection</strong> — untrusted retrieved text that tries to override system policy.</li>
-<li><strong>Distribution shift</strong> — the model never saw your jargon; without RAG it will guess.</li>
+<li><strong>Golden sets</strong> — a curated set of inputs with expected properties (not always exact strings). Version them in git.</li>
+<li><strong>Task metrics</strong> — exact match or F1 for extraction/classification; faithfulness and helpfulness for open answers; pass@k for code.</li>
+<li><strong>LLM-as-judge</strong> — a stronger model scores outputs against a rubric; cheap and scalable, but calibrate it against human labels on a sample or it drifts.</li>
+<li><strong>Slices</strong> — measure by language, topic, and user tier. An 85% aggregate can hide a 40% score on your enterprise segment.</li>
+<li><strong>Regression gates</strong> — run the golden set in CI on every prompt or model change and block merges that drop key metrics.</li>
 </ul>
-<p>Once you see the model as a conditioned token engine with a finite stage, the rest of this part becomes inevitable engineering: put the right tokens on stage, constrain the outputs, and verify against tools and documents.</p>
-
+<p>The senior move is to treat the model like a dependency with a changelog: providers deprecate and silently update models, so pin versions and re-run evals before adopting a new one.</p>
+<h2>Safety, security, and privacy at the model layer</h2>
+<ul>
+<li><strong>Prompt injection</strong> — untrusted retrieved text or tool output that tries to override your system policy. Treat all non-system content as data, never as instructions, and delimit it clearly.</li>
+<li><strong>Data leakage</strong> — prompts and completions may be logged by providers or your own stack. Scrub PII, use zero-retention or enterprise data terms where required, and never place secrets in prompts that land in third-party logs.</li>
+<li><strong>Training-data memorization</strong> — models can regurgitate verbatim strings; do not assume outputs are original or license-clean.</li>
+<li><strong>Jailbreaks and misuse</strong> — pair the model with input/output classifiers (e.g. a moderation pass) rather than trusting the model to police itself.</li>
+</ul>
+<h2>When not to use an LLM at all</h2>
+<p>The most credible thing you can say in an interview is where you would <em>not</em> reach for a model. Skip the LLM when a deterministic system is cheaper and safer:</p>
+<ul>
+<li><strong>Exact, auditable computation</strong> — tax math, billing, ledger balances. Use code.</li>
+<li><strong>High-volume, low-ambiguity classification</strong> where a small fine-tuned classifier or even regex hits the SLA at a fraction of the cost and latency.</li>
+<li><strong>Zero tolerance for wrong answers with no human check</strong> — e.g. automated medication dosing.</li>
+<li><strong>Insufficient data or evals</strong> — if you cannot measure quality, you cannot operate the feature responsibly.</li>
+</ul>
+<p>“Should this be an LLM?” is a real design question. Often the best architecture uses the model for the fuzzy 20% (understanding messy language) and classical code for the deterministic 80%.</p>
+<h2>Real production example: coding assistants and chat at scale</h2>
+<p>GitHub Copilot’s inline completion is a masterclass in the trade space: it must return a suggestion in roughly the time between keystrokes, so it leans on smaller, faster models, tight context selection from surrounding code, aggressive cancellation when you keep typing, and caching. It optimizes for TTFT and acceptance rate, not for essay quality. Contrast that with ChatGPT and Claude answering a long analytical question: they stream a larger model’s output, spend more on reasoning, and optimize for correctness and helpfulness. Same underlying next-token engine, opposite operating points — chosen by the product’s latency budget and cost of error. Anthropic and OpenAI both publish that they serve these behind heavy batching and KV-cache reuse; the shared system prompt across millions of chats is exactly the prefix-cache win described above.</p>
+<h2>Rollout and operations</h2>
+<p>Ship an LLM feature the way you ship any risky dependency: start in <strong>shadow mode</strong> (generate but do not show), compare against a baseline, then release behind a <strong>feature flag</strong> to a small cohort. Instrument dashboards for TTFT, TPOT, tokens per request, cost per request, error and timeout rates, refusal rate, and eval scores by slice. Keep a fast <strong>rollback</strong> to the previous model version, because provider updates and traffic shifts will move quality without warning. Add per-user and per-tenant rate limits and budget caps so a runaway loop cannot produce a surprise invoice.</p>
 <h2>Pretraining, then alignment</h2>
-<p>Pretraining is reading the internet (and more) to learn statistics of language. Alignment stages afterward — supervised instruction data, preference tuning, safety policies — bend the same engine toward being helpful and constrained. In system design talks, separate “what the weights know” from “what we put in the prompt today.” One changes rarely and costs a fortune; the other changes every deploy.</p>
+<p>Pretraining is reading the internet (and more) to learn the statistics of language. Alignment stages afterward — supervised instruction data, preference tuning (RLHF/DPO), safety policies — bend the same engine toward being helpful and constrained. In system-design talks, separate “what the weights know” from “what we put in the prompt today.” One changes rarely and costs a fortune to retrain; the other changes every deploy. This is also why fine-tuning is usually the wrong first move: it is expensive, slow to iterate, and bakes in facts that go stale — prompting and retrieval get you most of the way for a fraction of the cost.</p>
 <h2>Multimodal note</h2>
-<p>Some models also take images or audio by mapping those inputs into the same kind of token stream. The story does not change: everything becomes conditioning for the next token. When you design products, ask whether vision is required or whether a captioning tool plus text RAG is enough.</p>
+<p>Some models also take images or audio by mapping those inputs into the same kind of token stream. The story does not change: everything becomes conditioning for the next token, and vision tokens are often expensive. When you design products, ask whether vision is truly required or whether a cheaper captioning/OCR tool plus text retrieval is enough — the answer changes your cost curve dramatically.</p>
+<h2>Interview close</h2>
+<p>When an interviewer asks “how does an LLM work, and how would you build on one?”, give this arc in ninety seconds: it is a next-token engine conditioned on a finite context window; it has frozen, dated knowledge, so anything private or fresh must be retrieved, anything exact must be computed by code, and anything irreversible needs a human; serving splits into prefill and decode, which is why you optimize TTFT and cost separately and lean on batching, caching, and model routing; you make it trustworthy with golden-set evals, faithfulness checks, and injection defenses; and you know when <em>not</em> to use it. Expect follow-ups on hallucination mitigation, how you would cut cost by 40% without hurting quality (routing, caching, context trimming, shorter outputs), and how you would evaluate a model swap (pinned versions, regression gates, sliced metrics). Once you can see the model as a conditioned token engine on a finite stage, the rest of this part becomes inevitable engineering: put the right tokens on stage, constrain the outputs, and verify against tools and documents.</p>

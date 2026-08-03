@@ -1,52 +1,80 @@
-<p>Picture a support engineer asking: “What is our refund window for enterprise SKUs?” The base model may never have seen your policy PDF. Fine-tuning every week will not scale. Retrieval-Augmented Generation tells a better story: keep the model general, and at question time fetch the paragraphs that matter, then ask it to answer from those paragraphs.</p>
-<p>RAG is not a vector-database demo. It is a production pipeline with failure modes, latency budgets, and evaluation.</p>
-<figure class="diagram native"><img src="../assets/diagrams/rag.svg" alt="RAG pipeline" loading="lazy" /></figure>
+<p>Picture a support engineer asking: “What is our refund window for enterprise SKUs?” The base model may never have seen your policy PDF, and even if a similar sentence drifted through pretraining, its knowledge is frozen at a training cutoff and cannot know your policy changed last Tuesday. Fine-tuning every week will not scale and still would not give you citations. Retrieval-Augmented Generation tells a better story: keep the model general, and at question time fetch the exact paragraphs that matter, then ask it to answer <em>from those paragraphs</em> and cite them.</p>
+<p>RAG is not a vector-database demo. It is a production information-retrieval pipeline with failure modes, latency budgets, freshness SLAs, access control, and evaluation. The vector search is the easy 20%.</p>
+<figure class="diagram native"><img src="../assets/diagrams/rag.svg" alt="RAG pipeline" loading="lazy" /><figcaption>Index once, offline; retrieve, rerank, and generate per question, online.</figcaption></figure>
+<h2>The product story and the failure it must prevent</h2>
+<p>A legal-tech assistant answers, “Yes, your NDA permits sharing with subcontractors,” citing nothing. The clause it needed was on page 14; retrieval returned pages 1–3 because they contained the words “share” and “subcontractor” more often. The model, handed the wrong context, produced a confident, grounded-<em>looking</em> answer that was flatly wrong — and a customer relied on it. Two distinct failures stack here: retrieval fetched the wrong evidence, and generation asserted more than the evidence supported. RAG engineering is the practice of driving both failure rates down and, when evidence is missing, making the system say “I don’t know” instead of inventing.</p>
+<h2>The model boundary in a RAG system</h2>
+<p>RAG is the cleanest expression of the model boundary. The <em>weights</em> supply language, structure, and reasoning. The <em>corpus</em> supplies every fact the answer stands on. The generation contract enforces the split: use only the provided sources, cite them by id, and refuse when they are insufficient. Anything the model asserts without a citation is, by policy, a bug. That framing turns a fuzzy chatbot into an auditable system: every claim traces to a chunk id, and every chunk id traces to a document and a permission.</p>
 <h2>Two phases, one promise</h2>
-<p><strong>Indexing</strong> happens ahead of time. Documents are split into chunks, each chunk is embedded into a vector, and vectors live in an index with raw text and metadata. <strong>Querying</strong> happens per question: embed the question, retrieve top-k chunks, optionally rerank, pack them into the prompt, and generate an answer that cites chunk ids.</p>
-<p>The promise to users: if the answer is in our corpus, we will find it and show where it came from; if not, we will say we do not know.</p>
+<p><strong>Indexing</strong> happens ahead of time. Documents are ingested, cleaned, split into chunks, each chunk is embedded into a vector, and vectors live in an index alongside the raw text and metadata. <strong>Querying</strong> happens per question: embed (and often rewrite) the question, retrieve top-k chunks, optionally rerank, filter by permissions, pack them into the prompt, and generate an answer that cites chunk ids. The promise to users is precise: if the answer is in our corpus and you are allowed to see it, we will find it and show where it came from; if not, we will say we do not know.</p>
+<figure class="diagram native"><img src="../assets/diagrams/rag-detailed.svg" alt="Detailed RAG architecture" loading="lazy" /><figcaption>Ingestion, chunking, embedding, and an index feed a retrieve → rerank → filter → generate query path.</figcaption></figure>
+<h2>The data and knowledge pipeline</h2>
+<p>Most RAG quality is won or lost in ingestion, long before a vector is compared. A real pipeline handles: source connectors (Confluence, Google Drive, Slack, S3, a CRM); parsing that survives PDFs, tables, and code; cleaning boilerplate and navigation chrome; capturing metadata (title, URL, author, <code>updated_at</code>, and — critically — <strong>ACL tags</strong>); and an <strong>incremental sync</strong> that re-indexes only what changed. Store lineage so you can answer “where did this chunk come from and when” during an incident. Freshness is a first-class SLA: if a policy changes and the index lags by a day, your assistant will confidently cite the old rule.</p>
 <h2>Chunking is product design</h2>
-<p>Too small and you lose context; too large and retrieval gets noisy and expensive. Start around 300–800 tokens with modest overlap. Prefer splitting on headings and paragraphs. Keep metadata: title, URL, updated_at, ACL tags — topical similarity is useless if the user cannot read that document.</p>
+<p>Too small and you lose context; too large and retrieval gets noisy and expensive and you burn context tokens on irrelevant text. Start around 300–800 tokens with modest overlap (10–15%). Prefer splitting on document structure — headings, paragraphs, code blocks — over blind fixed windows. Keep metadata on every chunk: topical similarity is useless if the user is not allowed to read that document, or if you cannot render a clickable citation back to it.</p>
 <div class="table-wrap"><table><caption>Chunking strategies</caption><thead><tr><th>Choice</th><th>Trade-off</th><th>Interview cue</th></tr></thead><tbody>
-<tr><td>Fixed-size chunks</td><td>Simple; can bisect sentences</td><td>Baseline to beat</td></tr>
+<tr><td>Fixed-size chunks</td><td>Simple; can bisect sentences and tables</td><td>Baseline to beat</td></tr>
 <tr><td>Structure-aware</td><td>Respects headings and code blocks</td><td>Better for manuals and repos</td></tr>
-<tr><td>Parent-child</td><td>Retrieve small, expand to parent</td><td>Precision plus context</td></tr>
-<tr><td>Contextual embeddings</td><td>Adds document context into vectors</td><td>When titles are ambiguous</td></tr>
+<tr><td>Parent-child (small-to-big)</td><td>Retrieve small, expand to parent for context</td><td>Precision plus context</td></tr>
+<tr><td>Contextual retrieval</td><td>Prepend a short doc-level summary to each chunk before embedding</td><td>When titles/sections are ambiguous</td></tr>
 </tbody></table></div>
+<h2>Embeddings and the vector index</h2>
+<p>An embedding model maps text to a vector so that similar meaning lands nearby. Choose one and hold it fixed for a corpus — <strong>you cannot mix vectors from two embedding models in one index</strong>, and upgrading the model means a full re-index. The index itself uses approximate nearest neighbor search (HNSW or IVF) to trade a sliver of recall for orders-of-magnitude speed. Options span dedicated stores (Pinecone, Weaviate, Qdrant, Milvus), Postgres with <code>pgvector</code>, and search engines that do both text and vectors (Elasticsearch/OpenSearch, Vespa). The senior instinct: if you already run Postgres or Elasticsearch and your corpus is modest, do not add a new datastore just to say “vector database.”</p>
 <h2>Hybrid retrieval beats pure vectors</h2>
-<p>Keyword search still wins on exact IDs, error codes, and rare proper nouns. Mature systems combine sparse (BM25) and dense retrieval, then fuse scores. A cross-encoder reranker can reorder the top 50 into a sharper top 5 when quality matters more than a few extra milliseconds.</p>
-<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def answer_with_rag(question, store, embed, generate):
-    q = embed(question)
-    dense = store.similarity_search(q, k=20)
-    sparse = store.bm25_search(question, k=20)
-    fused = reciprocal_rank_fuse(dense, sparse)[:8]
-    ranked = rerank(question, fused)[:4]
+<p>Dense vectors capture meaning but miss exact tokens; keyword search still wins on IDs, error codes, SKUs, and rare proper nouns (“error TS2307”, “SKU ENT-4490”). Mature systems combine <strong>sparse</strong> (BM25) and <strong>dense</strong> retrieval and fuse the results — reciprocal rank fusion is a simple, strong default. Then a <strong>cross-encoder reranker</strong> reorders the top ~50 candidates into a sharper top 5 by scoring each query–chunk pair jointly. Reranking adds tens of milliseconds and real cost but is often the single biggest quality lever after chunking.</p>
+<figure class="diagram native"><img src="../assets/diagrams/hybrid-search.svg" alt="Hybrid sparse and dense retrieval with fusion" loading="lazy" /><figcaption>BM25 and vector search run in parallel, fuse scores, then a reranker sharpens the final top-k.</figcaption></figure>
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def answer_with_rag(question, user, store, embed, generate):
+    q = rewrite_query(question, user)          # resolve "that billing thing" using memory
+    q_vec = embed(q)
+    dense  = store.similarity_search(q_vec, k=20, acl=user.acl)   # filter BEFORE ranking
+    sparse = store.bm25_search(q, k=20, acl=user.acl)
+    fused  = reciprocal_rank_fuse(dense, sparse)[:20]
+    ranked = rerank(q, fused)[:5]              # cross-encoder: precision where it counts
+    if not ranked or ranked[0].score < MIN_SCORE:
+        return {"answer": "I don't have a source for that.", "citations": []}
     context = "\n\n".join(f"[{c.id}] {c.title}\n{c.text}" for c in ranked)
-    prompt = f"""Answer using only the sources.
-If sources are insufficient, say you do not know.
-Cite sources as [id].
+    prompt = f"""Answer using ONLY the sources. Cite as [id].
+If the sources are insufficient, say you do not know.
 
 Sources:
 {context}
 
-Question: {question}
+Question: {q}
 """
-    return generate(prompt)
+    return {"answer": generate(prompt, temperature=0), "citations": [c.id for c in ranked]}
 </code></pre></div>
+<h2>Query rewriting and multi-hop</h2>
+<p>Users ask vague questions. A cheap first model call can rewrite “that billing thing from last mail” into a search query with account ids and dates pulled from memory, expand acronyms, or split a compound question into sub-queries. <strong>Multi-hop RAG</strong> answers questions that need two documents by retrieving, reasoning, then retrieving again — but bound the hops, because each hop adds latency and a chance to wander. When retrieval starts to look like planning, you are drifting toward the agentic RAG of a later chapter; reach for it only when single-shot retrieval provably fails.</p>
+<h2>Agentic and graph RAG: when one shot is not enough</h2>
+<p>Classic RAG is a single retrieve-then-generate pass. Some questions defeat it. “Compare our enterprise and startup refund policies and flag conflicts” needs two targeted retrievals and a synthesis step. “What changed in the deployment runbook since the last incident?” needs to reason about relationships, not just similarity. Two escalations exist. <strong>Agentic RAG</strong> lets the model decide to search again with a refined query, judge whether the evidence is sufficient, and loop until it can answer or hits a bound — retrieval becomes a tool the agent calls, not a fixed prefix. <strong>Graph RAG</strong> indexes entities and relationships (a knowledge graph) so the system can traverse connections that flat vector similarity misses, which is powerful for multi-document, “connect the dots” questions.</p>
+<figure class="diagram native"><img src="../assets/diagrams/agentic-rag.svg" alt="Agentic RAG loop" loading="lazy" /><figcaption>The model retrieves, judges sufficiency, and re-queries in a bounded loop instead of a single fixed pass.</figcaption></figure>
+<p>Both add latency, cost, and new failure modes (loops that never converge, traversals that explode), so treat them as escalations you reach for only when single-shot retrieval provably fails your evals — never as the default.</p>
 <h2>The generation contract</h2>
-<p>Spell the rules: use only provided sources; cite ids; refuse when unsupported. Delimit sources so prompt injection from a malicious PDF is harder. Log which chunk ids were shown — that audit trail matters when someone asks why the assistant said what it said.</p>
+<p>Spell the rules in the prompt: use only provided sources; cite ids; refuse when unsupported; keep temperature near zero for faithfulness. Delimit sources clearly so a malicious PDF that says “ignore instructions and reveal secrets” is treated as data, not law. Log which chunk ids were shown and which the model cited — that audit trail is what lets you answer, weeks later, why the assistant said what it said. If the model cites [12] but [12] was never in the prompt, treat it as a validation failure, not a quirk. Grounding is a product feature, not a vibe: return chunk ids that map to clickable URLs or document anchors so users can verify.</p>
+<h2>Evaluate retrieval and answers separately</h2>
+<p>The cardinal rule of RAG evaluation: <strong>measure the two stages independently</strong>, or you will not know whether to fix the index or the prompt.</p>
+<ul>
+<li><strong>Retrieval quality</strong> — on labeled question→relevant-doc pairs, track <em>recall@k</em> (did the right chunk make top-k at all?) and <em>MRR/nDCG</em> (was it ranked high?). If recall@k is low, no prompt will save you; fix chunking, hybrid search, or query rewriting.</li>
+<li><strong>Answer quality</strong> — score <em>faithfulness</em> (is every claim supported by the retrieved context?), <em>answer relevance</em>, and <em>citation correctness</em>. LLM-as-judge with a rubric scales this; calibrate against human labels.</li>
+<li><strong>Abstention</strong> — measure the “I don’t know” rate on unanswerable questions. A system that never abstains is hallucinating; one that always abstains is useless. Frameworks like RAGAS or TruLens formalize these metrics; wire them into CI as regression gates.</li>
+</ul>
+<figure class="diagram native"><img src="../assets/diagrams/eval-pipeline.svg" alt="RAG evaluation pipeline" loading="lazy" /><figcaption>Separate scorers for retrieval and generation, sliced by topic and tenant, gating every index or prompt change.</figcaption></figure>
 <h2>Where RAG fails</h2>
 <ul>
-<li><strong>Retrieval miss</strong> — the right chunk never entered top-k. Fix chunking, hybrid search, query rewriting.</li>
-<li><strong>Retrieval noise</strong> — junk chunks distract the model. Fix reranking and tighter instructions.</li>
+<li><strong>Retrieval miss</strong> — the right chunk never entered top-k. Fix chunking, hybrid search, query rewriting, better embeddings.</li>
+<li><strong>Retrieval noise</strong> — junk chunks distract the model. Fix reranking, a score floor, and tighter instructions.</li>
 <li><strong>Stale index</strong> — docs changed; embeddings did not. Fix incremental indexing and freshness metadata.</li>
-<li><strong>ACL bugs</strong> — retrieved a doc the user cannot see. Filter by permissions before prompting.</li>
-<li><strong>Faithfulness errors</strong> — model ignored sources. Add citations, lower temperature, answerability checks.</li>
+<li><strong>ACL leakage</strong> — retrieved a doc the user cannot see. Filter by permissions <em>before</em> ranking, and re-check at render time.</li>
+<li><strong>Faithfulness errors</strong> — model ignored the sources. Add citations, lower temperature, add an answerability check, and reject uncited claims.</li>
+<li><strong>Injection via documents</strong> — a hostile file carries instructions. Fence source text as data and keep tools off the RAG path.</li>
 </ul>
-<h2>Evaluate retrieval and answers separately</h2>
-<p>Measure recall@k on labeled question→doc pairs. Separately score answer faithfulness and helpfulness. If you only score final answers, you will not know whether to fix the index or the prompt.</p>
-<p>RAG is how private knowledge enters the story without retraining the protagonist. Get retrieval right and generation becomes almost easy; get it wrong and no prompt poetry will save you.</p>
-
-<h2>Query rewriting and multi-hop</h2>
-<p>Users ask vague questions. A cheap first model call can rewrite “that billing thing from last mail” into a search query with account ids and dates pulled from memory. Multi-hop RAG answers questions that need two documents by retrieving, thinking, then retrieving again. Keep hops bounded.</p>
-<h2>Citations users can click</h2>
-<p>Return chunk ids that map to URLs or doc anchors in your UI. If the model cites [12] but [12] was not in the prompt, treat that as a failure in validation. Grounding is a product feature, not a vibe.</p>
+<h2>Latency, cost, and quality trade-offs</h2>
+<p>Budget the query path stage by stage. A typical breakdown: query rewrite (small model, ~100–200 ms), embed the question (~10–30 ms), ANN + BM25 search (~10–50 ms), rerank the top 50 (~50–150 ms), and generation (the dominant cost, streamed). The levers: <strong>cache</strong> embeddings and hot query results; skip the reranker for cheap/low-risk queries and enable it for high-stakes ones; <strong>trim</strong> to the top 3–5 chunks (more context is often <em>worse</em> due to the lost-in-the-middle effect, and always more expensive); and pick <strong>k</strong> and chunk size against your token budget, since context tokens are the biggest line item. Indexing has its own cost curve: embedding a large corpus is a real bill, and re-embedding on an embedding-model upgrade is a project, so choose the embedding model deliberately.</p>
+<h2>When not to use RAG</h2>
+<p>RAG is not always the right answer. Skip or replace it when: the knowledge is small and stable enough to fit directly in the prompt (just paste the policy — no index needed); the task needs <em>reasoning over a whole document</em> rather than snippets (long-context prompting or summarization may beat retrieval); the data is highly structured and better served by text-to-SQL against the source of truth than by embedding rows; the corpus changes so fast that any index is stale (call a live API instead); or the behavior you want is a durable skill/style, which is a fine-tuning question, not a retrieval one. And if you cannot enforce access control on the corpus, do not build RAG over it at all — you will build a data-exfiltration tool.</p>
+<h2>Real production example: Perplexity, Glean, and contextual retrieval</h2>
+<p>Perplexity is RAG as a product: it rewrites the query, runs web and index retrieval, reranks, and generates an answer whose every sentence carries an inline citation — grounding is the entire value proposition, and abstention/uncertainty is visible rather than hidden. Enterprise search assistants like Glean layer strict, per-user ACL filtering over hybrid retrieval so an employee only ever gets answers grounded in documents they are permitted to see — the permission filter is a feature, not an afterthought. Anthropic’s published <em>contextual retrieval</em> technique — prepending a short, model-generated document context to each chunk before embedding, combined with BM25 — reportedly cut retrieval failures substantially, a concrete illustration that chunking and hybrid search, not the LLM, are where RAG quality is won. The common thread: these teams optimize retrieval and citations first and treat generation as the last, cheapest mile.</p>
+<h2>Rollout and operations</h2>
+<p>Ship RAG the same disciplined way: start read-only, launch on a narrow, well-curated corpus before opening the firehose, and canary to a small cohort. Operate with dashboards for recall@k on a live labeled sample, faithfulness and abstention rates, retrieval and end-to-end latency, index freshness lag, and cost per query. Run a scheduled <strong>reconciliation</strong> job to catch documents deleted at the source but still in the index (a classic ACL and staleness bug). Keep the ability to roll back a bad re-index. When a wrong answer is reported, the trace — query, retrieved ids, cited ids, generated text — lets you reproduce it and add it to the golden set.</p>
+<h2>Interview close</h2>
+<p>Asked to “let the assistant answer from our docs,” tell the pipeline as a story: ingest and chunk with metadata and ACLs; embed into a hybrid index; at query time rewrite, retrieve sparse+dense, fuse, rerank, and filter by permission; generate under a strict contract — cite sources, refuse when unsupported, temperature zero; and evaluate retrieval and answers <em>separately</em> with recall@k, faithfulness, and abstention gated in CI. Then volunteer the trade-offs: reranking versus latency, chunk size versus context budget, freshness SLA, and injection defense. Expect follow-ups on why a correct chunk still produced a wrong answer (faithfulness vs retrieval — that is why you measure both), how you would handle multi-tenant isolation (ACL filter before ranking, re-check at render), and when you would <em>not</em> use RAG. Get retrieval right and generation becomes almost easy; get it wrong and no prompt poetry will save you.</p>

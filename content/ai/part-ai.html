@@ -1,13 +1,15 @@
-<p>Imagine you are building an assistant for a real company. Someone asks: “What did we promise customer X last quarter, and can you open a follow-up ticket?” A plain chatbot will invent an answer. A useful system will find the right documents, remember the conversation, call tools safely, and leave a trail you can trust.</p>
-<p>This part is the story of how that system is built — not as magic, but as a stack of ideas you can explain on a whiteboard.</p>
+<p>Imagine you are building an assistant for a real company. Someone asks: "What did we promise customer X last quarter, and can you open a follow-up ticket?" A plain chatbot will invent an answer — a plausible promise that was never made, a ticket number that does not exist. A useful system will find the right documents, cite them, remember the conversation, call tools safely, and leave a trail you can trust. The distance between those two outcomes is this entire part.</p>
+<p>Here is the idea that runs underneath every chapter, so hold onto it early: <strong>the model only produces text.</strong> It has no memory between calls, no access to your database, no knowledge of your private documents, and no ability to take an action in the world. Everything that makes an AI product feel intelligent — that it remembers you, knows your data, cites its sources, files a ticket — is machinery an engineer built <em>around</em> a stateless token engine. Once you see that boundary clearly, the whole field stops being magic and becomes architecture: each capability in this part is simply the external system that compensates for something the model cannot do on its own.</p>
+<p>This part is the story of how that system is built — not as magic, but as a stack of ideas you can explain on a whiteboard, each doing one job and handing off to the next.</p>
 <ul>
-<li><strong>How LLMs work</strong> — why next-token prediction is enough to get reasoning, code, and conversation.</li>
-<li><strong>Prompting</strong> — the control surface: roles, examples, structure, and evaluation.</li>
-<li><strong>RAG</strong> — giving the model your private knowledge at question time.</li>
-<li><strong>Memory</strong> — carrying the right context across turns without drowning the window.</li>
-<li><strong>Agents</strong> — the think → act → observe loop that turns answers into actions.</li>
-<li><strong>MCP</strong> — a standard way to plug tools and data into any host.</li>
-<li><strong>Skills</strong> — reusable procedures loaded only when a task needs them.</li>
-<li><strong>Design walkthrough</strong> — wiring every piece into one assistant.</li>
+<li><strong>How LLMs work</strong> — why next-token prediction is enough to get reasoning, code, and conversation, and where the weights stop and your data must begin.</li>
+<li><strong>Prompting</strong> — the control surface: roles, examples, structure, and evaluation that turn a raw model into a reliable component.</li>
+<li><strong>RAG</strong> — giving the model your private knowledge at question time, with citations and the discipline to refuse when the documents do not support an answer.</li>
+<li><strong>Memory</strong> — carrying the right context across turns from an external, per-user store, without drowning the window or violating privacy.</li>
+<li><strong>Agents</strong> — the think → act → observe loop that turns answers into actions, where the model proposes and your runtime disposes.</li>
+<li><strong>MCP</strong> — a standard way to plug tools and data into any host, collapsing N×M bespoke connectors into N+M reusable servers.</li>
+<li><strong>Skills</strong> — reusable procedures loaded only when a task needs them, so organizational know-how rides along without a novel-length prompt.</li>
+<li><strong>Design walkthrough</strong> — wiring every piece into one assistant an orchestrator can run, defend, and keep safe.</li>
 </ul>
-<p>Read it as a continuous story. Each chapter adds one capability. By the end you should be able to design, critique, and interview on modern AI systems with the same confidence you bring to coding patterns and distributed design.</p>
+<p>Read it as a continuous story. Each chapter adds exactly one capability to the same running example, and each ends with an interview close so you can rehearse explaining it out loud. Along the way, two themes recur because they are what separate a demo from a system: the <em>model boundary</em> — knowledge, memory, actions, and permissions all live outside the weights — and <em>trust</em> — citations, refusal, gates on irreversible actions, isolation between users, and evals that gate every change. Chase those two threads and the individual techniques stop feeling like a bag of tricks.</p>
+<p>By the end you should be able to design, critique, and interview on modern AI systems with the same confidence you bring to coding patterns and distributed design — and to answer "design ChatGPT for our company" not with buzzwords, but with an architecture you can draw, defend, and ship.</p>
