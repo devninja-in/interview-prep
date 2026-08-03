@@ -1,16 +1,14 @@
+# Cloudflare Workers Static Assets ignore (for any leftover root deploys)
 .git
 .git/
-**/.git
 **/.git/**
 
 .github/
-.github/**
-
 .wrangler/
-.wrangler/**
-
 node_modules/
-node_modules/**
+dist/
+src/
+scripts/
 
 *.pack
 *.idx
@@ -19,11 +17,11 @@ node_modules/**
 
 .DS_Store
 *.log
-
-# Dev / deploy config — not needed as public assets
 .gitignore
 .assetsignore
 wrangler.jsonc
 wrangler.toml
+package.json
+package-lock.json
 README.md
 .nojekyll

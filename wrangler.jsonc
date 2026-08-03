@@ -1,12 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "interview-prep",
+  "main": "src/index.js",
   "compatibility_date": "2026-08-03",
   "observability": {
     "enabled": true
   },
+  "build": {
+    "command": "npm run build"
+  },
   "assets": {
-    "directory": ".",
-    "not_found_handling": "404-page"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
   }
 }

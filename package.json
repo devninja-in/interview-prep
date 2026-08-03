@@ -1,0 +1,14 @@
+{
+  "name": "interview-prep",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Interview Prep static book (competitive programming, system design, AI)",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.118.0"
+  }
+}

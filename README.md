@@ -1,8 +1,9 @@
 # Interview Prep
 
-Coding, system design, and AI in one place — published as a static book for GitHub Pages.
+Coding, system design, and AI in one place — published as a static book.
 
-**Live site:** [https://devninja-in.github.io/interview-prep/](https://devninja-in.github.io/interview-prep/)
+**Cloudflare Worker:** [https://interview-prep.devninja.workers.dev/](https://interview-prep.devninja.workers.dev/)  
+**GitHub Pages:** [https://devninja-in.github.io/interview-prep/](https://devninja-in.github.io/interview-prep/)
 
 ## What's inside
 
@@ -12,27 +13,36 @@ Coding, system design, and AI in one place — published as a static book for Gi
 
 ## Local preview
 
-Open `index.html` in a browser, or serve the repo root:
-
 ```bash
 python3 -m http.server 8080
+# or
+npm run build && npx wrangler dev
 ```
 
-Then visit `http://localhost:8080`.
+## Cloudflare Workers deploy
 
-## Cloudflare deploy
+This project deploys as a **Worker with Static Assets** (not classic Pages).
 
-This repo includes `wrangler.jsonc` and `.assetsignore` so Workers Static Assets do **not** upload `.git` (which exceeds the 25 MiB file limit).
+### Required build settings (Workers → Settings → Builds)
 
-In Cloudflare, use:
-- **Framework preset:** None / Static
-- **Build command:** leave empty (or `echo "static site"`)
-- **Deploy / output directory:** `.` (repo root)
-- Ensure the committed `wrangler.jsonc` is used (do not let setup recreate assets as the full git checkout without `.assetsignore`)
+| Setting | Value |
+|---------|--------|
+| Git branch | `main` |
+| Build command | `npm run build` (or leave empty) |
+| Deploy command | `npm run deploy` |
+| Root directory | `/` |
 
-Also ignore via `.assetsignore`: `.github/`, `node_modules/`, and Wrangler local files.
+`npm run deploy` runs `npm run build && wrangler deploy`, so `dist/` is always fresh and `.git` is never uploaded.
+### What the build does
 
-**Last Cloudflare trigger:** 2026-08-03 00:32 UTC
+1. `npm run build` copies the site into `dist/` (no `.git`)
+2. `wrangler deploy` publishes `src/index.js` + `dist/` assets
+3. The Worker serves assets via `env.ASSETS.fetch()` (replaces any Hello World stub)
+
+Files: `wrangler.jsonc`, `src/index.js`, `scripts/build.mjs`, `.assetsignore`
+
+**Deploy trigger:** 2026-08-03 Cloudflare dist fix
+
 ## Files
 
 | Path | Purpose |
@@ -43,6 +53,7 @@ Also ignore via `.assetsignore`: `.github/`, `node_modules/`, and Wrangler local
 | `assets/diagrams/` | Highlighted diagram pages |
 | `assets/interview-prep.pdf` | Original PDF |
 | `assets/book-data.json` | Chapter map for navigation |
+| `dist/` | Build output for Cloudflare (generated) |
 
 ## Keyboard (reader)
 
