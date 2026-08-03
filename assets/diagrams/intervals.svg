@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="240" viewBox="0 0 720 240" role="img" aria-label="Intervals">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Intervals">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-intervals" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-intervals" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-intervals" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="720" height="240" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Intervals</text>
-  
-  <rect x="60" y="100" width="180" height="28" rx="6" fill="#d7ebe7" stroke="#c5d5ce"/>
-  <rect x="200" y="145" width="160" height="28" rx="6" fill="#f7ddd4" stroke="#c5d5ce"/>
-  <rect x="390" y="100" width="140" height="28" rx="6" fill="#f3e8d8" stroke="#c5d5ce"/>
-  <line x1="50" y1="200" x2="560" y2="200" stroke="#0f1c24" stroke-width="1.2"/>
-  <text x="60" y="225" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Sort by start, then merge overlaps as you scan.</text>
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Intervals</text>
+  <line x1="90" y1="126" x2="450" y2="126" stroke="#9aabb5" stroke-width="1"/><rect x="90" y="100" width="144" height="34" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.4" filter="url(#sh-intervals)"/><text x="162" y="122" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="650" fill="#15202b">[1,4]</text>
+<line x1="90" y1="180" x2="450" y2="180" stroke="#9aabb5" stroke-width="1"/><rect x="186" y="154" width="144" height="34" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.4" filter="url(#sh-intervals)"/><text x="258" y="176" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="650" fill="#15202b">[3,6]</text>
+<line x1="90" y1="234" x2="450" y2="234" stroke="#9aabb5" stroke-width="1"/><rect x="378" y="208" width="48" height="34" rx="6" fill="#ffffff" stroke="#2c3a45" stroke-width="1.4" filter="url(#sh-intervals)"/><text x="402" y="230" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="650" fill="#15202b">[7,8]</text>
+<rect x="560" y="120" width="180" height="56" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-intervals)"/>
 
+<text x="650" y="141" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">sort by start</text>
+<text x="650" y="156" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">then sweep</text>
+<rect x="560" y="210" width="180" height="56" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.6" filter="url(#sh-intervals)"/>
+
+<text x="650" y="231" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">merge if</text>
+<text x="650" y="246" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">next.start &lt;= end</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-intervals)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">sorted by start</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">current interval is merged prefix</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(n log n) sort</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: sorting turns pairwise overlap into a linear sweep.</text>
 </svg>

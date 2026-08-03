@@ -1,32 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Ride matching">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="530" viewBox="0 0 1000 530" role="img" aria-label="Uber matching">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-uber-matching" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-uber-matching" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-uber-matching" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="300" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Ride matching</text>
-  
-  <rect x="40" y="80" width="140" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="110.0" y="104.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Driver GPS</text>
-  <rect x="40" y="180" width="140" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="110.0" y="204.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Ride request</text>
-  <rect x="220" y="120" width="150" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="295.0" y="139.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Geo index</text>
-<text x="295.0" y="159.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">S2 / geohash</text>
-  <rect x="410" y="120" width="150" height="50" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="485.0" y="139.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Matcher</text>
-<text x="485.0" y="159.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">ring + ETA</text>
-  <rect x="600" y="80" width="160" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="680.0" y="104.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Offer → driver</text>
-  <rect x="600" y="180" width="160" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="680.0" y="204.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Trip state machine</text>
-  <path d="M185 104 H205 V145 H215" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
-  <path d="M185 204 H205 V145" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
-  <path d="M375 145 H405" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M565 130 H580 V104 H595" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
-  <path d="M565 155 H580 V204 H595" fill="none" stroke="#0f1c24" stroke-width="1.2"/>
-  <text x="40" y="270" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Claim driver with CAS/lease. Expand search ring on timeouts. Shard by city.</text>
+  <rect width="1000" height="530" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="1000" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Uber matching</text>
+  <rect x="28" y="64" width="140" height="410" rx="6" fill="#eef2f5" stroke="#9aabb5" stroke-width="1"/><text x="40" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">CLIENT</text>
+<rect x="182" y="64" width="150" height="410" rx="6" fill="#e8f1f8" stroke="#9aabb5" stroke-width="1"/><text x="194" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">EDGE</text>
+<rect x="346" y="64" width="198" height="410" rx="6" fill="#e9f4f1" stroke="#9aabb5" stroke-width="1"/><text x="358" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">SERVICE</text>
+<rect x="558" y="64" width="164" height="410" rx="6" fill="#f7f0e6" stroke="#9aabb5" stroke-width="1"/><text x="570" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">ASYNC</text>
+<rect x="736" y="64" width="236" height="410" rx="6" fill="#f3f0ea" stroke="#9aabb5" stroke-width="1"/><text x="748" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">DATA</text>
+<rect x="44" y="152.8" width="108" height="56" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-uber-matching)"/>
 
+<text x="98" y="173.8" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Rider app</text>
+<text x="98" y="188.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">pickup/dropoff</text>
+<rect x="44" y="262" width="108" height="56" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-uber-matching)"/>
+
+<text x="98" y="283" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Driver app</text>
+<text x="98" y="298" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">location pings</text>
+<rect x="198" y="207.4" width="118" height="56" rx="6" fill="#d9e8f5" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-uber-matching)"/>
+
+<text x="257" y="228.4" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Mobile edge</text>
+<text x="257" y="243.4" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">region routing</text>
+<rect x="347" y="133.3" width="152" height="56" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-uber-matching)"/>
+
+<text x="423" y="154.3" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Location svc</text>
+<text x="423" y="169.3" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">S2/geohash</text>
+<rect x="391" y="226.9" width="152" height="56" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.6" filter="url(#sh-uber-matching)"/>
+
+<text x="467" y="247.9" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Matcher</text>
+<text x="467" y="262.9" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">ETA + constraints</text>
+<rect x="578" y="211.3" width="124" height="56" rx="6" fill="#f3e2c7" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-uber-matching)"/>
+
+<text x="640" y="232.3" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Dispatch queue</text>
+<text x="640" y="247.3" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">offer timeout</text>
+<rect x="733" y="133.3" width="142" height="56" rx="6" fill="#dde9f7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-uber-matching)"/>
+
+<text x="804" y="154.3" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Geo index</text>
+<text x="804" y="169.3" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">drivers by cell</text>
+<rect x="823" y="226.9" width="142" height="56" rx="6" fill="#ffffff" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-uber-matching)"/>
+<path d="M823,234.9 Q894,224.9 965,234.9" fill="none" stroke="#2c3a45" stroke-width="1"/>
+<text x="894" y="247.9" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Trip store</text>
+<text x="894" y="262.9" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">state machine</text>
+<rect x="763" y="304.9" width="142" height="56" rx="6" fill="#dde9f7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-uber-matching)"/>
+
+<text x="834" y="325.9" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Pricing cache</text>
+<text x="834" y="340.9" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">surge/ETA</text>
+<path d="M152 290 H198 V235.4" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-uber-matching)"/>
+<rect x="155.6" y="244.7" width="38.8" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="175" y="258.7" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">ping</text>
+<circle cx="170.4" cy="268.4" r="10" fill="#15202b"/><text x="170.4" y="272.4" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">1</text>
+<path d="M316 235.4 H347 V161.3" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-uber-matching)"/>
+<rect x="305.9" y="180.4" width="51.2" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="331.5" y="194.4" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">update</text>
+<circle cx="332.3" cy="211" r="10" fill="#15202b"/><text x="332.3" y="215" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">2</text>
+<path d="M499 161.3 H733 V161.3" fill="none" stroke="#0d7a6f" stroke-width="1.5" marker-end="url(#arr-acc-uber-matching)"/>
+<rect x="574.9" y="143.3" width="82.2" height="20" rx="10" fill="#ffffff" stroke="#0d7a6f" stroke-width="1"/><text x="616" y="157.3" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#0d7a6f">upsert cell</text>
+<circle cx="543.8" cy="147.3" r="10" fill="#15202b"/><text x="543.8" y="151.3" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">3</text>
+<path d="M152 180.8 H198 V235.4" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-uber-matching)"/>
+<rect x="146.3" y="190.1" width="57.4" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="175" y="204.1" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">request</text>
+<circle cx="170.4" cy="174.4" r="10" fill="#15202b"/><text x="170.4" y="178.4" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">4</text>
+<path d="M316 235.4 H391 V254.9" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-uber-matching)"/>
+<rect x="331" y="227.2" width="45" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="353.5" y="241.2" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">route</text>
+<circle cx="338.5" cy="241.1" r="10" fill="#15202b"/><text x="338.5" y="245.1" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">5</text>
+<path d="M543 254.9 H733 V161.3" fill="none" stroke="#0d7a6f" stroke-width="1.5" marker-end="url(#arr-acc-uber-matching)"/>
+<rect x="612.4" y="190.1" width="51.2" height="20" rx="10" fill="#ffffff" stroke="#0d7a6f" stroke-width="1"/><text x="638" y="204.1" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#0d7a6f">nearby</text>
+<circle cx="581.6" cy="227.8" r="10" fill="#15202b"/><text x="581.6" y="231.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">6</text>
+<path d="M543 254.9 H763 V332.9" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-uber-matching)"/>
+<rect x="621.2" y="275.9" width="63.6" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="653" y="289.9" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">ETA/fare</text>
+<circle cx="585.8" cy="268.8" r="10" fill="#15202b"/><text x="585.8" y="272.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">7</text>
+<path d="M543 254.9 H578 V239.3" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-uber-matching)"/>
+<rect x="538" y="229.1" width="45" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="560.5" y="243.1" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">offer</text>
+<circle cx="559.9" cy="272.7" r="10" fill="#15202b"/><text x="559.9" y="276.7" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">8</text>
+<path d="M702 239.3 H823 V254.9" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-uber-matching)"/>
+<rect x="712.1" y="229.1" width="100.8" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="762.5" y="243.1" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">accept/timeout</text>
+<circle cx="730.9" cy="227.5" r="10" fill="#15202b"/><text x="730.9" y="231.5" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">9</text>
+<rect x="738" y="388" width="218" height="54" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2"/><text x="750" y="406" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">SEARCH WIDENING</text><text x="750" y="426" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12" fill="#15202b">Start in pickup cell, expand rings until enough drivers qualify.</text>
+  <rect x="0" y="494" width="1000" height="36" fill="#f0f3f5"/><text x="28" y="516" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: matching is a low-latency geo search plus a stateful dispatch protocol.</text>
 </svg>

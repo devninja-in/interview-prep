@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="260" viewBox="0 0 720 260" role="img" aria-label="Backtracking loop">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Backtracking loop">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-backtracking-loop" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-backtracking-loop" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-backtracking-loop" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="720" height="260" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Backtracking loop</text>
-  
-  <rect x="40" y="100" width="140" height="56" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="110.0" y="128.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1. Choose</text>
-  <rect x="240" y="100" width="140" height="56" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="310.0" y="128.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2. Explore</text>
-  <rect x="440" y="100" width="140" height="56" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="510.0" y="128.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3. Unchoose</text>
-  <path d="M185 128 H235" stroke="#0f1c24" stroke-width="1.6"/>
-  <path d="M385 128 H435" stroke="#0f1c24" stroke-width="1.6"/>
-  <text x="40" y="210" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Build a candidate, recurse, then undo the choice and try the next.</text>
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Backtracking loop</text>
+  <circle cx="120" cy="112" r="24" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.5" filter="url(#sh-backtracking-loop)"/><text x="120" y="117" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#ffffff">start</text>
+<circle cx="260" cy="188" r="24" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-backtracking-loop)"/><text x="260" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">A</text>
+<circle cx="120" cy="188" r="24" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-backtracking-loop)"/><text x="120" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">B</text>
+<circle cx="400" cy="188" r="24" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-backtracking-loop)"/><text x="400" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">C</text>
+<path d="M140 126 L240 174 M120 136 V164 M140 126 L380 174" fill="none" stroke="#2c3a45" stroke-width="1.55"/>
+<rect x="560" y="94" width="170" height="50" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-backtracking-loop)"/>
 
+<text x="645" y="112" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">choose</text>
+<text x="645" y="127" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">append candidate</text>
+<rect x="560" y="164" width="170" height="50" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.6" filter="url(#sh-backtracking-loop)"/>
+
+<text x="645" y="182" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">explore</text>
+<text x="645" y="197" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">recursive call</text>
+<rect x="560" y="234" width="170" height="50" rx="6" fill="#f7e7c8" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-backtracking-loop)"/>
+
+<text x="645" y="252" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">unchoose</text>
+<text x="645" y="267" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">pop candidate</text>
+<path d="M645 144 L645 160" fill="none" stroke="#0d7a6f" stroke-width="1.6" marker-end="url(#arr-acc-backtracking-loop)"/>
+<path d="M645 214 L645 230" fill="none" stroke="#2c3a45" stroke-width="1.6" marker-end="url(#arr-backtracking-loop)"/>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-backtracking-loop)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">path + remaining choices</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">undo every mutation</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">exponential; prune early</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: mutate state in a disciplined choose/explore/unchoose cycle.</text>
 </svg>

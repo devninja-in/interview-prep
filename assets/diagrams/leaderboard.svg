@@ -1,23 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="240" viewBox="0 0 820 240" role="img" aria-label="Leaderboard">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="530" viewBox="0 0 1000 530" role="img" aria-label="Leaderboard">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-leaderboard" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-leaderboard" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-leaderboard" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="240" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Leaderboard</text>
-  
-  <rect x="40" y="100" width="160" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="120.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">ZADD score</text>
-  <rect x="240" y="100" width="180" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="330.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Redis ZSET</text>
-  <rect x="460" y="70" width="160" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="540.0" y="90.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">ZREVRANGE top-k</text>
-  <rect x="460" y="140" width="160" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="540.0" y="160.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">ZREVRANK player</text>
-  <path d="M205 125 H235" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M425 125 H455" stroke="#0f1c24" stroke-width="1.2"/>
-  <text x="40" y="220" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">O(log n) updates and rank queries on one board.</text>
+  <rect width="1000" height="530" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="1000" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Leaderboard</text>
+  <rect x="28" y="64" width="140" height="410" rx="6" fill="#eef2f5" stroke="#9aabb5" stroke-width="1"/><text x="40" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">CLIENT</text>
+<rect x="182" y="64" width="150" height="410" rx="6" fill="#e8f1f8" stroke="#9aabb5" stroke-width="1"/><text x="194" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">EDGE</text>
+<rect x="346" y="64" width="198" height="410" rx="6" fill="#e9f4f1" stroke="#9aabb5" stroke-width="1"/><text x="358" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">SERVICE</text>
+<rect x="558" y="64" width="164" height="410" rx="6" fill="#f7f0e6" stroke="#9aabb5" stroke-width="1"/><text x="570" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">ASYNC</text>
+<rect x="736" y="64" width="236" height="410" rx="6" fill="#f3f0ea" stroke="#9aabb5" stroke-width="1"/><text x="748" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">DATA</text>
+<rect x="44" y="184" width="108" height="56" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-leaderboard)"/>
 
+<text x="98" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Player</text>
+<text x="98" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">score</text>
+<rect x="198" y="184" width="118" height="56" rx="6" fill="#d9e8f5" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-leaderboard)"/>
+
+<text x="257" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Game API</text>
+<text x="257" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">auth</text>
+<rect x="369" y="184" width="152" height="56" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-leaderboard)"/>
+
+<text x="445" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Score svc</text>
+<text x="445" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">validate</text>
+<rect x="578" y="184" width="124" height="56" rx="6" fill="#f3e2c7" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-leaderboard)"/>
+
+<text x="640" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Aggregator</text>
+<text x="640" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">season/window</text>
+<rect x="745" y="141.1" width="142" height="56" rx="6" fill="#ffffff" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-leaderboard)"/>
+<path d="M745,149.1 Q816,139.1 887,149.1" fill="none" stroke="#2c3a45" stroke-width="1"/>
+<text x="816" y="162.1" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Sorted set</text>
+<text x="816" y="177.1" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">rank by score</text>
+<rect x="821" y="242.5" width="142" height="56" rx="6" fill="#dde9f7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-leaderboard)"/>
+
+<text x="892" y="263.5" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Event log</text>
+<text x="892" y="278.5" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">audit</text>
+<path d="M152 212 H198 V212" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-leaderboard)"/>
+<rect x="152.5" y="194" width="45" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="175" y="208" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">score</text>
+<circle cx="170.4" cy="198" r="10" fill="#15202b"/><text x="170.4" y="202" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">1</text>
+<path d="M316 212 H369 V212" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-leaderboard)"/>
+<rect x="320" y="194" width="45" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="342.5" y="208" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">check</text>
+<circle cx="335.4" cy="198" r="10" fill="#15202b"/><text x="335.4" y="202" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">2</text>
+<path d="M521 212 H578 V212" fill="none" stroke="#0d7a6f" stroke-width="1.5" marker-end="url(#arr-acc-leaderboard)"/>
+<rect x="514.6" y="194" width="69.8" height="20" rx="10" fill="#ffffff" stroke="#0d7a6f" stroke-width="1"/><text x="549.5" y="208" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#0d7a6f">aggregate</text>
+<circle cx="541" cy="198" r="10" fill="#15202b"/><text x="541" y="202" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">3</text>
+<path d="M702 212 H745 V169.1" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-leaderboard)"/>
+<rect x="704.1" y="172.6" width="38.8" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="723.5" y="186.6" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">zadd</text>
+<circle cx="720" cy="192" r="10" fill="#15202b"/><text x="720" y="196" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">4</text>
+<path d="M521 212 H821 V270.5" fill="none" stroke="#2c3a45" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr-leaderboard)"/>
+<rect x="626.8" y="223.2" width="88.4" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="671" y="237.2" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">read-through</text>
+<circle cx="575" cy="223.2" r="10" fill="#15202b"/><text x="575" y="227.2" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">R</text>
+  <rect x="0" y="494" width="1000" height="36" fill="#f0f3f5"/><text x="28" y="516" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: hot ranked reads need sorted structures plus async aggregation for write spikes.</text>
 </svg>

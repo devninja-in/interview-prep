@@ -1,19 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="280" viewBox="0 0 820 280" role="img" aria-label="Trapping Rain Water">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Trapping rain water">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-trapping-rain-water" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-trapping-rain-water" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-trapping-rain-water" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="280" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Trapping Rain Water</text>
-  
-  <text x="40" y="70" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">height = [0,1,0,2,1,0,1,3,2,1,2,1]</text>
-  <rect x="60" y="220" width="36" height="0" fill="#fff" stroke="#c5d5ce"/><rect x="105" y="192" width="36" height="28" fill="#d7ebe7" stroke="#c5d5ce"/><rect x="150" y="220" width="36" height="0" fill="#fff" stroke="#c5d5ce"/><rect x="195" y="164" width="36" height="56" fill="#d7ebe7" stroke="#c5d5ce"/><rect x="240" y="192" width="36" height="28" fill="#d7ebe7" stroke="#c5d5ce"/><rect x="285" y="220" width="36" height="0" fill="#fff" stroke="#c5d5ce"/><rect x="330" y="192" width="36" height="28" fill="#d7ebe7" stroke="#c5d5ce"/><rect x="375" y="136" width="36" height="84" fill="#d7ebe7" stroke="#c5d5ce"/><rect x="420" y="164" width="36" height="56" fill="#d7ebe7" stroke="#c5d5ce"/><rect x="465" y="192" width="36" height="28" fill="#d7ebe7" stroke="#c5d5ce"/><rect x="510" y="164" width="36" height="56" fill="#d7ebe7" stroke="#c5d5ce"/><rect x="555" y="192" width="36" height="28" fill="#d7ebe7" stroke="#c5d5ce"/>
-  <rect x="150" y="192" width="36" height="28" fill="#f7ddd4" opacity="0.85"/>
-  <rect x="240" y="164" width="36" height="28" fill="#f7ddd4" opacity="0.85"/>
-  <rect x="285" y="192" width="36" height="28" fill="#f7ddd4" opacity="0.85"/>
-  <text x="40" y="255" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">Water at i = min(left_max, right_max) - height[i]</text>
-  <text x="480" y="255" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Two pointers: advance the side with smaller max.</text>
-
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Trapping rain water</text>
+  <rect x="110" y="250" width="30" height="0" rx="3" fill="#ffffff" stroke="#2c3a45" stroke-width="1.2" filter="url(#sh-trapping-rain-water)"/>
+<text x="125" y="266" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">0</text>
+<rect x="152" y="136" width="30" height="114" rx="3" fill="#0d7a6f" stroke="#2c3a45" stroke-width="1.2" filter="url(#sh-trapping-rain-water)"/>
+<text x="167" y="266" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">3</text>
+<rect x="194" y="250" width="30" height="0" rx="3" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.2" filter="url(#sh-trapping-rain-water)"/>
+<text x="209" y="266" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">0</text>
+<rect x="236" y="174" width="30" height="76" rx="3" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.2" filter="url(#sh-trapping-rain-water)"/>
+<text x="251" y="266" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">2</text>
+<rect x="278" y="250" width="30" height="0" rx="3" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.2" filter="url(#sh-trapping-rain-water)"/>
+<text x="293" y="266" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">0</text>
+<rect x="320" y="98" width="30" height="152" rx="3" fill="#0d7a6f" stroke="#2c3a45" stroke-width="1.2" filter="url(#sh-trapping-rain-water)"/>
+<text x="335" y="266" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">4</text>
+<rect x="194" y="136" width="182" height="114" fill="#d5ebe7" opacity="0.55" stroke="none"/>
+<text x="286" y="128" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="500" fill="#0d7a6f">water = min(leftMax,rightMax)-height[i]</text>
+<rect x="540" y="132" width="250" height="82" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2"/><text x="552" y="150" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">TWO POINTER RULE</text><text x="552" y="170" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12" fill="#15202b">Advance the side with smaller max; the opposite side already bounds it.</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-trapping-rain-water)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">leftMax/rightMax</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">smaller wall bounds water</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(n) time, O(1) space</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: reason from the limiting wall, not from each bar independently.</text>
 </svg>

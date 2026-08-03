@@ -1,28 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="260" viewBox="0 0 820 260" role="img" aria-label="Kafka-like queue">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="530" viewBox="0 0 1000 530" role="img" aria-label="Kafka partitions">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-kafka-partitions" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-kafka-partitions" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-kafka-partitions" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="260" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Kafka-like queue</text>
-  
-  <rect x="40" y="110" width="120" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="100.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Producers</text>
-  <rect x="200" y="70" width="140" height="40" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="270.0" y="90.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Partition 0</text>
-  <rect x="200" y="120" width="140" height="40" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="270.0" y="140.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Partition 1</text>
-  <rect x="200" y="170" width="140" height="40" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="270.0" y="190.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Partition 2</text>
-  <rect x="400" y="110" width="160" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="480.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Consumer group</text>
-  <rect x="600" y="110" width="140" height="50" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="670.0" y="135.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Offsets</text>
-  <path d="M165 135 H195" stroke="#0f1c24" stroke-width="1.2"/>
-  <path d="M345 135 H395" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M565 135 H595" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <text x="40" y="240" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Order per partition key; one consumer per partition in a group.</text>
+  <rect width="1000" height="530" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="1000" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Kafka partitions</text>
+  <rect x="28" y="64" width="140" height="410" rx="6" fill="#eef2f5" stroke="#9aabb5" stroke-width="1"/><text x="40" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">CLIENT</text>
+<rect x="182" y="64" width="150" height="410" rx="6" fill="#e8f1f8" stroke="#9aabb5" stroke-width="1"/><text x="194" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">EDGE</text>
+<rect x="346" y="64" width="198" height="410" rx="6" fill="#e9f4f1" stroke="#9aabb5" stroke-width="1"/><text x="358" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">SERVICE</text>
+<rect x="558" y="64" width="164" height="410" rx="6" fill="#f7f0e6" stroke="#9aabb5" stroke-width="1"/><text x="570" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">ASYNC</text>
+<rect x="736" y="64" width="236" height="410" rx="6" fill="#f3f0ea" stroke="#9aabb5" stroke-width="1"/><text x="748" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">DATA</text>
+<rect x="44" y="191.8" width="108" height="56" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-kafka-partitions)"/>
 
+<text x="98" y="212.8" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Producers</text>
+<text x="98" y="227.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">keyed events</text>
+<rect x="198" y="191.8" width="118" height="56" rx="6" fill="#d9e8f5" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-kafka-partitions)"/>
+
+<text x="257" y="212.8" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Broker leader</text>
+<text x="257" y="227.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">topic metadata</text>
+<rect x="578" y="121.6" width="124" height="56" rx="6" fill="#f3e2c7" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-kafka-partitions)"/>
+
+<text x="640" y="142.6" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Partition 0</text>
+<text x="640" y="157.6" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">append log</text>
+<rect x="578" y="195.7" width="124" height="56" rx="6" fill="#f3e2c7" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-kafka-partitions)"/>
+
+<text x="640" y="216.7" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Partition 1</text>
+<text x="640" y="231.7" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">append log</text>
+<rect x="578" y="269.8" width="124" height="56" rx="6" fill="#f3e2c7" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-kafka-partitions)"/>
+
+<text x="640" y="290.8" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Partition 2</text>
+<text x="640" y="305.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">append log</text>
+<rect x="369" y="191.8" width="152" height="56" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-kafka-partitions)"/>
+
+<text x="445" y="212.8" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Consumer group</text>
+<text x="445" y="227.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">rebalance</text>
+<rect x="743" y="164.5" width="142" height="56" rx="6" fill="#ffffff" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-kafka-partitions)"/>
+<path d="M743,172.5 Q814,162.5 885,172.5" fill="none" stroke="#2c3a45" stroke-width="1"/>
+<text x="814" y="185.5" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Offsets</text>
+<text x="814" y="200.5" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">committed</text>
+<rect x="823" y="262" width="142" height="56" rx="6" fill="#ffffff" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-kafka-partitions)"/>
+<path d="M823,270 Q894,260 965,270" fill="none" stroke="#2c3a45" stroke-width="1"/>
+<text x="894" y="283" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Sink DB</text>
+<text x="894" y="298" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">materialized</text>
+<path d="M152 219.8 H198 V219.8" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-kafka-partitions)"/>
+<rect x="146.3" y="201.8" width="57.4" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="175" y="215.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">produce</text>
+<circle cx="170.4" cy="205.8" r="10" fill="#15202b"/><text x="170.4" y="209.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">1</text>
+<path d="M316 219.8 H578 V223.7" fill="none" stroke="#0d7a6f" stroke-width="1.5" marker-end="url(#arr-acc-kafka-partitions)"/>
+<rect x="412.1" y="203.8" width="69.8" height="20" rx="10" fill="#ffffff" stroke="#0d7a6f" stroke-width="1"/><text x="447" y="217.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#0d7a6f">hash(key)</text>
+<circle cx="364.7" cy="206.3" r="10" fill="#15202b"/><text x="364.7" y="210.3" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">2</text>
+<path d="M578 223.7 V219.8 H521" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-kafka-partitions)"/>
+<rect x="530.1" y="203.8" width="38.8" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="549.5" y="217.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">poll</text>
+<circle cx="558" cy="209.2" r="10" fill="#15202b"/><text x="558" y="213.2" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">3</text>
+<path d="M521 219.8 H743 V192.5" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-kafka-partitions)"/>
+<rect x="606.4" y="188.2" width="51.2" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="632" y="202.2" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">commit</text>
+<circle cx="564.1" cy="202" r="10" fill="#15202b"/><text x="564.1" y="206" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">4</text>
+<path d="M521 219.8 H823 V290" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-kafka-partitions)"/>
+<rect x="643.3" y="236.9" width="57.4" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="672" y="250.9" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">process</text>
+<circle cx="575.3" cy="232.6" r="10" fill="#15202b"/><text x="575.3" y="236.6" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">5</text>
+<path d="M578 149.6 V219.8 H521" fill="none" stroke="#2c3a45" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr-kafka-partitions)"/>
+<rect x="517.7" y="166.7" width="63.6" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="549.5" y="180.7" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">parallel</text>
+<circle cx="558" cy="145.4" r="10" fill="#15202b"/><text x="558" y="149.4" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">A</text>
+<path d="M578 297.8 V219.8 H521" fill="none" stroke="#2c3a45" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr-kafka-partitions)"/>
+<rect x="517.7" y="240.8" width="63.6" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="549.5" y="254.8" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">parallel</text>
+<circle cx="558" cy="272.9" r="10" fill="#15202b"/><text x="558" y="276.9" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">B</text>
+<rect x="42" y="388" width="286" height="54" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2"/><text x="54" y="406" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">REPLAY</text><text x="54" y="426" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12" fill="#15202b">Offsets are consumer state; logs can be replayed if retention keeps data.</text>
+  <rect x="0" y="494" width="1000" height="36" fill="#f0f3f5"/><text x="28" y="516" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: ordering is per partition; consumer-group parallelism is bounded by partition count.</text>
 </svg>

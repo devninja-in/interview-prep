@@ -1,1431 +1,152 @@
 #!/usr/bin/env python3
-"""Generate native SVG topic diagrams (not PDF page screenshots)."""
+"""Generate professional SVG diagrams for interview prep chapters.
+
+The diagrams intentionally share a restrained visual language:
+dark title bar, paper background, role-colored components, orthogonal
+connectors, and terse interview-takeaway footers.
+"""
 from __future__ import annotations
 
+import html
+import json
 from pathlib import Path
+
+from diagram_kit import (
+    FILL_APP,
+    FILL_CACHE,
+    FILL_HL,
+    FILL_HL_SOFT,
+    FILL_QUEUE,
+    FILL_WARN,
+    INK,
+    LINE,
+    LINE_STRONG,
+    MONO,
+    MUTED,
+    SANS,
+    ZONE_APP,
+    ZONE_ASYNC,
+    ZONE_CLIENT,
+    ZONE_DATA,
+    ZONE_EDGE,
+    Canvas,
+    arrow,
+    badge,
+    callout,
+    cell,
+    elbow,
+    label,
+    mid_of,
+    node,
+    path_line,
+    zone,
+)
 
 OUT = Path(__file__).resolve().parents[1] / "assets" / "diagrams"
 OUT.mkdir(parents=True, exist_ok=True)
 
-# Site palette
-INK = "#0f1c24"
-SOFT = "#3a4a54"
-ACCENT = "#0d7a6f"
-ACCENT_SOFT = "#d7ebe7"
-SAND = "#f3e8d8"
-ROSE = "#f7ddd4"
-LINE = "#c5d5ce"
-PAPER = "#f7faf8"
-MONO = "IBM Plex Mono, ui-monospace, monospace"
-SANS = "Manrope, Segoe UI, sans-serif"
+# Keep diagram code compact while still calling the kit node primitive.
+kit_node = node
+
+
+def node(
+    x,
+    y,
+    w,
+    h,
+    label_text: str,
+    sub: str = "",
+    *,
+    kind: str = "app",
+    mid: str = "d",
+    rx: int = 6,
+) -> str:
+    return kit_node(x, y, w, h, label_text, sub=sub, kind=kind, mid=mid, rx=rx)
+
+
+REQUIRED_KEYS = [
+    "agent-loop",
+    "agent-tools",
+    "agentic-rag",
+    "ai-assistant",
+    "autocomplete-trie",
+    "backtracking",
+    "bfs-graph",
+    "binary-search",
+    "bits-xor",
+    "cache-cdn",
+    "cap",
+    "chat-flow",
+    "chat-message-path",
+    "code-copilot",
+    "coin-change-dp",
+    "consistent-hash-cache",
+    "dp-table",
+    "dropbox-sync",
+    "eval-pipeline",
+    "feature-store",
+    "feed-fanout",
+    "feed-hybrid-fanout",
+    "geo-matching",
+    "grounded-support",
+    "hash-map",
+    "heap",
+    "hybrid-search",
+    "intervals",
+    "islands-dfs",
+    "kadane",
+    "kafka-partitions",
+    "leaderboard",
+    "linked-list",
+    "llm-flow",
+    "llm-serving",
+    "load-balancer",
+    "longest-substr-window",
+    "lru-cache",
+    "mcp",
+    "meeting-rooms",
+    "memory",
+    "memory-tiers",
+    "merge-intervals-walk",
+    "min-window",
+    "moderation-cascade",
+    "multi-tenant-ai",
+    "notification-pipeline",
+    "object-storage",
+    "payment-saga",
+    "prefix-sums",
+    "queue",
+    "rag",
+    "rag-detailed",
+    "rate-limiter-token",
+    "recsys-towers",
+    "replication",
+    "rotated-search",
+    "rotting-oranges",
+    "semantic-cache",
+    "serialize-tree",
+    "skills",
+    "sliding-window",
+    "sql-nosql",
+    "stack",
+    "stock-profit",
+    "ticket-hold-checkout",
+    "top-k-buckets",
+    "topo-kahn",
+    "transcription-ai",
+    "trap-water",
+    "tree-bst",
+    "two-pointers",
+    "two-sum-walk",
+    "uber-matching",
+    "url-shortener",
+    "url-shortener-detailed",
+    "video-pipeline",
+    "web-crawler",
+    "word-ladder-bfs",
+    "youtube-cdn-pipeline",
+]
 
-
-def svg(w: int, h: int, body: str, title: str) -> str:
-    return f'''<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-label="{title}">
-  <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="{INK}"/>
-    </marker>
-  </defs>
-  <rect width="{w}" height="{h}" fill="{PAPER}"/>
-  <text x="24" y="36" font-family="{SANS}" font-size="18" font-weight="700" fill="{INK}">{title}</text>
-  {body}
-</svg>
-'''
-
-
-def box(x, y, w, h, fill, label, sub="", rx=10):
-    lines = [
-        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" fill="{fill}" stroke="{LINE}" stroke-width="1.2"/>',
-        f'<text x="{x + w/2}" y="{y + h/2 - (6 if sub else 0)}" text-anchor="middle" font-family="{SANS}" font-size="13" font-weight="650" fill="{INK}">{label}</text>',
-    ]
-    if sub:
-        lines.append(
-            f'<text x="{x + w/2}" y="{y + h/2 + 14}" text-anchor="middle" font-family="{MONO}" font-size="10" fill="{SOFT}">{sub}</text>'
-        )
-    return "\n".join(lines)
-
-
-def caption(x, y, text):
-    return f'<text x="{x}" y="{y}" font-family="{MONO}" font-size="11" fill="{SOFT}">{text}</text>'
-
-
-DIAGRAMS: dict[str, str] = {}
-
-# --- Competitive programming ---
-DIAGRAMS["hash-map"] = svg(
-    720,
-    280,
-    f'''
-  {box(40, 90, 90, 54, SAND, "key", '"apple"')}
-  {box(40, 160, 90, 54, SAND, "key", '"mango"')}
-  <text x="155" y="150" font-family="{MONO}" font-size="12" fill="{ACCENT}">hash()</text>
-  <path d="M140 117 H210" stroke="{INK}" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-  <path d="M140 187 H210" stroke="{INK}" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-  {box(220, 80, 70, 44, ACCENT_SOFT, "[0]")}
-  {box(220, 132, 70, 44, ACCENT_SOFT, "[1]", "apple")}
-  {box(220, 184, 70, 44, ACCENT_SOFT, "[2]", "mango")}
-  {box(320, 132, 140, 44, ROSE, "collision?", "chain / probe")}
-  {caption(40, 260, "Hashing turns a key into a bucket index so lookup stays near O(1).")}
-''',
-    "Hash map lookup",
-)
-
-DIAGRAMS["two-pointers"] = svg(
-    720,
-    240,
-    f'''
-  {"".join(box(60 + i*70, 100, 58, 58, ACCENT_SOFT if i in (0,5) else "#fff", str(v)) for i,v in enumerate([1,2,3,4,6,8]))}
-  <text x="89" y="90" font-family="{MONO}" font-size="11" fill="{ACCENT}">L</text>
-  <text x="439" y="90" font-family="{MONO}" font-size="11" fill="{ACCENT}">R</text>
-  <path d="M89 175 V195 H439 V175" fill="none" stroke="{ACCENT}" stroke-width="1.6"/>
-  {caption(60, 220, "Move L/R based on the sum (or condition) until they meet.")}
-''',
-    "Two pointers",
-)
-
-DIAGRAMS["sliding-window"] = svg(
-    720,
-    240,
-    f'''
-  {"".join(box(50 + i*62, 100, 52, 52, ROSE if 2 <= i <= 4 else "#fff", c) for i,c in enumerate(list("ABCAC")))}
-  <rect x="{50+2*62}" y="94" width="{52*3+20}" height="64" rx="8" fill="none" stroke="{ACCENT}" stroke-width="2.2"/>
-  <text x="210" y="85" font-family="{MONO}" font-size="12" fill="{ACCENT}">window</text>
-  {caption(50, 210, "Grow right, shrink left — keep only what the constraint allows.")}
-''',
-    "Sliding window",
-)
-
-DIAGRAMS["stack"] = svg(
-    720,
-    260,
-    f'''
-  {box(80, 180, 120, 40, ACCENT_SOFT, "A")}
-  {box(80, 130, 120, 40, ACCENT_SOFT, "B")}
-  {box(80, 80, 120, 40, ROSE, "C", "top")}
-  <text x="260" y="120" font-family="{SANS}" font-size="14" fill="{INK}">push → add on top</text>
-  <text x="260" y="150" font-family="{SANS}" font-size="14" fill="{INK}">pop → remove from top</text>
-  {caption(80, 240, "Last in, first out — perfect for matching and next-greater problems.")}
-''',
-    "Stack",
-)
-
-DIAGRAMS["binary-search"] = svg(
-    720,
-    240,
-    f'''
-  {"".join(box(40 + i*70, 110, 58, 50, ROSE if i==3 else ACCENT_SOFT if i in (0,1,2) else "#fff", str(v)) for i,v in enumerate([2,4,6,8,10,12,14]))}
-  <text x="60" y="95" font-family="{MONO}" font-size="11" fill="{ACCENT}">lo</text>
-  <text x="270" y="95" font-family="{MONO}" font-size="11" fill="{ACCENT}">mid</text>
-  <text x="480" y="95" font-family="{MONO}" font-size="11" fill="{SOFT}">hi</text>
-  {caption(40, 210, "Compare mid, throw away half the search space each step.")}
-''',
-    "Binary search",
-)
-
-DIAGRAMS["linked-list"] = svg(
-    720,
-    240,
-    f'''
-  {box(50, 100, 70, 50, ACCENT_SOFT, "1")}
-  {box(170, 100, 70, 50, ACCENT_SOFT, "2")}
-  {box(290, 100, 70, 50, ACCENT_SOFT, "3")}
-  <path d="M120 125 H165" stroke="{INK}" stroke-width="1.6"/>
-  <path d="M240 125 H285" stroke="{INK}" stroke-width="1.6"/>
-  <text x="400" y="110" font-family="{SANS}" font-size="13" fill="{INK}">reverse →</text>
-  {box(500, 100, 70, 50, ROSE, "3")}
-  {box(590, 100, 70, 50, ACCENT_SOFT, "2")}
-  <path d="M570 125 H585" stroke="{INK}" stroke-width="1.6"/>
-  {caption(50, 210, "Rewire next pointers carefully — null checks catch most bugs.")}
-''',
-    "Linked list reverse",
-)
-
-DIAGRAMS["tree-bst"] = svg(
-    720,
-    300,
-    f'''
-  {box(310, 70, 70, 40, ROSE, "8")}
-  {box(180, 140, 70, 40, ACCENT_SOFT, "3")}
-  {box(440, 140, 70, 40, ACCENT_SOFT, "10")}
-  {box(120, 210, 70, 40, "#fff", "1")}
-  {box(240, 210, 70, 40, "#fff", "6")}
-  <path d="M330 110 L230 140" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M360 110 L460 140" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M200 180 L155 210" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M230 180 L270 210" stroke="{INK}" stroke-width="1.4"/>
-  {caption(50, 280, "BST rule: left &lt; node &lt; right at every level.")}
-''',
-    "Binary search tree",
-)
-
-DIAGRAMS["heap"] = svg(
-    720,
-    280,
-    f'''
-  {box(310, 70, 70, 40, ROSE, "1", "min")}
-  {box(200, 140, 70, 40, ACCENT_SOFT, "3")}
-  {box(420, 140, 70, 40, ACCENT_SOFT, "2")}
-  {box(140, 210, 70, 40, "#fff", "7")}
-  {box(260, 210, 70, 40, "#fff", "5")}
-  <path d="M330 110 L250 140" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M360 110 L440 140" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M220 180 L175 210" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M250 180 L290 210" stroke="{INK}" stroke-width="1.4"/>
-  {caption(50, 260, "Parent is always smaller (min-heap) or larger (max-heap) than children.")}
-''',
-    "Heap / priority queue",
-)
-
-DIAGRAMS["backtracking"] = svg(
-    720,
-    260,
-    f'''
-  {box(40, 100, 140, 56, SAND, "1. Choose")}
-  {box(240, 100, 140, 56, ACCENT_SOFT, "2. Explore")}
-  {box(440, 100, 140, 56, ROSE, "3. Unchoose")}
-  <path d="M185 128 H235" stroke="{INK}" stroke-width="1.6"/>
-  <path d="M385 128 H435" stroke="{INK}" stroke-width="1.6"/>
-  {caption(40, 210, "Build a candidate, recurse, then undo the choice and try the next.")}
-''',
-    "Backtracking loop",
-)
-
-DIAGRAMS["bfs-graph"] = svg(
-    720,
-    300,
-    f'''
-  {box(60, 130, 60, 40, ROSE, "A")}
-  {box(200, 70, 60, 40, ACCENT_SOFT, "B")}
-  {box(200, 190, 60, 40, ACCENT_SOFT, "C")}
-  {box(340, 40, 60, 40, "#fff", "D")}
-  {box(340, 120, 60, 40, "#fff", "E")}
-  {box(340, 220, 60, 40, "#fff", "F")}
-  <path d="M120 145 H195" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M120 155 H195 M200 165" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M120 150 Q160 200 200 205" fill="none" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M260 90 H335" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M260 100 H335 M340 135" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M260 210 H335" stroke="{INK}" stroke-width="1.3"/>
-  {caption(40, 280, "BFS explores layer by layer using a queue — shortest path in unweighted graphs.")}
-''',
-    "Graph BFS layers",
-)
-
-DIAGRAMS["dp-table"] = svg(
-    720,
-    260,
-    f'''
-  {"".join(box(80 + i*70, 90, 60, 44, ACCENT_SOFT if i else ROSE, f"dp[{i}]", str(v)) for i,v in enumerate([0,1,1,2,3,5]))}
-  <path d="M140 160 H470" stroke="{ACCENT}" stroke-width="1.5" stroke-dasharray="4 4"/>
-  {caption(80, 210, "Each cell is built from earlier answers — get the recurrence and base cases right.")}
-''',
-    "Dynamic programming table",
-)
-
-DIAGRAMS["intervals"] = svg(
-    720,
-    240,
-    f'''
-  <rect x="60" y="100" width="180" height="28" rx="6" fill="{ACCENT_SOFT}" stroke="{LINE}"/>
-  <rect x="200" y="145" width="160" height="28" rx="6" fill="{ROSE}" stroke="{LINE}"/>
-  <rect x="390" y="100" width="140" height="28" rx="6" fill="{SAND}" stroke="{LINE}"/>
-  <line x1="50" y1="200" x2="560" y2="200" stroke="{INK}" stroke-width="1.2"/>
-  {caption(60, 225, "Sort by start, then merge overlaps as you scan.")}
-''',
-    "Intervals",
-)
-
-DIAGRAMS["bits-xor"] = svg(
-    720,
-    240,
-    f'''
-  <text x="60" y="110" font-family="{MONO}" font-size="16" fill="{INK}">5 = 1 0 1</text>
-  <text x="60" y="145" font-family="{MONO}" font-size="16" fill="{INK}">3 = 0 1 1</text>
-  <line x1="60" y1="160" x2="200" y2="160" stroke="{LINE}"/>
-  <text x="60" y="190" font-family="{MONO}" font-size="16" fill="{ACCENT}">XOR 1 1 0 = 6</text>
-  {caption(280, 145, "XOR cancels pairs — lonely numbers fall out for free.")}
-''',
-    "Bit manipulation",
-)
-
-# --- System design ---
-DIAGRAMS["load-balancer"] = svg(
-    760,
-    300,
-    f'''
-  {box(40, 130, 110, 50, SAND, "Clients")}
-  {box(240, 130, 140, 50, ROSE, "Load Balancer", "health checks")}
-  {box(500, 70, 120, 44, ACCENT_SOFT, "Server 1")}
-  {box(500, 130, 120, 44, ACCENT_SOFT, "Server 2")}
-  {box(500, 190, 120, 44, ACCENT_SOFT, "Server 3")}
-  <path d="M155 155 H235" stroke="{INK}" stroke-width="1.6"/>
-  <path d="M385 145 H495" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M385 155 H495" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M385 165 H495" stroke="{INK}" stroke-width="1.4"/>
-  {caption(40, 270, "One entry point spreads traffic across identical, stateless servers.")}
-''',
-    "Load balancer",
-)
-
-DIAGRAMS["cache-cdn"] = svg(
-    760,
-    280,
-    f'''
-  {box(40, 120, 100, 48, SAND, "User")}
-  {box(200, 120, 110, 48, ROSE, "CDN / edge")}
-  {box(370, 120, 110, 48, ACCENT_SOFT, "App cache")}
-  {box(540, 120, 120, 48, "#fff", "Database")}
-  <path d="M145 144 H195" stroke="{INK}" stroke-width="1.5"/>
-  <path d="M315 144 H365" stroke="{INK}" stroke-width="1.5"/>
-  <path d="M485 144 H535" stroke="{INK}" stroke-width="1.5"/>
-  {caption(40, 230, "Serve hot data from the closest fast layer; fall back on a miss.")}
-''',
-    "Caching & CDNs",
-)
-
-DIAGRAMS["sql-nosql"] = svg(
-    760,
-    280,
-    f'''
-  {box(60, 90, 260, 140, ACCENT_SOFT, "SQL", "fixed schema · joins · ACID")}
-  {box(400, 90, 260, 140, ROSE, "NoSQL", "flexible · scale-out · simple access")}
-  {caption(60, 260, "Pick for access patterns first — not fashion.")}
-''',
-    "SQL vs NoSQL",
-)
-
-DIAGRAMS["replication"] = svg(
-    760,
-    300,
-    f'''
-  {box(80, 80, 140, 50, ROSE, "Primary")}
-  {box(80, 180, 140, 44, ACCENT_SOFT, "Replica A")}
-  {box(280, 180, 140, 44, ACCENT_SOFT, "Replica B")}
-  <path d="M150 135 V175" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M150 135 H350 V175" fill="none" stroke="{INK}" stroke-width="1.4"/>
-  {box(500, 120, 160, 70, SAND, "Shard map", "user_id → shard")}
-  {caption(80, 270, "Replication for reads/HA; sharding for capacity.")}
-''',
-    "Replication & sharding",
-)
-
-DIAGRAMS["cap"] = svg(
-    720,
-    300,
-    f'''
-  <polygon points="340,70 160,240 520,240" fill="{ACCENT_SOFT}" stroke="{LINE}" stroke-width="1.4"/>
-  <text x="340" y="95" text-anchor="middle" font-family="{SANS}" font-size="14" font-weight="700" fill="{INK}">C</text>
-  <text x="175" y="255" text-anchor="middle" font-family="{SANS}" font-size="14" font-weight="700" fill="{INK}">A</text>
-  <text x="505" y="255" text-anchor="middle" font-family="{SANS}" font-size="14" font-weight="700" fill="{INK}">P</text>
-  <text x="250" y="170" font-family="{MONO}" font-size="11" fill="{SOFT}">CP</text>
-  <text x="400" y="170" font-family="{MONO}" font-size="11" fill="{SOFT}">AP</text>
-  {caption(80, 285, "During a partition you choose consistency or availability.")}
-''',
-    "CAP trade-offs",
-)
-
-DIAGRAMS["queue"] = svg(
-    760,
-    260,
-    f'''
-  {box(40, 110, 120, 50, SAND, "Producer")}
-  {box(240, 100, 200, 70, ROSE, "Queue / topic", "async buffer")}
-  {box(520, 90, 120, 44, ACCENT_SOFT, "Worker A")}
-  {box(520, 150, 120, 44, ACCENT_SOFT, "Worker B")}
-  <path d="M165 135 H235" stroke="{INK}" stroke-width="1.5"/>
-  <path d="M445 125 H515" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M445 145 H515" stroke="{INK}" stroke-width="1.4"/>
-  {caption(40, 230, "Decouple producers from consumers and smooth traffic spikes.")}
-''',
-    "Message queues",
-)
-
-DIAGRAMS["url-shortener"] = svg(
-    760,
-    280,
-    f'''
-  {box(40, 110, 90, 48, SAND, "Client")}
-  {box(180, 110, 90, 48, ROSE, "API")}
-  {box(320, 110, 120, 48, ACCENT_SOFT, "ID service")}
-  {box(490, 70, 140, 40, "#fff", "KV / DB")}
-  {box(490, 150, 140, 40, "#fff", "Cache")}
-  <path d="M135 134 H175" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M275 134 H315" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M445 125 H485" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M445 145 H485" stroke="{INK}" stroke-width="1.3"/>
-  {caption(40, 240, "Write path: create code, store mapping, cache hot redirects.")}
-''',
-    "URL shortener write path",
-)
-
-DIAGRAMS["chat-flow"] = svg(
-    760,
-    280,
-    f'''
-  {box(40, 110, 100, 48, SAND, "Client A")}
-  {box(190, 110, 120, 48, ROSE, "Gateway")}
-  {box(360, 110, 130, 48, ACCENT_SOFT, "Chat service")}
-  {box(540, 70, 130, 40, "#fff", "Store")}
-  {box(540, 160, 130, 40, "#fff", "Client B")}
-  <path d="M145 134 H185" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M315 134 H355" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M495 125 H535" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M495 145 H535" stroke="{INK}" stroke-width="1.3"/>
-  {caption(40, 240, "Persist first, then fan out to connected recipients.")}
-''',
-    "Chat message flow",
-)
-
-DIAGRAMS["feed-fanout"] = svg(
-    760,
-    280,
-    f'''
-  {box(40, 110, 110, 48, SAND, "New post")}
-  {box(210, 110, 130, 48, ROSE, "Fanout worker")}
-  {box(410, 60, 140, 40, ACCENT_SOFT, "Follower feed 1")}
-  {box(410, 120, 140, 40, ACCENT_SOFT, "Follower feed 2")}
-  {box(410, 180, 140, 40, ACCENT_SOFT, "Follower feed N")}
-  <path d="M155 134 H205" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M345 120 H405" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M345 134 H405" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M345 148 H405" stroke="{INK}" stroke-width="1.3"/>
-  {caption(40, 250, "Push fanout writes the post id into follower inboxes ahead of time.")}
-''',
-    "Feed fanout",
-)
-
-DIAGRAMS["object-storage"] = svg(
-    760,
-    280,
-    f'''
-  {box(40, 120, 100, 48, SAND, "Object")}
-  {box(200, 90, 100, 40, ROSE, "chunk 1")}
-  {box(200, 145, 100, 40, ROSE, "chunk 2")}
-  {box(200, 200, 100, 40, ROSE, "chunk 3")}
-  {box(380, 90, 120, 40, ACCENT_SOFT, "disk / rack A")}
-  {box(380, 145, 120, 40, ACCENT_SOFT, "disk / rack B")}
-  {box(380, 200, 120, 40, ACCENT_SOFT, "disk / rack C")}
-  <path d="M145 140 H195" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M145 145 H195" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M145 155 H195" stroke="{INK}" stroke-width="1.3"/>
-  {caption(40, 260, "Split, replicate across failure domains, reassemble on read.")}
-''',
-    "Object storage",
-)
-
-DIAGRAMS["video-pipeline"] = svg(
-    760,
-    260,
-    f'''
-  {box(40, 110, 110, 48, SAND, "Upload")}
-  {box(200, 110, 130, 48, ROSE, "Transcode")}
-  {box(380, 80, 100, 40, ACCENT_SOFT, "1080p")}
-  {box(380, 140, 100, 40, ACCENT_SOFT, "720p")}
-  {box(540, 110, 120, 48, "#fff", "CDN")}
-  <path d="M155 134 H195" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M335 125 H375" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M335 145 H375" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M485 134 H535" stroke="{INK}" stroke-width="1.4"/>
-  {caption(40, 230, "Transcode once, then serve the right rendition from the edge.")}
-''',
-    "Video pipeline",
-)
-
-DIAGRAMS["geo-matching"] = svg(
-    760,
-    300,
-    f'''
-  <rect x="80" y="70" width="280" height="180" fill="#fff" stroke="{LINE}"/>
-  <path d="M150 70 V250 M220 70 V250 M290 70 V250 M80 130 H360 M80 190 H360" stroke="{LINE}"/>
-  <circle cx="200" cy="160" r="10" fill="{ROSE}" stroke="{INK}"/>
-  <text x="214" y="164" font-family="{MONO}" font-size="12" fill="{INK}">R</text>
-  <circle cx="175" cy="145" r="5" fill="{ACCENT}"/>
-  <circle cx="230" cy="175" r="5" fill="{ACCENT}"/>
-  <circle cx="250" cy="140" r="5" fill="{ACCENT}"/>
-  {caption(400, 140, "Rider R")}
-  {caption(400, 165, "Drivers in nearby cells")}
-  {caption(80, 280, "Search the rider cell and neighbors — not the whole map.")}
-''',
-    "Geo matching",
-)
-
-# --- AI ---
-DIAGRAMS["llm-flow"] = svg(
-    760,
-    260,
-    f'''
-  {box(40, 110, 120, 50, SAND, "Tokens in")}
-  {box(220, 110, 160, 50, ROSE, "Model", "next-token probs")}
-  {box(440, 110, 140, 50, ACCENT_SOFT, "Sample", "temperature")}
-  <path d="M165 135 H215" stroke="{INK}" stroke-width="1.5"/>
-  <path d="M385 135 H435" stroke="{INK}" stroke-width="1.5"/>
-  {caption(40, 220, "A model predicts the next token from context — repeatedly.")}
-''',
-    "How an LLM answers",
-)
-
-DIAGRAMS["rag"] = svg(
-    760,
-    300,
-    f'''
-  {box(40, 70, 140, 44, SAND, "Documents")}
-  {box(40, 150, 140, 44, ROSE, " Embeddings")}
-  {box(40, 220, 140, 44, ACCENT_SOFT, "Vector index")}
-  {box(280, 150, 140, 50, SAND, "Question")}
-  {box(480, 90, 160, 50, ROSE, "Retrieve top-k")}
-  {box(480, 180, 160, 50, ACCENT_SOFT, "LLM + context")}
-  <path d="M110 118 V145" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M110 198 V215" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M185 240 H470" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M425 175 H475" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M560 145 V175" stroke="{INK}" stroke-width="1.3"/>
-  {caption(280, 280, "Index once; on each question retrieve, then generate.")}
-''',
-    "RAG pipeline",
-)
-
-DIAGRAMS["memory"] = svg(
-    760,
-    280,
-    f'''
-  {box(60, 80, 520, 50, ROSE, "Context window", "system · history · tools · user")}
-  {box(60, 170, 200, 50, ACCENT_SOFT, "Short-term", "recent turns")}
-  {box(320, 170, 260, 50, SAND, "Long-term retrieval", "search past notes")}
-  {caption(60, 250, "Everything competing for one fixed window — budget it carefully.")}
-''',
-    "Memory layers",
-)
-
-DIAGRAMS["agent-loop"] = svg(
-    760,
-    260,
-    f'''
-  {box(60, 110, 120, 50, SAND, "Think")}
-  {box(240, 110, 120, 50, ROSE, "Act / tool")}
-  {box(420, 110, 120, 50, ACCENT_SOFT, "Observe")}
-  <path d="M185 135 H235" stroke="{INK}" stroke-width="1.5"/>
-  <path d="M365 135 H415" stroke="{INK}" stroke-width="1.5"/>
-  <path d="M540 135 H580 Q610 135 610 180 H120 Q90 180 90 145" fill="none" stroke="{ACCENT}" stroke-width="1.5" stroke-dasharray="5 4"/>
-  {caption(60, 220, "ReAct-style loop: reason, call a tool, read the result, repeat.")}
-''',
-    "Agent loop",
-)
-
-DIAGRAMS["mcp"] = svg(
-    760,
-    280,
-    f'''
-  {box(60, 110, 120, 50, SAND, "App A")}
-  {box(60, 180, 120, 50, SAND, "App B")}
-  {box(280, 130, 150, 60, ROSE, "MCP", "one protocol")}
-  {box(520, 90, 130, 44, ACCENT_SOFT, "Tools")}
-  {box(520, 150, 130, 44, ACCENT_SOFT, "Data")}
-  {box(520, 210, 130, 44, ACCENT_SOFT, "Prompts")}
-  <path d="M185 135 H275" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M185 200 H275" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M435 150 H515" stroke="{INK}" stroke-width="1.3"/>
-  {caption(60, 265, "Standardize tool access instead of N×M custom integrations.")}
-''',
-    "MCP",
-)
-
-DIAGRAMS["skills"] = svg(
-    760,
-    260,
-    f'''
-  {box(60, 100, 180, 70, SAND, "Name + description", "always loaded")}
-  {box(300, 100, 200, 70, ROSE, "Full SKILL.md", "loaded when needed")}
-  {box(560, 100, 120, 70, ACCENT_SOFT, "Agent")}
-  <path d="M245 135 H295" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M505 135 H555" stroke="{INK}" stroke-width="1.4"/>
-  {caption(60, 220, "Keep catalogs cheap; pull full instructions only for the active skill.")}
-''',
-    "Skills loading",
-)
-
-DIAGRAMS["ai-assistant"] = svg(
-    760,
-    300,
-    f'''
-  {box(40, 120, 100, 48, SAND, "User")}
-  {box(190, 110, 140, 68, ROSE, "Orchestrator", "agent loop")}
-  {box(390, 60, 130, 44, ACCENT_SOFT, "Memory")}
-  {box(390, 120, 130, 44, ACCENT_SOFT, "RAG")}
-  {box(390, 180, 130, 44, ACCENT_SOFT, "MCP tools")}
-  {box(580, 120, 120, 48, "#fff", "Model")}
-  <path d="M145 144 H185" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M335 130 H385" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M335 144 H385" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M335 158 H385" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M525 144 H575" stroke="{INK}" stroke-width="1.4"/>
-  {caption(40, 270, "One orchestrator owns context and routes memory, retrieval, and tools.")}
-''',
-    "AI assistant design",
-)
-
-# --- AI interview deep-dive diagrams ---
-DIAGRAMS["rag-detailed"] = svg(
-    820,
-    360,
-    f'''
-  <text x="40" y="68" font-family="{MONO}" font-size="12" fill="{ACCENT}">INGEST (offline / nearline)</text>
-  {box(40, 80, 100, 44, SAND, "Connectors")}
-  {box(160, 80, 90, 44, "#fff", "Clean")}
-  {box(270, 80, 90, 44, ROSE, "Chunk")}
-  {box(380, 80, 90, 44, ACCENT_SOFT, "Embed")}
-  {box(490, 80, 120, 44, SAND, "Vector + meta")}
-  <path d="M140 102 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M250 102 H265" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M360 102 H375" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M470 102 H485" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <text x="40" y="175" font-family="{MONO}" font-size="12" fill="{ACCENT}">QUERY (online, &lt;2–3s)</text>
-  {box(40, 190, 100, 44, SAND, "Question")}
-  {box(160, 190, 100, 44, ROSE, "Rewrite")}
-  {box(280, 190, 110, 44, ACCENT_SOFT, "Hybrid retrieve")}
-  {box(410, 190, 90, 44, "#fff", "Rerank")}
-  {box(520, 190, 110, 44, SAND, "Ground LLM")}
-  {box(650, 190, 110, 44, ROSE, "Cite + stream")}
-  <path d="M140 212 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M260 212 H275" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M390 212 H405" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M500 212 H515" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M630 212 H645" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {box(280, 260, 110, 40, ROSE, "ACL filter", "at retrieve")}
-  {box(410, 260, 90, 40, ACCENT_SOFT, "Abstain", "low conf.")}
-  <path d="M335 234 V255" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M455 234 V255" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 335, "Separate ingest from query. Filter permissions in retrieval — never only in the prompt.")}
-''',
-    "RAG interview whiteboard",
-)
-
-DIAGRAMS["hybrid-search"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 120, 120, 50, SAND, "Query")}
-  {box(220, 70, 140, 48, ACCENT_SOFT, "BM25 / lexical")}
-  {box(220, 160, 140, 48, ROSE, "Dense / ANN")}
-  {box(420, 115, 140, 50, "#fff", "Fuse (RRF)")}
-  {box(620, 115, 140, 50, SAND, "Rerank top-n")}
-  <path d="M165 145 H215" stroke="{INK}" stroke-width="1.4"/>
-  <path d="M200 145 V94 H215" fill="none" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M200 145 V184 H215" fill="none" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M365 94 H390 V140 H415" fill="none" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M365 184 H390 V140" fill="none" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M565 140 H615" stroke="{INK}" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-  {caption(40, 260, "Lexical catches IDs & rare tokens; dense catches paraphrases; fuse then rerank.")}
-''',
-    "Hybrid retrieval",
-)
-
-DIAGRAMS["eval-pipeline"] = svg(
-    820,
-    320,
-    f'''
-  {box(40, 90, 130, 50, SAND, "Gold sets")}
-  {box(200, 90, 140, 50, ROSE, "Candidate run")}
-  {box(370, 70, 150, 44, ACCENT_SOFT, "Auto metrics")}
-  {box(370, 130, 150, 44, "#fff", "LLM judge")}
-  {box(560, 90, 140, 50, SAND, "Gate vs baseline")}
-  {box(720, 90, 60, 50, ROSE, "Ship?")}
-  <path d="M175 115 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M345 115 H365" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M525 115 H555" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M705 115 H715" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {box(40, 210, 160, 48, ACCENT_SOFT, "Online: A/B")}
-  {box(230, 210, 160, 48, "#fff", "Traces + feedback")}
-  {box(420, 210, 180, 48, ROSE, "Human spot-check")}
-  <path d="M630 140 V180 H120 V205" fill="none" stroke="{ACCENT}" stroke-width="1.3" stroke-dasharray="4 3"/>
-  {caption(40, 295, "Offline gates block bad deploys; online + humans catch what metrics miss.")}
-''',
-    "LLM evaluation pipeline",
-)
-
-DIAGRAMS["agent-tools"] = svg(
-    820,
-    340,
-    f'''
-  {box(40, 100, 110, 48, SAND, "User goal")}
-  {box(180, 100, 130, 48, ROSE, "Planner LLM")}
-  {box(350, 60, 130, 40, ACCENT_SOFT, "search_*")}
-  {box(350, 115, 130, 40, ACCENT_SOFT, "hold / book")}
-  {box(350, 170, 130, 40, "#fff", "pay (gated)")}
-  {box(530, 100, 130, 48, SAND, "Tool runtime")}
-  {box(690, 100, 100, 48, ROSE, "APIs")}
-  <path d="M155 124 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M315 124 H345" stroke="{INK}" stroke-width="1.3"/>
-  <path d="M485 80 H510 V124 H525" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M485 135 H525" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M485 190 H510 V124" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M665 124 H685" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {box(180, 240, 160, 44, ROSE, "Confirm UI", "before pay/book")}
-  {box(370, 240, 160, 44, ACCENT_SOFT, "Budgets", "steps / $ / tokens")}
-  {box(560, 240, 160, 44, "#fff", "Audit log")}
-  {caption(40, 315, "Tools are the product. Schema-validate args; gate irreversible actions; cap loops.")}
-''',
-    "Tool-using agent",
-)
-
-DIAGRAMS["memory-tiers"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 110, 160, 70, SAND, "Short-term", "thread window")}
-  {box(240, 110, 160, 70, ROSE, "Working state", "slots / summary")}
-  {box(440, 110, 160, 70, ACCENT_SOFT, "Long-term facts", "editable store")}
-  {box(640, 110, 140, 70, "#fff", "Semantic recall", "embeddings")}
-  <path d="M205 145 H235" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M405 145 H435" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M605 145 H635" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 230, "Do not dump months of chat into the prompt — retrieve the right memories each turn.")}
-  {caption(40, 255, "User must be able to see, edit, and delete long-term memory.")}
-''',
-    "Assistant memory tiers",
-)
-
-DIAGRAMS["moderation-cascade"] = svg(
-    820,
-    280,
-    f'''
-  {box(40, 110, 100, 50, SAND, "Content")}
-  {box(170, 110, 120, 50, ROSE, "Hash / rules")}
-  {box(320, 110, 130, 50, ACCENT_SOFT, "Classifiers")}
-  {box(480, 110, 130, 50, "#fff", "LLM (gray)")}
-  {box(640, 70, 130, 40, ROSE, "Auto action")}
-  {box(640, 130, 130, 40, SAND, "Human queue")}
-  {box(640, 190, 130, 40, ACCENT_SOFT, "Allow")}
-  <path d="M145 135 H165" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M295 135 H315" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M455 135 H475" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M615 135 H635" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 255, "Cheap filters first; LLM only on uncertain band; humans for high-severity appeals.")}
-''',
-    "Moderation cascade",
-)
-
-DIAGRAMS["recsys-towers"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 80, 140, 48, SAND, "User features")}
-  {box(40, 180, 140, 48, SAND, "Item features")}
-  {box(230, 80, 140, 48, ROSE, "User tower")}
-  {box(230, 180, 140, 48, ROSE, "Item tower")}
-  {box(420, 130, 140, 48, ACCENT_SOFT, "ANN retrieve")}
-  {box(610, 130, 150, 48, "#fff", "Ranker → top N")}
-  <path d="M185 104 H225" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M185 204 H225" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M375 104 H395 V154 H415" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M375 204 H395 V154" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M565 154 H605" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 270, "Retrieve thousands cheaply with towers; spend compute only on ranking candidates.")}
-''',
-    "Two-tower recommendations",
-)
-
-DIAGRAMS["multi-tenant-ai"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 120, 110, 50, SAND, "Tenant A")}
-  {box(40, 190, 110, 50, SAND, "Tenant B")}
-  {box(200, 145, 140, 50, ROSE, "API gateway", "auth + quota")}
-  {box(390, 100, 140, 44, ACCENT_SOFT, "Model router")}
-  {box(390, 160, 140, 44, "#fff", "Meter / bill")}
-  {box(390, 220, 140, 44, SAND, "Trace store")}
-  {box(580, 145, 180, 50, ROSE, "Providers / models")}
-  <path d="M155 145 H195" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M155 215 H175 V170 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M345 170 H385" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M535 170 H575" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 280, "Quotas and tenancy are product features — not afterthoughts on the LLM call.")}
-''',
-    "Multi-tenant AI platform",
-)
-
-DIAGRAMS["transcription-ai"] = svg(
-    820,
-    280,
-    f'''
-  {box(40, 110, 100, 50, SAND, "Audio")}
-  {box(170, 110, 120, 50, ROSE, "Streaming ASR")}
-  {box(320, 110, 120, 50, ACCENT_SOFT, "Diarize")}
-  {box(470, 70, 140, 44, "#fff", "Live captions")}
-  {box(470, 140, 140, 44, SAND, "LLM summary")}
-  {box(640, 110, 130, 50, ROSE, "Search index")}
-  <path d="M145 135 H165" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M295 135 H315" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M445 135 H465" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M615 135 H635" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 240, "Stream partials for UX; batch structured notes; index for later search.")}
-''',
-    "Realtime transcription + summary",
-)
-
-DIAGRAMS["grounded-support"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 130, 110, 48, SAND, "Ticket")}
-  {box(180, 130, 130, 48, ROSE, "Intent route")}
-  {box(350, 70, 150, 48, ACCENT_SOFT, "RAG policies")}
-  {box(350, 160, 150, 48, "#fff", "Action tools")}
-  {box(540, 70, 140, 48, SAND, "Cited answer")}
-  {box(540, 160, 140, 48, ROSE, "Authz + caps")}
-  {box(720, 115, 70, 48, ACCENT_SOFT, "Human")}
-  <path d="M155 154 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M315 154 H330 V94 H345" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M315 154 H330 V184 H345" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M505 94 H535" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M505 184 H535" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M685 154 H715" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  {caption(40, 260, "Knowledge path cites policy; action path is deterministic server auth — not LLM vibes.")}
-''',
-    "Grounded support bot",
-)
-
-# --- CP interview deep-dive diagrams ---
-DIAGRAMS["two-sum-walk"] = svg(
-    820,
-    300,
-    f'''
-  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">nums = [2, 7, 11, 15]  target = 9</text>
-  {box(40, 100, 70, 50, ACCENT_SOFT, "2")}
-  {box(130, 100, 70, 50, ROSE, "7")}
-  {box(220, 100, 70, 50, "#fff", "11")}
-  {box(310, 100, 70, 50, "#fff", "15")}
-  <text x="75" y="175" font-family="{MONO}" font-size="11" fill="{SOFT}">i=0</text>
-  <text x="165" y="175" font-family="{MONO}" font-size="11" fill="{ACCENT}">i=1 hit</text>
-  {box(450, 90, 320, 90, SAND, "seen map", "after i=0: {{2:0}}")}
-  <text x="450" y="210" font-family="{SANS}" font-size="13" fill="{INK}">need = 9-7 = 2 → found at index 0 → return [0,1]</text>
-  {caption(40, 270, "Store each value after checking its complement — never pair a number with itself.")}
-''',
-    "Two Sum walkthrough",
-)
-
-DIAGRAMS["longest-substr-window"] = svg(
-    820,
-    280,
-    f'''
-  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">s = "abcabcbb"</text>
-  {"".join(box(40 + i*70, 100, 58, 50, ROSE if 0 <= i <= 2 else "#fff", c) for i,c in enumerate(list("abcabcbb")[:6]))}
-  <rect x="40" y="94" width="198" height="62" rx="8" fill="none" stroke="{ACCENT}" stroke-width="2"/>
-  <text x="40" y="185" font-family="{MONO}" font-size="12" fill="{ACCENT}">best window "abc" length 3</text>
-  <text x="40" y="210" font-family="{SANS}" font-size="13" fill="{INK}">On repeat of 'a', jump left past previous 'a'</text>
-  {caption(40, 255, "Variable window: expand right; when duplicate in window, move left forward.")}
-''',
-    "Longest substring window",
-)
-
-DIAGRAMS["merge-intervals-walk"] = svg(
-    820,
-    280,
-    f'''
-  {box(40, 90, 100, 44, "#fff", "[1,3]")}
-  {box(160, 90, 100, 44, "#fff", "[2,6]")}
-  {box(280, 90, 100, 44, "#fff", "[8,10]")}
-  {box(400, 90, 100, 44, "#fff", "[15,18]")}
-  <path d="M90 150 V170 H210 V150" fill="none" stroke="{ACCENT}" stroke-width="1.6"/>
-  <text x="110" y="195" font-family="{MONO}" font-size="12" fill="{ACCENT}">overlap → merge</text>
-  {box(40, 220, 120, 40, ROSE, "[1,6]")}
-  {box(180, 220, 120, 40, ACCENT_SOFT, "[8,10]")}
-  {box(320, 220, 120, 40, SAND, "[15,18]")}
-  {caption(480, 245, "Sort by start, then one linear pass.")}
-''',
-    "Merge intervals",
-)
-
-DIAGRAMS["lru-cache"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 100, 160, 70, SAND, "HashMap", "key → node")}
-  {box(280, 80, 480, 120, "#fff", "", "")}
-  <text x="300" y="110" font-family="{SANS}" font-size="13" font-weight="650" fill="{INK}">Doubly linked list (MRU → LRU)</text>
-  {box(300, 130, 90, 44, ROSE, "MRU")}
-  {box(420, 130, 90, 44, ACCENT_SOFT, "…")}
-  {box(540, 130, 90, 44, SAND, "LRU")}
-  <path d="M395 152 H415" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M515 152 H535" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M210 135 H270" stroke="{INK}" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-  {caption(40, 250, "get/put: O(1) via map. Evict: remove LRU tail. On access: move node to MRU head.")}
-''',
-    "LRU Cache structure",
-)
-
-DIAGRAMS["islands-dfs"] = svg(
-    820,
-    300,
-    f'''
-  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">grid flood-fill</text>
-  {"".join(box(40 + c*55, 90 + r*55, 48, 48, ROSE if (r,c) in {(0,0),(0,1),(1,0)} else (ACCENT_SOFT if (r,c) in {(2,2),(2,3),(3,3)} else "#fff"), "1" if (r,c) in {(0,0),(0,1),(1,0),(2,2),(2,3),(3,3)} else "0") for r in range(4) for c in range(4))}
-  <text x="320" y="120" font-family="{SANS}" font-size="13" fill="{INK}">Island A (DFS/BFS)</text>
-  <text x="320" y="200" font-family="{SANS}" font-size="13" fill="{INK}">Island B</text>
-  <text x="320" y="260" font-family="{MONO}" font-size="12" fill="{ACCENT}">answer = 2</text>
-  {caption(40, 290, "Each unvisited land cell starts a new island; flood-fill marks the whole component.")}
-''',
-    "Number of Islands",
-)
-
-DIAGRAMS["topo-kahn"] = svg(
-    820,
-    280,
-    f'''
-  {box(40, 100, 70, 50, ROSE, "0", "in=0")}
-  {box(160, 100, 70, 50, ACCENT_SOFT, "1", "in=1")}
-  {box(280, 100, 70, 50, "#fff", "2", "in=1")}
-  {box(400, 100, 70, 50, SAND, "3", "in=2")}
-  <path d="M115 125 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M235 125 H275" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M350 125 H395" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M75 155 V190 H435 V155" fill="none" stroke="{SOFT}" stroke-width="1.2"/>
-  <text x="40" y="230" font-family="{SANS}" font-size="13" fill="{INK}">Kahn: queue all indegree 0 → take course → decrement neighbors</text>
-  {caption(40, 260, "If you cannot process all nodes, there is a cycle → cannot finish.")}
-''',
-    "Course Schedule (Kahn)",
-)
-
-DIAGRAMS["coin-change-dp"] = svg(
-    820,
-    280,
-    f'''
-  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">coins=[1,2,5] amount=11 → dp[x]=fewest coins for x</text>
-  {"".join(box(40 + i*60, 110, 52, 44, ROSE if i==11 else ACCENT_SOFT, str(v)) for i,v in enumerate([0,1,1,2,2,1,2,2,3,3,2,3]))}
-  <text x="40" y="185" font-family="{MONO}" font-size="11" fill="{SOFT}">x:  0  1  2  3  4  5  6  7  8  9 10 11</text>
-  <text x="40" y="220" font-family="{SANS}" font-size="13" fill="{INK}">Transition: dp[x] = min(dp[x], dp[x-c]+1) for each coin c</text>
-  {caption(40, 255, "Unbounded knapsack. Greedy fails for arbitrary denominations — say why.")}
-''',
-    "Coin Change DP",
-)
-
-DIAGRAMS["word-ladder-bfs"] = svg(
-    820,
-    280,
-    f'''
-  {box(40, 110, 100, 48, SAND, "hit", "begin")}
-  {box(200, 70, 100, 48, ACCENT_SOFT, "hot")}
-  {box(200, 160, 100, 48, "#fff", "hip")}
-  {box(360, 110, 100, 48, ROSE, "dot")}
-  {box(520, 110, 100, 48, ACCENT_SOFT, "dog")}
-  {box(680, 110, 100, 48, SAND, "cog", "end")}
-  <path d="M145 134 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M300 94 H340 V134 H355" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M465 134 H515" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M625 134 H675" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 240, "Implicit graph: edge if Hamming distance 1. BFS = shortest transformation length.")}
-''',
-    "Word Ladder BFS",
-)
-
-DIAGRAMS["serialize-tree"] = svg(
-    820,
-    300,
-    f'''
-  {box(360, 70, 70, 40, ROSE, "1")}
-  {box(250, 140, 70, 40, ACCENT_SOFT, "2")}
-  {box(470, 140, 70, 40, ACCENT_SOFT, "3")}
-  {box(420, 210, 70, 40, SAND, "4")}
-  {box(520, 210, 70, 40, SAND, "5")}
-  <path d="M360 110 L285 140" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M430 110 L505 140" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M490 185 L455 210" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M520 185 L555 210" stroke="{INK}" stroke-width="1.2"/>
-  <text x="40" y="100" font-family="{MONO}" font-size="12" fill="{ACCENT}">BFS serialize</text>
-  <text x="40" y="130" font-family="{MONO}" font-size="12" fill="{INK}">1,2,3,#,#,4,5,#,#,#,#</text>
-  {caption(40, 270, "Level-order with explicit null markers makes encode/decode invertible.")}
-''',
-    "Serialize binary tree",
-)
-
-DIAGRAMS["trap-water"] = svg(
-    820,
-    280,
-    f'''
-  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">height = [0,1,0,2,1,0,1,3,2,1,2,1]</text>
-  {"".join(f'<rect x="{60 + i*45}" y="{220 - h*28}" width="36" height="{h*28}" fill="{ACCENT_SOFT if h else "#fff"}" stroke="{LINE}"/>' for i,h in enumerate([0,1,0,2,1,0,1,3,2,1,2,1]))}
-  <rect x="150" y="192" width="36" height="28" fill="{ROSE}" opacity="0.85"/>
-  <rect x="240" y="164" width="36" height="28" fill="{ROSE}" opacity="0.85"/>
-  <rect x="285" y="192" width="36" height="28" fill="{ROSE}" opacity="0.85"/>
-  <text x="40" y="255" font-family="{SANS}" font-size="13" fill="{INK}">Water at i = min(left_max, right_max) - height[i]</text>
-  {caption(480, 255, "Two pointers: advance the side with smaller max.")}
-''',
-    "Trapping Rain Water",
-)
-
-# --- System design interview deep-dive diagrams ---
-DIAGRAMS["url-shortener-detailed"] = svg(
-    820,
-    320,
-    f'''
-  <text x="40" y="68" font-family="{MONO}" font-size="12" fill="{ACCENT}">WRITE</text>
-  {box(40, 80, 100, 44, SAND, "Client")}
-  {box(160, 80, 110, 44, ROSE, "Shorten API")}
-  {box(290, 80, 120, 44, ACCENT_SOFT, "ID / base62")}
-  {box(430, 80, 130, 44, "#fff", "KV store")}
-  <path d="M145 102 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M275 102 H285" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M415 102 H425" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <text x="40" y="165" font-family="{MONO}" font-size="12" fill="{ACCENT}">READ (hot path)</text>
-  {box(40, 180, 100, 44, SAND, "GET /code")}
-  {box(160, 180, 100, 44, ROSE, "Edge/CDN")}
-  {box(280, 180, 100, 44, ACCENT_SOFT, "Redis")}
-  {box(400, 180, 100, 44, "#fff", "KV")}
-  {box(520, 180, 120, 44, SAND, "302 → URL")}
-  <path d="M145 202 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M265 202 H275" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M385 202 H395" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M505 202 H515" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {box(660, 180, 120, 44, ROSE, "Clicks → Q", "async")}
-  {caption(40, 280, "Redirect must not wait on analytics. Cache hot codes; prefer 302 for control.")}
-''',
-    "URL shortener design",
-)
-
-DIAGRAMS["feed-hybrid-fanout"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 120, 120, 50, SAND, "New post")}
-  {box(200, 70, 160, 48, ROSE, "Fan-out write", "normal users")}
-  {box(200, 170, 160, 48, ACCENT_SOFT, "Fan-out read", "celebrities")}
-  {box(400, 70, 160, 48, "#fff", "Follower timelines")}
-  {box(400, 170, 160, 48, "#fff", "Merge at read")}
-  {box(600, 120, 160, 50, SAND, "Home feed")}
-  <path d="M165 145 H185 V94 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M165 145 H185 V194 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M365 94 H395" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  <path d="M365 194 H395" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  <path d="M565 94 H580 V145 H595" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M565 194 H580 V145" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 260, "Hybrid: push for normal follow graphs; pull for mega-influencers.")}
-''',
-    "News feed hybrid fan-out",
-)
-
-DIAGRAMS["chat-message-path"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 120, 100, 48, SAND, "Sender")}
-  {box(170, 120, 120, 48, ROSE, "Chat WS")}
-  {box(320, 120, 130, 48, ACCENT_SOFT, "Durable log")}
-  {box(480, 70, 130, 44, "#fff", "Inbox A")}
-  {box(480, 160, 130, 44, "#fff", "Inbox B")}
-  {box(650, 70, 120, 44, SAND, "Online push")}
-  {box(650, 160, 120, 44, ROSE, "Store offline")}
-  <path d="M145 144 H165" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M295 144 H315" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M455 130 H475 V92 H475" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M455 144 H475 V182" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M615 92 H645" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  <path d="M615 182 H645" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  {caption(40, 260, "Persist before ACK. Online sockets get push; offline users get store-and-forward.")}
-''',
-    "Chat message delivery",
-)
-
-DIAGRAMS["rate-limiter-token"] = svg(
-    820,
-    280,
-    f'''
-  {box(40, 110, 110, 50, SAND, "Request")}
-  {box(180, 110, 130, 50, ROSE, "API gateway")}
-  {box(340, 110, 160, 50, ACCENT_SOFT, "Redis token bucket")}
-  {box(540, 70, 140, 44, "#fff", "Allow → svc")}
-  {box(540, 160, 140, 44, SAND, "429 Retry-After")}
-  <path d="M155 135 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M315 135 H335" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M505 120 H520 V92 H535" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M505 145 H520 V182 H535" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 240, "Atomic Lua/INCR in Redis. Token bucket allows controlled bursts.")}
-''',
-    "Distributed rate limiter",
-)
-
-DIAGRAMS["uber-matching"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 80, 140, 48, SAND, "Driver GPS")}
-  {box(40, 180, 140, 48, ROSE, "Ride request")}
-  {box(220, 120, 150, 50, ACCENT_SOFT, "Geo index", "S2 / geohash")}
-  {box(410, 120, 150, 50, "#fff", "Matcher", "ring + ETA")}
-  {box(600, 80, 160, 48, SAND, "Offer → driver")}
-  {box(600, 180, 160, 48, ROSE, "Trip state machine")}
-  <path d="M185 104 H205 V145 H215" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M185 204 H205 V145" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M375 145 H405" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M565 130 H580 V104 H595" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M565 155 H580 V204 H595" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 270, "Claim driver with CAS/lease. Expand search ring on timeouts. Shard by city.")}
-''',
-    "Ride matching",
-)
-
-DIAGRAMS["youtube-cdn-pipeline"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 120, 110, 48, SAND, "Upload")}
-  {box(180, 120, 120, 48, ROSE, "Object store")}
-  {box(330, 70, 140, 44, ACCENT_SOFT, "Transcode")}
-  {box(330, 160, 140, 44, "#fff", "HLS/DASH")}
-  {box(500, 120, 120, 48, SAND, "CDN edge")}
-  {box(650, 120, 120, 48, ROSE, "Player")}
-  <path d="M155 144 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M305 144 H315 V92 H325" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M305 144 H315 V182 H325" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M475 92 H485 V144 H495" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M475 182 H485 V144" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M625 144 H645" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 260, "Processing is async. Playback is CDN + adaptive bitrate — never transcode on the request path.")}
-''',
-    "Video streaming pipeline",
-)
-
-DIAGRAMS["notification-pipeline"] = svg(
-    820,
-    280,
-    f'''
-  {box(40, 110, 110, 50, SAND, "Event")}
-  {box(180, 110, 130, 50, ROSE, "Prefs gate")}
-  {box(340, 110, 140, 50, ACCENT_SOFT, "Kafka by prio")}
-  {box(510, 60, 120, 40, "#fff", "Push")}
-  {box(510, 120, 120, 40, "#fff", "Email")}
-  {box(510, 180, 120, 40, "#fff", "SMS")}
-  {box(660, 110, 110, 50, SAND, "Providers")}
-  <path d="M155 135 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M315 135 H335" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M485 120 H500 V80 H505" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M485 135 H505" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M485 150 H500 V200 H505" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M635 135 H655" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 250, "Idempotent sends, retries, DLQ. Never block the product write path on notifications.")}
-''',
-    "Notification system",
-)
-
-DIAGRAMS["autocomplete-trie"] = svg(
-    820,
-    280,
-    f'''
-  {box(40, 110, 120, 50, SAND, "Prefix \"ca\"")}
-  {box(200, 110, 140, 50, ROSE, "Trie / prefix idx")}
-  {box(380, 110, 150, 50, ACCENT_SOFT, "Top-k suggestions")}
-  {box(570, 110, 140, 50, "#fff", "Edge cache")}
-  <path d="M165 135 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M345 135 H375" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M535 135 H565" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <text x="40" y="200" font-family="{SANS}" font-size="13" fill="{INK}">Offline: query logs → top-k per prefix → ship snapshot</text>
-  {caption(40, 240, "Debounce client-side. Update index in minutes, not per keystroke.")}
-''',
-    "Search autocomplete",
-)
-
-DIAGRAMS["consistent-hash-cache"] = svg(
-    820,
-    300,
-    f'''
-  <circle cx="280" cy="150" r="90" fill="none" stroke="{LINE}" stroke-width="2"/>
-  {box(250, 40, 70, 36, ROSE, "N1")}
-  {box(380, 120, 70, 36, ACCENT_SOFT, "N2")}
-  {box(250, 220, 70, 36, SAND, "N3")}
-  {box(140, 120, 70, 36, "#fff", "N4")}
-  {box(500, 90, 160, 48, SAND, "Client / proxy")}
-  {box(500, 170, 160, 48, ROSE, "key → vnode")}
-  <path d="M500 145 H370" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  {caption(40, 280, "Consistent hashing: add/remove nodes moves ~1/N keys. Replicate hot keys; soft TTL vs stampede.")}
-''',
-    "Distributed cache ring",
-)
-
-DIAGRAMS["ticket-hold-checkout"] = svg(
-    820,
-    300,
-    f'''
-  {box(40, 120, 110, 48, SAND, "Select seats")}
-  {box(180, 120, 120, 48, ROSE, "Hold + TTL")}
-  {box(330, 120, 130, 48, ACCENT_SOFT, "Payment")}
-  {box(490, 70, 140, 44, "#fff", "Commit sold")}
-  {box(490, 160, 140, 44, SAND, "Expire hold")}
-  {box(660, 120, 120, 48, ROSE, "Ticket IDs")}
-  <path d="M155 144 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M305 144 H325" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M465 130 H480 V92 H485" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M465 155 H480 V182 H485" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M635 92 H645 V144 H655" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 260, "Strong consistency on inventory: CAS / conditional update. Idempotent payment webhooks.")}
-''',
-    "Ticket booking holds",
-)
-
-# --- Extra researched interview diagrams (2025–2026) ---
-DIAGRAMS["stock-profit"] = svg(
-    820, 260,
-    f'''
-  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">prices = [7,1,5,3,6,4]</text>
-  {"".join(box(40+i*70, 100, 58, 44, ROSE if i==1 else (ACCENT_SOFT if i==4 else "#fff"), str(p)) for i,p in enumerate([7,1,5,3,6,4]))}
-  <text x="40" y="185" font-family="{SANS}" font-size="13" fill="{INK}">min so far=1 · sell at 6 → profit 5</text>
-  {caption(40, 230, "One pass: track running minimum; best = max(price − min).")}
-''',
-    "Buy/sell stock",
-)
-
-DIAGRAMS["min-window"] = svg(
-    820, 260,
-    f'''
-  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">s="ADOBECODEBANC" t="ABC"</text>
-  {box(40, 100, 200, 50, ROSE, "window covers A,B,C")}
-  {box(280, 100, 200, 50, ACCENT_SOFT, "shrink left while valid")}
-  {box(520, 100, 200, 50, SAND, "best = \"BANC\"")}
-  <path d="M245 125 H275" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M485 125 H515" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 210, "Expand until need met; shrink for minimal covering window.")}
-''',
-    "Minimum window substring",
-)
-
-DIAGRAMS["kadane"] = svg(
-    820, 260,
-    f'''
-  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">nums = [-2,1,-3,4,-1,2,1,-5,4]</text>
-  {box(40, 110, 280, 50, ROSE, "best ending here")}
-  {box(360, 110, 280, 50, ACCENT_SOFT, "global best = 6")}
-  <text x="40" y="200" font-family="{SANS}" font-size="13" fill="{INK}">subarray [4,-1,2,1] · cur = max(x, cur+x)</text>
-  {caption(40, 235, "Kadane: extend or restart at each index.")}
-''',
-    "Maximum subarray",
-)
-
-DIAGRAMS["rotated-search"] = svg(
-    820, 260,
-    f'''
-  {"".join(box(40+i*70, 100, 58, 44, ACCENT_SOFT if i<=3 else ROSE, str(v)) for i,v in enumerate([4,5,6,7,0,1,2]))}
-  <text x="40" y="180" font-family="{SANS}" font-size="13" fill="{INK}">Left half sorted · if target in range search left else right</text>
-  {caption(40, 220, "Always identify which half is sorted, then binary-search.")}
-''',
-    "Rotated sorted search",
-)
-
-DIAGRAMS["top-k-buckets"] = svg(
-    820, 260,
-    f'''
-  {box(40, 100, 140, 50, SAND, "count map")}
-  {box(220, 100, 200, 50, ROSE, "buckets[freq]→vals")}
-  {box(460, 100, 200, 50, ACCENT_SOFT, "scan high→low → k")}
-  <path d="M185 125 H215" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M425 125 H455" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 210, "O(n) bucket sort beats full sort for top-k frequent.")}
-''',
-    "Top K frequent",
-)
-
-DIAGRAMS["meeting-rooms"] = svg(
-    820, 260,
-    f'''
-  {box(40, 90, 120, 40, "#fff", "[0,30]")}
-  {box(40, 140, 120, 40, "#fff", "[5,10]")}
-  {box(40, 190, 120, 40, "#fff", "[15,20]")}
-  {box(220, 120, 200, 50, ROSE, "min-heap of ends")}
-  {box(480, 120, 200, 50, ACCENT_SOFT, "rooms = 2")}
-  <path d="M165 145 H215" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M425 145 H475" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 245, "Reuse room when start ≥ earliest end.")}
-''',
-    "Meeting Rooms II",
-)
-
-DIAGRAMS["rotting-oranges"] = svg(
-    820, 280,
-    f'''
-  {"".join(box(40+c*55, 90+r*55, 48, 48, ROSE if (r,c) in {(1,0),(1,1)} else (ACCENT_SOFT if (r,c)==(0,2) else "#fff"), "2" if (r,c) in {(1,0)} else ("1" if (r,c) in {(0,0),(0,1),(1,1),(2,1)} else "0")) for r in range(3) for c in range(3))}
-  <text x="280" y="120" font-family="{SANS}" font-size="13" fill="{INK}">Multi-source BFS from all rotten</text>
-  <text x="280" y="160" font-family="{MONO}" font-size="12" fill="{ACCENT}">each level = 1 minute</text>
-  {caption(40, 260, "If fresh remain when queue empties → -1.")}
-''',
-    "Rotting oranges",
-)
-
-DIAGRAMS["dropbox-sync"] = svg(
-    820, 280,
-    f'''
-  {box(40, 110, 120, 50, SAND, "Client")}
-  {box(200, 70, 150, 44, ROSE, "Metadata DB")}
-  {box(200, 160, 150, 44, ACCENT_SOFT, "Chunk blobs")}
-  {box(400, 110, 150, 50, "#fff", "Sync notify")}
-  {box(590, 110, 150, 50, SAND, "Other devices")}
-  <path d="M165 135 H185 V92 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M165 135 H185 V182 H195" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M355 135 H395" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M555 135 H585" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 250, "Upload missing content-hashed chunks; commit metadata; notify peers.")}
-''',
-    "Dropbox-style sync",
-)
-
-DIAGRAMS["web-crawler"] = svg(
-    820, 260,
-    f'''
-  {box(40, 110, 130, 50, SAND, "URL frontier")}
-  {box(200, 110, 130, 50, ROSE, "Fetch workers")}
-  {box(360, 70, 140, 44, ACCENT_SOFT, "Dedupe seen")}
-  {box(360, 160, 140, 44, "#fff", "Extract links")}
-  {box(540, 110, 160, 50, SAND, "Store docs")}
-  <path d="M175 135 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M335 120 H355" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M505 135 H535" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 230, "Shard by host for politeness; cache robots.txt; prioritize carefully.")}
-''',
-    "Web crawler",
-)
-
-DIAGRAMS["payment-saga"] = svg(
-    820, 280,
-    f'''
-  {box(40, 110, 120, 50, SAND, "Client key")}
-  {box(190, 110, 130, 50, ROSE, "Payment API")}
-  {box(350, 110, 130, 50, ACCENT_SOFT, "Ledger")}
-  {box(510, 70, 140, 44, "#fff", "Processor")}
-  {box(510, 160, 140, 44, SAND, "Webhooks")}
-  <path d="M165 135 H185" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M325 135 H345" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M485 120 H505" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 250, "Idempotency keys + append-only ledger + signed webhooks.")}
-''',
-    "Payment system",
-)
-
-DIAGRAMS["leaderboard"] = svg(
-    820, 240,
-    f'''
-  {box(40, 100, 160, 50, SAND, "ZADD score")}
-  {box(240, 100, 180, 50, ROSE, "Redis ZSET")}
-  {box(460, 70, 160, 40, ACCENT_SOFT, "ZREVRANGE top-k")}
-  {box(460, 140, 160, 40, "#fff", "ZREVRANK player")}
-  <path d="M205 125 H235" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M425 125 H455" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 220, "O(log n) updates and rank queries on one board.")}
-''',
-    "Leaderboard",
-)
-
-DIAGRAMS["kafka-partitions"] = svg(
-    820, 260,
-    f'''
-  {box(40, 110, 120, 50, SAND, "Producers")}
-  {box(200, 70, 140, 40, ROSE, "Partition 0")}
-  {box(200, 120, 140, 40, ROSE, "Partition 1")}
-  {box(200, 170, 140, 40, ROSE, "Partition 2")}
-  {box(400, 110, 160, 50, ACCENT_SOFT, "Consumer group")}
-  {box(600, 110, 140, 50, "#fff", "Offsets")}
-  <path d="M165 135 H195" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M345 135 H395" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M565 135 H595" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 240, "Order per partition key; one consumer per partition in a group.")}
-''',
-    "Kafka-like queue",
-)
-
-DIAGRAMS["llm-serving"] = svg(
-    820, 280,
-    f'''
-  {box(40, 110, 110, 50, SAND, "Clients")}
-  {box(180, 110, 130, 50, ROSE, "Gateway")}
-  {box(340, 70, 150, 44, ACCENT_SOFT, "Batcher")}
-  {box(340, 160, 150, 44, "#fff", "KV cache")}
-  {box(530, 110, 140, 50, SAND, "GPU replicas")}
-  {box(700, 110, 90, 50, ROSE, "Stream")}
-  <path d="M155 135 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M315 135 H335" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M495 135 H525" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M675 135 H695" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 250, "Continuous batching + paged KV cache keeps GPUs utilized.")}
-''',
-    "LLM inference serving",
-)
-
-DIAGRAMS["agentic-rag"] = svg(
-    820, 280,
-    f'''
-  {box(40, 120, 110, 48, SAND, "Question")}
-  {box(180, 120, 120, 48, ROSE, "Router")}
-  {box(340, 70, 150, 44, ACCENT_SOFT, "Simple RAG")}
-  {box(340, 160, 150, 44, "#fff", "Agentic loop")}
-  {box(540, 120, 140, 48, SAND, "Answer")}
-  <path d="M155 144 H175" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M305 130 H335 V92 H335" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M305 155 H335 V182" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M495 92 H510 V144 H535" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M495 182 H510 V144" fill="none" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 250, "Default simple; agentic only when multi-hop metrics require it.")}
-''',
-    "Agentic RAG routing",
-)
-
-DIAGRAMS["semantic-cache"] = svg(
-    820, 240,
-    f'''
-  {box(40, 100, 120, 50, SAND, "Prompt")}
-  {box(200, 100, 140, 50, ROSE, "Embed + ANN")}
-  {box(380, 60, 150, 40, ACCENT_SOFT, "Hit → answer")}
-  {box(380, 140, 150, 40, "#fff", "Miss → LLM")}
-  <path d="M165 125 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M345 125 H375" stroke="{INK}" stroke-width="1.2"/>
-  {caption(40, 220, "Threshold + tenant/model version must match or you serve wrong answers.")}
-''',
-    "Semantic cache",
-)
-
-DIAGRAMS["code-copilot"] = svg(
-    820, 260,
-    f'''
-  {box(40, 110, 120, 50, SAND, "IDE cursor")}
-  {box(190, 70, 150, 44, ROSE, "Context pack")}
-  {box(190, 160, 150, 44, ACCENT_SOFT, "Repo retrieve")}
-  {box(380, 110, 140, 50, "#fff", "FIM / chat")}
-  {box(560, 110, 140, 50, SAND, "Suggestion")}
-  <path d="M165 135 H185" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M345 135 H375" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M525 135 H555" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  {caption(40, 240, "Tight latency for inline complete; deeper retrieval for repo Q&A.")}
-''',
-    "Coding copilot",
-)
-
-DIAGRAMS["feature-store"] = svg(
-    820, 280,
-    f'''
-  {box(40, 120, 120, 50, SAND, "Pipelines")}
-  {box(200, 70, 150, 44, ROSE, "Offline tables")}
-  {box(200, 160, 150, 44, ACCENT_SOFT, "Online KV")}
-  {box(400, 70, 150, 44, "#fff", "Training")}
-  {box(400, 160, 150, 44, SAND, "Serving")}
-  {box(600, 120, 140, 50, ROSE, "Registry")}
-  <path d="M165 135 H185" stroke="{INK}" stroke-width="1.2"/>
-  <path d="M355 92 H395" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  <path d="M355 182 H395" stroke="{INK}" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  {caption(40, 250, "Same transforms; point-in-time joins offline; watch train/serve skew.")}
-''',
-    "Feature store",
-)
-
-DIAGRAMS["prefix-sums"] = svg(
-    720,
-    260,
-    f'''
-  <text x="60" y="90" font-family="{SANS}" font-size="13" fill="{SOFT}">array</text>
-  {"".join(box(60 + i*70, 100, 58, 44, "#fff", str(v)) for i,v in enumerate([3,1,4,1,5]))}
-  <text x="60" y="175" font-family="{SANS}" font-size="13" fill="{SOFT}">prefix</text>
-  {"".join(box(60 + i*58, 185, 50, 40, ACCENT_SOFT if i else ROSE, str(v)) for i,v in enumerate([0,3,4,8,9,14]))}
-  {caption(60, 245, "sum(1..3) = prefix[4] - prefix[1] = 9 - 3 = 6")}
-''',
-    "Prefix sums",
-)
-
-# Map chapter id -> diagram keys (ordered)
 CHAPTER_DIAGRAMS = {
     "03-arrays": ["hash-map", "prefix-sums"],
     "04-two-pointers": ["two-pointers"],
@@ -1515,6 +236,1555 @@ CHAPTER_DIAGRAMS = {
 }
 
 
+def esc(text: object) -> str:
+    return html.escape(str(text), quote=True)
+
+
+def fmt(v: object) -> str:
+    if isinstance(v, (int, float)):
+        if abs(v - round(v)) < 1e-9:
+            return str(int(round(v)))
+        return f"{v:.1f}".rstrip("0").rstrip(".")
+    return str(v)
+
+
+def text(
+    x: float,
+    y: float,
+    body: str,
+    *,
+    size: int = 12,
+    weight: str = "500",
+    fill: str = INK,
+    mono: bool = False,
+    anchor: str = "start",
+) -> str:
+    fam = MONO if mono else SANS
+    return (
+        f'<text x="{fmt(x)}" y="{fmt(y)}" text-anchor="{anchor}" font-family="{fam}" '
+        f'font-size="{size}" font-weight="{weight}" fill="{fill}">{esc(body)}</text>'
+    )
+
+
+def text_lines(
+    x: float,
+    y: float,
+    lines: list[str],
+    *,
+    size: int = 12,
+    gap: int = 15,
+    fill: str = MUTED,
+    mono: bool = False,
+) -> str:
+    return "\n".join(text(x, y + i * gap, line, size=size, fill=fill, mono=mono) for i, line in enumerate(lines))
+
+
+def edge_label(x: float, y: float, body: str, *, accent: bool = False) -> str:
+    if not body:
+        return ""
+    w = max(36, len(body) * 6.2 + 14)
+    fill = "#ffffff"
+    stroke = FILL_HL if accent else LINE
+    return (
+        f'<rect x="{fmt(x - w / 2)}" y="{fmt(y - 14)}" width="{fmt(w)}" height="20" rx="10" '
+        f'fill="{fill}" stroke="{stroke}" stroke-width="1"/>'
+        + text(x, y, body, size=10, fill=FILL_HL if accent else MUTED, mono=True, anchor="middle")
+    )
+
+
+LANES = {
+    "CLIENT": (28, 64, 140, 410, ZONE_CLIENT),
+    "EDGE": (182, 64, 150, 410, ZONE_EDGE),
+    "SERVICE": (346, 64, 198, 410, ZONE_APP),
+    "ASYNC": (558, 64, 164, 410, ZONE_ASYNC),
+    "DATA": (736, 64, 236, 410, ZONE_DATA),
+}
+
+NODE_W = {"CLIENT": 108, "EDGE": 118, "SERVICE": 152, "ASYNC": 124, "DATA": 142}
+
+
+def n(
+    ident: str,
+    lane: str,
+    row: float,
+    title: str,
+    sub: str = "",
+    kind: str = "app",
+    *,
+    dx: float = 0,
+    w: int | None = None,
+    h: int = 56,
+) -> dict[str, object]:
+    return {
+        "id": ident,
+        "lane": lane,
+        "row": row,
+        "title": title,
+        "sub": sub,
+        "kind": kind,
+        "dx": dx,
+        "w": w,
+        "h": h,
+    }
+
+
+def f(
+    src: str,
+    dst: str,
+    label_text: str = "",
+    step: int | str | None = None,
+    *,
+    accent: bool = False,
+    dashed: bool = False,
+    via: str = "hv",
+) -> dict[str, object]:
+    return {
+        "src": src,
+        "dst": dst,
+        "label": label_text,
+        "step": step,
+        "accent": accent,
+        "dashed": dashed,
+        "via": via,
+    }
+
+
+def _node_box(spec: dict[str, object]) -> tuple[float, float, float, float]:
+    lane = str(spec["lane"])
+    zx, zy, zw, _zh, _fill = LANES[lane]
+    w = float(spec["w"] or NODE_W[lane])
+    h = float(spec["h"])
+    x = zx + (zw - w) / 2 + float(spec["dx"])
+    y = zy + 42 + float(spec["row"]) * 78
+    return x, y, w, h
+
+
+def _anchors(a: tuple[float, float, float, float], b: tuple[float, float, float, float]) -> tuple[float, float, float, float]:
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    acx, acy = ax + aw / 2, ay + ah / 2
+    bcx, bcy = bx + bw / 2, by + bh / 2
+    if abs(bcx - acx) >= abs(bcy - acy):
+        if bcx >= acx:
+            return ax + aw, acy, bx, bcy
+        return ax, acy, bx + bw, bcy
+    if bcy >= acy:
+        return acx, ay + ah, bcx, by
+    return acx, ay, bcx, by + bh
+
+
+def system_diagram(
+    title: str,
+    note: str,
+    nodes: list[dict[str, object]],
+    flows: list[dict[str, object]],
+    *,
+    callouts: list[tuple[int, int, int, int, str, str]] | None = None,
+) -> str:
+    mid = mid_of(title)
+    boxes: dict[str, tuple[float, float, float, float]] = {}
+    parts: list[str] = [
+        zone(x, y, w, h, lane, fill) for lane, (x, y, w, h, fill) in LANES.items()
+    ]
+    for spec in nodes:
+        x, y, w, h = _node_box(spec)
+        boxes[str(spec["id"])] = (x, y, w, h)
+        parts.append(
+            node(
+                x,
+                y,
+                w,
+                h,
+                str(spec["title"]),
+                sub=str(spec["sub"]),
+                kind=str(spec["kind"]),
+                mid=mid,
+            )
+        )
+    badge_counts: dict[str, int] = {}
+    for flow in flows:
+        x1, y1, x2, y2 = _anchors(boxes[str(flow["src"])], boxes[str(flow["dst"])])
+        parts.append(
+            elbow(
+                x1,
+                y1,
+                x2,
+                y2,
+                mid=mid,
+                via=str(flow["via"]),
+                accent=bool(flow["accent"]),
+                dashed=bool(flow["dashed"]),
+            )
+        )
+        lx, ly = (x1 + x2) / 2, (y1 + y2) / 2 - 4
+        parts.append(edge_label(lx, ly, str(flow["label"]), accent=bool(flow["accent"])))
+        if flow["step"] is not None:
+            src = str(flow["src"])
+            fanout = badge_counts.get(src, 0)
+            badge_counts[src] = fanout + 1
+            bx = x1 + (x2 - x1) * 0.14 + (12 if x2 >= x1 else -12)
+            by = y1 + (y2 - y1) * 0.14 - 14 + fanout * 17
+            parts.append(badge(bx, by, flow["step"], mid=mid))
+    for co in callouts or []:
+        parts.append(callout(*co, mid=mid))
+    return Canvas(1000, 530, title, note=note).add(*parts).render()
+
+
+def simple_system(
+    title: str,
+    note: str,
+    *,
+    client: tuple[str, str] = ("Client", "mobile / web"),
+    edge: tuple[str, str] = ("Gateway", "auth + routing"),
+    service: tuple[str, str] = ("Service", "business logic"),
+    async_node: tuple[str, str] = ("Event bus", "decouple writes"),
+    data: tuple[str, str] = ("Store", "durable state"),
+    extra_data: tuple[str, str] | None = None,
+    labels: tuple[str, str, str, str] = ("request", "route", "publish", "persist"),
+) -> str:
+    nodes = [
+        n("client", "CLIENT", 1, client[0], client[1], "client"),
+        n("edge", "EDGE", 1, edge[0], edge[1], "edge"),
+        n("service", "SERVICE", 1, service[0], service[1], "app"),
+        n("async", "ASYNC", 1, async_node[0], async_node[1], "queue"),
+        n("data", "DATA", 0.45 if extra_data else 1, data[0], data[1], "store", dx=-38 if extra_data else 0),
+    ]
+    if extra_data:
+        nodes.append(n("data2", "DATA", 1.75, extra_data[0], extra_data[1], "cache", dx=38))
+    flows = [
+        f("client", "edge", labels[0], 1),
+        f("edge", "service", labels[1], 2),
+        f("service", "async", labels[2], 3, accent=True),
+        f("async", "data", labels[3], 4),
+    ]
+    if extra_data:
+        flows.append(f("service", "data2", "read-through", "R", dashed=True))
+    return system_diagram(title, note, nodes, flows)
+
+
+def array_row(
+    values: list[object],
+    *,
+    x: int,
+    y: int,
+    w: int = 50,
+    h: int = 44,
+    active: set[int] | list[int] | range = (),
+    soft: set[int] | list[int] | range = (),
+    pointers: dict[int, str] | None = None,
+    indexes: bool = True,
+    mid: str,
+) -> str:
+    active_set, soft_set = set(active), set(soft)
+    pointers = pointers or {}
+    parts: list[str] = []
+    for i, value in enumerate(values):
+        cx = x + i * (w + 8)
+        parts.append(cell(cx, y, w, h, value, active=i in active_set, soft=i in soft_set, mid=mid))
+        if indexes:
+            parts.append(text(cx + w / 2, y + h + 17, str(i), size=10, fill=MUTED, mono=True, anchor="middle"))
+        if i in pointers:
+            parts.append(text(cx + w / 2, y - 18, pointers[i], size=11, fill=FILL_HL, mono=True, anchor="middle"))
+            parts.append(path_line(f"M{cx + w / 2} {y - 13} V{y - 2}", mid=mid, accent=True))
+    return "\n".join(parts)
+
+
+def mini_node(x: int, y: int, name: str, *, active: bool = False, soft: bool = False, mid: str) -> str:
+    fill = FILL_HL if active else (FILL_HL_SOFT if soft else "#ffffff")
+    stroke = FILL_HL if active else LINE_STRONG
+    tc = "#ffffff" if active else INK
+    return (
+        f'<circle cx="{x}" cy="{y}" r="24" fill="{fill}" stroke="{stroke}" stroke-width="1.5" filter="url(#sh-{mid})"/>'
+        + text(x, y + 5, name, size=12, weight="700", fill=tc, mono=True, anchor="middle")
+    )
+
+
+def matrix_grid(
+    values: list[list[object]],
+    *,
+    x: int,
+    y: int,
+    active: set[tuple[int, int]] = frozenset(),
+    soft: set[tuple[int, int]] = frozenset(),
+    mid: str,
+    size: int = 42,
+) -> str:
+    parts: list[str] = []
+    for r, row in enumerate(values):
+        for c, value in enumerate(row):
+            parts.append(cell(x + c * (size + 6), y + r * (size + 6), size, size, value, active=(r, c) in active, soft=(r, c) in soft, mid=mid))
+    return "\n".join(parts)
+
+
+def bars(values: list[int], *, x: int, baseline: int, scale: int, active: set[int], soft: set[int], mid: str) -> str:
+    parts: list[str] = []
+    for i, value in enumerate(values):
+        h = value * scale
+        bx = x + i * 42
+        fill = FILL_HL if i in active else (FILL_HL_SOFT if i in soft else "#ffffff")
+        parts.append(
+            f'<rect x="{bx}" y="{baseline - h}" width="30" height="{h}" rx="3" fill="{fill}" '
+            f'stroke="{LINE_STRONG}" stroke-width="1.2" filter="url(#sh-{mid})"/>'
+        )
+        parts.append(text(bx + 15, baseline + 16, str(value), size=10, fill=MUTED, mono=True, anchor="middle"))
+    return "\n".join(parts)
+
+
+def interval_bar(x: int, y: int, start: int, end: int, label_text: str, *, active: bool, mid: str) -> str:
+    sx, ex = x + start * 48, x + end * 48
+    fill = FILL_HL_SOFT if active else "#ffffff"
+    stroke = FILL_HL if active else LINE_STRONG
+    return (
+        f'<line x1="{x}" y1="{y + 26}" x2="{x + 360}" y2="{y + 26}" stroke="{LINE}" stroke-width="1"/>'
+        f'<rect x="{sx}" y="{y}" width="{ex - sx}" height="34" rx="6" fill="{fill}" stroke="{stroke}" stroke-width="1.4" filter="url(#sh-{mid})"/>'
+        + text((sx + ex) / 2, y + 22, label_text, size=11, weight="650", fill=INK, anchor="middle")
+    )
+
+
+ALGO_META: dict[str, tuple[str, str, str]] = {
+    "Hash map lookup": ("bucket = hash(key) % m", "load factor stays bounded", "avg O(1), resize O(n)"),
+    "Two pointers": ("L=0, R=n-1, target=9", "pointers only move inward", "O(n) time, O(1) space"),
+    "Sliding window": ("freq map + L/R bounds", "window always valid after shrink", "O(n), each index moves once"),
+    "Stack": ("top pointer on C", "only top is mutable", "push/pop O(1)"),
+    "Binary search": ("lo=0, hi=6, mid=3", "answer remains inside range", "O(log n), O(1)"),
+    "Linked list reverse": ("prev, cur, next", "reversed prefix points back", "O(n) time, O(1) space"),
+    "Binary search tree": ("node=8, bounds=(-inf,inf)", "left < node < right recursively", "O(h), worst O(n)"),
+    "Heap / priority queue": ("array-backed complete tree", "parent priority <= children", "push/pop O(log n)"),
+    "Backtracking loop": ("path + remaining choices", "undo every mutation", "exponential; prune early"),
+    "Graph BFS layers": ("queue + visited set", "first visit is shortest depth", "O(V+E)"),
+    "Dynamic programming table": ("dp[i] stores solved prefix", "compute dependencies first", "states x transitions"),
+    "Intervals": ("sorted by start", "current interval is merged prefix", "O(n log n) sort"),
+    "Bits and XOR": ("bit columns for a and b", "same bits cancel under XOR", "O(bits), O(1)"),
+    "Prefix sums": ("prefix[i] sum before i", "prefix is cumulative", "build O(n), query O(1)"),
+    "Two sum walk": ("seen map: value -> index", "complement checked before insert", "O(n) time, O(n) space"),
+    "Longest substring window": ("last_seen + L/R", "no duplicate inside window", "O(n), alphabet map"),
+    "Merge intervals walk": ("current=[1,4], next=[3,6]", "merged output never overlaps", "O(n log n)"),
+    "LRU cache": ("map + doubly linked list", "MRU left, LRU right", "get/put O(1)"),
+    "Number of islands DFS": ("grid cell + visited", "DFS consumes one island", "O(R*C)"),
+    "Topological sort - Kahn": ("indegree map + zero queue", "output has no unmet prereqs", "O(V+E)"),
+    "Coin change DP": ("dp[amount] min coins", "relax from smaller amounts", "O(amount * coins)"),
+    "Word ladder BFS": ("frontier by word distance", "first target hit is shortest", "O(N * word_len^2)"),
+    "Serialize binary tree": ("preorder token cursor", "# marks null children", "O(n) encode/decode"),
+    "Trapping rain water": ("leftMax/rightMax", "smaller wall bounds water", "O(n) time, O(1) space"),
+    "Best time to buy/sell stock": ("min_price so far", "sell after buy only", "O(n), one pass"),
+    "Minimum window substring": ("need/have counts + L/R", "valid iff formed == required", "O(|s|+|t|)"),
+    "Kadane maximum subarray": ("current sum, best sum", "negative prefix is discarded", "O(n), O(1)"),
+    "Search rotated sorted array": ("lo/mid/hi + target", "one half is always sorted", "O(log n)"),
+    "Top K frequent buckets": ("count map + buckets", "bucket i holds freq i", "O(n) time"),
+    "Meeting rooms sweep": ("min-heap of end times", "heap holds active meetings", "O(n log n)"),
+    "Rotting oranges BFS": ("multi-source queue", "minute = BFS layer", "O(R*C)"),
+    "Autocomplete trie": ("prefix cursor at node", "path spells prefix", "O(prefix + k)"),
+}
+
+
+def state_panel(x: int, y: int, w: int, items: tuple[str, str, str], *, mid: str) -> str:
+    headings = ("STATE", "INVARIANT", "COMPLEXITY")
+    col = w / 3
+    parts = [
+        f'<rect x="{fmt(x)}" y="{fmt(y)}" width="{fmt(w)}" height="82" rx="8" fill="#ffffff" stroke="{LINE}" stroke-width="1.2" filter="url(#sh-{mid})"/>'
+    ]
+    for i, (heading, body) in enumerate(zip(headings, items)):
+        cx = x + i * col
+        if i:
+            parts.append(f'<line x1="{fmt(cx)}" y1="{fmt(y + 12)}" x2="{fmt(cx)}" y2="{fmt(y + 70)}" stroke="{LINE}" stroke-width="1"/>')
+        parts.append(text(cx + 14, y + 25, heading, size=10, weight="700", fill=FILL_HL, mono=True))
+        parts.append(text(cx + 14, y + 49, body, size=11, weight="550", fill=INK, mono=False))
+    return "\n".join(parts)
+
+
+def algorithm_canvas(title: str, note: str, *parts: str, w: int = 900, h: int = 360) -> str:
+    chunks = list(parts)
+    meta = ALGO_META.get(title)
+    if meta:
+        h = max(h, 450)
+        chunks.append(state_panel(48, h - 132, w - 96, meta, mid=mid_of(title)))
+    return Canvas(w, h, title, note=note).add(*chunks).render()
+
+
+def hash_map() -> str:
+    title = "Hash map lookup"
+    mid = mid_of(title)
+    parts = [
+        node(48, 110, 110, 54, 'key="apple"', "stable hash", kind="client", mid=mid),
+        node(220, 110, 120, 54, "hash(key)", "mod buckets", kind="app", mid=mid),
+        arrow(162, 137, 215, 137, mid=mid, accent=True),
+        array_row(["0", "1", "2", "3"], x=400, y=84, w=58, h=44, active={1}, soft={2}, pointers={}, mid=mid),
+        node(646, 92, 132, 44, "value", "profile row", kind="store", mid=mid),
+        node(646, 160, 132, 44, "collision", "chain/probe", kind="warn", mid=mid),
+        elbow(636, 106, 545, 106, mid=mid, via="vh", accent=True),
+        edge_label(592, 100, "bucket[1]", accent=True),
+        callout(48, 230, 355, 64, "invariant", "Average O(1) depends on low load factor and good hashing.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: state the hash, collision strategy, and resize threshold.", *parts)
+
+
+def two_pointers() -> str:
+    title = "Two pointers"
+    mid = mid_of(title)
+    parts = [
+        array_row([1, 2, 3, 4, 6, 8], x=90, y=132, active={0, 5}, soft={1, 2, 3, 4}, pointers={0: "L", 5: "R"}, mid=mid),
+        path_line("M115 212 H405", mid=mid, accent=True, arrow=False),
+        text(260, 240, "sum = 1 + 8; move L right if too small, R left if too large", size=12, fill=MUTED, mono=True, anchor="middle"),
+        callout(560, 116, 260, 80, "whiteboard note", "Sorted input lets each pointer move once: O(n).", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: monotonic movement is the proof that this stays linear.", *parts)
+
+
+def sliding_window() -> str:
+    title = "Sliding window"
+    mid = mid_of(title)
+    parts = [
+        array_row(list("A B C A C B".split()), x=86, y=128, active={2, 3, 4}, soft={1, 5}, pointers={2: "L", 4: "R"}, mid=mid),
+        f'<rect x="198" y="118" width="166" height="64" rx="8" fill="none" stroke="{FILL_HL}" stroke-width="2"/>',
+        callout(520, 108, 270, 96, "loop shape", "Expand R to include a candidate; shrink L until the constraint is valid.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: maintain the answer incrementally instead of rescanning the window.", *parts)
+
+
+def stack() -> str:
+    title = "Stack"
+    mid = mid_of(title)
+    parts = [
+        cell(120, 204, 130, 42, "A", soft=True, mid=mid),
+        cell(120, 156, 130, 42, "B", soft=True, mid=mid),
+        cell(120, 108, 130, 42, "C", active=True, mid=mid),
+        text(270, 132, "top", size=12, fill=FILL_HL, mono=True),
+        arrow(260, 128, 250, 128, mid=mid, accent=True),
+        node(455, 96, 160, 52, "push(x)", "add above top", kind="app", mid=mid),
+        node(455, 176, 160, 52, "pop()", "remove top", kind="app", mid=mid),
+        callout(76, 274, 430, 48, "pattern", "Use stacks for matching, rollback, monotonic next-greater scans.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: LIFO gives O(1) local state for nested or monotonic problems.", *parts)
+
+
+def binary_search() -> str:
+    title = "Binary search"
+    mid = mid_of(title)
+    parts = [
+        array_row([2, 4, 6, 8, 10, 12, 14], x=72, y=132, active={3}, soft={0, 1, 2}, pointers={0: "lo", 3: "mid", 6: "hi"}, mid=mid),
+        edge_label(180, 114, "discard left half?"),
+        callout(560, 108, 270, 96, "decision", "Compare target with mid, then keep the sorted half that can contain it.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: define inclusive/exclusive bounds before writing the loop.", *parts)
+
+
+def linked_list() -> str:
+    title = "Linked list reverse"
+    mid = mid_of(title)
+    parts = [
+        node(70, 126, 72, 48, "1", "prev", kind="hl", mid=mid),
+        node(190, 126, 72, 48, "2", "cur", kind="app", mid=mid),
+        node(310, 126, 72, 48, "3", "next", kind="app", mid=mid),
+        arrow(142, 150, 185, 150, mid=mid),
+        arrow(262, 150, 305, 150, mid=mid),
+        node(540, 126, 120, 48, "reverse", "cur.next = prev", kind="warn", mid=mid),
+        elbow(540, 150, 382, 150, mid=mid, via="hv", accent=True),
+        callout(72, 246, 470, 52, "safe order", "Save next before rewiring; then advance prev and cur.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: pointer problems are mostly about update order.", *parts)
+
+
+def tree_bst() -> str:
+    title = "Binary search tree"
+    mid = mid_of(title)
+    parts = [
+        mini_node(430, 98, "8", active=True, mid=mid),
+        mini_node(300, 178, "3", soft=True, mid=mid),
+        mini_node(560, 178, "10", soft=True, mid=mid),
+        mini_node(230, 260, "1", mid=mid),
+        mini_node(370, 260, "6", mid=mid),
+        path_line("M414 116 L318 160", mid=mid, arrow=False),
+        path_line("M446 116 L542 160", mid=mid, arrow=False),
+        path_line("M286 196 L244 242", mid=mid, arrow=False),
+        path_line("M314 196 L356 242", mid=mid, arrow=False),
+        callout(60, 102, 220, 84, "invariant", "Every subtree obeys left < node < right.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: carry min/max bounds; local comparisons alone miss invalid descendants.", *parts, h=390)
+
+
+def heap() -> str:
+    title = "Heap / priority queue"
+    mid = mid_of(title)
+    parts = [
+        mini_node(284, 92, "1", active=True, mid=mid),
+        mini_node(204, 164, "3", soft=True, mid=mid),
+        mini_node(364, 164, "2", soft=True, mid=mid),
+        mini_node(154, 236, "7", mid=mid),
+        mini_node(254, 236, "5", mid=mid),
+        path_line("M270 112 L218 146 M298 112 L350 146 M192 184 L166 218 M216 184 L242 218", mid=mid, arrow=False),
+        array_row([1, 3, 2, 7, 5], x=500, y=146, active={0}, soft={1, 2}, pointers={0: "min"}, mid=mid),
+        callout(500, 230, 270, 52, "operations", "push/pop restore the heap by bubbling along one path.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: heap shape is complete; priority comes from parent-child order.", *parts, h=380)
+
+
+def backtracking() -> str:
+    title = "Backtracking loop"
+    mid = mid_of(title)
+    parts = [
+        mini_node(120, 112, "start", active=True, mid=mid),
+        mini_node(260, 188, "A", soft=True, mid=mid),
+        mini_node(120, 188, "B", soft=True, mid=mid),
+        mini_node(400, 188, "C", soft=True, mid=mid),
+        path_line("M140 126 L240 174 M120 136 V164 M140 126 L380 174", mid=mid, arrow=False),
+        node(560, 94, 170, 50, "choose", "append candidate", kind="app", mid=mid),
+        node(560, 164, 170, 50, "explore", "recursive call", kind="hl", mid=mid),
+        node(560, 234, 170, 50, "unchoose", "pop candidate", kind="warn", mid=mid),
+        arrow(645, 144, 645, 160, mid=mid, accent=True),
+        arrow(645, 214, 645, 230, mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: mutate state in a disciplined choose/explore/unchoose cycle.", *parts, h=380)
+
+
+def bfs_graph() -> str:
+    title = "Graph BFS layers"
+    mid = mid_of(title)
+    parts = [
+        mini_node(90, 172, "A", active=True, mid=mid),
+        mini_node(240, 112, "B", soft=True, mid=mid),
+        mini_node(240, 232, "C", soft=True, mid=mid),
+        mini_node(390, 90, "D", mid=mid),
+        mini_node(390, 172, "E", mid=mid),
+        mini_node(390, 254, "F", mid=mid),
+        path_line("M114 162 L216 122 M114 182 L216 222 M264 112 L366 90 M264 232 L366 254 M264 122 L366 164", mid=mid, arrow=False),
+        node(560, 96, 210, 52, "queue", "A | B C | D E F", kind="queue", mid=mid),
+        callout(560, 178, 250, 70, "shortest path", "First visit to a node is the minimum edge count in an unweighted graph.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: BFS is level-order traversal with a visited set.", *parts, h=380)
+
+
+def dp_table() -> str:
+    title = "Dynamic programming table"
+    mid = mid_of(title)
+    parts = [
+        text(76, 104, "state", size=12, fill=MUTED, mono=True),
+        array_row(["dp[0]", "dp[1]", "dp[2]", "dp[3]", "dp[4]", "dp[5]"], x=76, y=124, w=74, active={5}, soft={3, 4}, pointers={5: "answer"}, indexes=False, mid=mid),
+        text(76, 212, "value", size=12, fill=MUTED, mono=True),
+        array_row([0, 1, 1, 2, 3, 5], x=76, y=228, w=74, active={5}, soft={3, 4}, indexes=False, mid=mid),
+        callout(630, 132, 210, 92, "transition", "dp[i] = combine(previous states); compute in dependency order.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: name the state, base case, transition, and iteration order.", *parts, h=390)
+
+
+def intervals() -> str:
+    title = "Intervals"
+    mid = mid_of(title)
+    parts = [
+        interval_bar(90, 100, 0, 3, "[1,4]", active=True, mid=mid),
+        interval_bar(90, 154, 2, 5, "[3,6]", active=True, mid=mid),
+        interval_bar(90, 208, 6, 7, "[7,8]", active=False, mid=mid),
+        node(560, 120, 180, 56, "sort by start", "then sweep", kind="app", mid=mid),
+        node(560, 210, 180, 56, "merge if", "next.start <= end", kind="hl", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: sorting turns pairwise overlap into a linear sweep.", *parts, h=370)
+
+
+def bits_xor() -> str:
+    title = "Bits and XOR"
+    mid = mid_of(title)
+    parts = [
+        text(92, 106, "a", mono=True, fill=MUTED),
+        array_row([1, 0, 1, 1, 0], x=130, y=86, active={0, 2, 3}, indexes=False, mid=mid),
+        text(92, 170, "b", mono=True, fill=MUTED),
+        array_row([0, 0, 1, 0, 1], x=130, y=150, active={2, 4}, indexes=False, mid=mid),
+        text(92, 240, "a^b", mono=True, fill=FILL_HL),
+        array_row([1, 0, 0, 1, 1], x=130, y=220, active={0, 3, 4}, soft={1, 2}, indexes=False, mid=mid),
+        callout(560, 130, 230, 70, "property", "x ^ x = 0 and x ^ 0 = x; order does not matter.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: XOR cancels duplicates and encodes parity.", *parts, h=360)
+
+
+def prefix_sums() -> str:
+    title = "Prefix sums"
+    mid = mid_of(title)
+    parts = [
+        text(70, 114, "array", mono=True, fill=MUTED),
+        array_row([3, 1, 4, 1, 5], x=150, y=92, active={1, 2, 3}, mid=mid),
+        text(70, 214, "prefix", mono=True, fill=MUTED),
+        array_row([0, 3, 4, 8, 9, 14], x=150, y=192, w=46, active={1, 4}, soft={2, 3}, mid=mid),
+        callout(560, 140, 230, 74, "range sum", "sum[l..r] = prefix[r+1] - prefix[l]", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: precompute cumulative state to answer ranges in O(1).", *parts, h=360)
+
+
+def two_sum_walk() -> str:
+    title = "Two sum walk"
+    mid = mid_of(title)
+    parts = [
+        array_row([2, 7, 11, 15], x=86, y=128, active={0, 1}, pointers={0: "i", 1: "j"}, mid=mid),
+        node(420, 104, 170, 56, "target = 9", "2 + 7", kind="hl", mid=mid),
+        arrow(332, 150, 415, 132, mid=mid, accent=True),
+        callout(620, 104, 230, 86, "hash map pass", "Before inserting nums[i], ask whether target - nums[i] was seen.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: one pass works because the complement is the only needed history.", *parts, h=340)
+
+
+def longest_substr_window() -> str:
+    title = "Longest substring window"
+    mid = mid_of(title)
+    chars = list("P W W K E W".split())
+    parts = [
+        array_row(chars, x=72, y=132, active={2, 3, 4}, soft={5}, pointers={2: "L", 4: "R"}, mid=mid),
+        node(540, 105, 210, 56, "last_seen", "W -> 2, K -> 3", kind="cache", mid=mid),
+        callout(540, 188, 252, 74, "on duplicate", "Move L to max(L, last_seen[c] + 1). Never move L backwards.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: indexes in the map let the left edge jump over duplicates.", *parts)
+
+
+def merge_intervals_walk() -> str:
+    title = "Merge intervals walk"
+    mid = mid_of(title)
+    parts = [
+        interval_bar(80, 90, 0, 3, "[1,4]", active=True, mid=mid),
+        interval_bar(80, 142, 2, 5, "[3,6]", active=True, mid=mid),
+        interval_bar(80, 226, 0, 5, "[1,6]", active=True, mid=mid),
+        node(560, 116, 190, 56, "overlap", "3 <= current.end", kind="hl", mid=mid),
+        arrow(260, 196, 260, 220, mid=mid, accent=True),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: keep one current interval and extend its end greedily.", *parts, h=360)
+
+
+def lru_cache() -> str:
+    title = "LRU cache"
+    mid = mid_of(title)
+    parts = [
+        node(70, 120, 140, 54, "hash map", "key -> list node", kind="cache", mid=mid),
+        node(330, 90, 90, 44, "MRU", "C", kind="hl", mid=mid),
+        node(460, 90, 90, 44, "B", "", kind="app", mid=mid),
+        node(590, 90, 90, 44, "LRU", "A", kind="warn", mid=mid),
+        arrow(420, 112, 455, 112, mid=mid),
+        arrow(550, 112, 585, 112, mid=mid),
+        elbow(210, 147, 330, 112, mid=mid, via="hv", accent=True),
+        callout(330, 186, 300, 74, "invariant", "Reads and writes move a node to MRU; capacity eviction pops LRU.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: hash map + doubly linked list gives O(1) get/put.", *parts)
+
+
+def islands_dfs() -> str:
+    title = "Number of islands DFS"
+    mid = mid_of(title)
+    grid = [["1", "1", "0", "0"], ["1", "0", "0", "1"], ["0", "0", "1", "1"], ["1", "0", "0", "0"]]
+    parts = [
+        matrix_grid(grid, x=90, y=90, active={(0, 0), (0, 1), (1, 0)}, soft={(1, 3), (2, 2), (2, 3)}, mid=mid),
+        node(420, 114, 190, 56, "DFS flood fill", "mark visited water", kind="hl", mid=mid),
+        callout(420, 196, 280, 70, "count rule", "Increment when you see unvisited land; DFS consumes the whole component.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: components in grids are graph traversals with boundary checks.", *parts)
+
+
+def topo_kahn() -> str:
+    title = "Topological sort - Kahn"
+    mid = mid_of(title)
+    parts = [
+        mini_node(110, 168, "A", active=True, mid=mid),
+        mini_node(250, 112, "B", soft=True, mid=mid),
+        mini_node(250, 224, "C", soft=True, mid=mid),
+        mini_node(410, 168, "D", mid=mid),
+        path_line("M134 160 L226 122 M134 176 L226 214 M274 122 L388 160 M274 214 L388 176", mid=mid, accent=True),
+        node(560, 104, 210, 54, "zero indegree queue", "A, then B/C", kind="queue", mid=mid),
+        node(560, 190, 210, 54, "emit order", "A B C D", kind="store", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: removing zero-indegree nodes exposes the next valid choices.", *parts)
+
+
+def coin_change_dp() -> str:
+    title = "Coin change DP"
+    mid = mid_of(title)
+    parts = [
+        text(88, 96, "amount", mono=True, fill=MUTED),
+        array_row(list(range(0, 8)), x=90, y=112, w=42, indexes=False, soft={0}, active={6}, mid=mid),
+        text(88, 190, "min coins", mono=True, fill=MUTED),
+        array_row([0, 1, 1, 2, 2, 1, 2, 2], x=90, y=206, w=42, indexes=False, soft={1, 3, 5}, active={6}, mid=mid),
+        callout(560, 130, 260, 86, "transition", "dp[a] = 1 + min(dp[a-c]) for each coin c <= a.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: initialize impossible states and relax with each allowed coin.", *parts, h=360)
+
+
+def word_ladder_bfs() -> str:
+    title = "Word ladder BFS"
+    mid = mid_of(title)
+    parts = [
+        node(70, 128, 92, 42, "hit", "", kind="hl", mid=mid),
+        node(222, 92, 92, 42, "hot", "", kind="app", mid=mid),
+        node(374, 72, 92, 42, "dot", "", kind="app", mid=mid),
+        node(374, 154, 92, 42, "lot", "", kind="app", mid=mid),
+        node(526, 92, 92, 42, "dog", "", kind="app", mid=mid),
+        node(678, 92, 92, 42, "cog", "", kind="store", mid=mid),
+        elbow(162, 149, 222, 113, mid=mid, accent=True),
+        elbow(314, 113, 374, 93, mid=mid, accent=True),
+        elbow(466, 93, 526, 113, mid=mid, accent=True),
+        elbow(618, 113, 678, 113, mid=mid, accent=True),
+        callout(210, 236, 360, 58, "neighbor generation", "Wildcard buckets like h*t avoid comparing every word pair.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: BFS gives shortest transformations; preprocessing makes neighbors cheap.", *parts)
+
+
+def serialize_tree() -> str:
+    title = "Serialize binary tree"
+    mid = mid_of(title)
+    parts = [
+        mini_node(210, 90, "1", active=True, mid=mid),
+        mini_node(130, 170, "2", soft=True, mid=mid),
+        mini_node(290, 170, "3", soft=True, mid=mid),
+        mini_node(250, 250, "4", mid=mid),
+        mini_node(330, 250, "5", mid=mid),
+        path_line("M196 110 L144 152 M224 110 L276 152 M282 192 L258 232 M298 192 L322 232", mid=mid, arrow=False),
+        array_row(["1", "2", "#", "#", "3", "4", "#", "#", "5"], x=460, y=146, w=42, active={0, 4}, soft={2, 3, 6, 7}, indexes=False, mid=mid),
+        callout(458, 230, 300, 52, "decoder", "Read preorder tokens recursively; # consumes a null child.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: include null markers or structure is ambiguous.", *parts, h=380)
+
+
+def trap_water() -> str:
+    title = "Trapping rain water"
+    mid = mid_of(title)
+    parts = [
+        bars([0, 3, 0, 2, 0, 4], x=110, baseline=250, scale=38, active={1, 5}, soft={2, 3, 4}, mid=mid),
+        f'<rect x="194" y="136" width="182" height="114" fill="{FILL_HL_SOFT}" opacity="0.55" stroke="none"/>',
+        text(286, 128, "water = min(leftMax,rightMax)-height[i]", size=12, fill=FILL_HL, mono=True, anchor="middle"),
+        callout(540, 132, 250, 82, "two pointer rule", "Advance the side with smaller max; the opposite side already bounds it.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: reason from the limiting wall, not from each bar independently.", *parts)
+
+
+def stock_profit() -> str:
+    title = "Best time to buy/sell stock"
+    mid = mid_of(title)
+    pts = [(96, 230), (176, 150), (256, 210), (336, 110), (416, 170), (496, 90)]
+    path = "M" + " L".join(f"{x} {y}" for x, y in pts)
+    parts = [
+        path_line(path, mid=mid, accent=True, arrow=False),
+        mini_node(176, 150, "buy", soft=True, mid=mid),
+        mini_node(496, 90, "sell", active=True, mid=mid),
+        path_line("M176 150 H496", mid=mid, accent=True),
+        edge_label(336, 140, "max profit"),
+        callout(580, 118, 230, 82, "scan state", "Track min price so far; profit today = price - min.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: greedily remember the best prior buy, then evaluate each sell.", *parts)
+
+
+def min_window() -> str:
+    title = "Minimum window substring"
+    mid = mid_of(title)
+    parts = [
+        array_row(list("A D O B E C O D E B A N C".split()), x=44, y=136, w=36, active=set(range(8, 13)), soft=set(range(3, 8)), pointers={8: "L", 12: "R"}, mid=mid),
+        node(570, 108, 210, 56, "need counts", "A:1 B:1 C:1", kind="cache", mid=mid),
+        callout(570, 190, 260, 72, "valid window", "When formed == required, shrink L and record the smallest span.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: count satisfied characters, not just window length.", *parts)
+
+
+def kadane() -> str:
+    title = "Kadane maximum subarray"
+    mid = mid_of(title)
+    parts = [
+        array_row([-2, 1, -3, 4, -1, 2, 1, -5, 4], x=72, y=128, w=46, active={3, 4, 5, 6}, soft={1, 2}, pointers={3: "start", 6: "best"}, mid=mid),
+        node(620, 92, 190, 54, "current = max(x, current+x)", "", kind="app", mid=mid),
+        node(620, 172, 190, 54, "best = max(best,current)", "", kind="hl", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: drop any prefix whose running sum becomes negative.", *parts)
+
+
+def rotated_search() -> str:
+    title = "Search rotated sorted array"
+    mid = mid_of(title)
+    parts = [
+        array_row([4, 5, 6, 7, 0, 1, 2], x=80, y=132, active={3}, soft={0, 1, 2}, pointers={0: "lo", 3: "mid", 6: "hi"}, mid=mid),
+        edge_label(205, 114, "left half sorted", accent=True),
+        node(590, 104, 210, 70, "branch", "If target fits sorted half, keep it; else search other half.", kind="app", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: one side of mid is always sorted; use it to discard half.", *parts)
+
+
+def top_k_buckets() -> str:
+    title = "Top K frequent buckets"
+    mid = mid_of(title)
+    parts = [
+        node(60, 116, 150, 54, "frequency map", "item -> count", kind="cache", mid=mid),
+        array_row(["0", "1", "2", "3", "4"], x=280, y=104, w=48, active={3}, soft={1, 2}, pointers={3: "bucket count"}, indexes=False, mid=mid),
+        node(598, 92, 150, 48, "scan high -> low", "emit until k", kind="hl", mid=mid),
+        node(598, 172, 150, 48, "answer", "top K", kind="store", mid=mid),
+        arrow(210, 143, 275, 126, mid=mid, accent=True),
+        arrow(536, 126, 592, 116, mid=mid, accent=True),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: counts are bounded by n, so buckets avoid O(n log n) sorting.", *parts)
+
+
+def meeting_rooms() -> str:
+    title = "Meeting rooms sweep"
+    mid = mid_of(title)
+    parts = [
+        interval_bar(90, 88, 0, 3, "A", active=True, mid=mid),
+        interval_bar(90, 142, 1, 5, "B", active=True, mid=mid),
+        interval_bar(90, 196, 4, 6, "C", active=False, mid=mid),
+        node(560, 96, 170, 54, "min-heap", "earliest end", kind="queue", mid=mid),
+        node(560, 176, 170, 54, "rooms = heap size", "peak overlap", kind="hl", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: reuse a room when the earliest ending meeting has finished.", *parts, h=350)
+
+
+def rotting_oranges() -> str:
+    title = "Rotting oranges BFS"
+    mid = mid_of(title)
+    grid = [[2, 1, 1, 0], [1, 1, 0, 1], [0, 1, 1, 1]]
+    parts = [
+        matrix_grid(grid, x=100, y=92, active={(0, 0)}, soft={(0, 1), (1, 0)}, mid=mid, size=46),
+        node(430, 96, 190, 54, "multi-source queue", "all rotten at t=0", kind="queue", mid=mid),
+        node(430, 176, 190, 54, "minute layers", "infect neighbors", kind="hl", mid=mid),
+        callout(430, 258, 270, 48, "finish", "If fresh remain after BFS, return -1.", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: time in grids is often BFS layer count.", *parts, h=370)
+
+
+def autocomplete_trie() -> str:
+    title = "Autocomplete trie"
+    mid = mid_of(title)
+    parts = [
+        mini_node(180, 90, "root", active=True, mid=mid),
+        mini_node(100, 170, "c", soft=True, mid=mid),
+        mini_node(260, 170, "d", mid=mid),
+        mini_node(70, 250, "a", soft=True, mid=mid),
+        mini_node(150, 250, "o", soft=True, mid=mid),
+        path_line("M164 108 L116 152 M196 108 L244 152 M94 188 L76 232 M106 188 L140 232", mid=mid, arrow=False),
+        node(470, 102, 200, 54, "prefix walk", "O(len(prefix))", kind="app", mid=mid),
+        node(470, 188, 200, 54, "top suggestions", "cached by node", kind="cache", mid=mid),
+    ]
+    return algorithm_canvas(title, "Interview takeaway: trie nodes trade memory for prefix lookup speed.", *parts, h=370)
+
+
+def simple_arch_diagrams() -> dict[str, str]:
+    return {
+        "cache-cdn": simple_system(
+            "CDN cache path",
+            "Interview takeaway: separate edge hits from origin misses and invalidate with versioned assets.",
+            client=("Browser", "GET asset"),
+            edge=("CDN POP", "cache key"),
+            service=("Origin app", "auth / render"),
+            async_node=("Purge bus", "ban / version"),
+            data=("Object store", "immutable blobs"),
+            extra_data=("Redis", "hot HTML"),
+            labels=("GET", "miss", "purge", "fetch"),
+        ),
+        "cap": simple_system(
+            "CAP trade-off",
+            "Interview takeaway: under partition you choose availability or consistency per operation.",
+            client=("Client", "read/write"),
+            edge=("Router", "region aware"),
+            service=("Replica A", "leader?"),
+            async_node=("Partition", "delayed link"),
+            data=("Replica B", "possibly stale"),
+            labels=("write", "route", "replicate", "converge"),
+        ),
+        "chat-flow": simple_system(
+            "Chat send flow",
+            "Interview takeaway: persist before fanout; delivery receipts are separate from message writes.",
+            client=("Sender", "mobile"),
+            edge=("WebSocket GW", "sticky session"),
+            service=("Message svc", "validate + store"),
+            async_node=("Fanout topic", "per conversation"),
+            data=("Message DB", "append only"),
+            extra_data=("Presence cache", "online users"),
+            labels=("send", "auth", "produce", "append"),
+        ),
+        "feed-fanout": simple_system(
+            "Feed fanout on write",
+            "Interview takeaway: precompute follower inboxes for fast reads, but protect celebrity writes.",
+            client=("Creator", "post"),
+            edge=("API edge", "rate limits"),
+            service=("Post svc", "fanout plan"),
+            async_node=("Fanout workers", "followers"),
+            data=("Inbox store", "per user feed"),
+            extra_data=("Post store", "source of truth"),
+            labels=("post", "write", "enqueue", "append"),
+        ),
+        "object-storage": simple_system(
+            "Object storage upload",
+            "Interview takeaway: split metadata from immutable chunks and verify checksums at boundaries.",
+            client=("Client", "multipart upload"),
+            edge=("Upload edge", "signed URL"),
+            service=("Metadata svc", "object manifest"),
+            async_node=("Compaction queue", "erasure coding"),
+            data=("Blob store", "chunks"),
+            extra_data=("Metadata DB", "namespace"),
+            labels=("PUT part", "authorize", "complete", "write"),
+        ),
+        "video-pipeline": simple_system(
+            "Video processing pipeline",
+            "Interview takeaway: uploads return quickly; transcoding and thumbnails happen asynchronously.",
+            client=("Uploader", "raw video"),
+            edge=("Upload edge", "resumable"),
+            service=("Asset svc", "metadata"),
+            async_node=("Transcode jobs", "renditions"),
+            data=("Media store", "HLS/DASH"),
+            extra_data=("Catalog DB", "status"),
+            labels=("upload", "register", "job", "write"),
+        ),
+        "geo-matching": simple_system(
+            "Geo proximity matching",
+            "Interview takeaway: index moving entities by geohash/S2 cells and widen search gradually.",
+            client=("Rider app", "pickup"),
+            edge=("Location edge", "coarse cell"),
+            service=("Matcher", "candidate rank"),
+            async_node=("Dispatch events", "offer / accept"),
+            data=("Geo index", "drivers by cell"),
+            extra_data=("Trip DB", "state machine"),
+            labels=("request", "nearby", "offer", "update"),
+        ),
+        "llm-flow": simple_system(
+            "LLM request flow",
+            "Interview takeaway: keep prompt assembly, model inference, and safety boundaries explicit.",
+            client=("User", "prompt"),
+            edge=("AI gateway", "auth + quota"),
+            service=("Prompt builder", "context + policy"),
+            async_node=("Model runtime", "stream tokens"),
+            data=("Prompt logs", "audit / eval"),
+            extra_data=("Context cache", "short-lived"),
+            labels=("ask", "gate", "infer", "log"),
+        ),
+        "rag": simple_system(
+            "Retrieval augmented generation",
+            "Interview takeaway: retrieval is a grounding step, not a guarantee; cite and evaluate sources.",
+            client=("User", "question"),
+            edge=("API", "tenant policy"),
+            service=("Retriever", "embed + search"),
+            async_node=("LLM", "grounded answer"),
+            data=("Vector index", "chunks"),
+            extra_data=("Doc store", "source text"),
+            labels=("ask", "rewrite", "top-k", "fetch"),
+        ),
+        "memory": simple_system(
+            "Agent memory",
+            "Interview takeaway: separate ephemeral context from durable user facts with consent and decay.",
+            client=("User", "conversation"),
+            edge=("Assistant", "session"),
+            service=("Memory writer", "extract facts"),
+            async_node=("Review queue", "privacy filters"),
+            data=("Long-term store", "facts"),
+            extra_data=("Short context", "tokens"),
+            labels=("turn", "summarize", "review", "upsert"),
+        ),
+        "agent-loop": simple_system(
+            "Agent loop",
+            "Interview takeaway: plan-act-observe loops need budgets, tool allowlists, and stop conditions.",
+            client=("User goal", "task"),
+            edge=("Planner", "decompose"),
+            service=("Executor", "tool call"),
+            async_node=("Observation", "result"),
+            data=("Scratchpad", "state"),
+            extra_data=("Policy", "limits"),
+            labels=("goal", "plan", "act", "record"),
+        ),
+        "mcp": simple_system(
+            "MCP tool boundary",
+            "Interview takeaway: MCP standardizes tool schemas while preserving least-privilege server boundaries.",
+            client=("LLM host", "client"),
+            edge=("MCP client", "schema cache"),
+            service=("MCP server", "tool router"),
+            async_node=("Tool call", "side effect"),
+            data=("External API", "resource"),
+            labels=("intent", "JSON-RPC", "invoke", "read/write"),
+        ),
+        "skills": simple_system(
+            "Skills packaging",
+            "Interview takeaway: skills make repeatable procedures discoverable without retraining the model.",
+            client=("User", "request"),
+            edge=("Skill router", "metadata match"),
+            service=("Skill runtime", "instructions"),
+            async_node=("Artifacts", "files / commands"),
+            data=("Skill registry", "versioned"),
+            labels=("ask", "select", "execute", "publish"),
+        ),
+        "ai-assistant": simple_system(
+            "AI assistant architecture",
+            "Interview takeaway: assistants are product systems: identity, memory, tools, safety, and eval loops.",
+            client=("User", "chat UI"),
+            edge=("Assistant API", "auth + quota"),
+            service=("Orchestrator", "model + tools"),
+            async_node=("Eval stream", "quality signals"),
+            data=("Memory + logs", "tenant scoped"),
+            extra_data=("Tool registry", "allowlist"),
+            labels=("message", "route", "trace", "store"),
+        ),
+        "hybrid-search": simple_system(
+            "Hybrid search",
+            "Interview takeaway: combine lexical precision with vector recall, then rerank the merged candidates.",
+            client=("Query", "keywords + intent"),
+            edge=("Search API", "filters"),
+            service=("Merger/Reranker", "BM25 + ANN"),
+            async_node=("Index updates", "freshness"),
+            data=("Vector index", "semantic"),
+            extra_data=("Inverted index", "lexical"),
+            labels=("search", "parse", "rank", "refresh"),
+        ),
+        "eval-pipeline": simple_system(
+            "AI evaluation pipeline",
+            "Interview takeaway: ship model changes behind eval gates with offline, online, and human signals.",
+            client=("Traffic sample", "prompts"),
+            edge=("Trace collector", "redaction"),
+            service=("Eval runner", "judges + metrics"),
+            async_node=("Review queue", "human labels"),
+            data=("Metrics store", "slices"),
+            extra_data=("Golden set", "regression"),
+            labels=("sample", "sanitize", "score", "write"),
+        ),
+        "agent-tools": simple_system(
+            "Agent tool use",
+            "Interview takeaway: tools extend capability but require schemas, retries, and permission checks.",
+            client=("User task", "goal"),
+            edge=("Policy gate", "allowed tools"),
+            service=("Tool planner", "arguments"),
+            async_node=("Tool executor", "idempotent call"),
+            data=("Tool result", "observation"),
+            labels=("intent", "authorize", "call", "return"),
+        ),
+        "memory-tiers": simple_system(
+            "AI memory tiers",
+            "Interview takeaway: choose TTL and retrieval policy per memory tier to avoid stale personalization.",
+            client=("Conversation", "turns"),
+            edge=("Context window", "working set"),
+            service=("Summarizer", "episodic"),
+            async_node=("Consolidator", "decay + merge"),
+            data=("Profile store", "semantic facts"),
+            extra_data=("Vector memory", "episodes"),
+            labels=("recent", "compress", "promote", "upsert"),
+        ),
+        "moderation-cascade": simple_system(
+            "Moderation cascade",
+            "Interview takeaway: fast rules catch obvious cases; expensive classifiers handle ambiguous content.",
+            client=("Input", "text/image"),
+            edge=("Rules", "blocklists"),
+            service=("Classifier", "risk score"),
+            async_node=("Human review", "appeals"),
+            data=("Policy log", "audit"),
+            labels=("submit", "screen", "escalate", "record"),
+        ),
+        "recsys-towers": simple_system(
+            "Recommendation two-tower retrieval",
+            "Interview takeaway: retrieve cheaply with embeddings, then rank deeply on a smaller candidate set.",
+            client=("User", "session"),
+            edge=("Feature fetch", "fresh context"),
+            service=("User tower", "embedding"),
+            async_node=("Candidate gen", "ANN top-k"),
+            data=("Item tower index", "item vectors"),
+            extra_data=("Feature store", "features"),
+            labels=("request", "hydrate", "query", "retrieve"),
+        ),
+        "multi-tenant-ai": simple_system(
+            "Multi-tenant AI platform",
+            "Interview takeaway: tenant isolation spans prompts, tools, data, quotas, and observability.",
+            client=("Tenant app", "API key"),
+            edge=("Gateway", "quota + auth"),
+            service=("Orchestrator", "tenant policy"),
+            async_node=("Trace bus", "billing/eval"),
+            data=("Tenant data", "isolated"),
+            extra_data=("Config store", "models/tools"),
+            labels=("call", "identify", "trace", "access"),
+        ),
+        "transcription-ai": simple_system(
+            "AI transcription pipeline",
+            "Interview takeaway: streaming UX and batch accuracy often use different model paths.",
+            client=("Audio stream", "chunks"),
+            edge=("Media gateway", "VAD"),
+            service=("ASR service", "partial text"),
+            async_node=("Diarization job", "speakers"),
+            data=("Transcript store", "segments"),
+            extra_data=("Object store", "audio"),
+            labels=("stream", "decode", "enrich", "save"),
+        ),
+        "grounded-support": simple_system(
+            "Grounded support assistant",
+            "Interview takeaway: cite retrieved sources and hand off when confidence or policy requires it.",
+            client=("Customer", "question"),
+            edge=("Support API", "account auth"),
+            service=("RAG agent", "retrieve + answer"),
+            async_node=("Ticket queue", "handoff"),
+            data=("Knowledge base", "articles"),
+            extra_data=("CRM", "customer facts"),
+            labels=("ask", "authorize", "escalate", "lookup"),
+        ),
+        "llm-serving": simple_system(
+            "LLM inference serving",
+            "Interview takeaway: throughput comes from batching and KV cache management; latency needs admission control.",
+            client=("Clients", "streaming"),
+            edge=("Model gateway", "rate + auth"),
+            service=("Batcher", "continuous batch"),
+            async_node=("GPU workers", "decode loop"),
+            data=("KV cache", "paged blocks"),
+            extra_data=("Model weights", "replicas"),
+            labels=("prompt", "admit", "schedule", "read"),
+        ),
+        "agentic-rag": simple_system(
+            "Agentic RAG routing",
+            "Interview takeaway: default to simple RAG; add agent loops only for measurable multi-hop needs.",
+            client=("Question", "user"),
+            edge=("Router", "complexity score"),
+            service=("RAG planner", "sub-questions"),
+            async_node=("Tool loop", "retrieve/verify"),
+            data=("Knowledge graph", "entities"),
+            extra_data=("Vector index", "chunks"),
+            labels=("ask", "classify", "iterate", "lookup"),
+        ),
+        "semantic-cache": simple_system(
+            "Semantic cache",
+            "Interview takeaway: cache keys include tenant, model, policy, and similarity threshold.",
+            client=("Prompt", "request"),
+            edge=("Embedding gate", "tenant/model"),
+            service=("ANN lookup", "similarity"),
+            async_node=("LLM fallback", "miss path"),
+            data=("Response cache", "embedding+answer"),
+            labels=("embed", "search", "miss", "fill"),
+        ),
+        "code-copilot": simple_system(
+            "Coding copilot",
+            "Interview takeaway: inline completion optimizes latency; repo Q&A optimizes context quality.",
+            client=("IDE", "cursor + file"),
+            edge=("Context packer", "budget"),
+            service=("Retriever", "repo symbols"),
+            async_node=("Model call", "FIM/chat"),
+            data=("Repo index", "embeddings"),
+            extra_data=("Telemetry", "acceptance"),
+            labels=("request", "pack", "infer", "search"),
+        ),
+        "feature-store": simple_system(
+            "Feature store",
+            "Interview takeaway: train/serve parity depends on shared definitions and point-in-time correctness.",
+            client=("Pipelines", "events"),
+            edge=("Registry", "feature defs"),
+            service=("Transform jobs", "offline/online"),
+            async_node=("Materializer", "freshness"),
+            data=("Online KV", "serving"),
+            extra_data=("Offline tables", "training"),
+            labels=("define", "compute", "publish", "serve"),
+        ),
+        "chat-message-path": simple_system(
+            "Chat message path",
+            "Interview takeaway: message IDs, ordering, and ack semantics matter more than socket mechanics.",
+            client=("Sender", "mobile"),
+            edge=("WS gateway", "connection id"),
+            service=("Message API", "idempotency key"),
+            async_node=("Delivery fanout", "recipients"),
+            data=("Message log", "ordered append"),
+            extra_data=("Inbox cache", "unread"),
+            labels=("send", "validate", "produce", "append"),
+        ),
+        "rate-limiter-token": simple_system(
+            "Token bucket rate limiter",
+            "Interview takeaway: token bucket permits bursts while enforcing average rate over time.",
+            client=("Client", "request"),
+            edge=("Edge proxy", "identity key"),
+            service=("Limiter", "consume token"),
+            async_node=("Refill clock", "tokens/sec"),
+            data=("Counter store", "atomic TTL"),
+            labels=("call", "check", "refill", "write"),
+        ),
+        "youtube-cdn-pipeline": simple_system(
+            "YouTube CDN pipeline",
+            "Interview takeaway: upload, transcode, package, and edge distribution are separate scaling problems.",
+            client=("Viewer", "playback"),
+            edge=("CDN edge", "segment cache"),
+            service=("Playback API", "manifest"),
+            async_node=("Packager", "HLS/DASH"),
+            data=("Origin media", "renditions"),
+            extra_data=("Metadata DB", "catalog"),
+            labels=("GET", "manifest", "prefetch", "segments"),
+        ),
+        "notification-pipeline": simple_system(
+            "Notification pipeline",
+            "Interview takeaway: preferences, dedupe, and provider retries belong before fanout leaves your system.",
+            client=("Producer", "event"),
+            edge=("Ingress", "schema"),
+            service=("Preference svc", "dedupe + quiet hours"),
+            async_node=("Channel queues", "email/push/SMS"),
+            data=("Delivery log", "status"),
+            extra_data=("User prefs", "opt-in"),
+            labels=("event", "filter", "enqueue", "record"),
+        ),
+        "consistent-hash-cache": simple_system(
+            "Consistent hash cache",
+            "Interview takeaway: virtual nodes smooth distribution and minimize key movement on membership changes.",
+            client=("Client", "key"),
+            edge=("Hash ring", "virtual nodes"),
+            service=("Cache router", "owner lookup"),
+            async_node=("Rebalance", "node changes"),
+            data=("Cache nodes", "sharded"),
+            labels=("get", "hash", "move keys", "route"),
+        ),
+        "ticket-hold-checkout": simple_system(
+            "Ticket hold checkout",
+            "Interview takeaway: holds are leases; payment success must atomically confirm before expiry.",
+            client=("Buyer", "seat select"),
+            edge=("Checkout API", "idempotency"),
+            service=("Inventory svc", "hold lease"),
+            async_node=("Payment saga", "authorize/capture"),
+            data=("Seat ledger", "holds + sales"),
+            extra_data=("Timer wheel", "expiry"),
+            labels=("hold", "validate", "authorize", "commit"),
+        ),
+        "dropbox-sync": simple_system(
+            "Dropbox file sync",
+            "Interview takeaway: sync protocols exchange metadata first, then transfer content-addressed blocks.",
+            client=("Device", "local changes"),
+            edge=("Sync edge", "delta cursor"),
+            service=("Metadata svc", "version vector"),
+            async_node=("Block upload", "dedupe chunks"),
+            data=("Block store", "content hash"),
+            extra_data=("Metadata DB", "folders"),
+            labels=("delta", "compare", "upload", "store"),
+        ),
+        "web-crawler": simple_system(
+            "Web crawler",
+            "Interview takeaway: politeness and frontier scheduling are first-class design constraints.",
+            client=("Seeds", "URLs"),
+            edge=("Frontier", "priority + host"),
+            service=("Fetcher", "robots + crawl"),
+            async_node=("Parser queue", "links/content"),
+            data=("Index store", "documents"),
+            extra_data=("Seen set", "dedupe"),
+            labels=("seed", "schedule", "parse", "index"),
+        ),
+        "payment-saga": simple_system(
+            "Payment saga",
+            "Interview takeaway: distributed checkout uses compensating actions, not cross-service transactions.",
+            client=("Buyer", "checkout"),
+            edge=("Order API", "idempotency"),
+            service=("Saga orchestrator", "state machine"),
+            async_node=("Events", "reserve/pay/ship"),
+            data=("Order ledger", "append state"),
+            extra_data=("Outbox", "exactly-once-ish"),
+            labels=("submit", "start", "emit", "record"),
+        ),
+        "leaderboard": simple_system(
+            "Leaderboard",
+            "Interview takeaway: hot ranked reads need sorted structures plus async aggregation for write spikes.",
+            client=("Player", "score"),
+            edge=("Game API", "auth"),
+            service=("Score svc", "validate"),
+            async_node=("Aggregator", "season/window"),
+            data=("Sorted set", "rank by score"),
+            extra_data=("Event log", "audit"),
+            labels=("score", "check", "aggregate", "zadd"),
+        ),
+    }
+
+
+def load_balancer() -> str:
+    return system_diagram(
+        "Load balancer",
+        "Interview takeaway: balancing policy, health checks, and connection draining are the core trade-offs.",
+        [
+            n("user", "CLIENT", 1, "Clients", "web / mobile", "client"),
+            n("dns", "EDGE", 0.25, "DNS / Anycast", "nearest POP", "edge"),
+            n("lb", "EDGE", 1.4, "L7 load balancer", "TLS + routing", "edge"),
+            n("api1", "SERVICE", 0.15, "API replica A", "healthy", "app", dx=-18),
+            n("api2", "SERVICE", 1.15, "API replica B", "draining", "warn", dx=18),
+            n("api3", "SERVICE", 2.15, "API replica C", "healthy", "app", dx=-18),
+            n("jobs", "ASYNC", 1.15, "Work queue", "slow tasks", "queue"),
+            n("cache", "DATA", 0.45, "Redis cache", "hot reads", "cache", dx=-42),
+            n("db", "DATA", 1.85, "Primary DB", "durable writes", "store", dx=42),
+        ],
+        [
+            f("user", "dns", "lookup", 1),
+            f("dns", "lb", "connect", 2),
+            f("lb", "api1", "least-conn", 3, accent=True),
+            f("lb", "api2", "drain", "D", dashed=True),
+            f("api1", "cache", "hit", 4, accent=True),
+            f("api1", "db", "miss/read", 5),
+            f("api1", "jobs", "enqueue", 6),
+        ],
+        callouts=[(732, 388, 218, 54, "slo guardrail", "Health checks remove bad hosts before users see errors.")],
+    )
+
+
+def url_shortener() -> str:
+    return simple_system(
+        "URL shortener",
+        "Interview takeaway: short code generation, redirect latency, and abuse controls define the design.",
+        client=("Browser", "short URL"),
+        edge=("Redirect edge", "domain + TLS"),
+        service=("URL service", "lookup code"),
+        async_node=("Analytics bus", "click events"),
+        data=("URL mapping DB", "code -> long URL"),
+        extra_data=("Hot cache", "code -> URL"),
+        labels=("GET /abc", "route", "emit", "lookup"),
+    )
+
+
+def url_shortener_detailed() -> str:
+    return system_diagram(
+        "URL shortener detailed",
+        "Interview takeaway: create path optimizes uniqueness; redirect path optimizes cache hit latency.",
+        [
+            n("creator", "CLIENT", 0.35, "Creator", "POST long URL", "client"),
+            n("clicker", "CLIENT", 2.05, "Clicker", "GET /xYz", "client"),
+            n("edge", "EDGE", 1.15, "API / Redirect edge", "auth + abuse", "edge"),
+            n("api", "SERVICE", 0.35, "Create API", "validate URL", "app", dx=-20),
+            n("redir", "SERVICE", 2.05, "Redirect API", "302 response", "hl", dx=20),
+            n("id", "ASYNC", 0.35, "ID allocator", "base62 / Snowflake", "queue"),
+            n("events", "ASYNC", 2.05, "Click stream", "analytics", "queue"),
+            n("map", "DATA", 0.55, "Mapping DB", "code -> long", "store", dx=-44),
+            n("cache", "DATA", 1.85, "Redis cache", "hot codes", "cache", dx=44),
+        ],
+        [
+            f("creator", "edge", "create", 1),
+            f("edge", "api", "POST", 2),
+            f("api", "id", "reserve", 3, accent=True),
+            f("api", "map", "insert", 4),
+            f("clicker", "edge", "GET", 5),
+            f("edge", "redir", "route", 6),
+            f("redir", "cache", "hit/miss", 7, accent=True),
+            f("redir", "map", "fallback", 8),
+            f("redir", "events", "produce", 9),
+        ],
+        callouts=[(738, 388, 218, 54, "redirect path", "Cache and return 302 before analytics finishes.")],
+    )
+
+
+def rag_detailed() -> str:
+    return system_diagram(
+        "RAG detailed",
+        "Interview takeaway: retrieval quality, reranking, and citation grounding are more important than model size.",
+        [
+            n("user", "CLIENT", 1.2, "User", "question", "client"),
+            n("api", "EDGE", 1.2, "RAG API", "tenant + policy", "edge"),
+            n("rewrite", "SERVICE", 0.2, "Query rewrite", "intent + filters", "app", dx=-22),
+            n("rerank", "SERVICE", 1.45, "Reranker", "cross encoder", "hl", dx=22),
+            n("llm", "ASYNC", 1.1, "LLM", "grounded answer", "queue"),
+            n("vec", "DATA", 0.15, "Vector index", "ANN top-k", "store", dx=-44),
+            n("lex", "DATA", 1.15, "BM25 index", "exact terms", "cache", dx=44),
+            n("docs", "DATA", 2.2, "Doc store", "source chunks", "store", dx=0),
+        ],
+        [
+            f("user", "api", "ask", 1),
+            f("api", "rewrite", "rewrite", 2),
+            f("rewrite", "vec", "semantic", 3, accent=True),
+            f("rewrite", "lex", "lexical", 4),
+            f("vec", "rerank", "top-k", 5, via="vh"),
+            f("lex", "rerank", "merge", 6, via="vh"),
+            f("rerank", "docs", "fetch text", 7),
+            f("rerank", "llm", "context", 8, accent=True),
+            f("llm", "api", "answer+cites", 9, via="vh"),
+        ],
+        callouts=[(44, 390, 280, 52, "failure mode", "Good RAG cites sources and says when retrieval is weak.")],
+    )
+
+
+def feed_hybrid_fanout() -> str:
+    return system_diagram(
+        "Hybrid feed fanout",
+        "Interview takeaway: use push for normal accounts and pull/rank celebrity content at read time.",
+        [
+            n("creator", "CLIENT", 0.35, "Publisher", "new post", "client"),
+            n("reader", "CLIENT", 2.1, "Reader", "open feed", "client"),
+            n("edge", "EDGE", 1.2, "Feed API", "auth + cursor", "edge"),
+            n("write", "SERVICE", 0.35, "Write path", "post metadata", "app", dx=-20),
+            n("read", "SERVICE", 2.1, "Read path", "merge + rank", "hl", dx=20),
+            n("fanout", "ASYNC", 0.45, "Fanout workers", "followers inbox", "queue"),
+            n("pull", "ASYNC", 2.0, "Celebrity pull", "defer heavy fanout", "queue"),
+            n("post", "DATA", 0.35, "Post store", "source of truth", "store", dx=-54),
+            n("inbox", "DATA", 1.35, "Inbox store", "precomputed", "cache", dx=44),
+            n("graph", "DATA", 2.35, "Graph store", "follow edges", "store", dx=-10),
+        ],
+        [
+            f("creator", "edge", "post", 1),
+            f("edge", "write", "write", 2),
+            f("write", "post", "append", 3),
+            f("write", "fanout", "produce", 4, accent=True),
+            f("fanout", "inbox", "push", 5),
+            f("reader", "edge", "read", 6),
+            f("edge", "read", "cursor", 7),
+            f("read", "inbox", "pull inbox", 8),
+            f("read", "pull", "celebrity ids", 9, dashed=True),
+            f("pull", "post", "fetch latest", 10),
+            f("read", "graph", "filters", 11),
+        ],
+        callouts=[(744, 388, 210, 54, "ranker input", "Merge inbox, pull candidates, ads, and freshness features.")],
+    )
+
+
+def uber_matching() -> str:
+    return system_diagram(
+        "Uber matching",
+        "Interview takeaway: matching is a low-latency geo search plus a stateful dispatch protocol.",
+        [
+            n("rider", "CLIENT", 0.6, "Rider app", "pickup/dropoff", "client"),
+            n("driver", "CLIENT", 2.0, "Driver app", "location pings", "client"),
+            n("edge", "EDGE", 1.3, "Mobile edge", "region routing", "edge"),
+            n("loc", "SERVICE", 0.35, "Location svc", "S2/geohash", "app", dx=-22),
+            n("match", "SERVICE", 1.55, "Matcher", "ETA + constraints", "hl", dx=22),
+            n("dispatch", "ASYNC", 1.35, "Dispatch queue", "offer timeout", "queue"),
+            n("geo", "DATA", 0.35, "Geo index", "drivers by cell", "cache", dx=-50),
+            n("trip", "DATA", 1.55, "Trip store", "state machine", "store", dx=40),
+            n("pricing", "DATA", 2.55, "Pricing cache", "surge/ETA", "cache", dx=-20),
+        ],
+        [
+            f("driver", "edge", "ping", 1),
+            f("edge", "loc", "update", 2),
+            f("loc", "geo", "upsert cell", 3, accent=True),
+            f("rider", "edge", "request", 4),
+            f("edge", "match", "route", 5),
+            f("match", "geo", "nearby", 6, accent=True),
+            f("match", "pricing", "ETA/fare", 7),
+            f("match", "dispatch", "offer", 8),
+            f("dispatch", "trip", "accept/timeout", 9),
+        ],
+        callouts=[(738, 388, 218, 54, "search widening", "Start in pickup cell, expand rings until enough drivers qualify.")],
+    )
+
+
+def kafka_partitions() -> str:
+    return system_diagram(
+        "Kafka partitions",
+        "Interview takeaway: ordering is per partition; consumer-group parallelism is bounded by partition count.",
+        [
+            n("prod", "CLIENT", 1.1, "Producers", "keyed events", "client"),
+            n("broker", "EDGE", 1.1, "Broker leader", "topic metadata", "edge"),
+            n("p0", "ASYNC", 0.2, "Partition 0", "append log", "queue"),
+            n("p1", "ASYNC", 1.15, "Partition 1", "append log", "queue"),
+            n("p2", "ASYNC", 2.1, "Partition 2", "append log", "queue"),
+            n("cg", "SERVICE", 1.1, "Consumer group", "rebalance", "app"),
+            n("offsets", "DATA", 0.75, "Offsets", "committed", "store", dx=-40),
+            n("sink", "DATA", 2.0, "Sink DB", "materialized", "store", dx=40),
+        ],
+        [
+            f("prod", "broker", "produce", 1),
+            f("broker", "p1", "hash(key)", 2, accent=True),
+            f("p1", "cg", "poll", 3, via="vh"),
+            f("cg", "offsets", "commit", 4),
+            f("cg", "sink", "process", 5),
+            f("p0", "cg", "parallel", "A", dashed=True, via="vh"),
+            f("p2", "cg", "parallel", "B", dashed=True, via="vh"),
+        ],
+        callouts=[(42, 388, 286, 54, "replay", "Offsets are consumer state; logs can be replayed if retention keeps data.")],
+    )
+
+
+def replication() -> str:
+    return system_diagram(
+        "Database replication",
+        "Interview takeaway: replicas improve read scale and availability but introduce lag and failover complexity.",
+        [
+            n("client", "CLIENT", 1, "Client", "read/write", "client"),
+            n("proxy", "EDGE", 1, "DB proxy", "route reads", "edge"),
+            n("primary", "SERVICE", 1, "Primary", "writes", "hl"),
+            n("wal", "ASYNC", 1, "WAL stream", "ordered log", "queue"),
+            n("r1", "DATA", 0.45, "Replica A", "read", "store", dx=-42),
+            n("r2", "DATA", 1.75, "Replica B", "lagging", "store", dx=42),
+        ],
+        [
+            f("client", "proxy", "SQL", 1),
+            f("proxy", "primary", "writes", 2, accent=True),
+            f("primary", "wal", "replicate", 3),
+            f("wal", "r1", "apply", 4),
+            f("wal", "r2", "apply lag", 5, dashed=True),
+        ],
+    )
+
+
+def sql_nosql() -> str:
+    return system_diagram(
+        "SQL vs NoSQL",
+        "Interview takeaway: pick data models from access patterns, consistency needs, and query flexibility.",
+        [
+            n("app", "CLIENT", 1, "Application", "access patterns", "client"),
+            n("dao", "EDGE", 1, "Data API", "contract", "edge"),
+            n("tx", "SERVICE", 0.45, "SQL path", "joins + ACID", "app", dx=-20),
+            n("kv", "SERVICE", 1.75, "NoSQL path", "scale + shape", "app", dx=20),
+            n("events", "ASYNC", 1, "CDC / stream", "sync views", "queue"),
+            n("sql", "DATA", 0.45, "Relational DB", "normalized", "store", dx=-45),
+            n("nosql", "DATA", 1.75, "Document/KV", "denormalized", "store", dx=45),
+        ],
+        [
+            f("app", "dao", "query", 1),
+            f("dao", "tx", "transactions", 2),
+            f("dao", "kv", "key access", 3),
+            f("tx", "sql", "SQL", 4),
+            f("kv", "nosql", "get/put", 5),
+            f("tx", "events", "changes", 6, dashed=True),
+            f("events", "nosql", "project", 7, dashed=True),
+        ],
+    )
+
+
+def queue_diagram() -> str:
+    return system_diagram(
+        "Queue based workflow",
+        "Interview takeaway: queues absorb spikes, retry transient failure, and need dead-letter handling.",
+        [
+            n("prod", "CLIENT", 1, "Producer", "request accepted", "client"),
+            n("api", "EDGE", 1, "Ingress API", "idempotency", "edge"),
+            n("svc", "SERVICE", 1, "Job service", "validate", "app"),
+            n("q", "ASYNC", 0.6, "Main queue", "visibility timeout", "queue"),
+            n("dlq", "ASYNC", 2.1, "DLQ", "poison messages", "alert"),
+            n("worker", "DATA", 0.6, "Workers", "side effects", "app", dx=-42),
+            n("state", "DATA", 2.0, "Job state DB", "status", "store", dx=42),
+        ],
+        [
+            f("prod", "api", "submit", 1),
+            f("api", "svc", "202", 2),
+            f("svc", "q", "enqueue", 3, accent=True),
+            f("q", "worker", "lease", 4),
+            f("worker", "state", "complete", 5),
+            f("worker", "dlq", "fail xN", 6, dashed=True),
+        ],
+    )
+
+
+def build_diagrams() -> dict[str, str]:
+    diagrams: dict[str, str] = {
+        "hash-map": hash_map(),
+        "two-pointers": two_pointers(),
+        "sliding-window": sliding_window(),
+        "stack": stack(),
+        "binary-search": binary_search(),
+        "linked-list": linked_list(),
+        "tree-bst": tree_bst(),
+        "heap": heap(),
+        "backtracking": backtracking(),
+        "bfs-graph": bfs_graph(),
+        "dp-table": dp_table(),
+        "intervals": intervals(),
+        "bits-xor": bits_xor(),
+        "prefix-sums": prefix_sums(),
+        "two-sum-walk": two_sum_walk(),
+        "longest-substr-window": longest_substr_window(),
+        "merge-intervals-walk": merge_intervals_walk(),
+        "lru-cache": lru_cache(),
+        "islands-dfs": islands_dfs(),
+        "topo-kahn": topo_kahn(),
+        "coin-change-dp": coin_change_dp(),
+        "word-ladder-bfs": word_ladder_bfs(),
+        "serialize-tree": serialize_tree(),
+        "trap-water": trap_water(),
+        "stock-profit": stock_profit(),
+        "min-window": min_window(),
+        "kadane": kadane(),
+        "rotated-search": rotated_search(),
+        "top-k-buckets": top_k_buckets(),
+        "meeting-rooms": meeting_rooms(),
+        "rotting-oranges": rotting_oranges(),
+        "autocomplete-trie": autocomplete_trie(),
+        "load-balancer": load_balancer(),
+        "url-shortener": url_shortener(),
+        "url-shortener-detailed": url_shortener_detailed(),
+        "rag-detailed": rag_detailed(),
+        "feed-hybrid-fanout": feed_hybrid_fanout(),
+        "uber-matching": uber_matching(),
+        "kafka-partitions": kafka_partitions(),
+        "replication": replication(),
+        "sql-nosql": sql_nosql(),
+        "queue": queue_diagram(),
+    }
+    diagrams.update(simple_arch_diagrams())
+    missing = [key for key in REQUIRED_KEYS if key not in diagrams]
+    extra = [key for key in diagrams if key not in REQUIRED_KEYS]
+    if missing or extra:
+        raise RuntimeError(f"diagram key mismatch; missing={missing}, extra={extra}")
+    return {key: diagrams[key] for key in REQUIRED_KEYS}
+
+
+DIAGRAMS = build_diagrams()
+
+
 def main() -> None:
     for p in OUT.glob("diagram-p*.jpg"):
         p.unlink()
@@ -1523,13 +1793,12 @@ def main() -> None:
 
     for key, content in DIAGRAMS.items():
         path = OUT / f"{key}.svg"
-        path.write_text(content)
+        path.write_text(content, encoding="utf-8")
         print("wrote", path.name)
 
-    import json
-
     (OUT / "manifest.json").write_text(
-        json.dumps({"diagrams": list(DIAGRAMS.keys()), "chapters": CHAPTER_DIAGRAMS}, indent=2)
+        json.dumps({"diagrams": list(DIAGRAMS.keys()), "chapters": CHAPTER_DIAGRAMS}, indent=2),
+        encoding="utf-8",
     )
     print("manifest diagrams:", len(DIAGRAMS))
 

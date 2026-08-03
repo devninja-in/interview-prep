@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Two Sum walkthrough">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Two sum walk">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-two-sum-walk" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-two-sum-walk" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-two-sum-walk" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="300" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Two Sum walkthrough</text>
-  
-  <text x="40" y="70" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">nums = [2, 7, 11, 15]  target = 9</text>
-  <rect x="40" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="75.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text>
-  <rect x="130" y="100" width="70" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="165.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">7</text>
-  <rect x="220" y="100" width="70" height="50" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="255.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">11</text>
-  <rect x="310" y="100" width="70" height="50" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="345.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">15</text>
-  <text x="75" y="175" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">i=0</text>
-  <text x="165" y="175" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#0d7a6f">i=1 hit</text>
-  <rect x="450" y="90" width="320" height="90" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="610.0" y="129.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">seen map</text>
-<text x="610.0" y="149.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">after i=0: {{2:0}}</text>
-  <text x="450" y="210" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">need = 9-7 = 2 → found at index 0 → return [0,1]</text>
-  <text x="40" y="270" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Store each value after checking its complement — never pair a number with itself.</text>
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Two sum walk</text>
+  <rect x="86" y="128" width="50" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-two-sum-walk)"/><text x="111" y="154" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">2</text>
+<text x="111" y="189" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">0</text>
+<text x="111" y="110" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="500" fill="#0d7a6f">i</text>
+<path d="M111.0 115 V126" fill="none" stroke="#0d7a6f" stroke-width="1.55" marker-end="url(#arr-acc-two-sum-walk)"/>
+<rect x="144" y="128" width="50" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-two-sum-walk)"/><text x="169" y="154" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">7</text>
+<text x="169" y="189" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">1</text>
+<text x="169" y="110" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="500" fill="#0d7a6f">j</text>
+<path d="M169.0 115 V126" fill="none" stroke="#0d7a6f" stroke-width="1.55" marker-end="url(#arr-acc-two-sum-walk)"/>
+<rect x="202" y="128" width="50" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-two-sum-walk)"/><text x="227" y="154" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">11</text>
+<text x="227" y="189" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">2</text>
+<rect x="260" y="128" width="50" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-two-sum-walk)"/><text x="285" y="154" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">15</text>
+<text x="285" y="189" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">3</text>
+<rect x="420" y="104" width="170" height="56" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.6" filter="url(#sh-two-sum-walk)"/>
 
+<text x="505" y="125" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">target = 9</text>
+<text x="505" y="140" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">2 + 7</text>
+<path d="M332 150 L415 132" fill="none" stroke="#0d7a6f" stroke-width="1.6" marker-end="url(#arr-acc-two-sum-walk)"/>
+<rect x="620" y="104" width="230" height="86" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2"/><text x="632" y="122" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">HASH MAP PASS</text><text x="632" y="142" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12" fill="#15202b">Before inserting nums[i], ask whether target - nums[i] was seen.</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-two-sum-walk)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">seen map: value -&gt; index</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">complement checked before insert</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(n) time, O(n) space</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: one pass works because the complement is the only needed history.</text>
 </svg>

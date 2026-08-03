@@ -1,27 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="240" viewBox="0 0 720 240" role="img" aria-label="Linked list reverse">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Linked list reverse">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-linked-list-reverse" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-linked-list-reverse" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-linked-list-reverse" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="720" height="240" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Linked list reverse</text>
-  
-  <rect x="50" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="85.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text>
-  <rect x="170" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="205.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text>
-  <rect x="290" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="325.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text>
-  <path d="M120 125 H165" stroke="#0f1c24" stroke-width="1.6"/>
-  <path d="M240 125 H285" stroke="#0f1c24" stroke-width="1.6"/>
-  <text x="400" y="110" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">reverse →</text>
-  <rect x="500" y="100" width="70" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="535.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text>
-  <rect x="590" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="625.0" y="125.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text>
-  <path d="M570 125 H585" stroke="#0f1c24" stroke-width="1.6"/>
-  <text x="50" y="210" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Rewire next pointers carefully — null checks catch most bugs.</text>
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Linked list reverse</text>
+  <rect x="70" y="126" width="72" height="48" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.6" filter="url(#sh-linked-list-reverse)"/>
 
+<text x="106" y="143" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">1</text>
+<text x="106" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">prev</text>
+<rect x="190" y="126" width="72" height="48" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-linked-list-reverse)"/>
+
+<text x="226" y="143" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">2</text>
+<text x="226" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">cur</text>
+<rect x="310" y="126" width="72" height="48" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-linked-list-reverse)"/>
+
+<text x="346" y="143" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">3</text>
+<text x="346" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">next</text>
+<path d="M142 150 L185 150" fill="none" stroke="#2c3a45" stroke-width="1.6" marker-end="url(#arr-linked-list-reverse)"/>
+<path d="M262 150 L305 150" fill="none" stroke="#2c3a45" stroke-width="1.6" marker-end="url(#arr-linked-list-reverse)"/>
+<rect x="540" y="126" width="120" height="48" rx="6" fill="#f7e7c8" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-linked-list-reverse)"/>
+
+<text x="600" y="143" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">reverse</text>
+<text x="600" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">cur.next = prev</text>
+<path d="M540 150 H382 V150" fill="none" stroke="#0d7a6f" stroke-width="1.5" marker-end="url(#arr-acc-linked-list-reverse)"/>
+<rect x="72" y="246" width="470" height="52" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2"/><text x="84" y="264" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">SAFE ORDER</text><text x="84" y="284" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12" fill="#15202b">Save next before rewiring; then advance prev and cur.</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-linked-list-reverse)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">prev, cur, next</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">reversed prefix points back</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(n) time, O(1) space</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: pointer problems are mostly about update order.</text>
 </svg>

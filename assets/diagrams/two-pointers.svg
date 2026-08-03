@@ -1,23 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="240" viewBox="0 0 720 240" role="img" aria-label="Two pointers">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Two pointers">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-two-pointers" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-two-pointers" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-two-pointers" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="720" height="240" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Two pointers</text>
-  
-  <rect x="60" y="100" width="58" height="58" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="89.0" y="129.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="130" y="100" width="58" height="58" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="159.0" y="129.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text><rect x="200" y="100" width="58" height="58" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="229.0" y="129.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text><rect x="270" y="100" width="58" height="58" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="299.0" y="129.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">4</text><rect x="340" y="100" width="58" height="58" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="369.0" y="129.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">6</text><rect x="410" y="100" width="58" height="58" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="439.0" y="129.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">8</text>
-  <text x="89" y="90" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#0d7a6f">L</text>
-  <text x="439" y="90" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#0d7a6f">R</text>
-  <path d="M89 175 V195 H439 V175" fill="none" stroke="#0d7a6f" stroke-width="1.6"/>
-  <text x="60" y="220" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Move L/R based on the sum (or condition) until they meet.</text>
-
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Two pointers</text>
+  <rect x="90" y="132" width="50" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-two-pointers)"/><text x="115" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">1</text>
+<text x="115" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">0</text>
+<text x="115" y="114" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="500" fill="#0d7a6f">L</text>
+<path d="M115.0 119 V130" fill="none" stroke="#0d7a6f" stroke-width="1.55" marker-end="url(#arr-acc-two-pointers)"/>
+<rect x="148" y="132" width="50" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-two-pointers)"/><text x="173" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">2</text>
+<text x="173" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">1</text>
+<rect x="206" y="132" width="50" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-two-pointers)"/><text x="231" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">3</text>
+<text x="231" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">2</text>
+<rect x="264" y="132" width="50" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-two-pointers)"/><text x="289" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">4</text>
+<text x="289" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">3</text>
+<rect x="322" y="132" width="50" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-two-pointers)"/><text x="347" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">6</text>
+<text x="347" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">4</text>
+<rect x="380" y="132" width="50" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-two-pointers)"/><text x="405" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">8</text>
+<text x="405" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">5</text>
+<text x="405" y="114" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="500" fill="#0d7a6f">R</text>
+<path d="M405.0 119 V130" fill="none" stroke="#0d7a6f" stroke-width="1.55" marker-end="url(#arr-acc-two-pointers)"/>
+<path d="M115 212 H405" fill="none" stroke="#0d7a6f" stroke-width="1.55"/>
+<text x="260" y="240" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="500" fill="#5b6b76">sum = 1 + 8; move L right if too small, R left if too large</text>
+<rect x="560" y="116" width="260" height="80" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2"/><text x="572" y="134" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">WHITEBOARD NOTE</text><text x="572" y="154" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12" fill="#15202b">Sorted input lets each pointer move once: O(n).</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-two-pointers)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">L=0, R=n-1, target=9</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">pointers only move inward</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(n) time, O(1) space</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: monotonic movement is the proof that this stays linear.</text>
 </svg>

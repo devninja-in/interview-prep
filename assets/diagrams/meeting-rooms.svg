@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="260" viewBox="0 0 820 260" role="img" aria-label="Meeting Rooms II">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Meeting rooms sweep">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-meeting-rooms-sweep" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-meeting-rooms-sweep" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-meeting-rooms-sweep" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="260" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Meeting Rooms II</text>
-  
-  <rect x="40" y="90" width="120" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="100.0" y="110.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">[0,30]</text>
-  <rect x="40" y="140" width="120" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="100.0" y="160.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">[5,10]</text>
-  <rect x="40" y="190" width="120" height="40" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="100.0" y="210.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">[15,20]</text>
-  <rect x="220" y="120" width="200" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="320.0" y="145.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">min-heap of ends</text>
-  <rect x="480" y="120" width="200" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="580.0" y="145.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">rooms = 2</text>
-  <path d="M165 145 H215" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M425 145 H475" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <text x="40" y="245" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Reuse room when start ≥ earliest end.</text>
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Meeting rooms sweep</text>
+  <line x1="90" y1="114" x2="450" y2="114" stroke="#9aabb5" stroke-width="1"/><rect x="90" y="88" width="144" height="34" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.4" filter="url(#sh-meeting-rooms-sweep)"/><text x="162" y="110" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="650" fill="#15202b">A</text>
+<line x1="90" y1="168" x2="450" y2="168" stroke="#9aabb5" stroke-width="1"/><rect x="138" y="142" width="192" height="34" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.4" filter="url(#sh-meeting-rooms-sweep)"/><text x="234" y="164" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="650" fill="#15202b">B</text>
+<line x1="90" y1="222" x2="450" y2="222" stroke="#9aabb5" stroke-width="1"/><rect x="282" y="196" width="96" height="34" rx="6" fill="#ffffff" stroke="#2c3a45" stroke-width="1.4" filter="url(#sh-meeting-rooms-sweep)"/><text x="330" y="218" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="650" fill="#15202b">C</text>
+<rect x="560" y="96" width="170" height="54" rx="6" fill="#f3e2c7" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-meeting-rooms-sweep)"/>
 
+<text x="645" y="116" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">min-heap</text>
+<text x="645" y="131" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">earliest end</text>
+<rect x="560" y="176" width="170" height="54" rx="6" fill="#d5ebe7" stroke="#0d7a6f" stroke-width="1.6" filter="url(#sh-meeting-rooms-sweep)"/>
+
+<text x="645" y="196" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">rooms = heap size</text>
+<text x="645" y="211" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">peak overlap</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-meeting-rooms-sweep)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">min-heap of end times</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">heap holds active meetings</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(n log n)</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: reuse a room when the earliest ending meeting has finished.</text>
 </svg>

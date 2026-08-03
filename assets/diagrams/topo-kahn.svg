@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="280" viewBox="0 0 820 280" role="img" aria-label="Course Schedule (Kahn)">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Topological sort - Kahn">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-topological-sort-kahn" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-topological-sort-kahn" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-topological-sort-kahn" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="280" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Course Schedule (Kahn)</text>
-  
-  <rect x="40" y="100" width="70" height="50" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="75.0" y="119.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text>
-<text x="75.0" y="139.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">in=0</text>
-  <rect x="160" y="100" width="70" height="50" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="195.0" y="119.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text>
-<text x="195.0" y="139.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">in=1</text>
-  <rect x="280" y="100" width="70" height="50" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="315.0" y="119.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text>
-<text x="315.0" y="139.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">in=1</text>
-  <rect x="400" y="100" width="70" height="50" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="435.0" y="119.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text>
-<text x="435.0" y="139.0" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#3a4a54">in=2</text>
-  <path d="M115 125 H155" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M235 125 H275" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M350 125 H395" stroke="#0f1c24" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <path d="M75 155 V190 H435 V155" fill="none" stroke="#3a4a54" stroke-width="1.2"/>
-  <text x="40" y="230" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">Kahn: queue all indegree 0 → take course → decrement neighbors</text>
-  <text x="40" y="260" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">If you cannot process all nodes, there is a cycle → cannot finish.</text>
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Topological sort - Kahn</text>
+  <circle cx="110" cy="168" r="24" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.5" filter="url(#sh-topological-sort-kahn)"/><text x="110" y="173" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#ffffff">A</text>
+<circle cx="250" cy="112" r="24" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-topological-sort-kahn)"/><text x="250" y="117" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">B</text>
+<circle cx="250" cy="224" r="24" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-topological-sort-kahn)"/><text x="250" y="229" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">C</text>
+<circle cx="410" cy="168" r="24" fill="#ffffff" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-topological-sort-kahn)"/><text x="410" y="173" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">D</text>
+<path d="M134 160 L226 122 M134 176 L226 214 M274 122 L388 160 M274 214 L388 176" fill="none" stroke="#0d7a6f" stroke-width="1.55" marker-end="url(#arr-acc-topological-sort-kahn)"/>
+<rect x="560" y="104" width="210" height="54" rx="6" fill="#f3e2c7" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-topological-sort-kahn)"/>
 
+<text x="665" y="124" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">zero indegree queue</text>
+<text x="665" y="139" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">A, then B/C</text>
+<rect x="560" y="190" width="210" height="54" rx="6" fill="#ffffff" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-topological-sort-kahn)"/>
+<path d="M560,198 Q665,188 770,198" fill="none" stroke="#2c3a45" stroke-width="1"/>
+<text x="665" y="210" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">emit order</text>
+<text x="665" y="225" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">A B C D</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-topological-sort-kahn)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">indegree map + zero queue</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">output has no unmet prereqs</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(V+E)</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: removing zero-indegree nodes exposes the next valid choices.</text>
 </svg>

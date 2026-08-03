@@ -1,29 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="280" viewBox="0 0 820 280" role="img" aria-label="Coin Change DP">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Coin change DP">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-coin-change-dp" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-coin-change-dp" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-coin-change-dp" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="280" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Coin Change DP</text>
-  
-  <text x="40" y="70" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">coins=[1,2,5] amount=11 → dp[x]=fewest coins for x</text>
-  <rect x="40" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="66.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="100" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="126.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="160" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="186.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="220" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="246.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text><rect x="280" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="306.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text><rect x="340" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="366.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="400" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="426.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text><rect x="460" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="486.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text><rect x="520" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="546.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text><rect x="580" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="606.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text><rect x="640" y="110" width="52" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="666.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text><rect x="700" y="110" width="52" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="726.0" y="132.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text>
-  <text x="40" y="185" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">x:  0  1  2  3  4  5  6  7  8  9 10 11</text>
-  <text x="40" y="220" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">Transition: dp[x] = min(dp[x], dp[x-c]+1) for each coin c</text>
-  <text x="40" y="255" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Unbounded knapsack. Greedy fails for arbitrary denominations — say why.</text>
-
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Coin change DP</text>
+  <text x="88" y="96" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="500" fill="#5b6b76">amount</text>
+<rect x="90" y="112" width="42" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="111" y="138" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">0</text>
+<rect x="140" y="112" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="161" y="138" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">1</text>
+<rect x="190" y="112" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="211" y="138" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">2</text>
+<rect x="240" y="112" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="261" y="138" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">3</text>
+<rect x="290" y="112" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="311" y="138" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">4</text>
+<rect x="340" y="112" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="361" y="138" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">5</text>
+<rect x="390" y="112" width="42" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-coin-change-dp)"/><text x="411" y="138" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">6</text>
+<rect x="440" y="112" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="461" y="138" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">7</text>
+<text x="88" y="190" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="500" fill="#5b6b76">min coins</text>
+<rect x="90" y="206" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="111" y="232" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">0</text>
+<rect x="140" y="206" width="42" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="161" y="232" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">1</text>
+<rect x="190" y="206" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="211" y="232" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">1</text>
+<rect x="240" y="206" width="42" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="261" y="232" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">2</text>
+<rect x="290" y="206" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="311" y="232" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">2</text>
+<rect x="340" y="206" width="42" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="361" y="232" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">1</text>
+<rect x="390" y="206" width="42" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-coin-change-dp)"/><text x="411" y="232" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">2</text>
+<rect x="440" y="206" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/><text x="461" y="232" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">2</text>
+<rect x="560" y="130" width="260" height="86" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2"/><text x="572" y="148" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">TRANSITION</text><text x="572" y="168" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12" fill="#15202b">dp[a] = 1 + min(dp[a-c]) for each coin c &lt;= a.</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-coin-change-dp)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">dp[amount] min coins</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">relax from smaller amounts</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(amount * coins)</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: initialize impossible states and relax with each allowed coin.</text>
 </svg>

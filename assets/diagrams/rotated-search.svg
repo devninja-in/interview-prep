@@ -1,22 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="260" viewBox="0 0 820 260" role="img" aria-label="Rotated sorted search">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Search rotated sorted array">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-search-rotated-sorted-array" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-search-rotated-sorted-array" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-search-rotated-sorted-array" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="260" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Rotated sorted search</text>
-  
-  <rect x="40" y="100" width="58" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="69.0" y="122.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">4</text><rect x="110" y="100" width="58" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="139.0" y="122.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">5</text><rect x="180" y="100" width="58" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="209.0" y="122.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">6</text><rect x="250" y="100" width="58" height="44" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="279.0" y="122.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">7</text><rect x="320" y="100" width="58" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="349.0" y="122.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="390" y="100" width="58" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="419.0" y="122.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="460" y="100" width="58" height="44" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="489.0" y="122.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text>
-  <text x="40" y="180" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">Left half sorted · if target in range search left else right</text>
-  <text x="40" y="220" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Always identify which half is sorted, then binary-search.</text>
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Search rotated sorted array</text>
+  <rect x="80" y="132" width="50" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-search-rotated-sorted-array)"/><text x="105" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">4</text>
+<text x="105" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">0</text>
+<text x="105" y="114" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="500" fill="#0d7a6f">lo</text>
+<path d="M105.0 119 V130" fill="none" stroke="#0d7a6f" stroke-width="1.55" marker-end="url(#arr-acc-search-rotated-sorted-array)"/>
+<rect x="138" y="132" width="50" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-search-rotated-sorted-array)"/><text x="163" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">5</text>
+<text x="163" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">1</text>
+<rect x="196" y="132" width="50" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-search-rotated-sorted-array)"/><text x="221" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">6</text>
+<text x="221" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">2</text>
+<rect x="254" y="132" width="50" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-search-rotated-sorted-array)"/><text x="279" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">7</text>
+<text x="279" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">3</text>
+<text x="279" y="114" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="500" fill="#0d7a6f">mid</text>
+<path d="M279.0 119 V130" fill="none" stroke="#0d7a6f" stroke-width="1.55" marker-end="url(#arr-acc-search-rotated-sorted-array)"/>
+<rect x="312" y="132" width="50" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-search-rotated-sorted-array)"/><text x="337" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">0</text>
+<text x="337" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">4</text>
+<rect x="370" y="132" width="50" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-search-rotated-sorted-array)"/><text x="395" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">1</text>
+<text x="395" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">5</text>
+<rect x="428" y="132" width="50" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-search-rotated-sorted-array)"/><text x="453" y="158" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">2</text>
+<text x="453" y="193" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">6</text>
+<text x="453" y="114" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="500" fill="#0d7a6f">hi</text>
+<path d="M453.0 119 V130" fill="none" stroke="#0d7a6f" stroke-width="1.55" marker-end="url(#arr-acc-search-rotated-sorted-array)"/>
+<rect x="148.4" y="100" width="113.2" height="20" rx="10" fill="#ffffff" stroke="#0d7a6f" stroke-width="1"/><text x="205" y="114" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#0d7a6f">left half sorted</text>
+<rect x="590" y="104" width="210" height="70" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-search-rotated-sorted-array)"/>
 
+<text x="695" y="132" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">branch</text>
+<text x="695" y="147" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">If target fits sorted half, keep it; else search other half.</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-search-rotated-sorted-array)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">lo/mid/hi + target</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">one half is always sorted</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(log n)</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: one side of mid is always sorted; use it to discard half.</text>
 </svg>

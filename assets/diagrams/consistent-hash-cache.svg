@@ -1,27 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Distributed cache ring">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="530" viewBox="0 0 1000 530" role="img" aria-label="Consistent hash cache">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-consistent-hash-cache" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-consistent-hash-cache" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-consistent-hash-cache" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="300" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Distributed cache ring</text>
-  
-  <circle cx="280" cy="150" r="90" fill="none" stroke="#c5d5ce" stroke-width="2"/>
-  <rect x="250" y="40" width="70" height="36" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="285.0" y="58.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">N1</text>
-  <rect x="380" y="120" width="70" height="36" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="415.0" y="138.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">N2</text>
-  <rect x="250" y="220" width="70" height="36" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="285.0" y="238.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">N3</text>
-  <rect x="140" y="120" width="70" height="36" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="175.0" y="138.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">N4</text>
-  <rect x="500" y="90" width="160" height="48" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="580.0" y="114.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">Client / proxy</text>
-  <rect x="500" y="170" width="160" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="580.0" y="194.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">key → vnode</text>
-  <path d="M500 145 H370" stroke="#0f1c24" stroke-width="1.2" marker-end="url(#arrowhead)"/>
-  <text x="40" y="280" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Consistent hashing: add/remove nodes moves ~1/N keys. Replicate hot keys; soft TTL vs stampede.</text>
+  <rect width="1000" height="530" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="1000" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Consistent hash cache</text>
+  <rect x="28" y="64" width="140" height="410" rx="6" fill="#eef2f5" stroke="#9aabb5" stroke-width="1"/><text x="40" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">CLIENT</text>
+<rect x="182" y="64" width="150" height="410" rx="6" fill="#e8f1f8" stroke="#9aabb5" stroke-width="1"/><text x="194" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">EDGE</text>
+<rect x="346" y="64" width="198" height="410" rx="6" fill="#e9f4f1" stroke="#9aabb5" stroke-width="1"/><text x="358" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">SERVICE</text>
+<rect x="558" y="64" width="164" height="410" rx="6" fill="#f7f0e6" stroke="#9aabb5" stroke-width="1"/><text x="570" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">ASYNC</text>
+<rect x="736" y="64" width="236" height="410" rx="6" fill="#f3f0ea" stroke="#9aabb5" stroke-width="1"/><text x="748" y="82" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="600" letter-spacing="0.08em" fill="#5b6b76">DATA</text>
+<rect x="44" y="184" width="108" height="56" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-consistent-hash-cache)"/>
 
+<text x="98" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Client</text>
+<text x="98" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">key</text>
+<rect x="198" y="184" width="118" height="56" rx="6" fill="#d9e8f5" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-consistent-hash-cache)"/>
+
+<text x="257" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Hash ring</text>
+<text x="257" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">virtual nodes</text>
+<rect x="369" y="184" width="152" height="56" rx="6" fill="#cfe8e2" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-consistent-hash-cache)"/>
+
+<text x="445" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Cache router</text>
+<text x="445" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">owner lookup</text>
+<rect x="578" y="184" width="124" height="56" rx="6" fill="#f3e2c7" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-consistent-hash-cache)"/>
+
+<text x="640" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Rebalance</text>
+<text x="640" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">node changes</text>
+<rect x="783" y="184" width="142" height="56" rx="6" fill="#ffffff" stroke="#2c3a45" stroke-width="1.6" filter="url(#sh-consistent-hash-cache)"/>
+<path d="M783,192 Q854,182 925,192" fill="none" stroke="#2c3a45" stroke-width="1"/>
+<text x="854" y="205" text-anchor="middle" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="650" fill="#15202b">Cache nodes</text>
+<text x="854" y="220" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" fill="#5b6b76">sharded</text>
+<path d="M152 212 H198 V212" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-consistent-hash-cache)"/>
+<rect x="157" y="194" width="36" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="175" y="208" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">get</text>
+<circle cx="170.4" cy="198" r="10" fill="#15202b"/><text x="170.4" y="202" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">1</text>
+<path d="M316 212 H369 V212" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-consistent-hash-cache)"/>
+<rect x="323.1" y="194" width="38.8" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="342.5" y="208" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">hash</text>
+<circle cx="335.4" cy="198" r="10" fill="#15202b"/><text x="335.4" y="202" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">2</text>
+<path d="M521 212 H578 V212" fill="none" stroke="#0d7a6f" stroke-width="1.5" marker-end="url(#arr-acc-consistent-hash-cache)"/>
+<rect x="514.6" y="194" width="69.8" height="20" rx="10" fill="#ffffff" stroke="#0d7a6f" stroke-width="1"/><text x="549.5" y="208" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#0d7a6f">move keys</text>
+<circle cx="541" cy="198" r="10" fill="#15202b"/><text x="541" y="202" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">3</text>
+<path d="M702 212 H783 V212" fill="none" stroke="#2c3a45" stroke-width="1.5" marker-end="url(#arr-consistent-hash-cache)"/>
+<rect x="720" y="194" width="45" height="20" rx="10" fill="#ffffff" stroke="#9aabb5" stroke-width="1"/><text x="742.5" y="208" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="500" fill="#5b6b76">route</text>
+<circle cx="725.3" cy="198" r="10" fill="#15202b"/><text x="725.3" y="202" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" font-weight="700" fill="#fff">4</text>
+  <rect x="0" y="494" width="1000" height="36" fill="#f0f3f5"/><text x="28" y="516" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: virtual nodes smooth distribution and minimize key movement on membership changes.</text>
 </svg>

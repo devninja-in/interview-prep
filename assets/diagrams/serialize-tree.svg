@@ -1,29 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Serialize binary tree">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="450" viewBox="0 0 900 450" role="img" aria-label="Serialize binary tree">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    <marker id="arr-serialize-binary-tree" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2c3a45"/>
     </marker>
+    <marker id="arr-acc-serialize-binary-tree" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0d7a6f"/>
+    </marker>
+    <filter id="sh-serialize-binary-tree" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#15202b" flood-opacity="0.10"/>
+    </filter>
   </defs>
-  <rect width="820" height="300" fill="#f7faf8"/>
-  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Serialize binary tree</text>
-  
-  <rect x="360" y="70" width="70" height="40" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="395.0" y="90.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text>
-  <rect x="250" y="140" width="70" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="285.0" y="160.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">2</text>
-  <rect x="470" y="140" width="70" height="40" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="505.0" y="160.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">3</text>
-  <rect x="420" y="210" width="70" height="40" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="455.0" y="230.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">4</text>
-  <rect x="520" y="210" width="70" height="40" rx="10" fill="#f3e8d8" stroke="#c5d5ce" stroke-width="1.2"/>
-<text x="555.0" y="230.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">5</text>
-  <path d="M360 110 L285 140" stroke="#0f1c24" stroke-width="1.2"/>
-  <path d="M430 110 L505 140" stroke="#0f1c24" stroke-width="1.2"/>
-  <path d="M490 185 L455 210" stroke="#0f1c24" stroke-width="1.2"/>
-  <path d="M520 185 L555 210" stroke="#0f1c24" stroke-width="1.2"/>
-  <text x="40" y="100" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">BFS serialize</text>
-  <text x="40" y="130" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0f1c24">1,2,3,#,#,4,5,#,#,#,#</text>
-  <text x="40" y="270" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Level-order with explicit null markers makes encode/decode invertible.</text>
-
+  <rect width="900" height="450" fill="#fbfcfd"/>
+  <rect x="0" y="0" width="900" height="44" fill="#15202b"/>
+  <text x="28" y="28" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Serialize binary tree</text>
+  <circle cx="210" cy="90" r="24" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.5" filter="url(#sh-serialize-binary-tree)"/><text x="210" y="95" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#ffffff">1</text>
+<circle cx="130" cy="170" r="24" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-serialize-binary-tree)"/><text x="130" y="175" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">2</text>
+<circle cx="290" cy="170" r="24" fill="#d5ebe7" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-serialize-binary-tree)"/><text x="290" y="175" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">3</text>
+<circle cx="250" cy="250" r="24" fill="#ffffff" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-serialize-binary-tree)"/><text x="250" y="255" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">4</text>
+<circle cx="330" cy="250" r="24" fill="#ffffff" stroke="#2c3a45" stroke-width="1.5" filter="url(#sh-serialize-binary-tree)"/><text x="330" y="255" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="700" fill="#15202b">5</text>
+<path d="M196 110 L144 152 M224 110 L276 152 M282 192 L258 232 M298 192 L322 232" fill="none" stroke="#2c3a45" stroke-width="1.55"/>
+<rect x="460" y="146" width="42" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-serialize-binary-tree)"/><text x="481" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">1</text>
+<rect x="510" y="146" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-serialize-binary-tree)"/><text x="531" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">2</text>
+<rect x="560" y="146" width="42" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-serialize-binary-tree)"/><text x="581" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">#</text>
+<rect x="610" y="146" width="42" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-serialize-binary-tree)"/><text x="631" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">#</text>
+<rect x="660" y="146" width="42" height="44" rx="4" fill="#0d7a6f" stroke="#0d7a6f" stroke-width="1.8" filter="url(#sh-serialize-binary-tree)"/><text x="681" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#ffffff">3</text>
+<rect x="710" y="146" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-serialize-binary-tree)"/><text x="731" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">4</text>
+<rect x="760" y="146" width="42" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-serialize-binary-tree)"/><text x="781" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">#</text>
+<rect x="810" y="146" width="42" height="44" rx="4" fill="#d5ebe7" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-serialize-binary-tree)"/><text x="831" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">#</text>
+<rect x="860" y="146" width="42" height="44" rx="4" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-serialize-binary-tree)"/><text x="881" y="172" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#15202b">5</text>
+<rect x="458" y="230" width="300" height="52" rx="6" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2"/><text x="470" y="248" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">DECODER</text><text x="470" y="268" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="12" fill="#15202b">Read preorder tokens recursively; # consumes a null child.</text>
+<rect x="48" y="318" width="804" height="82" rx="8" fill="#ffffff" stroke="#9aabb5" stroke-width="1.2" filter="url(#sh-serialize-binary-tree)"/>
+<text x="62" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">STATE</text>
+<text x="62" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">preorder token cursor</text>
+<line x1="316" y1="330" x2="316" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="330" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">INVARIANT</text>
+<text x="330" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b"># marks null children</text>
+<line x1="584" y1="330" x2="584" y2="388" stroke="#9aabb5" stroke-width="1"/>
+<text x="598" y="343" text-anchor="start" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#0d7a6f">COMPLEXITY</text>
+<text x="598" y="367" text-anchor="start" font-family="Manrope, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="550" fill="#15202b">O(n) encode/decode</text>
+  <rect x="0" y="414" width="900" height="36" fill="#f0f3f5"/><text x="28" y="436" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="11" fill="#5b6b76">Interview takeaway: include null markers or structure is ambiguous.</text>
 </svg>
