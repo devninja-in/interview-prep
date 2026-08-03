@@ -166,48 +166,48 @@
 <div class="table-wrap"><table><thead><tr><th>step n</th><th>ways to reach it</th><th>how</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>base case</td></tr><tr><td>2</td><td>2</td><td>base case</td></tr><tr><td>3</td><td>3</td><td>ways(2) + ways(1) = 2 + 1</td></tr><tr><td>4</td><td>5</td><td>ways(3) + ways(2) = 3 + 2</td></tr><tr><td>5</td><td>8</td><td>ways(4) + ways(3) = 5 + 3</td></tr></tbody></table></div>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Say the state, the transition, and the base case before you write a loop.</p>
+<h2>Interview drill — DP</h2>
+<p class="drill-intro">State → transition → base case — say them before the loop.</p>
 <p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Coin Change</span></summary>
 <div class="qa-body">
-<p>Fewest coins to make amount (or -1).</p>
+<p>Fewest coins for amount.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Unbounded knapsack</p>
-<div class="qa-label">Approach</div>
-<p>dp[x] = min over coins of dp[x−c]+1. <a href="interview-cp.html">Lab Q7</a>.</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/coin-change-dp.svg" alt="Coin DP" loading="lazy" /></figure><p><a href="interview-cp.html#q7">Lab Q7</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. House Robber</span></summary>
 <div class="qa-body">
-<p>Max money without robbing two adjacent houses.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Apple · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> 1D DP · choose / skip</p>
+<p>Max money, no adjacent houses.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Apple · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> choose / skip</p>
 <div class="qa-label">Approach</div>
-<p>dp[i] = max(dp[i−1], dp[i−2] + nums[i]). Roll two variables for O(1) space.</p>
+<p>dp[i]=max(dp[i−1], dp[i−2]+nums[i]). Roll two variables for O(1) space.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Longest Increasing Subsequence</span></summary>
 <div class="qa-body">
-<p>Length of the longest strictly increasing subsequence.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Patience sorting / DP</p>
+<p>LIS length.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Patience / DP</p>
 <div class="qa-label">Approach</div>
-<p>O(n²) DP is fine to start; O(n log n) maintains tails of increasing subsequences with binary search — mention both.</p>
+<p>O(n²) DP fine to start; O(n log n) tails + binary search — mention both.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Word Break</span></summary>
 <div class="qa-body">
-<p>Can s be segmented into a space-separated sequence of dictionary words?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> DP · substring check</p>
+<p>Can s be segmented into dictionary words?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> substring DP</p>
 <div class="qa-label">Approach</div>
-<p>dp[i] true if some dp[j] and s[j:i] in dict. Put words in a set; optionally limit inner loop by max word length.</p>
+<p>dp[i] true if some dp[j] and s[j:i] in dict. Cap inner loop by max word length.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Unique Paths</span></summary>
 <div class="qa-body">
-<p>Robot goes only right/down on m×n grid — how many paths to bottom-right?</p>
+<p>Right/down paths on m×n grid.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Bloomberg · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Grid DP</p>
 <div class="qa-label">Approach</div>
-<p>dp[r][c] = dp[r−1][c] + dp[r][c−1], or combinatorial C(m+n−2, m−1). Obstacles variant adds a zeroing rule.</p>
+<p>dp[r][c]=dp[r−1][c]+dp[r][c−1], or C(m+n−2, m−1).</p>
 </div>
 </details>
 </section>

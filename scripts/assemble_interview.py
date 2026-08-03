@@ -27,7 +27,7 @@ LABS = [
         "part": "cp",
         "eyebrow": "Interview Lab · Competitive Programming",
         "title": "Coding interview questions",
-        "subtitle": "Ten FAANG-frequency problems with deep solutions — plus pattern follow-ups.",
+        "subtitle": "Ten FAANG-frequency problems with diagrams, walkthroughs, Python/Java, and follow-ups — practice like a timed phone screen.",
         "body": cp_lab_body,
         "after": "18-study-plan",
         "nav_title": "Interview Lab: Coding",

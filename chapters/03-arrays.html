@@ -158,56 +158,55 @@ def group_anagrams(words):
 <div class="table-wrap"><table><caption>Worked walkthrough</caption><thead><tr><th>i</th><th>nums[i]</th><th>need = target - nums[i]</th><th>seen so far</th><th>action</th></tr></thead><tbody><tr><td>0</td><td>2</td><td>7</td><td>{}</td><td>7 not seen, store 2 to 0</td></tr><tr><td>1</td><td>7</td><td>2</td><td>{2: 0}</td><td>2 is in seen, return [0, 1]</td></tr></tbody></table></div>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Questions interviewers actually ask when this chapter's pattern is the signal.</p>
+<h2>Interview drill — Arrays &amp;amp; hashing</h2>
+<p class="drill-intro">Hash-map interviews reward saying the complement insight before coding.</p>
 <p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Two Sum</span></summary>
 <div class="qa-body">
-<p>Return indices of two numbers that add to target. One solution guaranteed.</p>
+<p>Indices of two numbers that add to target.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Hash map</p>
-<div class="qa-label">Approach</div>
-<p>One pass: for each x check if target−x is in a map of seen values; else store x→index. O(n) time / space. Full solution in the <a href="interview-cp.html">Coding Interview Lab</a>.</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/two-sum-walk.svg" alt="Two Sum" loading="lazy" /></figure><ol class="qa-steps"><li>For each x, need = target − x.</li><li>If need in seen → return indices; else store x.</li><li>Store after check to avoid self-pairs.</li></ol><p><a href="interview-cp.html#q1">Full lab Q1</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Group Anagrams</span></summary>
 <div class="qa-body">
-<p>Group strings that are anagrams of each other.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map · sorted key / count key</p>
+<p>Group strings that are anagrams.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Uber · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map · sorted / count key</p>
 <div class="qa-label">Approach</div>
-<p>Key each word by sorted characters (or a 26-count tuple). Append into a map of key → list. Return the map values. O(n · k log k) with sort keys, or O(n · k) with count keys.</p><div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import defaultdict
+<div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import defaultdict
 
 def group_anagrams(strs):
     buckets = defaultdict(list)
     for s in strs:
-        key = tuple(sorted(s))
-        buckets[key].append(s)
+        buckets[tuple(sorted(s))].append(s)
     return list(buckets.values())
-</code></pre></div>
+</code></pre></div><p>Count-tuple keys make it O(n·k) instead of O(n·k log k).</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Top K Frequent Elements</span></summary>
 <div class="qa-body">
-<p>Return the k most frequent elements in an integer array.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map + heap / bucket sort</p>
+<p>k most frequent elements.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Heap / bucket sort</p>
 <div class="qa-label">Approach</div>
-<p>Count frequencies, then either push into a size-k min-heap (O(n log k)) or bucket-sort by frequency (O(n)). Interviewers often ask you to beat a full sort.</p>
+<p>Count → size-k min-heap O(n log k), or bucket by frequency O(n). Interviewers often ask you to beat a full sort.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Product of Array Except Self</span></summary>
 <div class="qa-body">
-<p>Return an array answer where answer[i] is the product of all elements except nums[i], without using division, in O(n).</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Apple · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Prefix / suffix products</p>
+<p>Products excluding self, no division, O(n).</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Apple · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Prefix / suffix</p>
 <div class="qa-label">Approach</div>
-<p>Left-to-right prefix products into the output, then a right-running suffix multiplier. Two passes, O(1) extra space beyond the output.</p>
+<p>Left-to-right prefix into output, then right-running suffix multiplier. O(1) extra space beyond output.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Longest Consecutive Sequence</span></summary>
 <div class="qa-body">
-<p>Find the length of the longest consecutive elements sequence in O(n).</p>
+<p>Longest consecutive run in O(n).</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash set</p>
 <div class="qa-label">Approach</div>
-<p>Put numbers in a set. Only start a streak when num−1 is absent. Walk upward counting. Each number enters a streak at most once → O(n).</p>
+<p>Set of numbers; only start a streak when num−1 missing; walk up. Each number enters a streak once → O(n).</p>
 </div>
 </details>
 </section>

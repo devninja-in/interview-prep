@@ -174,48 +174,48 @@ right--;
 <div class="table-wrap"><table><thead><tr><th>left</th><th>right</th><th>sum</th><th>compare to 10</th><th>action</th></tr></thead><tbody><tr><td>0</td><td>5</td><td>1 + 10 = 11</td><td>too big</td><td>move right in</td></tr><tr><td>0</td><td>4</td><td>1 + 8 = 9</td><td>too small</td><td>move left in</td></tr><tr><td>1</td><td>4</td><td>3 + 8 = 11</td><td>too big</td><td>move right in</td></tr><tr><td>1</td><td>3</td><td>3 + 6 = 9</td><td>too small</td><td>move left in</td></tr><tr><td>2</td><td>3</td><td>4 + 6 = 10</td><td>equal</td><td>found, return [2, 3]</td></tr></tbody></table></div>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Two pointers shine on sorted arrays and "container" geometry problems.</p>
+<h2>Interview drill — Two pointers</h2>
+<p class="drill-intro">Sorted arrays and container geometry — state the move rule.</p>
 <p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. 3Sum</span></summary>
 <div class="qa-body">
-<p>Find all unique triplets that sum to zero.</p>
+<p>Unique triplets summing to 0.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Facebook, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sort + two pointers</p>
 <div class="qa-label">Approach</div>
-<p>Sort; fix i; two-pointer on the rest. Skip duplicates for i/lo/hi.</p>
+<p>Sort; fix i; two-pointer on rest; skip duplicates for i/lo/hi.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Container With Most Water</span></summary>
 <div class="qa-body">
-<p>Max area of water between two vertical lines.</p>
+<p>Max area between two lines.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Bloomberg · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Opposite ends</p>
 <div class="qa-label">Approach</div>
-<p>Start at ends; move the shorter line inward — only that move can increase area.</p>
+<p>Start at ends; move the shorter line inward — only that can improve area.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Trapping Rain Water</span></summary>
 <div class="qa-body">
-<p>How much rain water can the elevation map trap?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Two pointers / stack</p>
-<div class="qa-label">Approach</div>
-<p>Advance the side with smaller max; water += max − height. <a href="interview-cp.html">Lab Q10</a>.</p>
+<p>How much rain is trapped?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Two pointers</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/trap-water.svg" alt="Trap" loading="lazy" /></figure><p><a href="interview-cp.html#q10">Lab Q10</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Valid Palindrome</span></summary>
 <div class="qa-body">
-<p>Is the string a palindrome ignoring non-alphanumeric characters?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Two pointers · skip non-alnum</p>
+<p>Palindrome ignoring non-alphanumeric?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Skip non-alnum</p>
 <div class="qa-label">Approach</div>
-<p>lo/hi; skip non-alnum; compare lowercased chars.</p>
+<p>lo/hi; skip non-alnum; compare lowercased.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Remove Duplicates from Sorted Array</span></summary>
 <div class="qa-body">
-<p>In-place remove duplicates; return new length.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Microsoft, Amazon · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Slow / fast writers</p>
+<p>In-place unique prefix length.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Microsoft, Amazon · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Slow/fast writers</p>
 <div class="qa-label">Approach</div>
-<p>Slow writes unique values; fast scans. Classic write-index pattern.</p>
+<p>Slow writes uniques; fast scans.</p>
 </div>
 </details>
 </section>

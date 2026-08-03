@@ -255,48 +255,48 @@ minute
 <p>Keep scanning. Every remaining cell is water or already visited, so no new island starts. 4 Total islands found: 1. 5</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Graph rounds usually mean BFS/DFS on grids or adjacency lists — not fancy theory.</p>
+<h2>Interview drill — Graphs</h2>
+<p class="drill-intro">Grid DFS/BFS and topo sort cover most graph phone screens.</p>
 <p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Number of Islands</span></summary>
 <div class="qa-body">
-<p>Count connected components of '1's in a grid.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> DFS / BFS flood fill</p>
-<div class="qa-label">Approach</div>
-<p>On each unvisited land cell, increment and flood-fill. <a href="interview-cp.html">Lab Q5</a>.</p>
+<p>Count land components.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Flood fill</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/islands-dfs.svg" alt="Islands" loading="lazy" /></figure><p><a href="interview-cp.html#q5">Lab Q5</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Course Schedule</span></summary>
 <div class="qa-body">
-<p>Can you finish all courses given prerequisite pairs?</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Topological sort</p>
-<div class="qa-label">Approach</div>
-<p>Detect a cycle in a directed graph via Kahn BFS or DFS colors. <a href="interview-cp.html">Lab Q6</a>.</p>
+<p>Can you finish all courses?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Topo sort</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/topo-kahn.svg" alt="Kahn" loading="lazy" /></figure><p><a href="interview-cp.html#q6">Lab Q6</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Clone Graph</span></summary>
 <div class="qa-body">
-<p>Deep-copy a connected undirected graph of nodes with neighbor lists.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> BFS/DFS + hashmap</p>
+<p>Deep-copy undirected graph.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> BFS + map</p>
 <div class="qa-label">Approach</div>
-<p>Map old node → new node. BFS/DFS: create clone on first visit, then wire neighbor clones from the map.</p>
+<p>Map old→new; BFS/DFS create clone on first visit, then wire neighbor clones.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Word Ladder</span></summary>
 <div class="qa-body">
-<p>Shortest word transformation changing one letter at a time.</p>
+<p>Shortest one-letter word transform.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, LinkedIn · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS shortest path</p>
-<div class="qa-label">Approach</div>
-<p>BFS over the word set; remove words when enqueued. <a href="interview-cp.html">Lab Q8</a>.</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/word-ladder-bfs.svg" alt="Word ladder" loading="lazy" /></figure><p><a href="interview-cp.html#q8">Lab Q8</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Pacific Atlantic Water Flow</span></summary>
 <div class="qa-body">
-<p>Cells from which water can flow to both Pacific and Atlantic oceans.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Multi-source DFS/BFS</p>
+<p>Cells that can reach both oceans.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Multi-source DFS</p>
 <div class="qa-label">Approach</div>
-<p>Flood inland from both ocean borders (water can "climb" to higher-or-equal cells). Intersection of the two reachable sets.</p>
+<p>Flood inland from both borders; intersection of reachable sets.</p>
 </div>
 </details>
 </section>

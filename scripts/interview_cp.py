@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
-"""Competitive programming interview Q&As — research-backed FAANG favorites."""
+"""Competitive programming interview Q&As — deep, diagrammed FAANG drills."""
 from __future__ import annotations
 
-from interview_helpers import code_block, drill_section, qa_block
+from interview_helpers import (
+    bullets,
+    callout,
+    code_block,
+    drill_section,
+    figure_diagram,
+    qa_block,
+    steps,
+)
 
 
 def cp_questions() -> list[str]:
@@ -12,25 +20,55 @@ def cp_questions() -> list[str]:
         qa_block(
             qnum=1,
             title="Two Sum",
-            asked="Amazon, Google, Meta, Microsoft, Apple — classic warmup across FAANG",
+            asked="Amazon, Google, Meta, Microsoft, Apple — classic FAANG warmup",
             difficulty="Easy",
             pattern="Hash map · complement lookup",
             prompt=(
                 "Given an array of integers nums and an integer target, return the indices of "
                 "the two numbers that add up to target. Exactly one solution exists; you may not "
-                "use the same element twice. This is the single most common coding-interview opener."
+                "use the same element twice. Narrate brute force → optimal, then code."
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Brute force checks every pair in O(n²). The interview insight: for each value "
-                    "<code>x</code>, the partner you need is <code>target - x</code>. If you remember "
-                    "every value you have already seen in a map from value → index, each new number "
-                    "becomes one hash lookup. Store a number <em>after</em> you check for its partner "
-                    "so you never pair an element with itself.</p>",
+                    "Clarify",
+                    bullets(
+                        [
+                            "Return indices or values? (indices — LeetCode default)",
+                            "Duplicates allowed in the array?",
+                            "Negative numbers? (yes — hash map still works)",
+                            "Guaranteed one answer, or return empty if none?",
+                        ]
+                    ),
                 ),
                 (
-                    "Solution (Python)",
+                    "Diagram",
+                    figure_diagram("two-sum-walk", "Two Sum hash-map walkthrough"),
+                ),
+                (
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "<strong>Brute force:</strong> check every pair → O(n²). Say it, then improve.",
+                            "<strong>Insight:</strong> for value <code>x</code> you need "
+                            "<code>target - x</code>. Remember past values in a map value→index.",
+                            "<strong>One pass:</strong> for each i, if need in map → return; else "
+                            "store nums[i]→i <em>after</em> the check (avoids self-pair).",
+                            "<strong>Complexity:</strong> time O(n), space O(n).",
+                        ]
+                    ),
+                ),
+                (
+                    "Walkthrough table",
+                    """<div class="table-wrap"><table>
+<caption>nums=[2,7,11,15], target=9</caption>
+<thead><tr><th>i</th><th>x</th><th>need</th><th>seen</th><th>action</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>2</td><td>7</td><td>{}</td><td>miss → store 2→0</td></tr>
+<tr><td>1</td><td>7</td><td>2</td><td>{2:0}</td><td>hit → return [0,1]</td></tr>
+</tbody></table></div>""",
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """def two_sum(nums, target):
@@ -44,16 +82,14 @@ def cp_questions() -> list[str]:
                     ),
                 ),
                 (
-                    "Solution (Java)",
+                    "Java",
                     code_block(
                         "java",
                         """int[] twoSum(int[] nums, int target) {
     Map<Integer, Integer> seen = new HashMap<>();
     for (int i = 0; i < nums.length; i++) {
         int need = target - nums[i];
-        if (seen.containsKey(need)) {
-            return new int[]{seen.get(need), i};
-        }
+        if (seen.containsKey(need)) return new int[]{seen.get(need), i};
         seen.put(nums[i], i);
     }
     return new int[]{};
@@ -61,10 +97,27 @@ def cp_questions() -> list[str]:
                     ),
                 ),
                 (
-                    "Complexity & follow-ups",
-                    "<p><strong>Time O(n), space O(n).</strong> Follow-ups interviewers love: return "
-                    "all pairs (use a multiset / frequency map); sorted array variant (two pointers, "
-                    "O(1) extra space); what if the array is a stream?</p>",
+                    "Follow-ups",
+                    bullets(
+                        [
+                            "All pairs / duplicates → frequency map or multiset.",
+                            "Sorted array → two pointers, O(1) extra space.",
+                            "Streaming input → same map, bound memory if needed.",
+                        ]
+                    ),
+                ),
+                (
+                    "Common mistakes",
+                    callout(
+                        "Watch for",
+                        bullets(
+                            [
+                                "Storing before checking → pairing with self when 2x = target.",
+                                "Returning values instead of indices.",
+                                "Using a list scan for \"seen\" → accidental O(n²).",
+                            ]
+                        ),
+                    ),
                 ),
             ],
         )
@@ -83,14 +136,33 @@ def cp_questions() -> list[str]:
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Maintain a window <code>[left, right]</code> that is always duplicate-free. "
-                    "Advance <code>right</code>. When <code>s[right]</code> was already inside the "
-                    "window, jump <code>left</code> past its previous index. Track the best window "
-                    "length. A map from character → last index avoids shrinking one-by-one.</p>",
+                    "Clarify",
+                    bullets(
+                        [
+                            "ASCII / Unicode? (map works either way)",
+                            "Empty string → 0",
+                            "All unique → n; all same → 1",
+                        ]
+                    ),
                 ),
                 (
-                    "Solution (Python)",
+                    "Diagram",
+                    figure_diagram("longest-substr-window", "Sliding window for unique substring"),
+                ),
+                (
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "Maintain window [left, right] that is always duplicate-free.",
+                            "Advance right. If s[right] was seen at index ≥ left, set "
+                            "left = last[ch] + 1.",
+                            "Update last[ch] = right; track best = max(best, right-left+1).",
+                            "Time O(n), space O(min(n, alphabet)).",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """def length_of_longest_substring(s):
@@ -105,11 +177,13 @@ def cp_questions() -> list[str]:
                     ),
                 ),
                 (
-                    "Complexity & traps",
-                    "<p><strong>Time O(n), space O(min(n, alphabet)).</strong> Trap: only move "
-                    "<code>left</code> forward when the previous occurrence is still inside the "
-                    "window (<code>last[ch] &gt;= left</code>). Empty string and all-unique strings "
-                    "are easy edge cases to miss under pressure.</p>",
+                    "Trap",
+                    callout(
+                        "Invariant",
+                        "<p>Only move left when the previous occurrence is still <em>inside</em> "
+                        "the window (<code>last[ch] &gt;= left</code>). Otherwise you can "
+                        "accidentally shrink past a valid window.</p>",
+                    ),
                 ),
             ],
         )
@@ -123,20 +197,28 @@ def cp_questions() -> list[str]:
             difficulty="Medium",
             pattern="Sort + linear merge",
             prompt=(
-                "Given an array of intervals where intervals[i] = [start_i, end_i], merge all "
-                "overlapping intervals and return an array of the non-overlapping intervals that "
-                "cover the input exactly."
+                "Given intervals[i] = [start_i, end_i], merge all overlapping intervals and "
+                "return the covering non-overlapping set."
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Sort by start time. Walk left to right keeping a \"current\" interval. If "
-                    "the next interval starts before or at the current end, extend the end "
-                    "(take max). Otherwise push current and start a new one. Sorting is what makes "
-                    "the single pass correct.</p>",
+                    "Diagram",
+                    figure_diagram("merge-intervals-walk", "Merge overlapping intervals"),
                 ),
                 (
-                    "Solution (Python)",
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "Sort by start time — required for a single pass.",
+                            "Keep a \"current\" interval. If next.start ≤ current.end, "
+                            "current.end = max(ends). Else push current and start new.",
+                            "Touching intervals [1,2][2,3]: ask if they merge (usually yes with ≤).",
+                            "Time O(n log n), space O(n).",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """def merge(intervals):
@@ -151,10 +233,14 @@ def cp_questions() -> list[str]:
                     ),
                 ),
                 (
-                    "Complexity & follow-ups",
-                    "<p><strong>Time O(n log n), space O(n).</strong> Follow-ups: insert a new "
-                    "interval into an already-merged list; find the minimum number of meeting rooms "
-                    "(sweep line / heap of end times); check if a person can attend all meetings.</p>",
+                    "Follow-ups",
+                    bullets(
+                        [
+                            "Insert Interval into an already-merged list (O(n), no full resort).",
+                            "Meeting Rooms II → min heap of end times / sweep line.",
+                            "Min removals to make non-overlapping → greedy by end.",
+                        ]
+                    ),
                 ),
             ],
         )
@@ -164,25 +250,45 @@ def cp_questions() -> list[str]:
         qa_block(
             qnum=4,
             title="LRU Cache",
-            asked="Amazon, Google, Meta, Apple, Microsoft — most cross-company design+code problem",
+            asked="Amazon, Google, Meta, Apple, Microsoft — highest cross-company design+code",
             difficulty="Medium",
             pattern="Hash map + doubly linked list",
             prompt=(
-                "Design a data structure that follows the constraints of a Least Recently Used "
-                "(LRU) cache. Implement get(key) and put(key, value) both in O(1) average time. "
-                "When capacity is exceeded, evict the least recently used key."
+                "Design LRUCache with get(key) and put(key, value) in O(1) average time. "
+                "Evict the least recently used key when over capacity."
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Hash map alone gives O(1) get but not O(1) eviction order. Doubly linked "
-                    "list alone gives O(1) move-to-front if you already have the node. Compose "
-                    "them: map key → node; list ordered most-recent at head, least-recent at tail. "
-                    "On get/put hit: unlink node and insert at head. On capacity overflow: remove "
-                    "tail and delete its map entry.</p>",
+                    "Clarify",
+                    bullets(
+                        [
+                            "Capacity ≥ 1?",
+                            "get miss → -1",
+                            "put on existing key updates value AND recency",
+                            "Thread safety? (usually out of scope unless asked)",
+                        ]
+                    ),
                 ),
                 (
-                    "Solution (Python)",
+                    "Diagram",
+                    figure_diagram("lru-cache", "Hash map plus doubly linked list"),
+                ),
+                (
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "<strong>Why both structures?</strong> Map → O(1) lookup. DLL → O(1) "
+                            "reorder / evict if you already have the node pointer.",
+                            "Sentinel head/tail simplify edge inserts/removes.",
+                            "get hit: unlink node, insert after head (MRU), return value.",
+                            "put: if key exists, remove old node; insert new at head; if "
+                            "size &gt; capacity, remove tail.prev and delete from map.",
+                            "Draw the list on the whiteboard before coding helpers.",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """class Node:
@@ -193,8 +299,7 @@ def cp_questions() -> list[str]:
 
 class LRUCache:
     def __init__(self, capacity):
-        self.cap = capacity
-        self.map = {}
+        self.cap, self.map = capacity, {}
         self.head, self.tail = Node(), Node()
         self.head.next, self.tail.prev = self.tail, self.head
 
@@ -203,8 +308,7 @@ class LRUCache:
         node.next.prev = node.prev
 
     def _add_front(self, node):
-        node.next = self.head.next
-        node.prev = self.head
+        node.next, node.prev = self.head.next, self.head
         self.head.next.prev = node
         self.head.next = node
 
@@ -212,8 +316,7 @@ class LRUCache:
         if key not in self.map:
             return -1
         node = self.map[key]
-        self._remove(node)
-        self._add_front(node)
+        self._remove(node); self._add_front(node)
         return node.val
 
     def put(self, key, value):
@@ -230,10 +333,12 @@ class LRUCache:
                 ),
                 (
                     "What interviewers listen for",
-                    "<p>Say out loud why both structures are needed. Handle capacity 1, update of "
-                    "an existing key (must refresh recency without growing size), and get miss "
-                    "returning -1. In Python, <code>collections.OrderedDict</code> is acceptable "
-                    "if you explain move_to_end — many interviewers still want the list drawn.</p>",
+                    callout(
+                        "Signal",
+                        "<p>Explain composition out loud. Handle capacity 1 and update-existing "
+                        "without growing size. OrderedDict is OK if you explain "
+                        "<code>move_to_end</code> — many still want the list drawn.</p>",
+                    ),
                 ),
             ],
         )
@@ -247,19 +352,28 @@ class LRUCache:
             difficulty="Medium",
             pattern="DFS / BFS on grid",
             prompt=(
-                "Given an m × n binary grid where '1' is land and '0' is water, return the number "
-                "of islands. An island is formed by connecting adjacent lands horizontally or "
-                "vertically (not diagonally)."
+                "Given an m×n grid of '1' (land) and '0' (water), return the number of islands. "
+                "Land connects 4-directionally (not diagonally)."
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Scan the grid. Each time you find an unvisited '1', you have discovered a "
-                    "new island — increment the count, then flood-fill (DFS or BFS) to mark every "
-                    "connected '1' as visited (flip to '0' or use a visited set). Never revisit.</p>",
+                    "Diagram",
+                    figure_diagram("islands-dfs", "Flood-fill islands on a grid"),
                 ),
                 (
-                    "Solution (Python)",
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "Scan every cell. On unvisited '1', increment count.",
+                            "Flood-fill (DFS or BFS) to mark the whole component visited "
+                            "(flip to '0' or use a visited set).",
+                            "Never revisit. Prefer BFS if recursion depth worries them.",
+                            "Time O(m·n), space O(m·n) worst case.",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """def num_islands(grid):
@@ -284,10 +398,15 @@ class LRUCache:
                     ),
                 ),
                 (
-                    "Complexity & variants",
-                    "<p><strong>Time O(m·n), space O(m·n)</strong> worst-case recursion / queue. "
-                    "Variants: max area of island; number of closed islands; surrounded regions; "
-                    "Pacific Atlantic water flow. Prefer BFS if recursion depth worries the interviewer.</p>",
+                    "Variants",
+                    bullets(
+                        [
+                            "Max area of island",
+                            "Number of closed islands",
+                            "Pacific Atlantic water flow (multi-source DFS)",
+                            "Surrounded regions",
+                        ]
+                    ),
                 ),
             ],
         )
@@ -299,22 +418,30 @@ class LRUCache:
             title="Course Schedule (can finish all courses?)",
             asked="Amazon, Google, Meta, Intuit — topological sort / cycle detection",
             difficulty="Medium",
-            pattern="Graph · Kahn's BFS or DFS cycle detect",
+            pattern="Graph · Kahn BFS or DFS colors",
             prompt=(
-                "There are numCourses labeled 0..n-1. prerequisites[i] = [a, b] means you must "
-                "take b before a. Return true if you can finish all courses (i.e. the graph has "
-                "no cycle)."
+                "numCourses labeled 0..n-1. prerequisites[i]=[a,b] means take b before a. "
+                "Return true iff you can finish all courses (DAG / no cycle)."
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Model courses as nodes and prerequisites as directed edges b → a. You can "
-                    "finish iff the graph is a DAG. Kahn's algorithm: compute indegrees, enqueue "
-                    "nodes with indegree 0, repeatedly take a node and reduce neighbors' indegrees. "
-                    "If you process all nodes, there is no cycle.</p>",
+                    "Diagram",
+                    figure_diagram("topo-kahn", "Kahn topological sort for courses"),
                 ),
                 (
-                    "Solution (Python)",
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "Model: directed edge b→a (b unlocks a). Finish iff DAG.",
+                            "Kahn: compute indegrees; queue all indegree 0; pop and decrement "
+                            "neighbors; count processed nodes.",
+                            "If processed == numCourses → true; else cycle → false.",
+                            "DFS alternative: 0/1/2 colors; back-edge to \"in stack\" = cycle.",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """from collections import deque, defaultdict
@@ -339,8 +466,12 @@ def can_finish(num_courses, prerequisites):
                 ),
                 (
                     "Follow-ups",
-                    "<p>Course Schedule II: return any valid order (the Kahn visit order). Detect "
-                    "which courses form the cycle. Weighted version → shortest path / DP on DAG.</p>",
+                    bullets(
+                        [
+                            "Course Schedule II → return any valid order (Kahn visit order).",
+                            "Parallel semesters → longest path in DAG / level BFS.",
+                        ]
+                    ),
                 ),
             ],
         )
@@ -354,21 +485,29 @@ def can_finish(num_courses, prerequisites):
             difficulty="Medium",
             pattern="Dynamic programming · bottom-up",
             prompt=(
-                "You are given coins of different denominations and a total amount. Return the "
-                "fewest number of coins needed to make that amount. If impossible, return -1. "
-                "You may use each coin unlimited times."
+                "coins of various denominations, total amount. Return fewest coins to make "
+                "amount, or -1 if impossible. Unlimited supply of each coin."
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Let <code>dp[x]</code> be the fewest coins to make amount x. "
-                    "<code>dp[0] = 0</code>. For each amount x from 1..amount, try every coin c: "
-                    "if x ≥ c, candidate is <code>dp[x - c] + 1</code>. Take the minimum. This is "
-                    "unbounded knapsack — order of loops (amount outer, coins inner) is the usual "
-                    "interview form.</p>",
+                    "Diagram",
+                    figure_diagram("coin-change-dp", "Bottom-up coin change DP table"),
                 ),
                 (
-                    "Solution (Python)",
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "Define dp[x] = fewest coins to make x; dp[0]=0; else ∞.",
+                            "For x from 1..amount: for each coin c≤x: "
+                            "dp[x]=min(dp[x], dp[x-c]+1).",
+                            "Why not greedy? Counterexample coins=[1,3,4], amount=6 → "
+                            "greedy 4+1+1=3 coins, optimal 3+3=2.",
+                            "Time O(amount·|coins|), space O(amount).",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """def coin_change(coins, amount):
@@ -382,10 +521,9 @@ def can_finish(num_courses, prerequisites):
                     ),
                 ),
                 (
-                    "Complexity & traps",
-                    "<p><strong>Time O(amount · |coins|), space O(amount).</strong> Do not confuse "
-                    "with Coin Change II (number of combinations). Greedy fails for arbitrary "
-                    "denominations — mention that and justify DP.</p>",
+                    "Related",
+                    "<p>Coin Change II counts combinations — different transition order/"
+                    "meaning. Do not confuse them in the interview.</p>",
                 ),
             ],
         )
@@ -399,21 +537,30 @@ def can_finish(num_courses, prerequisites):
             difficulty="Hard",
             pattern="BFS · implicit graph",
             prompt=(
-                "Given beginWord, endWord, and a wordList, find the length of the shortest "
-                "transformation sequence from beginWord to endWord where each step changes "
-                "exactly one letter and every intermediate word is in wordList. Return 0 if "
-                "impossible."
+                "beginWord → endWord, changing one letter at a time; each intermediate in "
+                "wordList. Return length of shortest transformation sequence (words in path), "
+                "or 0 if impossible."
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Each word is a node; an edge exists if Hamming distance is 1. The answer "
-                    "is shortest path length (number of words in the path). BFS from beginWord "
-                    "guarantees shortest. Optimize neighbor generation with a set of remaining "
-                    "words, or wildcard buckets (\"h*t\" → hot, hit).</p>",
+                    "Diagram",
+                    figure_diagram("word-ladder-bfs", "BFS over one-letter neighbors"),
                 ),
                 (
-                    "Solution (Python)",
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "Each word is a node; edge if Hamming distance 1.",
+                            "BFS from beginWord; distance = words in path so far.",
+                            "Neighbor gen: for each position try a–z; check set membership.",
+                            "Remove word when enqueued to avoid revisits.",
+                            "If endWord not in wordList → 0 immediately.",
+                            "Time O(N · L · 26); bidirectional BFS is a strong follow-up.",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """from collections import deque
@@ -436,12 +583,6 @@ def ladder_length(begin_word, end_word, word_list):
     return 0""",
                     ),
                 ),
-                (
-                    "Interview tips",
-                    "<p>Removing a word when enqueued prevents revisits. Bidirectional BFS is a "
-                    "strong follow-up for large dictionaries. Mention time O(N · L · 26) where L "
-                    "is word length.</p>",
-                ),
             ],
         )
     )
@@ -454,20 +595,29 @@ def ladder_length(begin_word, end_word, word_list):
             difficulty="Hard",
             pattern="BFS / preorder with null markers",
             prompt=(
-                "Design an algorithm to serialize a binary tree to a string and deserialize "
-                "that string back to the same tree structure. There is no restriction on the "
-                "format — only that the pair of operations is invertible."
+                "Design serialize(root)→string and deserialize(string)→tree. Format is your "
+                "choice; the pair must be invertible."
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Level-order (BFS) with explicit null markers is interview-friendly and "
-                    "matches LeetCode's format. Serialize: queue traversal, append values / \"#\". "
-                    "Deserialize: rebuild nodes in the same order, wiring left/right children as "
-                    "you consume the token stream.</p>",
+                    "Diagram",
+                    figure_diagram("serialize-tree", "BFS serialize with null markers"),
                 ),
                 (
-                    "Solution (Python)",
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "Pick BFS level-order with explicit '#' nulls (interview-friendly).",
+                            "Serialize: queue; append values / '#'; join with commas.",
+                            "Deserialize: rebuild root from first token; for each node consume "
+                            "next two tokens as left/right children.",
+                            "Handle empty tree and single-node trees explicitly.",
+                            "Preorder+nulls also works — mention both.",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """from collections import deque
@@ -507,12 +657,6 @@ class Codec:
         return root""",
                     ),
                 ),
-                (
-                    "What to say",
-                    "<p>Discuss delimiter choice, empty tree, and single-node trees. Preorder with "
-                    "nulls also works and uses less queue memory. Do not claim compression — "
-                    "correctness and clarity beat clever encodings.</p>",
-                ),
             ],
         )
     )
@@ -525,19 +669,29 @@ class Codec:
             difficulty="Hard",
             pattern="Two pointers · left/right max",
             prompt=(
-                "Given n non-negative integers representing an elevation map where the width of "
-                "each bar is 1, compute how much water it can trap after raining."
+                "n non-negative heights (bar width 1). How much water can the elevation map "
+                "trap after raining?"
             ),
             sections=[
                 (
-                    "How to think about it",
-                    "<p>Water above index i is limited by the shorter of the tallest bar to the "
-                    "left and the tallest to the right, minus height[i]. Two-pointer form: "
-                    "maintain left_max and right_max while walking from both ends. Always advance "
-                    "the side with the smaller max — that side's trapped water is fully determined.</p>",
+                    "Diagram",
+                    figure_diagram("trap-water", "Trapped water between bars"),
                 ),
                 (
-                    "Solution (Python)",
+                    "Step-by-step solution",
+                    steps(
+                        [
+                            "Water at i limited by min(tallest left, tallest right) − height[i].",
+                            "Prefix/suffix max arrays → clear O(n) time / O(n) space version — "
+                            "start here if needed.",
+                            "Two pointers: maintain left_max, right_max; always advance the side "
+                            "with the smaller max (that side's water is fully determined).",
+                            "Time O(n), space O(1). Monotonic stack is another valid approach.",
+                        ]
+                    ),
+                ),
+                (
+                    "Python",
                     code_block(
                         "python",
                         """def trap(height):
@@ -558,10 +712,13 @@ class Codec:
                     ),
                 ),
                 (
-                    "Complexity",
-                    "<p><strong>Time O(n), space O(1).</strong> Prefix/suffix max arrays are the "
-                    "clearer O(n) space version — start there if two pointers feel magical, then "
-                    "optimize. Monotonic stack is another valid O(n) approach.</p>",
+                    "Why the two-pointer trick works",
+                    callout(
+                        "Intuition",
+                        "<p>If height[lo] &lt; height[hi], the water at lo cannot be limited by "
+                        "anything on the right taller than height[hi] — left_max is the binding "
+                        "constraint. Symmetric for the right side.</p>",
+                    ),
                 ),
             ],
         )
@@ -571,22 +728,51 @@ class Codec:
 
 
 def cp_lab_body() -> str:
-    intro = """<p>These ten problems show up constantly in FAANG and late-stage startup coding rounds
-(Blind 75 / NeetCode frequency lists, Amazon online assessments, Google phone screens, Meta onsites).
-Each expandable card has the prompt, how to reason under a 25–40 minute clock, working code, and the
-follow-ups interviewers actually ask.</p>
-<p class="drill-intro">Tip: say the pattern name out loud before coding — hash map, sliding window,
-topo sort, BFS shortest path. Interviewers grade the narrative as much as the code.</p>
+    intro = """
+<p>This lab covers the <strong>highest-frequency coding interview problems</strong> across FAANG
+and late-stage startups (Blind 75 / NeetCode lists, Amazon OAs, Google phones, Meta onsites).
+Each card is a full 25–40 minute practice: clarify → diagram → steps → code → follow-ups.</p>
+
+<p class="drill-intro"><strong>How to use it:</strong> Time yourself. Say the pattern name before
+coding. After you finish, close the card and re-explain the invariant from memory.</p>
+
+<figure class="diagram native">
+<img src="../assets/diagrams/two-sum-walk.svg" alt="Two Sum walkthrough overview" loading="lazy" />
+</figure>
+
+<p class="drill-intro">Related chapters:
+<a href="03-arrays.html">Arrays</a>,
+<a href="05-sliding-window.html">Sliding window</a>,
+<a href="08-linked-lists.html">Linked lists</a>,
+<a href="12-graphs.html">Graphs</a>,
+<a href="13-dp.html">DP</a>.</p>
+
+<ul class="lab-toc">
+  <li><a href="#q1"><span>Q1</span> Two Sum</a></li>
+  <li><a href="#q2"><span>Q2</span> Longest substring without repeats</a></li>
+  <li><a href="#q3"><span>Q3</span> Merge Intervals</a></li>
+  <li><a href="#q4"><span>Q4</span> LRU Cache</a></li>
+  <li><a href="#q5"><span>Q5</span> Number of Islands</a></li>
+  <li><a href="#q6"><span>Q6</span> Course Schedule</a></li>
+  <li><a href="#q7"><span>Q7</span> Coin Change</a></li>
+  <li><a href="#q8"><span>Q8</span> Word Ladder</a></li>
+  <li><a href="#q9"><span>Q9</span> Serialize / Deserialize Tree</a></li>
+  <li><a href="#q10"><span>Q10</span> Trapping Rain Water</a></li>
+</ul>
 """
-    return intro + "\n".join(cp_questions())
+    blocks = cp_questions()
+    out = []
+    for i, block in enumerate(blocks, start=1):
+        out.append(block.replace('<details class="qa">', f'<details class="qa" id="q{i}">', 1))
+    return intro + "\n".join(out)
 
 
 def cp_chapter_drills() -> dict[str, str]:
-    """Per-chapter mini drills injected into topic pages."""
+    """Per-chapter mini drills — deepened, pointing at the lab."""
     return {
         "03-arrays": drill_section(
-            "Interview drill",
-            "Questions interviewers actually ask when this chapter's pattern is the signal.",
+            "Interview drill — Arrays &amp; hashing",
+            "Hash-map interviews reward saying the complement insight before coding.",
             [
                 qa_block(
                     qnum=1,
@@ -594,13 +780,19 @@ def cp_chapter_drills() -> dict[str, str]:
                     asked="Amazon, Google, Meta",
                     difficulty="Easy",
                     pattern="Hash map",
-                    prompt="Return indices of two numbers that add to target. One solution guaranteed.",
+                    prompt="Indices of two numbers that add to target.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>One pass: for each x check if target−x is in a map of seen values; "
-                            "else store x→index. O(n) time / space. Full solution in the "
-                            "<a href=\"interview-cp.html\">Coding Interview Lab</a>.</p>",
+                            "Steps",
+                            figure_diagram("two-sum-walk", "Two Sum")
+                            + steps(
+                                [
+                                    "For each x, need = target − x.",
+                                    "If need in seen → return indices; else store x.",
+                                    "Store after check to avoid self-pairs.",
+                                ]
+                            )
+                            + "<p><a href=\"interview-cp.html#q1\">Full lab Q1</a>.</p>",
                         ),
                     ],
                 ),
@@ -609,25 +801,22 @@ def cp_chapter_drills() -> dict[str, str]:
                     title="Group Anagrams",
                     asked="Amazon, Meta, Uber",
                     difficulty="Medium",
-                    pattern="Hash map · sorted key / count key",
-                    prompt="Group strings that are anagrams of each other.",
+                    pattern="Hash map · sorted / count key",
+                    prompt="Group strings that are anagrams.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Key each word by sorted characters (or a 26-count tuple). Append "
-                            "into a map of key → list. Return the map values. O(n · k log k) with "
-                            "sort keys, or O(n · k) with count keys.</p>"
-                            + code_block(
+                            code_block(
                                 "python",
                                 """from collections import defaultdict
 
 def group_anagrams(strs):
     buckets = defaultdict(list)
     for s in strs:
-        key = tuple(sorted(s))
-        buckets[key].append(s)
+        buckets[tuple(sorted(s))].append(s)
     return list(buckets.values())""",
-                            ),
+                            )
+                            + "<p>Count-tuple keys make it O(n·k) instead of O(n·k log k).</p>",
                         ),
                     ],
                 ),
@@ -636,14 +825,13 @@ def group_anagrams(strs):
                     title="Top K Frequent Elements",
                     asked="Amazon, Google, Meta",
                     difficulty="Medium",
-                    pattern="Hash map + heap / bucket sort",
-                    prompt="Return the k most frequent elements in an integer array.",
+                    pattern="Heap / bucket sort",
+                    prompt="k most frequent elements.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Count frequencies, then either push into a size-k min-heap "
-                            "(O(n log k)) or bucket-sort by frequency (O(n)). Interviewers often "
-                            "ask you to beat a full sort.</p>",
+                            "<p>Count → size-k min-heap O(n log k), or bucket by frequency O(n). "
+                            "Interviewers often ask you to beat a full sort.</p>",
                         ),
                     ],
                 ),
@@ -652,14 +840,13 @@ def group_anagrams(strs):
                     title="Product of Array Except Self",
                     asked="Amazon, Meta, Apple",
                     difficulty="Medium",
-                    pattern="Prefix / suffix products",
-                    prompt="Return an array answer where answer[i] is the product of all elements "
-                    "except nums[i], without using division, in O(n).",
+                    pattern="Prefix / suffix",
+                    prompt="Products excluding self, no division, O(n).",
                     sections=[
                         (
                             "Approach",
-                            "<p>Left-to-right prefix products into the output, then a right-running "
-                            "suffix multiplier. Two passes, O(1) extra space beyond the output.</p>",
+                            "<p>Left-to-right prefix into output, then right-running suffix "
+                            "multiplier. O(1) extra space beyond output.</p>",
                         ),
                     ],
                 ),
@@ -669,12 +856,12 @@ def group_anagrams(strs):
                     asked="Google, Amazon",
                     difficulty="Medium",
                     pattern="Hash set",
-                    prompt="Find the length of the longest consecutive elements sequence in O(n).",
+                    prompt="Longest consecutive run in O(n).",
                     sections=[
                         (
                             "Approach",
-                            "<p>Put numbers in a set. Only start a streak when num−1 is absent. "
-                            "Walk upward counting. Each number enters a streak at most once → O(n).</p>",
+                            "<p>Set of numbers; only start a streak when num−1 missing; walk up. "
+                            "Each number enters a streak once → O(n).</p>",
                         ),
                     ],
                 ),
@@ -682,8 +869,8 @@ def group_anagrams(strs):
             lab_href="interview-cp.html",
         ),
         "05-sliding-window": drill_section(
-            "Interview drill",
-            "Sliding-window problems are Amazon and Meta favorites for medium rounds.",
+            "Interview drill — Sliding window",
+            "Name the invariant: what makes the window valid?",
             [
                 qa_block(
                     qnum=1,
@@ -691,13 +878,12 @@ def group_anagrams(strs):
                     asked="Amazon, Google, Meta",
                     difficulty="Medium",
                     pattern="Variable window",
-                    prompt="Length of longest substring with all unique characters.",
+                    prompt="Longest unique-char substring length.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Expand right; when a duplicate appears inside the window, jump left "
-                            "past its last index. Track max length. See "
-                            "<a href=\"interview-cp.html\">Coding Interview Lab Q2</a>.</p>",
+                            "Steps",
+                            figure_diagram("longest-substr-window", "Window")
+                            + "<p><a href=\"interview-cp.html#q2\">Lab Q2</a>.</p>",
                         ),
                     ],
                 ),
@@ -706,14 +892,18 @@ def group_anagrams(strs):
                     title="Minimum Window Substring",
                     asked="Meta, Amazon, LinkedIn",
                     difficulty="Hard",
-                    pattern="Variable window · need/have counts",
-                    prompt="Smallest substring of s that covers all characters in t (including duplicates).",
+                    pattern="need/have counts",
+                    prompt="Smallest window of s covering t.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Expand until the window satisfies t's counts, then shrink from the "
-                            "left while still valid, recording the best span. Use need/have counters "
-                            "so validation is O(1).</p>",
+                            steps(
+                                [
+                                    "Expand until window satisfies t's counts.",
+                                    "Shrink from left while still valid; track best.",
+                                    "need/have counters keep validation O(1).",
+                                ]
+                            ),
                         ),
                     ],
                 ),
@@ -722,13 +912,12 @@ def group_anagrams(strs):
                     title="Longest Repeating Character Replacement",
                     asked="Google, Amazon",
                     difficulty="Medium",
-                    pattern="Window · max frequency",
-                    prompt="Longest substring you can get by replacing at most k characters.",
+                    pattern="max frequency",
+                    prompt="Longest substring with ≤ k replacements.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Window is valid while <code>window_len - max_freq ≤ k</code>. "
-                            "Expand right; shrink left when invalid. You never need to decrease "
+                            "<p>Valid while window_len − max_freq ≤ k. You need not decrease "
                             "max_freq for the answer to stay correct.</p>",
                         ),
                     ],
@@ -738,13 +927,12 @@ def group_anagrams(strs):
                     title="Permutation in String",
                     asked="Microsoft, Amazon",
                     difficulty="Medium",
-                    pattern="Fixed window · frequency match",
-                    prompt="Return true if s2 contains a permutation of s1.",
+                    pattern="Fixed window",
+                    prompt="Does s2 contain a permutation of s1?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Fixed window of len(s1) on s2; compare character counts (or a "
-                            "diff counter that hits zero when matched).</p>",
+                            "<p>Fixed window of len(s1); match character counts / diff counter.</p>",
                         ),
                     ],
                 ),
@@ -753,13 +941,12 @@ def group_anagrams(strs):
                     title="Max Consecutive Ones III",
                     asked="Facebook, Google",
                     difficulty="Medium",
-                    pattern="Window · at most k zeros",
-                    prompt="Longest subarray with at most k zeros (you may flip those zeros to ones).",
+                    pattern="at most k zeros",
+                    prompt="Longest subarray with ≤ k zeros.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Expand right; count zeros in the window; while zeros &gt; k, advance "
-                            "left. Track max window length.</p>",
+                            "<p>Expand right; while zeros &gt; k advance left; track max length.</p>",
                         ),
                     ],
                 ),
@@ -767,21 +954,21 @@ def group_anagrams(strs):
             lab_href="interview-cp.html",
         ),
         "12-graphs": drill_section(
-            "Interview drill",
-            "Graph rounds usually mean BFS/DFS on grids or adjacency lists — not fancy theory.",
+            "Interview drill — Graphs",
+            "Grid DFS/BFS and topo sort cover most graph phone screens.",
             [
                 qa_block(
                     qnum=1,
                     title="Number of Islands",
                     asked="Amazon, Google, Meta",
                     difficulty="Medium",
-                    pattern="DFS / BFS flood fill",
-                    prompt="Count connected components of '1's in a grid.",
+                    pattern="Flood fill",
+                    prompt="Count land components.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>On each unvisited land cell, increment and flood-fill. "
-                            "<a href=\"interview-cp.html\">Lab Q5</a>.</p>",
+                            "Steps",
+                            figure_diagram("islands-dfs", "Islands")
+                            + "<p><a href=\"interview-cp.html#q5\">Lab Q5</a>.</p>",
                         ),
                     ],
                 ),
@@ -790,13 +977,13 @@ def group_anagrams(strs):
                     title="Course Schedule",
                     asked="Amazon, Google",
                     difficulty="Medium",
-                    pattern="Topological sort",
-                    prompt="Can you finish all courses given prerequisite pairs?",
+                    pattern="Topo sort",
+                    prompt="Can you finish all courses?",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Detect a cycle in a directed graph via Kahn BFS or DFS colors. "
-                            "<a href=\"interview-cp.html\">Lab Q6</a>.</p>",
+                            "Steps",
+                            figure_diagram("topo-kahn", "Kahn")
+                            + "<p><a href=\"interview-cp.html#q6\">Lab Q6</a>.</p>",
                         ),
                     ],
                 ),
@@ -805,13 +992,13 @@ def group_anagrams(strs):
                     title="Clone Graph",
                     asked="Facebook, Amazon",
                     difficulty="Medium",
-                    pattern="BFS/DFS + hashmap",
-                    prompt="Deep-copy a connected undirected graph of nodes with neighbor lists.",
+                    pattern="BFS + map",
+                    prompt="Deep-copy undirected graph.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Map old node → new node. BFS/DFS: create clone on first visit, "
-                            "then wire neighbor clones from the map.</p>",
+                            "<p>Map old→new; BFS/DFS create clone on first visit, then wire "
+                            "neighbor clones.</p>",
                         ),
                     ],
                 ),
@@ -821,12 +1008,12 @@ def group_anagrams(strs):
                     asked="Google, LinkedIn",
                     difficulty="Hard",
                     pattern="BFS shortest path",
-                    prompt="Shortest word transformation changing one letter at a time.",
+                    prompt="Shortest one-letter word transform.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>BFS over the word set; remove words when enqueued. "
-                            "<a href=\"interview-cp.html\">Lab Q8</a>.</p>",
+                            "Steps",
+                            figure_diagram("word-ladder-bfs", "Word ladder")
+                            + "<p><a href=\"interview-cp.html#q8\">Lab Q8</a>.</p>",
                         ),
                     ],
                 ),
@@ -835,13 +1022,12 @@ def group_anagrams(strs):
                     title="Pacific Atlantic Water Flow",
                     asked="Google, Amazon",
                     difficulty="Medium",
-                    pattern="Multi-source DFS/BFS",
-                    prompt="Cells from which water can flow to both Pacific and Atlantic oceans.",
+                    pattern="Multi-source DFS",
+                    prompt="Cells that can reach both oceans.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Flood inland from both ocean borders (water can \"climb\" to "
-                            "higher-or-equal cells). Intersection of the two reachable sets.</p>",
+                            "<p>Flood inland from both borders; intersection of reachable sets.</p>",
                         ),
                     ],
                 ),
@@ -849,8 +1035,8 @@ def group_anagrams(strs):
             lab_href="interview-cp.html",
         ),
         "13-dp": drill_section(
-            "Interview drill",
-            "Say the state, the transition, and the base case before you write a loop.",
+            "Interview drill — DP",
+            "State → transition → base case — say them before the loop.",
             [
                 qa_block(
                     qnum=1,
@@ -858,12 +1044,12 @@ def group_anagrams(strs):
                     asked="Amazon, Meta",
                     difficulty="Medium",
                     pattern="Unbounded knapsack",
-                    prompt="Fewest coins to make amount (or -1).",
+                    prompt="Fewest coins for amount.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>dp[x] = min over coins of dp[x−c]+1. "
-                            "<a href=\"interview-cp.html\">Lab Q7</a>.</p>",
+                            "Steps",
+                            figure_diagram("coin-change-dp", "Coin DP")
+                            + "<p><a href=\"interview-cp.html#q7\">Lab Q7</a>.</p>",
                         ),
                     ],
                 ),
@@ -872,13 +1058,12 @@ def group_anagrams(strs):
                     title="House Robber",
                     asked="Amazon, Google, Apple",
                     difficulty="Medium",
-                    pattern="1D DP · choose / skip",
-                    prompt="Max money without robbing two adjacent houses.",
+                    pattern="choose / skip",
+                    prompt="Max money, no adjacent houses.",
                     sections=[
                         (
                             "Approach",
-                            "<p>dp[i] = max(dp[i−1], dp[i−2] + nums[i]). Roll two variables for "
-                            "O(1) space.</p>",
+                            "<p>dp[i]=max(dp[i−1], dp[i−2]+nums[i]). Roll two variables for O(1) space.</p>",
                         ),
                     ],
                 ),
@@ -887,13 +1072,12 @@ def group_anagrams(strs):
                     title="Longest Increasing Subsequence",
                     asked="Google, Amazon",
                     difficulty="Medium",
-                    pattern="Patience sorting / DP",
-                    prompt="Length of the longest strictly increasing subsequence.",
+                    pattern="Patience / DP",
+                    prompt="LIS length.",
                     sections=[
                         (
                             "Approach",
-                            "<p>O(n²) DP is fine to start; O(n log n) maintains tails of increasing "
-                            "subsequences with binary search — mention both.</p>",
+                            "<p>O(n²) DP fine to start; O(n log n) tails + binary search — mention both.</p>",
                         ),
                     ],
                 ),
@@ -902,13 +1086,12 @@ def group_anagrams(strs):
                     title="Word Break",
                     asked="Facebook, Amazon, Uber",
                     difficulty="Medium",
-                    pattern="DP · substring check",
-                    prompt="Can s be segmented into a space-separated sequence of dictionary words?",
+                    pattern="substring DP",
+                    prompt="Can s be segmented into dictionary words?",
                     sections=[
                         (
                             "Approach",
-                            "<p>dp[i] true if some dp[j] and s[j:i] in dict. Put words in a set; "
-                            "optionally limit inner loop by max word length.</p>",
+                            "<p>dp[i] true if some dp[j] and s[j:i] in dict. Cap inner loop by max word length.</p>",
                         ),
                     ],
                 ),
@@ -918,12 +1101,11 @@ def group_anagrams(strs):
                     asked="Amazon, Bloomberg",
                     difficulty="Medium",
                     pattern="Grid DP",
-                    prompt="Robot goes only right/down on m×n grid — how many paths to bottom-right?",
+                    prompt="Right/down paths on m×n grid.",
                     sections=[
                         (
                             "Approach",
-                            "<p>dp[r][c] = dp[r−1][c] + dp[r][c−1], or combinatorial "
-                            "C(m+n−2, m−1). Obstacles variant adds a zeroing rule.</p>",
+                            "<p>dp[r][c]=dp[r−1][c]+dp[r][c−1], or C(m+n−2, m−1).</p>",
                         ),
                     ],
                 ),
@@ -931,8 +1113,8 @@ def group_anagrams(strs):
             lab_href="interview-cp.html",
         ),
         "15-intervals": drill_section(
-            "Interview drill",
-            "Interval problems almost always start with sort-by-start (or a sweep line).",
+            "Interview drill — Intervals",
+            "Almost always: sort by start (or sweep by time).",
             [
                 qa_block(
                     qnum=1,
@@ -940,12 +1122,12 @@ def group_anagrams(strs):
                     asked="Amazon, Google, Meta",
                     difficulty="Medium",
                     pattern="Sort + merge",
-                    prompt="Merge all overlapping intervals.",
+                    prompt="Merge overlaps.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Sort by start; extend or append. "
-                            "<a href=\"interview-cp.html\">Lab Q3</a>.</p>",
+                            "Steps",
+                            figure_diagram("merge-intervals-walk", "Merge")
+                            + "<p><a href=\"interview-cp.html#q3\">Lab Q3</a>.</p>",
                         ),
                     ],
                 ),
@@ -954,13 +1136,12 @@ def group_anagrams(strs):
                     title="Insert Interval",
                     asked="Google, LinkedIn",
                     difficulty="Medium",
-                    pattern="Linear scan merge",
-                    prompt="Insert a new interval into a sorted non-overlapping list and merge.",
+                    pattern="Linear merge",
+                    prompt="Insert into sorted non-overlapping list.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Add all intervals fully left of new; merge overlaps; append the rest. "
-                            "O(n), no full resorted needed.</p>",
+                            "<p>Add fully-left; merge overlaps; append rest. O(n).</p>",
                         ),
                     ],
                 ),
@@ -969,13 +1150,13 @@ def group_anagrams(strs):
                     title="Meeting Rooms II",
                     asked="Facebook, Amazon, Bloomberg",
                     difficulty="Medium",
-                    pattern="Sweep / min-heap of ends",
-                    prompt="Minimum number of conference rooms required.",
+                    pattern="Min-heap of ends",
+                    prompt="Minimum conference rooms.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Sort starts; keep a min-heap of end times. If next start ≥ earliest "
-                            "end, reuse a room (pop); else allocate (push). Heap size is the answer.</p>",
+                            "<p>Sort starts; heap of ends; reuse room if start ≥ earliest end. "
+                            "Heap size = answer.</p>",
                         ),
                     ],
                 ),
@@ -984,13 +1165,12 @@ def group_anagrams(strs):
                     title="Non-overlapping Intervals",
                     asked="Amazon, Microsoft",
                     difficulty="Medium",
-                    pattern="Greedy by end time",
-                    prompt="Minimum number of intervals to remove to make the rest non-overlapping.",
+                    pattern="Greedy by end",
+                    prompt="Min removals for non-overlap.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Sort by end; greedily keep an interval if it starts ≥ last kept end. "
-                            "Removals = n − kept.</p>",
+                            "<p>Sort by end; keep if start ≥ last end; removals = n − kept.</p>",
                         ),
                     ],
                 ),
@@ -999,13 +1179,12 @@ def group_anagrams(strs):
                     title="Employee Free Time",
                     asked="Airbnb, Google",
                     difficulty="Hard",
-                    pattern="Merge all busy intervals",
-                    prompt="Given employees' busy intervals, return common free gaps.",
+                    pattern="Merge busy",
+                    prompt="Common free gaps across employees.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Flatten and merge all busy intervals; gaps between merged busy "
-                            "blocks are free time.</p>",
+                            "<p>Flatten+merge all busy intervals; gaps between merges are free.</p>",
                         ),
                     ],
                 ),
@@ -1013,21 +1192,21 @@ def group_anagrams(strs):
             lab_href="interview-cp.html",
         ),
         "08-linked-lists": drill_section(
-            "Interview drill",
-            "Linked-list interviews reward pointer diagrams — draw before you mutate.",
+            "Interview drill — Linked lists",
+            "Draw pointers before you mutate — especially for LRU.",
             [
                 qa_block(
                     qnum=1,
                     title="LRU Cache",
-                    asked="Every FAANG — highest cross-company frequency",
+                    asked="Every FAANG",
                     difficulty="Medium",
-                    pattern="Hash + doubly linked list",
+                    pattern="Hash + DLL",
                     prompt="O(1) get/put with LRU eviction.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Map to nodes; move-to-front on access; evict tail. "
-                            "<a href=\"interview-cp.html\">Lab Q4</a>.</p>",
+                            "Steps",
+                            figure_diagram("lru-cache", "LRU")
+                            + "<p><a href=\"interview-cp.html#q4\">Lab Q4</a>.</p>",
                         ),
                     ],
                 ),
@@ -1037,27 +1216,27 @@ def group_anagrams(strs):
                     asked="Amazon, Microsoft, Apple",
                     difficulty="Easy",
                     pattern="Three pointers",
-                    prompt="Reverse a singly linked list iteratively and recursively.",
+                    prompt="Reverse iteratively and recursively.",
                     sections=[
                         (
                             "Approach",
                             "<p>prev/curr/next walk. Recursion: reverse rest, then "
-                            "head.next.next = head; head.next = None.</p>",
+                            "head.next.next=head; head.next=None.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=3,
-                    title="Detect Cycle / Linked List Cycle II",
+                    title="Linked List Cycle II",
                     asked="Amazon, Google",
                     difficulty="Medium",
-                    pattern="Floyd tortoise & hare",
-                    prompt="Detect a cycle; return the node where the cycle begins.",
+                    pattern="Floyd",
+                    prompt="Return the node where the cycle begins.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Slow/fast meet ⇒ cycle. Reset one pointer to head; advance both "
-                            "one step — they meet at the entrance.</p>",
+                            "<p>Slow/fast meet ⇒ cycle. Reset one to head; advance both one step "
+                            "→ entrance.</p>",
                         ),
                     ],
                 ),
@@ -1067,11 +1246,11 @@ def group_anagrams(strs):
                     asked="Amazon, Microsoft",
                     difficulty="Easy",
                     pattern="Dummy head",
-                    prompt="Merge two sorted lists into one sorted list.",
+                    prompt="Merge two sorted lists.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Dummy node; always attach the smaller head; append leftovers.</p>",
+                            "<p>Dummy node; always attach smaller head; append leftovers.</p>",
                         ),
                     ],
                 ),
@@ -1080,13 +1259,12 @@ def group_anagrams(strs):
                     title="Copy List with Random Pointer",
                     asked="Facebook, Amazon",
                     difficulty="Medium",
-                    pattern="Hash map or interleave nodes",
-                    prompt="Deep copy a list where each node has next and random pointers.",
+                    pattern="Map or interleave",
+                    prompt="Deep copy next+random list.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Map old→new then wire next/random; or interleave cloned nodes "
-                            "in-place then split — explain both.</p>",
+                            "<p>Map old→new then wire; or interleave clones in-place then split.</p>",
                         ),
                     ],
                 ),
@@ -1094,8 +1272,8 @@ def group_anagrams(strs):
             lab_href="interview-cp.html",
         ),
         "04-two-pointers": drill_section(
-            "Interview drill",
-            "Two pointers shine on sorted arrays and \"container\" geometry problems.",
+            "Interview drill — Two pointers",
+            "Sorted arrays and container geometry — state the move rule.",
             [
                 qa_block(
                     qnum=1,
@@ -1103,11 +1281,11 @@ def group_anagrams(strs):
                     asked="Amazon, Facebook, Microsoft",
                     difficulty="Medium",
                     pattern="Sort + two pointers",
-                    prompt="Find all unique triplets that sum to zero.",
+                    prompt="Unique triplets summing to 0.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Sort; fix i; two-pointer on the rest. Skip duplicates for i/lo/hi.</p>",
+                            "<p>Sort; fix i; two-pointer on rest; skip duplicates for i/lo/hi.</p>",
                         ),
                     ],
                 ),
@@ -1117,12 +1295,11 @@ def group_anagrams(strs):
                     asked="Amazon, Google, Bloomberg",
                     difficulty="Medium",
                     pattern="Opposite ends",
-                    prompt="Max area of water between two vertical lines.",
+                    prompt="Max area between two lines.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Start at ends; move the shorter line inward — only that move can "
-                            "increase area.</p>",
+                            "<p>Start at ends; move the shorter line inward — only that can improve area.</p>",
                         ),
                     ],
                 ),
@@ -1131,13 +1308,13 @@ def group_anagrams(strs):
                     title="Trapping Rain Water",
                     asked="Amazon, Google",
                     difficulty="Hard",
-                    pattern="Two pointers / stack",
-                    prompt="How much rain water can the elevation map trap?",
+                    pattern="Two pointers",
+                    prompt="How much rain is trapped?",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Advance the side with smaller max; water += max − height. "
-                            "<a href=\"interview-cp.html\">Lab Q10</a>.</p>",
+                            "Steps",
+                            figure_diagram("trap-water", "Trap")
+                            + "<p><a href=\"interview-cp.html#q10\">Lab Q10</a>.</p>",
                         ),
                     ],
                 ),
@@ -1146,12 +1323,12 @@ def group_anagrams(strs):
                     title="Valid Palindrome",
                     asked="Facebook, Amazon",
                     difficulty="Easy",
-                    pattern="Two pointers · skip non-alnum",
-                    prompt="Is the string a palindrome ignoring non-alphanumeric characters?",
+                    pattern="Skip non-alnum",
+                    prompt="Palindrome ignoring non-alphanumeric?",
                     sections=[
                         (
                             "Approach",
-                            "<p>lo/hi; skip non-alnum; compare lowercased chars.</p>",
+                            "<p>lo/hi; skip non-alnum; compare lowercased.</p>",
                         ),
                     ],
                 ),
@@ -1160,12 +1337,12 @@ def group_anagrams(strs):
                     title="Remove Duplicates from Sorted Array",
                     asked="Microsoft, Amazon",
                     difficulty="Easy",
-                    pattern="Slow / fast writers",
-                    prompt="In-place remove duplicates; return new length.",
+                    pattern="Slow/fast writers",
+                    prompt="In-place unique prefix length.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Slow writes unique values; fast scans. Classic write-index pattern.</p>",
+                            "<p>Slow writes uniques; fast scans.</p>",
                         ),
                     ],
                 ),
@@ -1173,80 +1350,77 @@ def group_anagrams(strs):
             lab_href="interview-cp.html",
         ),
         "09-trees": drill_section(
-            "Interview drill",
-            "Tree interviews: name the traversal, then code it. Recursion is expected.",
+            "Interview drill — Trees",
+            "Name the traversal, then code it.",
             [
                 qa_block(
                     qnum=1,
                     title="Serialize / Deserialize Binary Tree",
                     asked="Meta, Amazon",
                     difficulty="Hard",
-                    pattern="BFS with null markers",
-                    prompt="Encode a tree to a string and decode it back.",
+                    pattern="BFS + nulls",
+                    prompt="Encode and decode a tree.",
                     sections=[
                         (
-                            "Approach",
-                            "<p>Level-order with # for nulls. "
-                            "<a href=\"interview-cp.html\">Lab Q9</a>.</p>",
+                            "Steps",
+                            figure_diagram("serialize-tree", "Serialize")
+                            + "<p><a href=\"interview-cp.html#q9\">Lab Q9</a>.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=2,
-                    title="Validate Binary Search Tree",
+                    title="Validate BST",
                     asked="Amazon, Google, Microsoft",
                     difficulty="Medium",
-                    pattern="Bounds recursion / inorder",
-                    prompt="Determine if a binary tree is a valid BST.",
+                    pattern="Bounds / inorder",
+                    prompt="Is the tree a valid BST?",
                     sections=[
                         (
                             "Approach",
-                            "<p>Pass (low, high) bounds down, or inorder and ensure strictly "
-                            "increasing values.</p>",
+                            "<p>Pass (low, high) bounds, or inorder strictly increasing.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=3,
-                    title="Lowest Common Ancestor of a BST / Binary Tree",
+                    title="Lowest Common Ancestor",
                     asked="Facebook, Amazon",
                     difficulty="Medium",
                     pattern="Recursion / BST walk",
-                    prompt="Find LCA of two nodes.",
+                    prompt="LCA of two nodes.",
                     sections=[
                         (
                             "Approach",
-                            "<p>BST: walk left/right by value. General tree: recurse; if both "
-                            "sides nonempty, root is LCA.</p>",
+                            "<p>BST: walk by value. General: if both sides nonempty, root is LCA.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=4,
-                    title="Binary Tree Level Order Traversal",
+                    title="Level Order Traversal",
                     asked="Amazon, Microsoft",
                     difficulty="Medium",
                     pattern="BFS by level",
-                    prompt="Return node values grouped by level.",
+                    prompt="Values grouped by level.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Queue; for each level process queue.length nodes into a list.</p>",
+                            "<p>Queue; process queue.length nodes per level into a list.</p>",
                         ),
                     ],
                 ),
                 qa_block(
                     qnum=5,
-                    title="Maximum Depth / Invert Binary Tree",
-                    asked="Google, Apple (warmup)",
+                    title="Max Depth / Invert Tree",
+                    asked="Google, Apple warmup",
                     difficulty="Easy",
-                    pattern="DFS recursion",
-                    prompt="Compute height; or mirror the tree.",
+                    pattern="DFS",
+                    prompt="Height or mirror the tree.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Depth = 1 + max(left, right). Invert = swap children then recurse "
-                            "(or BFS swap).</p>",
+                            "<p>Depth=1+max(left,right). Invert=swap children then recurse.</p>",
                         ),
                     ],
                 ),
@@ -1254,21 +1428,20 @@ def group_anagrams(strs):
             lab_href="interview-cp.html",
         ),
         "07-binary-search": drill_section(
-            "Interview drill",
-            "Binary search interviews fail on boundary bugs — state the invariant every time.",
+            "Interview drill — Binary search",
+            "State the invariant every iteration — that is the interview.",
             [
                 qa_block(
                     qnum=1,
                     title="Search in Rotated Sorted Array",
                     asked="Meta, Amazon, LinkedIn",
                     difficulty="Medium",
-                    pattern="Binary search on rotated array",
-                    prompt="Search target in a rotated sorted array with distinct values.",
+                    pattern="Rotated binary search",
+                    prompt="Find target in rotated sorted array.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Find which half is sorted; if target lies in that half, search "
-                            "there, else the other. O(log n).</p>",
+                            "<p>Find which half is sorted; if target in that half, search there, else the other.</p>",
                         ),
                     ],
                 ),
@@ -1277,13 +1450,12 @@ def group_anagrams(strs):
                     title="Find Minimum in Rotated Sorted Array",
                     asked="Amazon, Microsoft",
                     difficulty="Medium",
-                    pattern="Binary search · pivot",
-                    prompt="Find the minimum element in a rotated sorted array.",
+                    pattern="Pivot",
+                    prompt="Minimum element after rotation.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Compare mid to hi: if nums[mid] &gt; nums[hi], min is to the right; "
-                            "else min is at mid or left.</p>",
+                            "<p>Compare mid to hi: if nums[mid] &gt; nums[hi], min is right; else mid or left.</p>",
                         ),
                     ],
                 ),
@@ -1293,12 +1465,11 @@ def group_anagrams(strs):
                     asked="Google, Amazon",
                     difficulty="Medium",
                     pattern="Binary search on answer",
-                    prompt="Minimum eating speed to finish piles within h hours.",
+                    prompt="Min speed to finish in h hours.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Binary search speed in [1, max(pile)]. Feasibility: sum of "
-                            "ceil(pile/speed) ≤ h.</p>",
+                            "<p>Search speed in [1, max(pile)]; feasible if Σ ceil(pile/speed) ≤ h.</p>",
                         ),
                     ],
                 ),
@@ -1308,12 +1479,12 @@ def group_anagrams(strs):
                     asked="Google, Adobe",
                     difficulty="Hard",
                     pattern="Binary partition",
-                    prompt="Find median of two sorted arrays in O(log(m+n)).",
+                    prompt="Median in O(log(m+n)).",
                     sections=[
                         (
                             "Approach",
-                            "<p>Binary search partition on the smaller array so left parts have "
-                            "correct count and max(left) ≤ min(right).</p>",
+                            "<p>Binary search partition on smaller array so left count is correct "
+                            "and max(left) ≤ min(right).</p>",
                         ),
                     ],
                 ),
@@ -1322,13 +1493,12 @@ def group_anagrams(strs):
                     title="Time-Based Key-Value Store",
                     asked="Google, Lyft",
                     difficulty="Medium",
-                    pattern="Map + binary search timestamps",
-                    prompt="set(key, value, timestamp); get(key, timestamp) → latest value ≤ time.",
+                    pattern="Map + bisect",
+                    prompt="get(key,t) → latest value with time ≤ t.",
                     sections=[
                         (
                             "Approach",
-                            "<p>Store list of (time, value) per key (times increasing). "
-                            "Binary search for rightmost time ≤ query.</p>",
+                            "<p>Per key, list of (time,value) ascending; bisect rightmost ≤ t.</p>",
                         ),
                     ],
                 ),

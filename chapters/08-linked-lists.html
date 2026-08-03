@@ -174,48 +174,48 @@ boolean hasCycle(ListNode head) {
 <div class="table-wrap"><table><thead><tr><th>prev</th><th>current</th><th>action</th><th>list built so far</th></tr></thead><tbody><tr><td>null</td><td>1</td><td>1.next = null, prev = 1, current = 2</td><td>null &lt;- 1</td></tr><tr><td>1</td><td>2</td><td>2.next = 1, prev = 2, current = 3</td><td>null &lt;- 1 &lt;- 2</td></tr><tr><td>2</td><td>3</td><td>3.next = 2, prev = 3, current = null</td><td>null &lt;- 1 &lt;- 2 &lt;- 3</td></tr><tr><td>3</td><td>null</td><td>current is null, stop, return prev</td><td>new head is 3</td></tr></tbody></table></div>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Linked-list interviews reward pointer diagrams — draw before you mutate.</p>
+<h2>Interview drill — Linked lists</h2>
+<p class="drill-intro">Draw pointers before you mutate — especially for LRU.</p>
 <p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. LRU Cache</span></summary>
 <div class="qa-body">
 <p>O(1) get/put with LRU eviction.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Every FAANG — highest cross-company frequency · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash + doubly linked list</p>
-<div class="qa-label">Approach</div>
-<p>Map to nodes; move-to-front on access; evict tail. <a href="interview-cp.html">Lab Q4</a>.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Every FAANG · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash + DLL</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/lru-cache.svg" alt="LRU" loading="lazy" /></figure><p><a href="interview-cp.html#q4">Lab Q4</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Reverse Linked List</span></summary>
 <div class="qa-body">
-<p>Reverse a singly linked list iteratively and recursively.</p>
+<p>Reverse iteratively and recursively.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft, Apple · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Three pointers</p>
 <div class="qa-label">Approach</div>
-<p>prev/curr/next walk. Recursion: reverse rest, then head.next.next = head; head.next = None.</p>
+<p>prev/curr/next walk. Recursion: reverse rest, then head.next.next=head; head.next=None.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q3. Detect Cycle / Linked List Cycle II</span></summary>
+<summary><span>Q3. Linked List Cycle II</span></summary>
 <div class="qa-body">
-<p>Detect a cycle; return the node where the cycle begins.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Floyd tortoise &amp; hare</p>
+<p>Return the node where the cycle begins.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Floyd</p>
 <div class="qa-label">Approach</div>
-<p>Slow/fast meet ⇒ cycle. Reset one pointer to head; advance both one step — they meet at the entrance.</p>
+<p>Slow/fast meet ⇒ cycle. Reset one to head; advance both one step → entrance.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Merge Two Sorted Lists</span></summary>
 <div class="qa-body">
-<p>Merge two sorted lists into one sorted list.</p>
+<p>Merge two sorted lists.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Dummy head</p>
 <div class="qa-label">Approach</div>
-<p>Dummy node; always attach the smaller head; append leftovers.</p>
+<p>Dummy node; always attach smaller head; append leftovers.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Copy List with Random Pointer</span></summary>
 <div class="qa-body">
-<p>Deep copy a list where each node has next and random pointers.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map or interleave nodes</p>
+<p>Deep copy next+random list.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Map or interleave</p>
 <div class="qa-label">Approach</div>
-<p>Map old→new then wire next/random; or interleave cloned nodes in-place then split — explain both.</p>
+<p>Map old→new then wire; or interleave clones in-place then split.</p>
 </div>
 </details>
 </section>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" role="img" aria-label="Number of Islands">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0f1c24"/>
+    </marker>
+  </defs>
+  <rect width="820" height="300" fill="#f7faf8"/>
+  <text x="24" y="36" font-family="Manrope, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0f1c24">Number of Islands</text>
+  
+  <text x="40" y="70" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">grid flood-fill</text>
+  <rect x="40" y="90" width="48" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="64.0" y="114.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="95" y="90" width="48" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="119.0" y="114.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="150" y="90" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="174.0" y="114.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="205" y="90" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="229.0" y="114.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="40" y="145" width="48" height="48" rx="10" fill="#f7ddd4" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="64.0" y="169.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="95" y="145" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="119.0" y="169.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="150" y="145" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="174.0" y="169.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="205" y="145" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="229.0" y="169.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="40" y="200" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="64.0" y="224.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="95" y="200" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="119.0" y="224.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="150" y="200" width="48" height="48" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="174.0" y="224.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="205" y="200" width="48" height="48" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="229.0" y="224.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text><rect x="40" y="255" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="64.0" y="279.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="95" y="255" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="119.0" y="279.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="150" y="255" width="48" height="48" rx="10" fill="#fff" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="174.0" y="279.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">0</text><rect x="205" y="255" width="48" height="48" rx="10" fill="#d7ebe7" stroke="#c5d5ce" stroke-width="1.2"/>
+<text x="229.0" y="279.0" text-anchor="middle" font-family="Manrope, Segoe UI, sans-serif" font-size="13" font-weight="650" fill="#0f1c24">1</text>
+  <text x="320" y="120" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">Island A (DFS/BFS)</text>
+  <text x="320" y="200" font-family="Manrope, Segoe UI, sans-serif" font-size="13" fill="#0f1c24">Island B</text>
+  <text x="320" y="260" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" fill="#0d7a6f">answer = 2</text>
+  <text x="40" y="290" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#3a4a54">Each unvisited land cell starts a new island; flood-fill marks the whole component.</text>
+
+</svg>

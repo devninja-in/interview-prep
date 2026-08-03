@@ -185,48 +185,48 @@ TreeNode insertBST(TreeNode root, int val) {
 <p>Level order needs to capture the queue size at the start of each level so you know where one Recursion depth can be large on a skewed tree, so very deep trees may need an iterative</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Tree interviews: name the traversal, then code it. Recursion is expected.</p>
+<h2>Interview drill — Trees</h2>
+<p class="drill-intro">Name the traversal, then code it.</p>
 <p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Serialize / Deserialize Binary Tree</span></summary>
 <div class="qa-body">
-<p>Encode a tree to a string and decode it back.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS with null markers</p>
-<div class="qa-label">Approach</div>
-<p>Level-order with # for nulls. <a href="interview-cp.html">Lab Q9</a>.</p>
+<p>Encode and decode a tree.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS + nulls</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/serialize-tree.svg" alt="Serialize" loading="lazy" /></figure><p><a href="interview-cp.html#q9">Lab Q9</a>.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q2. Validate Binary Search Tree</span></summary>
+<summary><span>Q2. Validate BST</span></summary>
 <div class="qa-body">
-<p>Determine if a binary tree is a valid BST.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Bounds recursion / inorder</p>
+<p>Is the tree a valid BST?</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Bounds / inorder</p>
 <div class="qa-label">Approach</div>
-<p>Pass (low, high) bounds down, or inorder and ensure strictly increasing values.</p>
+<p>Pass (low, high) bounds, or inorder strictly increasing.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q3. Lowest Common Ancestor of a BST / Binary Tree</span></summary>
+<summary><span>Q3. Lowest Common Ancestor</span></summary>
 <div class="qa-body">
-<p>Find LCA of two nodes.</p>
+<p>LCA of two nodes.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Recursion / BST walk</p>
 <div class="qa-label">Approach</div>
-<p>BST: walk left/right by value. General tree: recurse; if both sides nonempty, root is LCA.</p>
+<p>BST: walk by value. General: if both sides nonempty, root is LCA.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q4. Binary Tree Level Order Traversal</span></summary>
+<summary><span>Q4. Level Order Traversal</span></summary>
 <div class="qa-body">
-<p>Return node values grouped by level.</p>
+<p>Values grouped by level.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> BFS by level</p>
 <div class="qa-label">Approach</div>
-<p>Queue; for each level process queue.length nodes into a list.</p>
+<p>Queue; process queue.length nodes per level into a list.</p>
 </div>
 </details><details class="qa">
-<summary><span>Q5. Maximum Depth / Invert Binary Tree</span></summary>
+<summary><span>Q5. Max Depth / Invert Tree</span></summary>
 <div class="qa-body">
-<p>Compute height; or mirror the tree.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Google, Apple (warmup) · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> DFS recursion</p>
+<p>Height or mirror the tree.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Apple warmup · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> DFS</p>
 <div class="qa-label">Approach</div>
-<p>Depth = 1 + max(left, right). Invert = swap children then recurse (or BFS swap).</p>
+<p>Depth=1+max(left,right). Invert=swap children then recurse.</p>
 </div>
 </details>
 </section>

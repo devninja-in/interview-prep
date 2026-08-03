@@ -145,48 +145,48 @@ def min_meeting_rooms(intervals):
 <p>Watch empty input and a single interval, the usual boundary cases.</p>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Interval problems almost always start with sort-by-start (or a sweep line).</p>
+<h2>Interview drill — Intervals</h2>
+<p class="drill-intro">Almost always: sort by start (or sweep by time).</p>
 <p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Merge Intervals</span></summary>
 <div class="qa-body">
-<p>Merge all overlapping intervals.</p>
+<p>Merge overlaps.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sort + merge</p>
-<div class="qa-label">Approach</div>
-<p>Sort by start; extend or append. <a href="interview-cp.html">Lab Q3</a>.</p>
+<div class="qa-label">Steps</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/merge-intervals-walk.svg" alt="Merge" loading="lazy" /></figure><p><a href="interview-cp.html#q3">Lab Q3</a>.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Insert Interval</span></summary>
 <div class="qa-body">
-<p>Insert a new interval into a sorted non-overlapping list and merge.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Google, LinkedIn · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Linear scan merge</p>
+<p>Insert into sorted non-overlapping list.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, LinkedIn · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Linear merge</p>
 <div class="qa-label">Approach</div>
-<p>Add all intervals fully left of new; merge overlaps; append the rest. O(n), no full resorted needed.</p>
+<p>Add fully-left; merge overlaps; append rest. O(n).</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Meeting Rooms II</span></summary>
 <div class="qa-body">
-<p>Minimum number of conference rooms required.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon, Bloomberg · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sweep / min-heap of ends</p>
+<p>Minimum conference rooms.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Facebook, Amazon, Bloomberg · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Min-heap of ends</p>
 <div class="qa-label">Approach</div>
-<p>Sort starts; keep a min-heap of end times. If next start ≥ earliest end, reuse a room (pop); else allocate (push). Heap size is the answer.</p>
+<p>Sort starts; heap of ends; reuse room if start ≥ earliest end. Heap size = answer.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Non-overlapping Intervals</span></summary>
 <div class="qa-body">
-<p>Minimum number of intervals to remove to make the rest non-overlapping.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Greedy by end time</p>
+<p>Min removals for non-overlap.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Greedy by end</p>
 <div class="qa-label">Approach</div>
-<p>Sort by end; greedily keep an interval if it starts ≥ last kept end. Removals = n − kept.</p>
+<p>Sort by end; keep if start ≥ last end; removals = n − kept.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Employee Free Time</span></summary>
 <div class="qa-body">
-<p>Given employees' busy intervals, return common free gaps.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Airbnb, Google · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Merge all busy intervals</p>
+<p>Common free gaps across employees.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Airbnb, Google · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Merge busy</p>
 <div class="qa-label">Approach</div>
-<p>Flatten and merge all busy intervals; gaps between merged busy blocks are free time.</p>
+<p>Flatten+merge all busy intervals; gaps between merges are free.</p>
 </div>
 </details>
 </section>

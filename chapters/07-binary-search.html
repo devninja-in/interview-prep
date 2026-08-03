@@ -159,48 +159,48 @@ boolean canDo(int[] weights, int days, int cap) {
 <div class="table-wrap"><table><thead><tr><th>low</th><th>high</th><th>mid</th><th>value at mid</th><th>action</th></tr></thead><tbody><tr><td>0</td><td>5</td><td>2</td><td>5</td><td>5 is below 7, search right, low = 3</td></tr><tr><td>3</td><td>5</td><td>4</td><td>9</td><td>9 is above 7, search left, high = 3</td></tr><tr><td>3</td><td>3</td><td>3</td><td>7</td><td>7 equals target, return index 3</td></tr></tbody></table></div>
 <!-- INTERVIEW_DRILL_START -->
 <section class="interview-drill" id="interview-drill">
-<h2>Interview drill</h2>
-<p class="drill-intro">Binary search interviews fail on boundary bugs — state the invariant every time.</p>
+<h2>Interview drill — Binary search</h2>
+<p class="drill-intro">State the invariant every iteration — that is the interview.</p>
 <p class="drill-intro">More drills in the <a href="interview-cp.html">Interview Lab</a>.</p>
 <details class="qa">
 <summary><span>Q1. Search in Rotated Sorted Array</span></summary>
 <div class="qa-body">
-<p>Search target in a rotated sorted array with distinct values.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, LinkedIn · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Binary search on rotated array</p>
+<p>Find target in rotated sorted array.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Meta, Amazon, LinkedIn · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Rotated binary search</p>
 <div class="qa-label">Approach</div>
-<p>Find which half is sorted; if target lies in that half, search there, else the other. O(log n).</p>
+<p>Find which half is sorted; if target in that half, search there, else the other.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q2. Find Minimum in Rotated Sorted Array</span></summary>
 <div class="qa-body">
-<p>Find the minimum element in a rotated sorted array.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Binary search · pivot</p>
+<p>Minimum element after rotation.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Microsoft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Pivot</p>
 <div class="qa-label">Approach</div>
-<p>Compare mid to hi: if nums[mid] &gt; nums[hi], min is to the right; else min is at mid or left.</p>
+<p>Compare mid to hi: if nums[mid] &gt; nums[hi], min is right; else mid or left.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q3. Koko Eating Bananas</span></summary>
 <div class="qa-body">
-<p>Minimum eating speed to finish piles within h hours.</p>
+<p>Min speed to finish in h hours.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Amazon · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Binary search on answer</p>
 <div class="qa-label">Approach</div>
-<p>Binary search speed in [1, max(pile)]. Feasibility: sum of ceil(pile/speed) ≤ h.</p>
+<p>Search speed in [1, max(pile)]; feasible if Σ ceil(pile/speed) ≤ h.</p>
 </div>
 </details><details class="qa">
 <summary><span>Q4. Median of Two Sorted Arrays</span></summary>
 <div class="qa-body">
-<p>Find median of two sorted arrays in O(log(m+n)).</p>
+<p>Median in O(log(m+n)).</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, Adobe · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Binary partition</p>
 <div class="qa-label">Approach</div>
-<p>Binary search partition on the smaller array so left parts have correct count and max(left) ≤ min(right).</p>
+<p>Binary search partition on smaller array so left count is correct and max(left) ≤ min(right).</p>
 </div>
 </details><details class="qa">
 <summary><span>Q5. Time-Based Key-Value Store</span></summary>
 <div class="qa-body">
-<p>set(key, value, timestamp); get(key, timestamp) → latest value ≤ time.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Google, Lyft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Map + binary search timestamps</p>
+<p>get(key,t) → latest value with time ≤ t.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Google, Lyft · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Map + bisect</p>
 <div class="qa-label">Approach</div>
-<p>Store list of (time, value) per key (times increasing). Binary search for rightmost time ≤ query.</p>
+<p>Per key, list of (time,value) ascending; bisect rightmost ≤ t.</p>
 </div>
 </details>
 </section>

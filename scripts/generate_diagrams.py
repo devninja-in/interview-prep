@@ -787,6 +787,174 @@ DIAGRAMS["grounded-support"] = svg(
     "Grounded support bot",
 )
 
+# --- CP interview deep-dive diagrams ---
+DIAGRAMS["two-sum-walk"] = svg(
+    820,
+    300,
+    f'''
+  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">nums = [2, 7, 11, 15]  target = 9</text>
+  {box(40, 100, 70, 50, ACCENT_SOFT, "2")}
+  {box(130, 100, 70, 50, ROSE, "7")}
+  {box(220, 100, 70, 50, "#fff", "11")}
+  {box(310, 100, 70, 50, "#fff", "15")}
+  <text x="75" y="175" font-family="{MONO}" font-size="11" fill="{SOFT}">i=0</text>
+  <text x="165" y="175" font-family="{MONO}" font-size="11" fill="{ACCENT}">i=1 hit</text>
+  {box(450, 90, 320, 90, SAND, "seen map", "after i=0: {{2:0}}")}
+  <text x="450" y="210" font-family="{SANS}" font-size="13" fill="{INK}">need = 9-7 = 2 → found at index 0 → return [0,1]</text>
+  {caption(40, 270, "Store each value after checking its complement — never pair a number with itself.")}
+''',
+    "Two Sum walkthrough",
+)
+
+DIAGRAMS["longest-substr-window"] = svg(
+    820,
+    280,
+    f'''
+  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">s = "abcabcbb"</text>
+  {"".join(box(40 + i*70, 100, 58, 50, ROSE if 0 <= i <= 2 else "#fff", c) for i,c in enumerate(list("abcabcbb")[:6]))}
+  <rect x="40" y="94" width="198" height="62" rx="8" fill="none" stroke="{ACCENT}" stroke-width="2"/>
+  <text x="40" y="185" font-family="{MONO}" font-size="12" fill="{ACCENT}">best window "abc" length 3</text>
+  <text x="40" y="210" font-family="{SANS}" font-size="13" fill="{INK}">On repeat of 'a', jump left past previous 'a'</text>
+  {caption(40, 255, "Variable window: expand right; when duplicate in window, move left forward.")}
+''',
+    "Longest substring window",
+)
+
+DIAGRAMS["merge-intervals-walk"] = svg(
+    820,
+    280,
+    f'''
+  {box(40, 90, 100, 44, "#fff", "[1,3]")}
+  {box(160, 90, 100, 44, "#fff", "[2,6]")}
+  {box(280, 90, 100, 44, "#fff", "[8,10]")}
+  {box(400, 90, 100, 44, "#fff", "[15,18]")}
+  <path d="M90 150 V170 H210 V150" fill="none" stroke="{ACCENT}" stroke-width="1.6"/>
+  <text x="110" y="195" font-family="{MONO}" font-size="12" fill="{ACCENT}">overlap → merge</text>
+  {box(40, 220, 120, 40, ROSE, "[1,6]")}
+  {box(180, 220, 120, 40, ACCENT_SOFT, "[8,10]")}
+  {box(320, 220, 120, 40, SAND, "[15,18]")}
+  {caption(480, 245, "Sort by start, then one linear pass.")}
+''',
+    "Merge intervals",
+)
+
+DIAGRAMS["lru-cache"] = svg(
+    820,
+    300,
+    f'''
+  {box(40, 100, 160, 70, SAND, "HashMap", "key → node")}
+  {box(280, 80, 480, 120, "#fff", "", "")}
+  <text x="300" y="110" font-family="{SANS}" font-size="13" font-weight="650" fill="{INK}">Doubly linked list (MRU → LRU)</text>
+  {box(300, 130, 90, 44, ROSE, "MRU")}
+  {box(420, 130, 90, 44, ACCENT_SOFT, "…")}
+  {box(540, 130, 90, 44, SAND, "LRU")}
+  <path d="M395 152 H415" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M515 152 H535" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M210 135 H270" stroke="{INK}" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+  {caption(40, 250, "get/put: O(1) via map. Evict: remove LRU tail. On access: move node to MRU head.")}
+''',
+    "LRU Cache structure",
+)
+
+DIAGRAMS["islands-dfs"] = svg(
+    820,
+    300,
+    f'''
+  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">grid flood-fill</text>
+  {"".join(box(40 + c*55, 90 + r*55, 48, 48, ROSE if (r,c) in {(0,0),(0,1),(1,0)} else (ACCENT_SOFT if (r,c) in {(2,2),(2,3),(3,3)} else "#fff"), "1" if (r,c) in {(0,0),(0,1),(1,0),(2,2),(2,3),(3,3)} else "0") for r in range(4) for c in range(4))}
+  <text x="320" y="120" font-family="{SANS}" font-size="13" fill="{INK}">Island A (DFS/BFS)</text>
+  <text x="320" y="200" font-family="{SANS}" font-size="13" fill="{INK}">Island B</text>
+  <text x="320" y="260" font-family="{MONO}" font-size="12" fill="{ACCENT}">answer = 2</text>
+  {caption(40, 290, "Each unvisited land cell starts a new island; flood-fill marks the whole component.")}
+''',
+    "Number of Islands",
+)
+
+DIAGRAMS["topo-kahn"] = svg(
+    820,
+    280,
+    f'''
+  {box(40, 100, 70, 50, ROSE, "0", "in=0")}
+  {box(160, 100, 70, 50, ACCENT_SOFT, "1", "in=1")}
+  {box(280, 100, 70, 50, "#fff", "2", "in=1")}
+  {box(400, 100, 70, 50, SAND, "3", "in=2")}
+  <path d="M115 125 H155" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M235 125 H275" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M350 125 H395" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M75 155 V190 H435 V155" fill="none" stroke="{SOFT}" stroke-width="1.2"/>
+  <text x="40" y="230" font-family="{SANS}" font-size="13" fill="{INK}">Kahn: queue all indegree 0 → take course → decrement neighbors</text>
+  {caption(40, 260, "If you cannot process all nodes, there is a cycle → cannot finish.")}
+''',
+    "Course Schedule (Kahn)",
+)
+
+DIAGRAMS["coin-change-dp"] = svg(
+    820,
+    280,
+    f'''
+  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">coins=[1,2,5] amount=11 → dp[x]=fewest coins for x</text>
+  {"".join(box(40 + i*60, 110, 52, 44, ROSE if i==11 else ACCENT_SOFT, str(v)) for i,v in enumerate([0,1,1,2,2,1,2,2,3,3,2,3]))}
+  <text x="40" y="185" font-family="{MONO}" font-size="11" fill="{SOFT}">x:  0  1  2  3  4  5  6  7  8  9 10 11</text>
+  <text x="40" y="220" font-family="{SANS}" font-size="13" fill="{INK}">Transition: dp[x] = min(dp[x], dp[x-c]+1) for each coin c</text>
+  {caption(40, 255, "Unbounded knapsack. Greedy fails for arbitrary denominations — say why.")}
+''',
+    "Coin Change DP",
+)
+
+DIAGRAMS["word-ladder-bfs"] = svg(
+    820,
+    280,
+    f'''
+  {box(40, 110, 100, 48, SAND, "hit", "begin")}
+  {box(200, 70, 100, 48, ACCENT_SOFT, "hot")}
+  {box(200, 160, 100, 48, "#fff", "hip")}
+  {box(360, 110, 100, 48, ROSE, "dot")}
+  {box(520, 110, 100, 48, ACCENT_SOFT, "dog")}
+  {box(680, 110, 100, 48, SAND, "cog", "end")}
+  <path d="M145 134 H195" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M300 94 H340 V134 H355" fill="none" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M465 134 H515" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  <path d="M625 134 H675" stroke="{INK}" stroke-width="1.3" marker-end="url(#arrowhead)"/>
+  {caption(40, 240, "Implicit graph: edge if Hamming distance 1. BFS = shortest transformation length.")}
+''',
+    "Word Ladder BFS",
+)
+
+DIAGRAMS["serialize-tree"] = svg(
+    820,
+    300,
+    f'''
+  {box(360, 70, 70, 40, ROSE, "1")}
+  {box(250, 140, 70, 40, ACCENT_SOFT, "2")}
+  {box(470, 140, 70, 40, ACCENT_SOFT, "3")}
+  {box(420, 210, 70, 40, SAND, "4")}
+  {box(520, 210, 70, 40, SAND, "5")}
+  <path d="M360 110 L285 140" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M430 110 L505 140" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M490 185 L455 210" stroke="{INK}" stroke-width="1.2"/>
+  <path d="M520 185 L555 210" stroke="{INK}" stroke-width="1.2"/>
+  <text x="40" y="100" font-family="{MONO}" font-size="12" fill="{ACCENT}">BFS serialize</text>
+  <text x="40" y="130" font-family="{MONO}" font-size="12" fill="{INK}">1,2,3,#,#,4,5,#,#,#,#</text>
+  {caption(40, 270, "Level-order with explicit null markers makes encode/decode invertible.")}
+''',
+    "Serialize binary tree",
+)
+
+DIAGRAMS["trap-water"] = svg(
+    820,
+    280,
+    f'''
+  <text x="40" y="70" font-family="{MONO}" font-size="12" fill="{ACCENT}">height = [0,1,0,2,1,0,1,3,2,1,2,1]</text>
+  {"".join(f'<rect x="{60 + i*45}" y="{220 - h*28}" width="36" height="{h*28}" fill="{ACCENT_SOFT if h else "#fff"}" stroke="{LINE}"/>' for i,h in enumerate([0,1,0,2,1,0,1,3,2,1,2,1]))}
+  <rect x="150" y="192" width="36" height="28" fill="{ROSE}" opacity="0.85"/>
+  <rect x="240" y="164" width="36" height="28" fill="{ROSE}" opacity="0.85"/>
+  <rect x="285" y="192" width="36" height="28" fill="{ROSE}" opacity="0.85"/>
+  <text x="40" y="255" font-family="{SANS}" font-size="13" fill="{INK}">Water at i = min(left_max, right_max) - height[i]</text>
+  {caption(480, 255, "Two pointers: advance the side with smaller max.")}
+''',
+    "Trapping Rain Water",
+)
+
 DIAGRAMS["prefix-sums"] = svg(
     720,
     260,
@@ -845,6 +1013,18 @@ CHAPTER_DIAGRAMS = {
         "multi-tenant-ai",
         "transcription-ai",
         "grounded-support",
+    ],
+    "interview-cp": [
+        "two-sum-walk",
+        "longest-substr-window",
+        "merge-intervals-walk",
+        "lru-cache",
+        "islands-dfs",
+        "topo-kahn",
+        "coin-change-dp",
+        "word-ladder-bfs",
+        "serialize-tree",
+        "trap-water",
     ],
 }
 

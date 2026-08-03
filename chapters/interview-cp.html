@@ -28,23 +28,59 @@
         <p class="part-eyebrow">Interview Lab · Competitive Programming</p>
         <header class="chapter-hero">
 <h1>Coding interview questions</h1>
-<p class="lab-hero-note">Ten FAANG-frequency problems with deep solutions — plus pattern follow-ups.</p>
+<p class="lab-hero-note">Ten FAANG-frequency problems with diagrams, walkthroughs, Python/Java, and follow-ups — practice like a timed phone screen.</p>
 </header>
 <div class="chapter-body">
-<p>These ten problems show up constantly in FAANG and late-stage startup coding rounds
-(Blind 75 / NeetCode frequency lists, Amazon online assessments, Google phone screens, Meta onsites).
-Each expandable card has the prompt, how to reason under a 25–40 minute clock, working code, and the
-follow-ups interviewers actually ask.</p>
-<p class="drill-intro">Tip: say the pattern name out loud before coding — hash map, sliding window,
-topo sort, BFS shortest path. Interviewers grade the narrative as much as the code.</p>
-<details class="qa">
+<p>This lab covers the <strong>highest-frequency coding interview problems</strong> across FAANG
+and late-stage startups (Blind 75 / NeetCode lists, Amazon OAs, Google phones, Meta onsites).
+Each card is a full 25–40 minute practice: clarify → diagram → steps → code → follow-ups.</p>
+
+<p class="drill-intro"><strong>How to use it:</strong> Time yourself. Say the pattern name before
+coding. After you finish, close the card and re-explain the invariant from memory.</p>
+
+<figure class="diagram native">
+<img src="../assets/diagrams/two-sum-walk.svg" alt="Two Sum walkthrough overview" loading="lazy" />
+</figure>
+
+<p class="drill-intro">Related chapters:
+<a href="03-arrays.html">Arrays</a>,
+<a href="05-sliding-window.html">Sliding window</a>,
+<a href="08-linked-lists.html">Linked lists</a>,
+<a href="12-graphs.html">Graphs</a>,
+<a href="13-dp.html">DP</a>.</p>
+
+<ul class="lab-toc">
+  <li><a href="#q1"><span>Q1</span> Two Sum</a></li>
+  <li><a href="#q2"><span>Q2</span> Longest substring without repeats</a></li>
+  <li><a href="#q3"><span>Q3</span> Merge Intervals</a></li>
+  <li><a href="#q4"><span>Q4</span> LRU Cache</a></li>
+  <li><a href="#q5"><span>Q5</span> Number of Islands</a></li>
+  <li><a href="#q6"><span>Q6</span> Course Schedule</a></li>
+  <li><a href="#q7"><span>Q7</span> Coin Change</a></li>
+  <li><a href="#q8"><span>Q8</span> Word Ladder</a></li>
+  <li><a href="#q9"><span>Q9</span> Serialize / Deserialize Tree</a></li>
+  <li><a href="#q10"><span>Q10</span> Trapping Rain Water</a></li>
+</ul>
+<details class="qa" id="q1">
 <summary><span>Q1. Two Sum</span></summary>
 <div class="qa-body">
-<p>Given an array of integers nums and an integer target, return the indices of the two numbers that add up to target. Exactly one solution exists; you may not use the same element twice. This is the single most common coding-interview opener.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft, Apple — classic warmup across FAANG · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Hash map · complement lookup</p>
-<div class="qa-label">How to think about it</div>
-<p>Brute force checks every pair in O(n²). The interview insight: for each value <code>x</code>, the partner you need is <code>target - x</code>. If you remember every value you have already seen in a map from value → index, each new number becomes one hash lookup. Store a number <em>after</em> you check for its partner so you never pair an element with itself.</p>
-<div class="qa-label">Solution (Python)</div>
+<p>Given an array of integers nums and an integer target, return the indices of the two numbers that add up to target. Exactly one solution exists; you may not use the same element twice. Narrate brute force → optimal, then code.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft, Apple — classic FAANG warmup · <strong>Difficulty:</strong> Easy · <strong>Pattern:</strong> Hash map · complement lookup</p>
+<div class="qa-label">Clarify</div>
+<ul><li>Return indices or values? (indices — LeetCode default)</li><li>Duplicates allowed in the array?</li><li>Negative numbers? (yes — hash map still works)</li><li>Guaranteed one answer, or return empty if none?</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/two-sum-walk.svg" alt="Two Sum hash-map walkthrough" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li><strong>Brute force:</strong> check every pair → O(n²). Say it, then improve.</li><li><strong>Insight:</strong> for value <code>x</code> you need <code>target - x</code>. Remember past values in a map value→index.</li><li><strong>One pass:</strong> for each i, if need in map → return; else store nums[i]→i <em>after</em> the check (avoids self-pair).</li><li><strong>Complexity:</strong> time O(n), space O(n).</li></ol>
+<div class="qa-label">Walkthrough table</div>
+<div class="table-wrap"><table>
+<caption>nums=[2,7,11,15], target=9</caption>
+<thead><tr><th>i</th><th>x</th><th>need</th><th>seen</th><th>action</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>2</td><td>7</td><td>{}</td><td>miss → store 2→0</td></tr>
+<tr><td>1</td><td>7</td><td>2</td><td>{2:0}</td><td>hit → return [0,1]</td></tr>
+</tbody></table></div>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def two_sum(nums, target):
     seen = {}  # value -&gt; index
     for i, x in enumerate(nums):
@@ -54,31 +90,35 @@ topo sort, BFS shortest path. Interviewers grade the narrative as much as the co
         seen[x] = i
     return []
 </code></pre></div>
-<div class="qa-label">Solution (Java)</div>
+<div class="qa-label">Java</div>
 <div class="code-block"><div class="code-lang">JAVA</div><pre class="code"><code class="language-java">int[] twoSum(int[] nums, int target) {
     Map&lt;Integer, Integer&gt; seen = new HashMap&lt;&gt;();
     for (int i = 0; i &lt; nums.length; i++) {
         int need = target - nums[i];
-        if (seen.containsKey(need)) {
-            return new int[]{seen.get(need), i};
-        }
+        if (seen.containsKey(need)) return new int[]{seen.get(need), i};
         seen.put(nums[i], i);
     }
     return new int[]{};
 }
 </code></pre></div>
-<div class="qa-label">Complexity &amp; follow-ups</div>
-<p><strong>Time O(n), space O(n).</strong> Follow-ups interviewers love: return all pairs (use a multiset / frequency map); sorted array variant (two pointers, O(1) extra space); what if the array is a stream?</p>
+<div class="qa-label">Follow-ups</div>
+<ul><li>All pairs / duplicates → frequency map or multiset.</li><li>Sorted array → two pointers, O(1) extra space.</li><li>Streaming input → same map, bound memory if needed.</li></ul>
+<div class="qa-label">Common mistakes</div>
+<aside class="qa-callout"><div class="qa-label">Watch for</div><ul><li>Storing before checking → pairing with self when 2x = target.</li><li>Returning values instead of indices.</li><li>Using a list scan for "seen" → accidental O(n²).</li></ul></aside>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q2">
 <summary><span>Q2. Longest Substring Without Repeating Characters</span></summary>
 <div class="qa-body">
 <p>Given a string s, find the length of the longest substring without repeating characters. Example: "abcabcbb" → 3 ("abc").</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft — Blind 75 staple · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sliding window · last-seen index</p>
-<div class="qa-label">How to think about it</div>
-<p>Maintain a window <code>[left, right]</code> that is always duplicate-free. Advance <code>right</code>. When <code>s[right]</code> was already inside the window, jump <code>left</code> past its previous index. Track the best window length. A map from character → last index avoids shrinking one-by-one.</p>
-<div class="qa-label">Solution (Python)</div>
+<div class="qa-label">Clarify</div>
+<ul><li>ASCII / Unicode? (map works either way)</li><li>Empty string → 0</li><li>All unique → n; all same → 1</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/longest-substr-window.svg" alt="Sliding window for unique substring" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li>Maintain window [left, right] that is always duplicate-free.</li><li>Advance right. If s[right] was seen at index ≥ left, set left = last[ch] + 1.</li><li>Update last[ch] = right; track best = max(best, right-left+1).</li><li>Time O(n), space O(min(n, alphabet)).</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def length_of_longest_substring(s):
     last = {}
     left = best = 0
@@ -89,18 +129,20 @@ topo sort, BFS shortest path. Interviewers grade the narrative as much as the co
         best = max(best, right - left + 1)
     return best
 </code></pre></div>
-<div class="qa-label">Complexity &amp; traps</div>
-<p><strong>Time O(n), space O(min(n, alphabet)).</strong> Trap: only move <code>left</code> forward when the previous occurrence is still inside the window (<code>last[ch] &gt;= left</code>). Empty string and all-unique strings are easy edge cases to miss under pressure.</p>
+<div class="qa-label">Trap</div>
+<aside class="qa-callout"><div class="qa-label">Invariant</div><p>Only move left when the previous occurrence is still <em>inside</em> the window (<code>last[ch] &gt;= left</code>). Otherwise you can accidentally shrink past a valid window.</p></aside>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q3">
 <summary><span>Q3. Merge Intervals</span></summary>
 <div class="qa-body">
-<p>Given an array of intervals where intervals[i] = [start_i, end_i], merge all overlapping intervals and return an array of the non-overlapping intervals that cover the input exactly.</p>
+<p>Given intervals[i] = [start_i, end_i], merge all overlapping intervals and return the covering non-overlapping set.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Microsoft — scheduling / calendar rounds · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Sort + linear merge</p>
-<div class="qa-label">How to think about it</div>
-<p>Sort by start time. Walk left to right keeping a "current" interval. If the next interval starts before or at the current end, extend the end (take max). Otherwise push current and start a new one. Sorting is what makes the single pass correct.</p>
-<div class="qa-label">Solution (Python)</div>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/merge-intervals-walk.svg" alt="Merge overlapping intervals" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li>Sort by start time — required for a single pass.</li><li>Keep a "current" interval. If next.start ≤ current.end, current.end = max(ends). Else push current and start new.</li><li>Touching intervals [1,2][2,3]: ask if they merge (usually yes with ≤).</li><li>Time O(n log n), space O(n).</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def merge(intervals):
     intervals.sort(key=lambda x: x[0])
     out = [intervals[0][:]]
@@ -111,18 +153,22 @@ topo sort, BFS shortest path. Interviewers grade the narrative as much as the co
             out.append([start, end])
     return out
 </code></pre></div>
-<div class="qa-label">Complexity &amp; follow-ups</div>
-<p><strong>Time O(n log n), space O(n).</strong> Follow-ups: insert a new interval into an already-merged list; find the minimum number of meeting rooms (sweep line / heap of end times); check if a person can attend all meetings.</p>
+<div class="qa-label">Follow-ups</div>
+<ul><li>Insert Interval into an already-merged list (O(n), no full resort).</li><li>Meeting Rooms II → min heap of end times / sweep line.</li><li>Min removals to make non-overlapping → greedy by end.</li></ul>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q4">
 <summary><span>Q4. LRU Cache</span></summary>
 <div class="qa-body">
-<p>Design a data structure that follows the constraints of a Least Recently Used (LRU) cache. Implement get(key) and put(key, value) both in O(1) average time. When capacity is exceeded, evict the least recently used key.</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Apple, Microsoft — most cross-company design+code problem · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map + doubly linked list</p>
-<div class="qa-label">How to think about it</div>
-<p>Hash map alone gives O(1) get but not O(1) eviction order. Doubly linked list alone gives O(1) move-to-front if you already have the node. Compose them: map key → node; list ordered most-recent at head, least-recent at tail. On get/put hit: unlink node and insert at head. On capacity overflow: remove tail and delete its map entry.</p>
-<div class="qa-label">Solution (Python)</div>
+<p>Design LRUCache with get(key) and put(key, value) in O(1) average time. Evict the least recently used key when over capacity.</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Apple, Microsoft — highest cross-company design+code · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Hash map + doubly linked list</p>
+<div class="qa-label">Clarify</div>
+<ul><li>Capacity ≥ 1?</li><li>get miss → -1</li><li>put on existing key updates value AND recency</li><li>Thread safety? (usually out of scope unless asked)</li></ul>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/lru-cache.svg" alt="Hash map plus doubly linked list" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li><strong>Why both structures?</strong> Map → O(1) lookup. DLL → O(1) reorder / evict if you already have the node pointer.</li><li>Sentinel head/tail simplify edge inserts/removes.</li><li>get hit: unlink node, insert after head (MRU), return value.</li><li>put: if key exists, remove old node; insert new at head; if size &gt; capacity, remove tail.prev and delete from map.</li><li>Draw the list on the whiteboard before coding helpers.</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">class Node:
     __slots__ = (&quot;key&quot;, &quot;val&quot;, &quot;prev&quot;, &quot;next&quot;)
     def __init__(self, key=0, val=0):
@@ -131,8 +177,7 @@ topo sort, BFS shortest path. Interviewers grade the narrative as much as the co
 
 class LRUCache:
     def __init__(self, capacity):
-        self.cap = capacity
-        self.map = {}
+        self.cap, self.map = capacity, {}
         self.head, self.tail = Node(), Node()
         self.head.next, self.tail.prev = self.tail, self.head
 
@@ -141,8 +186,7 @@ class LRUCache:
         node.next.prev = node.prev
 
     def _add_front(self, node):
-        node.next = self.head.next
-        node.prev = self.head
+        node.next, node.prev = self.head.next, self.head
         self.head.next.prev = node
         self.head.next = node
 
@@ -150,8 +194,7 @@ class LRUCache:
         if key not in self.map:
             return -1
         node = self.map[key]
-        self._remove(node)
-        self._add_front(node)
+        self._remove(node); self._add_front(node)
         return node.val
 
     def put(self, key, value):
@@ -166,17 +209,19 @@ class LRUCache:
             del self.map[lru.key]
 </code></pre></div>
 <div class="qa-label">What interviewers listen for</div>
-<p>Say out loud why both structures are needed. Handle capacity 1, update of an existing key (must refresh recency without growing size), and get miss returning -1. In Python, <code>collections.OrderedDict</code> is acceptable if you explain move_to_end — many interviewers still want the list drawn.</p>
+<aside class="qa-callout"><div class="qa-label">Signal</div><p>Explain composition out loud. Handle capacity 1 and update-existing without growing size. OrderedDict is OK if you explain <code>move_to_end</code> — many still want the list drawn.</p></aside>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q5">
 <summary><span>Q5. Number of Islands</span></summary>
 <div class="qa-body">
-<p>Given an m × n binary grid where '1' is land and '0' is water, return the number of islands. An island is formed by connecting adjacent lands horizontally or vertically (not diagonally).</p>
+<p>Given an m×n grid of '1' (land) and '0' (water), return the number of islands. Land connects 4-directionally (not diagonally).</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta — grid / flood-fill classic · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> DFS / BFS on grid</p>
-<div class="qa-label">How to think about it</div>
-<p>Scan the grid. Each time you find an unvisited '1', you have discovered a new island — increment the count, then flood-fill (DFS or BFS) to mark every connected '1' as visited (flip to '0' or use a visited set). Never revisit.</p>
-<div class="qa-label">Solution (Python)</div>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/islands-dfs.svg" alt="Flood-fill islands on a grid" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li>Scan every cell. On unvisited '1', increment count.</li><li>Flood-fill (DFS or BFS) to mark the whole component visited (flip to '0' or use a visited set).</li><li>Never revisit. Prefer BFS if recursion depth worries them.</li><li>Time O(m·n), space O(m·n) worst case.</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def num_islands(grid):
     if not grid:
         return 0
@@ -197,18 +242,20 @@ class LRUCache:
                 dfs(r, c)
     return count
 </code></pre></div>
-<div class="qa-label">Complexity &amp; variants</div>
-<p><strong>Time O(m·n), space O(m·n)</strong> worst-case recursion / queue. Variants: max area of island; number of closed islands; surrounded regions; Pacific Atlantic water flow. Prefer BFS if recursion depth worries the interviewer.</p>
+<div class="qa-label">Variants</div>
+<ul><li>Max area of island</li><li>Number of closed islands</li><li>Pacific Atlantic water flow (multi-source DFS)</li><li>Surrounded regions</li></ul>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q6">
 <summary><span>Q6. Course Schedule (can finish all courses?)</span></summary>
 <div class="qa-body">
-<p>There are numCourses labeled 0..n-1. prerequisites[i] = [a, b] means you must take b before a. Return true if you can finish all courses (i.e. the graph has no cycle).</p>
-<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Intuit — topological sort / cycle detection · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Graph · Kahn's BFS or DFS cycle detect</p>
-<div class="qa-label">How to think about it</div>
-<p>Model courses as nodes and prerequisites as directed edges b → a. You can finish iff the graph is a DAG. Kahn's algorithm: compute indegrees, enqueue nodes with indegree 0, repeatedly take a node and reduce neighbors' indegrees. If you process all nodes, there is no cycle.</p>
-<div class="qa-label">Solution (Python)</div>
+<p>numCourses labeled 0..n-1. prerequisites[i]=[a,b] means take b before a. Return true iff you can finish all courses (DAG / no cycle).</p>
+<p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Meta, Intuit — topological sort / cycle detection · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Graph · Kahn BFS or DFS colors</p>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/topo-kahn.svg" alt="Kahn topological sort for courses" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li>Model: directed edge b→a (b unlocks a). Finish iff DAG.</li><li>Kahn: compute indegrees; queue all indegree 0; pop and decrement neighbors; count processed nodes.</li><li>If processed == numCourses → true; else cycle → false.</li><li>DFS alternative: 0/1/2 colors; back-edge to "in stack" = cycle.</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import deque, defaultdict
 
 def can_finish(num_courses, prerequisites):
@@ -229,17 +276,19 @@ def can_finish(num_courses, prerequisites):
     return taken == num_courses
 </code></pre></div>
 <div class="qa-label">Follow-ups</div>
-<p>Course Schedule II: return any valid order (the Kahn visit order). Detect which courses form the cycle. Weighted version → shortest path / DP on DAG.</p>
+<ul><li>Course Schedule II → return any valid order (Kahn visit order).</li><li>Parallel semesters → longest path in DAG / level BFS.</li></ul>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q7">
 <summary><span>Q7. Coin Change</span></summary>
 <div class="qa-body">
-<p>You are given coins of different denominations and a total amount. Return the fewest number of coins needed to make that amount. If impossible, return -1. You may use each coin unlimited times.</p>
+<p>coins of various denominations, total amount. Return fewest coins to make amount, or -1 if impossible. Unlimited supply of each coin.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Meta, Google — unbounded knapsack DP · <strong>Difficulty:</strong> Medium · <strong>Pattern:</strong> Dynamic programming · bottom-up</p>
-<div class="qa-label">How to think about it</div>
-<p>Let <code>dp[x]</code> be the fewest coins to make amount x. <code>dp[0] = 0</code>. For each amount x from 1..amount, try every coin c: if x ≥ c, candidate is <code>dp[x - c] + 1</code>. Take the minimum. This is unbounded knapsack — order of loops (amount outer, coins inner) is the usual interview form.</p>
-<div class="qa-label">Solution (Python)</div>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/coin-change-dp.svg" alt="Bottom-up coin change DP table" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li>Define dp[x] = fewest coins to make x; dp[0]=0; else ∞.</li><li>For x from 1..amount: for each coin c≤x: dp[x]=min(dp[x], dp[x-c]+1).</li><li>Why not greedy? Counterexample coins=[1,3,4], amount=6 → greedy 4+1+1=3 coins, optimal 3+3=2.</li><li>Time O(amount·|coins|), space O(amount).</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def coin_change(coins, amount):
     INF = amount + 1
     dp = [0] + [INF] * amount
@@ -249,18 +298,20 @@ def can_finish(num_courses, prerequisites):
                 dp[x] = min(dp[x], dp[x - c] + 1)
     return dp[amount] if dp[amount] != INF else -1
 </code></pre></div>
-<div class="qa-label">Complexity &amp; traps</div>
-<p><strong>Time O(amount · |coins|), space O(amount).</strong> Do not confuse with Coin Change II (number of combinations). Greedy fails for arbitrary denominations — mention that and justify DP.</p>
+<div class="qa-label">Related</div>
+<p>Coin Change II counts combinations — different transition order/meaning. Do not confuse them in the interview.</p>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q8">
 <summary><span>Q8. Word Ladder</span></summary>
 <div class="qa-body">
-<p>Given beginWord, endWord, and a wordList, find the length of the shortest transformation sequence from beginWord to endWord where each step changes exactly one letter and every intermediate word is in wordList. Return 0 if impossible.</p>
+<p>beginWord → endWord, changing one letter at a time; each intermediate in wordList. Return length of shortest transformation sequence (words in path), or 0 if impossible.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Google, LinkedIn, Amazon — BFS shortest path in word graph · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS · implicit graph</p>
-<div class="qa-label">How to think about it</div>
-<p>Each word is a node; an edge exists if Hamming distance is 1. The answer is shortest path length (number of words in the path). BFS from beginWord guarantees shortest. Optimize neighbor generation with a set of remaining words, or wildcard buckets ("h*t" → hot, hit).</p>
-<div class="qa-label">Solution (Python)</div>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/word-ladder-bfs.svg" alt="BFS over one-letter neighbors" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li>Each word is a node; edge if Hamming distance 1.</li><li>BFS from beginWord; distance = words in path so far.</li><li>Neighbor gen: for each position try a–z; check set membership.</li><li>Remove word when enqueued to avoid revisits.</li><li>If endWord not in wordList → 0 immediately.</li><li>Time O(N · L · 26); bidirectional BFS is a strong follow-up.</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import deque
 
 def ladder_length(begin_word, end_word, word_list):
@@ -280,18 +331,18 @@ def ladder_length(begin_word, end_word, word_list):
                     q.append((nxt, dist + 1))
     return 0
 </code></pre></div>
-<div class="qa-label">Interview tips</div>
-<p>Removing a word when enqueued prevents revisits. Bidirectional BFS is a strong follow-up for large dictionaries. Mention time O(N · L · 26) where L is word length.</p>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q9">
 <summary><span>Q9. Serialize and Deserialize Binary Tree</span></summary>
 <div class="qa-body">
-<p>Design an algorithm to serialize a binary tree to a string and deserialize that string back to the same tree structure. There is no restriction on the format — only that the pair of operations is invertible.</p>
+<p>Design serialize(root)→string and deserialize(string)→tree. Format is your choice; the pair must be invertible.</p>
 <p class="qa-meta"><strong>Asked at:</strong> Meta (Facebook), Amazon, Microsoft — tree encoding classic · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> BFS / preorder with null markers</p>
-<div class="qa-label">How to think about it</div>
-<p>Level-order (BFS) with explicit null markers is interview-friendly and matches LeetCode's format. Serialize: queue traversal, append values / "#". Deserialize: rebuild nodes in the same order, wiring left/right children as you consume the token stream.</p>
-<div class="qa-label">Solution (Python)</div>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/serialize-tree.svg" alt="BFS serialize with null markers" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li>Pick BFS level-order with explicit '#' nulls (interview-friendly).</li><li>Serialize: queue; append values / '#'; join with commas.</li><li>Deserialize: rebuild root from first token; for each node consume next two tokens as left/right children.</li><li>Handle empty tree and single-node trees explicitly.</li><li>Preorder+nulls also works — mention both.</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">from collections import deque
 
 class Codec:
@@ -328,18 +379,18 @@ class Codec:
             i += 1
         return root
 </code></pre></div>
-<div class="qa-label">What to say</div>
-<p>Discuss delimiter choice, empty tree, and single-node trees. Preorder with nulls also works and uses less queue memory. Do not claim compression — correctness and clarity beat clever encodings.</p>
 </div>
 </details>
-<details class="qa">
+<details class="qa" id="q10">
 <summary><span>Q10. Trapping Rain Water</span></summary>
 <div class="qa-body">
-<p>Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.</p>
+<p>n non-negative heights (bar width 1). How much water can the elevation map trap after raining?</p>
 <p class="qa-meta"><strong>Asked at:</strong> Amazon, Google, Bloomberg — two pointers / monotonic stack · <strong>Difficulty:</strong> Hard · <strong>Pattern:</strong> Two pointers · left/right max</p>
-<div class="qa-label">How to think about it</div>
-<p>Water above index i is limited by the shorter of the tallest bar to the left and the tallest to the right, minus height[i]. Two-pointer form: maintain left_max and right_max while walking from both ends. Always advance the side with the smaller max — that side's trapped water is fully determined.</p>
-<div class="qa-label">Solution (Python)</div>
+<div class="qa-label">Diagram</div>
+<figure class="diagram native qa-diagram"><img src="../assets/diagrams/trap-water.svg" alt="Trapped water between bars" loading="lazy" /></figure>
+<div class="qa-label">Step-by-step solution</div>
+<ol class="qa-steps"><li>Water at i limited by min(tallest left, tallest right) − height[i].</li><li>Prefix/suffix max arrays → clear O(n) time / O(n) space version — start here if needed.</li><li>Two pointers: maintain left_max, right_max; always advance the side with the smaller max (that side's water is fully determined).</li><li>Time O(n), space O(1). Monotonic stack is another valid approach.</li></ol>
+<div class="qa-label">Python</div>
 <div class="code-block"><div class="code-lang">PYTHON</div><pre class="code"><code class="language-python">def trap(height):
     if not height:
         return 0
@@ -356,8 +407,8 @@ class Codec:
             hi -= 1
     return water
 </code></pre></div>
-<div class="qa-label">Complexity</div>
-<p><strong>Time O(n), space O(1).</strong> Prefix/suffix max arrays are the clearer O(n) space version — start there if two pointers feel magical, then optimize. Monotonic stack is another valid O(n) approach.</p>
+<div class="qa-label">Why the two-pointer trick works</div>
+<aside class="qa-callout"><div class="qa-label">Intuition</div><p>If height[lo] &lt; height[hi], the water at lo cannot be limited by anything on the right taller than height[hi] — left_max is the binding constraint. Symmetric for the right side.</p></aside>
 </div>
 </details>
 </div>

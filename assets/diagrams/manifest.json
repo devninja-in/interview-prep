@@ -42,6 +42,16 @@
     "multi-tenant-ai",
     "transcription-ai",
     "grounded-support",
+    "two-sum-walk",
+    "longest-substr-window",
+    "merge-intervals-walk",
+    "lru-cache",
+    "islands-dfs",
+    "topo-kahn",
+    "coin-change-dp",
+    "word-ladder-bfs",
+    "serialize-tree",
+    "trap-water",
     "prefix-sums"
   ],
   "chapters": {
@@ -153,6 +163,18 @@
       "multi-tenant-ai",
       "transcription-ai",
       "grounded-support"
+    ],
+    "interview-cp": [
+      "two-sum-walk",
+      "longest-substr-window",
+      "merge-intervals-walk",
+      "lru-cache",
+      "islands-dfs",
+      "topo-kahn",
+      "coin-change-dp",
+      "word-ladder-bfs",
+      "serialize-tree",
+      "trap-water"
     ]
   }
 }
